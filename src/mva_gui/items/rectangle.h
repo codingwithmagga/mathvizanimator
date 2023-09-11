@@ -1,9 +1,9 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include "abstractobject.h"
+#include "abstractitem.h"
 
-class RectangleItem : public AbstractObject
+class RectangleItem : public AbstractItem
 {
     Q_OBJECT
     QML_ELEMENT
@@ -17,25 +17,12 @@ public:
     ObjectStyle getObjectStyle() const override { return ObjectStyle{}; };
     void setObjectStyle(const ObjectStyle object_style) override{};
 
-    QVector<AbstractObject *> getSubObjects() const override
-    {
-        return QVector<AbstractObject *>{};
-    };
+    QVector<AbstractItem *> getSubObjects() const override { return QVector<AbstractItem *>{}; }
 
     void paint(QPainter *painter) override;
 
-public slots:
-    void onPressed(const qreal &mouse_x, const qreal &mouse_y);
-    void onPosChanged(const qreal &mouse_x, const qreal &mouse_y);
-
-protected:
-    void componentComplete() override;
-
 private:
     ObjectType object_type_ = ObjectType::BEZIER;
-
-    qreal start_x_ = 0;
-    qreal start_y_ = 0;
 };
 
 Q_DECLARE_METATYPE(RectangleItem)

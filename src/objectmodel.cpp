@@ -6,7 +6,7 @@ MObjectModel::MObjectModel(QObject *parent)
 
 }
 
-void MObjectModel::addMObject(AbstractObject *object)
+void MObjectModel::addMObject(AbstractItem *object)
 {
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_objects.append(object);

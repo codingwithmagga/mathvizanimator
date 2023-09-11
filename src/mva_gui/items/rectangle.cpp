@@ -4,10 +4,10 @@
 #include <QPen>
 
 RectangleItem::RectangleItem(QQuickItem *parent)
-    : AbstractObject{parent}
+    : AbstractItem{parent}
 {}
 
-AbstractObject::ObjectContour RectangleItem::getObjectContour() const
+AbstractItem::ObjectContour RectangleItem::getObjectContour() const
 {
     const auto x = parentItem()->x();
     const auto y = parentItem()->y();
@@ -35,34 +35,5 @@ void RectangleItem::paint(QPainter *painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->drawRect(x(), y(), width(), height());
 
-    qDebug() << "Paint rect: " << x() << y() << width() << height();
-}
-
-void RectangleItem::onPressed(const qreal &mouse_x, const qreal &mouse_y)
-{
-    start_x_ = mouse_x;
-    start_y_ = mouse_y;
-}
-
-void RectangleItem::onPosChanged(const qreal &mouse_x, const qreal &mouse_y)
-{
-    // Prevent boundary violation
-    qreal mouse_x_bdy = std::min(mousearea_width(), std::max(0.0, mouse_x));
-    qreal mouse_y_bdy = std::min(mousearea_height(), std::max(0.0, mouse_y));
-
-    if (mouse_x_bdy - start_x_ < 0) {
-        parentItem()->setX(mouse_x_bdy);
-    }
-
-    if (mouse_y_bdy - start_y_ < 0) {
-        parentItem()->setY(mouse_y_bdy);
-    }
-
-    setWidth(std::abs(mouse_x_bdy - start_x_));
-    setHeight(std::abs(mouse_y_bdy - start_y_));
-}
-
-void RectangleItem::componentComplete()
-{
-    QQuickPaintedItem::componentComplete();
+    qDebug() << "Paint rect: " << parentItem()->x() << parentItem()->y() << width() << height();
 }

@@ -1,11 +1,11 @@
-#ifndef ABSTRACTOBJECT_H
-#define ABSTRACTOBJECT_H
+#ifndef ABSTRACTITEM_H
+#define ABSTRACTITEM_H
 
 #include <QColor>
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
-class AbstractObject : public QQuickPaintedItem
+class AbstractItem : public QQuickPaintedItem
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName)
@@ -38,7 +38,7 @@ public:
         QVector<BezierCurve> contour;
     };
 
-    AbstractObject(QQuickItem *parent = nullptr);
+    AbstractItem(QQuickItem *parent = nullptr);
 
     virtual ObjectType getObjectType() const = 0;
     virtual ObjectContour getObjectContour() const = 0;
@@ -46,7 +46,7 @@ public:
     virtual ObjectStyle getObjectStyle() const = 0;
     virtual void setObjectStyle(const ObjectStyle object_style) = 0;
 
-    virtual QVector<AbstractObject *> getSubObjects() const = 0;
+    virtual QVector<AbstractItem *> getSubObjects() const = 0;
 
     QString name() const;
     void setName(const QString &name);
@@ -68,6 +68,6 @@ private:
     QColor color_;
 };
 
-Q_DECLARE_METATYPE(AbstractObject)
+Q_DECLARE_METATYPE(AbstractItem)
 
-#endif // ABSTRACTOBJECT_H
+#endif // ABSTRACTITEM_H

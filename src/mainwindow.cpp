@@ -10,6 +10,7 @@
 #include <cairomm/surface.h>
 #include <cairommconfig.h>
 
+#include "circleitem.h"
 #include "rectangle.h"
 
 auto surface = Cairo::ImageSurface::create(Cairo::Format::FORMAT_ARGB32, 600, 400);
@@ -95,10 +96,22 @@ void MainWindow::processStarted()
         cr_frame->set_source_rgba(1.0, 0.0, 0.0, alphaval);
 
         for (const auto &element : scene_elements) {
-            //  qDebug() << __func__ << element.typeName();
-            const auto obj = qvariant_cast<RectangleItem *>(element);
+            const auto qobj = qvariant_cast<QObject *>(element);
+            const QString className = qobj->metaObject()->className();
 
-            auto rect_contour = obj->getObjectContour();
+            AbstractItem::ObjectContour rect_contour;
+
+            if (className.compare("RectangleItem") == 0) {
+                const auto obj = qvariant_cast<RectangleItem *>(element);
+                rect_contour = obj->getObjectContour();
+            } else if (className.compare("CircleItem") == 0) {
+                const auto obj = qvariant_cast<CircleItem *>(element);
+                rect_contour = obj->getObjectContour();
+            } else {
+                qWarning() << "unknwon item. continue";
+                continue;
+            }
+
             cr_frame->move_to(rect_contour.contour[0].start.x, rect_contour.contour[0].start.y);
 
             for (int i = 0; i < rect_contour.contour.length(); ++i) {

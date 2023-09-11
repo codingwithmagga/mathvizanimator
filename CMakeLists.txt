@@ -5,27 +5,32 @@ project(mathvizanimator VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+
+set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/src/" CACHE STRING "QML Import path")
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
 find_package(Cairo REQUIRED)
 
 pkg_check_modules(CairoMM REQUIRED IMPORTED_TARGET cairomm-1.0)
 
+qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
+
+add_subdirectory(src/mva_gui)
 
 qt_add_executable(mathvizanimator-app
     src/main.cpp
     src/mainwindow.cpp
-    src/rectangle.cpp
-    src/abstractobject.cpp
     src/objectmodel.cpp
     src/qmlimageprovider.cpp
 )
 
 qt_add_qml_module(mathvizanimator-app
     URI mathvizanimator
-    VERSION 1.0
-    QML_FILES src/Main.qml src/ItemModel.qml
+    VERSION 0.1
+    QML_FILES
+        src/Main.qml
     DEPENDENCIES QtQuick
 )
 
@@ -42,6 +47,8 @@ target_link_libraries(mathvizanimator-app
         Qt6::Quick
         Cairo::Cairo
         PkgConfig::CairoMM
+        mva_gui
+        mva_guiplugin
 )
 
 target_include_directories(mathvizanimator-app

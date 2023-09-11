@@ -1,8 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QtQml/QQmlExtensionPlugin>
+
+#include "QDirIterator"
 
 #include "mainwindow.h"
+
+Q_IMPORT_QML_PLUGIN(mva_guiPlugin)
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +22,7 @@ int main(int argc, char *argv[])
     engine.addImageProvider(QLatin1String("imageprovider"), qmlImageProvider);
     engine.rootContext()->setContextProperty("imageprovider", qmlImageProvider);
 
-    const QUrl url(u"qrc:/mathvizanimator/src/Main.qml"_qs);
+    const QUrl url("qrc:/qt/qml/mathvizanimator/src/Main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);

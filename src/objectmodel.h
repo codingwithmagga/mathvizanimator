@@ -4,7 +4,7 @@
 #include <QAbstractListModel>
 #include <QQmlEngine>
 
-#include "abstractobject.h"
+#include "abstractitem.h"
 
 class MObjectModel : public QAbstractListModel
 {
@@ -18,10 +18,10 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 public slots:
-    void addMObject(AbstractObject *object);
+    void addMObject(AbstractItem *object);
 
 private:
-    QList<AbstractObject *> m_objects;
+    QList<AbstractItem *> m_objects;
 };
 
 #endif // OBJECTMODEL_H

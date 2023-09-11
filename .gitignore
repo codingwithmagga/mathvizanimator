@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# qt files
+*.user
+
+# build folders
+/build-*
