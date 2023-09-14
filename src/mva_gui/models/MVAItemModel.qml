@@ -11,4 +11,9 @@ ListModel {
         image_src: "http://doc.qt.io/qt-5/images/declarative-qtlogo.png"
         file: "qrc:/qt/qml/mva_gui/items/MVACircle.qml"
     }
+    ListElement {
+        name: "Text"
+        image_src: "http://doc.qt.io/qt-5/images/declarative-qtlogo.png"
+        file: "qrc:/qt/qml/mva_gui/items/MVAText.qml"
+    }
 }

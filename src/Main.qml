@@ -18,9 +18,8 @@ ApplicationWindow {
     property var dragItem: null
     property bool objectDragActive: false
 
-    Row {
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
+    RowLayout {
+        anchors.fill: parent
 
         spacing: 5
 
@@ -28,86 +27,20 @@ ApplicationWindow {
 
             id: itemView
 
-            width: 150
-            height: parent.height
+            Layout.minimumWidth: 50
+            Layout.preferredWidth: 150
+            Layout.maximumWidth: 300
+            Layout.minimumHeight: 150
+            Layout.fillHeight: true
+            Layout.margins: 20
+
             z: 1
 
-            model: ItemModel {}
+            model: MVAItemModel {}
 
-            delegate: Item {
+            delegate: MVAItemDelegate {
                 id: delegate
-                height: 40
-                width: itemView.width
-
-                MouseArea {
-
-                    function createShadow(file, mouse) {
-                        var point = mapToItem(root, mouseX, mouseY)
-
-                        console.log(file)
-
-                        const component = Qt.createComponent(file)
-                        if (component.status === Component.Ready) {
-                            var object = component.createObject(root, {
-                                                                    "x": point.x - 15,
-                                                                    "y": point.y - 8,
-                                                                    "width": 30,
-                                                                    "height": 16,
-                                                                    "item.color": "red",
-                                                                    "dragActive": objectDragActive,
-                                                                    "dragKey": thekey
-                                                                })
-                            return object
-                        } else {
-                            console.log("Error creat com")
-                        }
-
-                        return null
-                    }
-
-                    id: dragArea
-
-                    anchors.fill: parent
-                    onPressed: mouse => {
-                                   itemView.currentIndex = index
-
-                                   objectDragActive = true
-
-                                   drag.target = createShadow(file, mouse)
-                               }
-
-                    onReleased: mouse => {
-                                    drag.target.Drag.drop()
-
-                                    objectDragActive = false
-                                    drag.target.destroy()
-                                }
-
-                    Image {
-                        id: objectImage
-                        height: parent.height
-
-                        fillMode: Image.PreserveAspectFit
-                        source: image_src
-
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-                    }
-
-                    Label {
-                        id: objectText
-                        height: parent.height
-
-                        anchors.left: objectImage.right
-                        anchors.leftMargin: 10
-
-                        verticalAlignment: Text.AlignVCenter
-
-                        text: name
-                        font.bold: true
-                    }
-                }
+                width: parent.width
             }
         }
 
@@ -115,24 +48,14 @@ ApplicationWindow {
             id: mObjectModel
         }
 
-        Component {
-            id: objectDelegate
-            Item {
-                width: 180
-                height: 40
-                Column {
-                    Text {
-                        text: '<b>Name:</b> ' + color
-                    }
-                }
-            }
-        }
-
         DropArea {
             id: selectArea
 
-            width: 600
-            height: 400
+            Layout.minimumWidth: 600
+            Layout.minimumHeight: 400
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.margins: 20
 
             property var abstractItem: null
             property var abstractComponent: null
@@ -170,38 +93,37 @@ ApplicationWindow {
                 id: dropZone
 
                 anchors.fill: parent
-                color: "black"
+                color: "white"
             }
         }
+
         ColumnLayout {
 
             spacing: 5
+
+            Layout.minimumWidth: 50
+            Layout.preferredWidth: 100
+            Layout.maximumWidth: 100
+            Layout.minimumHeight: 150
+            Layout.fillHeight: true
+            Layout.margins: 20
+
             Button {
                 text: "Render"
                 onClicked: main_window.buttonClicked(selectArea.objs)
             }
         }
 
-        Component {
-            id: contactDelegate
-            Item {
-                width: 180
-                height: 40
-                Column {
-                    Text {
-                        text: '<b>Name:</b> ' + name
-                    }
-                    Text {
-                        text: '<b>Number:</b> ' + index
-                    }
-                }
-            }
-        }
-
         ListView {
             id: mObjectsListView
-            width: 200
-            height: parent.height
+
+            Layout.minimumWidth: 150
+            Layout.preferredWidth: 200
+            Layout.maximumWidth: 300
+            Layout.minimumHeight: 150
+            Layout.fillHeight: true
+            Layout.margins: 20
+
             model: mObjectModel
             highlight: Rectangle {
                 color: "lightsteelblue"

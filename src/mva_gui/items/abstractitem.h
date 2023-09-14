@@ -12,7 +12,7 @@ class AbstractItem : public QQuickPaintedItem
     Q_PROPERTY(QColor color READ color WRITE setColor)
 
 public:
-    enum ObjectType { BEZIER, TEXT };
+    enum class ObjectType { BEZIER, TEXT };
 
     struct ObjectStyle
     {

@@ -62,5 +62,4 @@ void CircleItem::paint(QPainter *painter)
                          width() - 2 * pen_width,
                          height() - 2 * pen_width);
 
-    qDebug() << "Paint circle: " << parentItem()->x() << parentItem()->y() << width() << height();
 }

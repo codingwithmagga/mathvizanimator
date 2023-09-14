@@ -25,6 +25,5 @@ private:
     ObjectType object_type_ = ObjectType::BEZIER;
 };
 
-Q_DECLARE_METATYPE(RectangleItem)
 
 #endif // RECTANGLE_H

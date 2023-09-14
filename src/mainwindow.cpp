@@ -3,6 +3,9 @@
 #include <iostream>
 
 #include <QDebug>
+#include <QImage>
+#include <QPainter>
+#include <QPainterPath>
 #include <QProcess>
 #include <QThread>
 
@@ -38,10 +41,6 @@ MainWindow::MainWindow()
     cr->save();
 
     start_data = surface->get_data();
-
-    qmlImageProvider_ = new QmlImageProvider();
-    QImage image(start_data, 600, 400, QImage::Format_ARGB32);
-    qmlImageProvider_->updateImage(image);
 }
 
 void MainWindow::buttonClicked(const QVariantList &list)
@@ -77,6 +76,7 @@ void MainWindow::buttonClicked(const QVariantList &list)
 void MainWindow::processStarted()
 {
     const int num_frames = 72;
+
     for (int frame = 0; frame < num_frames; ++frame) {
         auto stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Format::FORMAT_ARGB32,
                                                                    600);
@@ -95,45 +95,20 @@ void MainWindow::processStarted()
         auto alphaval = (double) frame / (double) num_frames;
         cr_frame->set_source_rgba(1.0, 0.0, 0.0, alphaval);
 
+        QImage image(start_data, 600, 400, QImage::Format::Format_ARGB32);
+        image.fill("white");
+        QPainter painter(&image);
+
         for (const auto &element : scene_elements) {
-            const auto qobj = qvariant_cast<QObject *>(element);
-            const QString className = qobj->metaObject()->className();
+            const auto qobj = qvariant_cast<AbstractItem *>(element);
 
-            AbstractItem::ObjectContour rect_contour;
-
-            if (className.compare("RectangleItem") == 0) {
-                const auto obj = qvariant_cast<RectangleItem *>(element);
-                rect_contour = obj->getObjectContour();
-            } else if (className.compare("CircleItem") == 0) {
-                const auto obj = qvariant_cast<CircleItem *>(element);
-                rect_contour = obj->getObjectContour();
-            } else {
-                qWarning() << "unknwon item. continue";
-                continue;
-            }
-
-            cr_frame->move_to(rect_contour.contour[0].start.x, rect_contour.contour[0].start.y);
-
-            for (int i = 0; i < rect_contour.contour.length(); ++i) {
-                auto x1 = rect_contour.contour[i].first_control_point.x;
-                auto y1 = rect_contour.contour[i].first_control_point.y;
-                auto x2 = rect_contour.contour[i].second_control_point.x;
-                auto y2 = rect_contour.contour[i].second_control_point.y;
-                auto x3 = rect_contour.contour[i].end.x;
-                auto y3 = rect_contour.contour[i].end.y;
-
-                cr_frame->curve_to(x1, y1, x2, y2, x3, y3);
-            }
-
-            cr_frame->close_path();
-            cr_frame->stroke();
+            painter.translate(qobj->parentItem()->position());
+            qobj->paint(&painter);
+            painter.resetTransform();
         }
-        cr_frame->restore();
-        auto data = reinterpret_cast<const char *>(surface_frame->get_data());
 
-        myProcess->write(data, 600 * 400 * 4);
-
-        delete[] copy_data;
+        auto imageData = reinterpret_cast<const char *>(image.bits());
+        myProcess->write(imageData, 600 * 400 * 4);
     }
 
     myProcess->closeWriteChannel();

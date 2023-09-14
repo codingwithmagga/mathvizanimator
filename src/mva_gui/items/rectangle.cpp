@@ -34,6 +34,4 @@ void RectangleItem::paint(QPainter *painter)
     painter->setPen(pen);
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->drawRect(x(), y(), width(), height());
-
-    qDebug() << "Paint rect: " << parentItem()->x() << parentItem()->y() << width() << height();
 }
