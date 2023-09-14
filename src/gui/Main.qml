@@ -3,8 +3,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import mathvizanimator
-import mva_gui
+import cwa.mva
 
 ApplicationWindow {
     id: root
@@ -68,7 +67,7 @@ ApplicationWindow {
 
                            const component = Qt.createComponent(
                                drag.source.file)
-                           console.log("dropped file " + drag.source.file)
+
                            if (component.status === Component.Ready) {
                                console.log(
                                    "dropped! at " + drag.x + " " + drag.y)
@@ -79,8 +78,6 @@ ApplicationWindow {
                                        "y": drag.y
                                    })
 
-                               console.log(
-                                   "object created at " + drag.x + " " + drag.y)
                                mObjectModel.addMObject(abstractItem.item)
                                objs.push(abstractItem.item)
                            } else {

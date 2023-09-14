@@ -1,12 +1,12 @@
 import QtQuick
 
-import mva_gui
+import cwa.mva
 
 Item {
-    id: circleItem
+    id: root
 
-    property alias item: circle
-    property string file: "qrc:/qt/qml/mva_gui/items/MVACircle.qml"
+    property alias item: circleItem
+    property string file: "qrc:/qt/qml/cwa/mva/items/MVACircle.qml"
     property bool dragActive: false
     property string dragKey: ""
 
@@ -17,19 +17,12 @@ Item {
     Drag.keys: dragKey
 
     CircleItem {
-        id: circle
+        id: circleItem
 
         name: "circle"
         color: "blue"
 
         height: parent.width
         width: height
-
-        MouseArea {
-            anchors.fill: circle
-            onClicked: {
-                circle.color = "yellow"
-            }
-        }
     }
 }

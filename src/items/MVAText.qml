@@ -1,12 +1,12 @@
 import QtQuick
 
-import mva_gui
+import cwa.mva
 
 Item {
-    id: textItem
+    id: root
 
-    property alias item: text
-    property string file: "qrc:/qt/qml/mva_gui/items/MVAText.qml"
+    property alias item: textItem
+    property string file: "qrc:/qt/qml/cwa/mva/items/MVAText.qml"
     property bool dragActive: false
     property string dragKey: ""
 
@@ -17,7 +17,7 @@ Item {
     width: 10
 
     TextItem {
-        id: text
+        id: textItem
 
         name: "text"
         color: "black"

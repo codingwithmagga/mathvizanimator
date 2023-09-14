@@ -5,8 +5,8 @@
 AbstractItem::AbstractItem(QQuickItem *parent)
     : QQuickPaintedItem(parent)
 {
-    connect(this, &QQuickItem::widthChanged, [=] { update(); });
-    connect(this, &QQuickItem::heightChanged, [=] { update(); });
+    connect(this, &QQuickItem::widthChanged, [this] { update(); });
+    connect(this, &QQuickItem::heightChanged, [this] { update(); });
 }
 
 QString AbstractItem::name() const

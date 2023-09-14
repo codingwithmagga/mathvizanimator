@@ -1,13 +1,10 @@
+#include <QDirIterator>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml/QQmlExtensionPlugin>
 
-#include "QDirIterator"
-
 #include "mainwindow.h"
-
-Q_IMPORT_QML_PLUGIN(mva_guiPlugin)
 
 int main(int argc, char *argv[])
 {
@@ -18,11 +15,12 @@ int main(int argc, char *argv[])
     MainWindow main_window;
     engine.rootContext()->setContextProperty(QStringLiteral("main_window"), &main_window);
 
-    auto qmlImageProvider = main_window.getImageProvider();
-    engine.addImageProvider(QLatin1String("imageprovider"), qmlImageProvider);
-    engine.rootContext()->setContextProperty("imageprovider", qmlImageProvider);
+    QDirIterator it(":", QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        qDebug() << it.next();
+    }
 
-    const QUrl url("qrc:/qt/qml/mathvizanimator/src/Main.qml");
+    const QUrl url("qrc:/qt/qml/cwa/mva/gui/Main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);

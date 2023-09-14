@@ -9,39 +9,11 @@
 #include <QProcess>
 #include <QThread>
 
-#include <cairomm/context.h>
-#include <cairomm/surface.h>
-#include <cairommconfig.h>
-
-#include "circleitem.h"
-#include "rectangle.h"
-
-auto surface = Cairo::ImageSurface::create(Cairo::Format::FORMAT_ARGB32, 600, 400);
-auto cr = Cairo::Context::create(surface);
-
-unsigned char *start_data;
+#include "abstractitem.h"
 
 QProcess *myProcess = new QProcess();
 
-//double rgba2rgb(double color, double alpha)
-//{
-//    return (1 - a)
-
-//        return new Color((1 - alpha) * RGB_background.r + alpha * RGBA_color.r,
-//                         (1 - alpha) * RGB_background.g + alpha * RGBA_color.g,
-//                         (1 - alpha) * RGB_background.b + alpha * RGBA_color.b);
-//}
-
-MainWindow::MainWindow()
-{
-    cr->save(); // save the state of the context
-    cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->paint();   // fill image with the color
-    cr->restore(); // color is back to black now
-    cr->save();
-
-    start_data = surface->get_data();
-}
+MainWindow::MainWindow() {}
 
 void MainWindow::buttonClicked(const QVariantList &list)
 {
@@ -78,24 +50,9 @@ void MainWindow::processStarted()
     const int num_frames = 72;
 
     for (int frame = 0; frame < num_frames; ++frame) {
-        auto stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Format::FORMAT_ARGB32,
-                                                                   600);
-
-        auto copy_data = new char[600 * 400 * 4];
-        strncpy(copy_data, (char *) start_data, 600 * 400 * 4);
-        auto surface_frame = Cairo::ImageSurface::create((unsigned char *) copy_data,
-                                                         Cairo::Format::FORMAT_ARGB32,
-                                                         600,
-                                                         400,
-                                                         stride);
-        auto cr_frame = Cairo::Context::create(surface_frame);
-
-        cr_frame->save();
-        cr_frame->set_line_width(1.0);
         auto alphaval = (double) frame / (double) num_frames;
-        cr_frame->set_source_rgba(1.0, 0.0, 0.0, alphaval);
 
-        QImage image(start_data, 600, 400, QImage::Format::Format_ARGB32);
+        QImage image(600, 400, QImage::Format::Format_ARGB32);
         image.fill("white");
         QPainter painter(&image);
 

@@ -31,6 +31,7 @@ AbstractItem::ObjectContour RectangleItem::getObjectContour() const
 void RectangleItem::paint(QPainter *painter)
 {
     QPen pen(color(), 5);
+    pen.setJoinStyle(Qt::MiterJoin);
     painter->setPen(pen);
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->drawRect(x(), y(), width(), height());
