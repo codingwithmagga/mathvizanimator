@@ -52,14 +52,15 @@ AbstractItem::ObjectContour CircleItem::getObjectContour() const
 
 void CircleItem::paint(QPainter *painter)
 {
-    const auto pen_width = 5;
+    painter->save();
+    const auto pen_width = 8.0;
 
     QPen pen(color(), pen_width);
     painter->setPen(pen);
     painter->setRenderHints(QPainter::Antialiasing, true);
-    painter->drawEllipse(x() + pen_width,
-                         y() + pen_width,
-                         width() - 2 * pen_width,
-                         height() - 2 * pen_width);
-
+    painter->drawEllipse(x() + pen_width / 2.0,
+                         y() + pen_width / 2.0,
+                         width() - pen_width,
+                         height() - pen_width);
+    painter->restore();
 }

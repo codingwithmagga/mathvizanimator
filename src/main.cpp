@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
     MainWindow main_window;
     engine.rootContext()->setContextProperty(QStringLiteral("main_window"), &main_window);
 
-    QDirIterator it(":", QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        qDebug() << it.next();
-    }
+    //    QDirIterator it(":", QDirIterator::Subdirectories);
+    //    while (it.hasNext()) {
+    //        qDebug() << it.next();
+    //    }
 
     const QUrl url("qrc:/qt/qml/cwa/mva/gui/Main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,

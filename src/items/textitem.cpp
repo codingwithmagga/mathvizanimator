@@ -10,6 +10,7 @@ TextItem::TextItem(QQuickItem *parent)
 
 void TextItem::paint(QPainter *painter)
 {
+    painter->save();
     painter->setRenderHints(QPainter::Antialiasing, true);
 
     QSvgRenderer renderer(m_svg_file.absoluteFilePath());
@@ -21,4 +22,5 @@ void TextItem::paint(QPainter *painter)
     setHeight(size.height());
 
     renderer.render(painter, QRect(QPoint(x(), y()), size));
+    painter->restore();
 }

@@ -3,7 +3,7 @@ import QtQuick
 import cwa.mva
 
 Item {
-    id: root
+    id: rootMVAText
 
     property alias item: textItem
     property string file: "qrc:/qt/qml/cwa/mva/items/MVAText.qml"
@@ -24,5 +24,9 @@ Item {
 
         height: parent.height
         width: parent.width
+
+        MVAMouseArea {
+            anchors.fill: parent
+        }
     }
 }

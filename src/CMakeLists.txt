@@ -23,6 +23,8 @@ qt_add_qml_module(mva-app
         items/MVACircle.qml
         items/MVARectangle.qml
         items/MVAText.qml
+        items/MVAMouseArea.qml
+        items/MVASurroundingRectangle.qml
     SOURCES
         items/abstractitem.cpp
         items/circleitem.cpp

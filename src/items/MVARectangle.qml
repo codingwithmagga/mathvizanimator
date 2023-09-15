@@ -3,7 +3,7 @@ import QtQuick
 import cwa.mva
 
 Item {
-    id: root
+    id: rootMVARectangle
 
     property alias item: rectangleItem
     property string file: "qrc:/qt/qml/cwa/mva/items/MVARectangle.qml"
@@ -24,5 +24,9 @@ Item {
 
         width: parent.width
         height: parent.height
+
+        MVAMouseArea {
+            anchors.fill: parent
+        }
     }
 }

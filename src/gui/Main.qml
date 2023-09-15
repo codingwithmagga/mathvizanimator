@@ -60,6 +60,8 @@ ApplicationWindow {
             property var abstractComponent: null
             property var objs: []
 
+            clip: true
+
             Drag.keys: [root.thekey]
 
             onDropped: drop => {

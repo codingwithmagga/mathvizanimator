@@ -59,9 +59,10 @@ void MainWindow::processStarted()
         for (const auto &element : scene_elements) {
             const auto qobj = qvariant_cast<AbstractItem *>(element);
 
+            painter.save();
             painter.translate(qobj->parentItem()->position());
             qobj->paint(&painter);
-            painter.resetTransform();
+            painter.restore();
         }
 
         auto imageData = reinterpret_cast<const char *>(image.bits());

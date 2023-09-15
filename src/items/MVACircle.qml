@@ -3,7 +3,7 @@ import QtQuick
 import cwa.mva
 
 Item {
-    id: root
+    id: rootMVACircle
 
     property alias item: circleItem
     property string file: "qrc:/qt/qml/cwa/mva/items/MVACircle.qml"
@@ -24,5 +24,9 @@ Item {
 
         height: parent.width
         width: height
+
+        MVAMouseArea {
+            anchors.fill: parent
+        }
     }
 }
