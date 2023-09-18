@@ -1,6 +1,8 @@
 import QtQuick
 
 MouseArea {
+    id: mvaMouseArea
+
     property var highlightRect: null
     property int highlightRectMargin: 10
 

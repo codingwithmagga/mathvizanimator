@@ -53,7 +53,7 @@ AbstractItem::ObjectContour CircleItem::getObjectContour() const
 void CircleItem::paint(QPainter *painter)
 {
     painter->save();
-    const auto pen_width = 8.0;
+    const auto pen_width = 4.0;
 
     QPen pen(color(), pen_width);
     painter->setPen(pen);

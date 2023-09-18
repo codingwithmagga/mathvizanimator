@@ -63,6 +63,11 @@ void MainWindow::processStarted()
             painter.translate(qobj->parentItem()->position());
             qobj->paint(&painter);
             painter.restore();
+
+            //            for (int i = 0; i < qobj->metaObject()->propertyCount(); ++i) {
+            //                qDebug() << qobj->metaObject()->property(i).name()
+            //                         << qobj->metaObject()->property(i).read(qobj);
+            //            }
         }
 
         auto imageData = reinterpret_cast<const char *>(image.bits());

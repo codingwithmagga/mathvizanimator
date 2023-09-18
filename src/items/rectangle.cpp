@@ -32,7 +32,7 @@ void RectangleItem::paint(QPainter *painter)
 {
     painter->save();
 
-    const qreal pen_width = 20;
+    const qreal pen_width = 4;
 
     QPen pen(color(), pen_width);
     pen.setJoinStyle(Qt::MiterJoin);

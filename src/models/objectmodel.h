@@ -22,6 +22,8 @@ public slots:
 
 private:
     QList<AbstractItem *> m_objects;
+
+    // QAbstractItemModel interface
 };
 
 #endif // OBJECTMODEL_H

@@ -43,10 +43,6 @@ ApplicationWindow {
             }
         }
 
-        MObjectModel {
-            id: mObjectModel
-        }
-
         DropArea {
             id: selectArea
 
@@ -71,8 +67,6 @@ ApplicationWindow {
                                drag.source.file)
 
                            if (component.status === Component.Ready) {
-                               console.log(
-                                   "dropped! at " + drag.x + " " + drag.y)
 
                                abstractItem = component.createObject(
                                    selectArea, {
@@ -80,7 +74,9 @@ ApplicationWindow {
                                        "y": drag.y
                                    })
 
-                               mObjectModel.addMObject(abstractItem.item)
+                               mObjectsListModel.append({
+                                                            "name": abstractItem.item.name
+                                                        })
                                objs.push(abstractItem.item)
                            } else {
                                console.log("Error creating object")
@@ -123,17 +119,29 @@ ApplicationWindow {
             Layout.fillHeight: true
             Layout.margins: 20
 
-            model: mObjectModel
+            model: ListModel {
+                id: mObjectsListModel
+            }
+
             highlight: Rectangle {
                 color: "lightsteelblue"
                 radius: 5
             }
             focus: true
 
-            delegate: Text {
-                text: 'Name: ' + mObjectModel.data(mObjectModel.index(index,
-                                                                      0), 0)
+            delegate: Label {
+
+                text: 'Name: ' + name
+
+                MouseArea {
+                    id: mObjectsListViewItemMouseArea
+                    anchors.fill: parent
+
+                    onClicked: mObjectsListView.currentIndex = index
+                }
             }
+
+            onCurrentIndexChanged: console.log("current index changed")
         }
     }
 }
