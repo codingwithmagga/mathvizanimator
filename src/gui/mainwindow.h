@@ -18,8 +18,8 @@ public slots:
     void processStarted();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
-    void save(const QVariantList &scene_elements) const;
-    void load() const;
+    void save(const QVariant &file, const QVariantList &scene_elements) const;
+    void load(const QVariant &file) const;
 
 private:
     QVariantList scene_elements;

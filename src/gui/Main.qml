@@ -2,6 +2,9 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
+
+import QtCore
 
 import cwa.mva
 
@@ -14,29 +17,96 @@ ApplicationWindow {
     title: qsTr("mathvizanimator")
 
     property string thekey: "specialkeyhere"
+    property url saveFile: ""
     property var dragItem: null
     property bool objectDragActive: false
+
+    FileDialog {
+        id: loadFileDialog
+        currentFolder: StandardPaths.standardLocations(
+                           StandardPaths.HomeLocation)[0]
+        nameFilters: ["JSON (*.json)"]
+
+        onAccepted: {
+            newAction.trigger(loadFileDialog)
+            main_window.load(selectedFile)
+        }
+    }
+
+    FileDialog {
+        id: saveFileDialog
+        currentFolder: StandardPaths.standardLocations(
+                           StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["JSON (*.json)"]
+
+        onAccepted: main_window.save(selectedFile, selectArea.objs)
+    }
+
+    Popup {
+        id: aboutPopup
+        anchors.centerIn: parent
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+
+        width: 500
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 20
+
+            Label {
+                text: qsTr("MathVizAnimator developed by CodingWithMagga. \ngithub: todo \nWebsite (german): todo \nYouTube (german): todo")
+                Layout.alignment: Qt.AlignHCenter
+
+                wrapMode: Text.WordWrap
+            }
+
+            Button {
+                text: qsTr("Close")
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: aboutPopup.close()
+            }
+        }
+    }
 
     menuBar: MenuBar {
         Menu {
             title: qsTr("&File")
             Action {
+                id: newAction
+
                 text: qsTr("&New...")
+                onTriggered: {
+
+                    function destroyElement(value) {
+                        value.destroy()
+                    }
+
+                    mObjectsListModel.clear()
+                    selectArea.objs.forEach(destroyElement)
+                    selectArea.objs = []
+                }
             }
             Action {
                 id: loadAction
 
                 text: qsTr("&Open...")
-                onTriggered: main_window.load()
+                onTriggered: loadFileDialog.open()
             }
             Action {
                 id: saveAction
 
                 text: qsTr("&Save")
-                onTriggered: main_window.save(selectArea.objs)
+                onTriggered: saveFileDialog.open()
             }
             Action {
+                id: saveAsAction
+
                 text: qsTr("Save &As...")
+                onTriggered: saveFileDialog.open()
             }
             MenuSeparator {}
             Action {
@@ -47,6 +117,8 @@ ApplicationWindow {
             title: qsTr("&Project")
             Action {
                 text: qsTr("&Render")
+
+                onTriggered: main_window.buttonClicked(selectArea.objs)
             }
             Action {
                 text: qsTr("&Snapshot")
@@ -56,6 +128,8 @@ ApplicationWindow {
             title: qsTr("&Help")
             Action {
                 text: qsTr("&About")
+
+                onTriggered: aboutPopup.open()
             }
         }
     }

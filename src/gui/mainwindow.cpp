@@ -88,7 +88,7 @@ void MainWindow::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
     qDebug() << "Process finished with status: " << exitStatus;
 }
 
-void MainWindow::save(const QVariantList &scene_elements) const
+void MainWindow::save(const QVariant &file, const QVariantList &scene_elements) const
 {
     QJsonObject save_json;
     int count = 0;
@@ -102,7 +102,7 @@ void MainWindow::save(const QVariantList &scene_elements) const
         count++;
     }
 
-    QFile saveFile("save.json");
+    QFile saveFile(file.toUrl().toLocalFile());
 
     if (!saveFile.open(QIODevice::WriteOnly)) {
         qWarning("Couldn't open save file.");
@@ -112,12 +112,12 @@ void MainWindow::save(const QVariantList &scene_elements) const
     saveFile.write(QJsonDocument(save_json).toJson());
 }
 
-void MainWindow::load() const
+void MainWindow::load(const QVariant &file) const
 {
-    QFile loadFile("save.json");
+    QFile loadFile(file.toUrl().toLocalFile());
 
     if (!loadFile.open(QIODevice::ReadOnly)) {
-        qWarning("Couldn't open save file.");
+        qWarning() << "Couldn't open save file. " << file.toUrl();
         return;
     }
 
