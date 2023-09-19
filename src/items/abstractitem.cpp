@@ -2,49 +2,69 @@
 
 #include "abstractitem.h"
 
-AbstractItem::AbstractItem(QQuickItem *parent)
+AbstractItem::AbstractItem(const QString &qml_file, QQuickItem *parent)
     : QQuickPaintedItem(parent)
-{
-    connect(this, &QQuickItem::widthChanged, [this] { update(); });
-    connect(this, &QQuickItem::heightChanged, [this] { update(); });
-}
+    , m_qml_file(qml_file)
+{}
 
 QString AbstractItem::name() const
 {
-    return name_;
+    return m_name;
 }
 
 void AbstractItem::setName(const QString &name)
 {
-    name_ = name;
+    m_name = name;
 }
 
 QColor AbstractItem::color() const
 {
-    return color_;
+    return m_color;
 }
 
 void AbstractItem::setColor(const QColor &color)
 {
-    color_ = color;
+    m_color = color;
 }
 
-qreal AbstractItem::mousearea_width() const
+QJsonObject AbstractItem::toJson() const
 {
-    return mousearea_width_;
+    QJsonObject json;
+
+    json["x"] = parentItem()->x();
+    json["y"] = parentItem()->y();
+    json["width"] = parentItem()->width();
+    json["height"] = parentItem()->height();
+    json["item.color"] = m_color.name();
+    json["item.name"] = m_name;
+    json["file"] = m_qml_file;
+
+    return json;
 }
 
-void AbstractItem::setMousearea_width(const qreal newMousearea_width)
+void AbstractItem::setPropertiesFromJson(const QJsonObject &json)
 {
-    mousearea_width_ = newMousearea_width;
-}
+    if (const QJsonValue v = json["x"]; v.isDouble()) {
+        parentItem()->setX(v.toDouble());
+    }
 
-qreal AbstractItem::mousearea_height() const
-{
-    return mousearea_height_;
-}
+    if (const QJsonValue v = json["y"]; v.isDouble()) {
+        parentItem()->setY(v.toDouble());
+    }
 
-void AbstractItem::setMousearea_height(qreal newMousearea_height)
-{
-    mousearea_height_ = newMousearea_height;
+    if (const QJsonValue v = json["width"]; v.isDouble()) {
+        parentItem()->setWidth(v.toDouble());
+    }
+
+    if (const QJsonValue v = json["height"]; v.isDouble()) {
+        parentItem()->setHeight(v.toDouble());
+    }
+
+    if (const QJsonValue v = json["color"]; v.isString()) {
+        m_color = v.toString();
+    }
+
+    if (const QJsonValue v = json["name"]; v.isString()) {
+        m_name = v.toString();
+    }
 }

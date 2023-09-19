@@ -2,6 +2,8 @@
 #define ABSTRACTITEM_H
 
 #include <QColor>
+#include <QFile>
+#include <QJsonObject>
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
@@ -10,43 +12,14 @@ class AbstractItem : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QColor color READ color WRITE setColor)
+    Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
 
 public:
     enum class ObjectType { BEZIER, TEXT };
 
-    struct ObjectStyle
-    {
-        int lineWidth;
-    };
-
-    struct Point
-    {
-        double x;
-        double y;
-    };
-
-    struct BezierCurve
-    {
-        Point start;
-        Point first_control_point;
-        Point second_control_point;
-        Point end;
-    };
-
-    struct ObjectContour
-    {
-        QVector<BezierCurve> contour;
-    };
-
-    AbstractItem(QQuickItem *parent = nullptr);
+    AbstractItem(const QString &qml_file, QQuickItem *parent = nullptr);
 
     virtual ObjectType getObjectType() const = 0;
-    virtual ObjectContour getObjectContour() const = 0;
-
-    virtual ObjectStyle getObjectStyle() const = 0;
-    virtual void setObjectStyle(const ObjectStyle object_style) = 0;
-
-    virtual QVector<AbstractItem *> getSubObjects() const = 0;
 
     QString name() const;
     void setName(const QString &name);
@@ -54,18 +27,14 @@ public:
     QColor color() const;
     void setColor(const QColor &color);
 
-    qreal mousearea_width() const;
-    void setMousearea_width(qreal newMousearea_width);
-
-    qreal mousearea_height() const;
-    void setMousearea_height(qreal newMousearea_height);
+    virtual QJsonObject toJson() const;
+    virtual void setPropertiesFromJson(const QJsonObject &json);
 
 private:
-    qreal mousearea_width_ = 600;
-    qreal mousearea_height_ = 400;
+    QString m_name;
+    QColor m_color;
 
-    QString name_;
-    QColor color_;
+    const QString m_qml_file;
 };
 
 Q_DECLARE_METATYPE(AbstractItem)

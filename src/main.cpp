@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    MainWindow main_window;
+    MainWindow main_window(&engine);
     engine.rootContext()->setContextProperty(QStringLiteral("main_window"), &main_window);
 
     //    QDirIterator it(":", QDirIterator::Subdirectories);

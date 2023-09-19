@@ -3,17 +3,22 @@
 #include <iostream>
 
 #include <QDebug>
+#include <QFile>
 #include <QImage>
+#include <QJsonDocument>
 #include <QPainter>
 #include <QPainterPath>
 #include <QProcess>
 #include <QThread>
 
 #include "abstractitem.h"
+#include "rectangle.h"
 
 QProcess *myProcess = new QProcess();
 
-MainWindow::MainWindow() {}
+MainWindow::MainWindow(QQmlApplicationEngine *const engine)
+    : m_qml_engine(engine)
+{}
 
 void MainWindow::buttonClicked(const QVariantList &list)
 {
@@ -81,4 +86,69 @@ void MainWindow::processStarted()
 void MainWindow::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     qDebug() << "Process finished with status: " << exitStatus;
+}
+
+void MainWindow::save(const QVariantList &scene_elements) const
+{
+    QJsonObject save_json;
+    int count = 0;
+    QString element_prefix = "element_";
+
+    for (const auto &element : scene_elements) {
+        const auto qobj = qvariant_cast<AbstractItem *>(element);
+
+        const auto json_element = qobj->toJson();
+        save_json[element_prefix + QString::number(count)] = json_element;
+        count++;
+    }
+
+    QFile saveFile("save.json");
+
+    if (!saveFile.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open save file.");
+        return;
+    }
+
+    saveFile.write(QJsonDocument(save_json).toJson());
+}
+
+void MainWindow::load() const
+{
+    QFile loadFile("save.json");
+
+    if (!loadFile.open(QIODevice::ReadOnly)) {
+        qWarning("Couldn't open save file.");
+        return;
+    }
+
+    QByteArray saveData = loadFile.readAll();
+
+    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+    QObject *oRootObject = dynamic_cast<QObject *>(m_qml_engine->rootObjects()[0]);
+    QObject *oSelectArea = oRootObject->findChild<QObject *>("selectArea");
+
+    if (!oRootObject) {
+        qWarning("oRootObject not found!");
+    }
+    if (!oSelectArea) {
+        qWarning("oSelectArea not found!");
+    }
+
+    QJsonObject json = loadDoc.object();
+    foreach (const QString &elementKey, json.keys()) {
+        auto element = json[elementKey].toObject();
+
+        QQmlComponent component(m_qml_engine, QUrl(element["file"].toString()));
+
+        QObject *comp = component.createWithInitialProperties(element.toVariantMap());
+        if (!comp) {
+            qWarning("comp not found!");
+        }
+        QQuickItem *item = qobject_cast<QQuickItem *>(comp);
+        if (!item) {
+            qWarning("item  not found!");
+        }
+        item->setParentItem(qobject_cast<QQuickItem *>(oSelectArea));
+    }
 }

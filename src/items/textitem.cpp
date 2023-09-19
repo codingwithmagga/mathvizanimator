@@ -5,7 +5,7 @@
 #include <QSvgRenderer>
 
 TextItem::TextItem(QQuickItem *parent)
-    : AbstractItem{parent}
+    : AbstractItem{"qrc:/qt/qml/cwa/mva/items/MVAText.qml", parent}
 {}
 
 void TextItem::paint(QPainter *painter)
@@ -23,4 +23,9 @@ void TextItem::paint(QPainter *painter)
 
     renderer.render(painter, QRect(QPoint(x(), y()), size));
     painter->restore();
+}
+
+QJsonObject TextItem::toJson() const
+{
+    return AbstractItem::toJson();
 }

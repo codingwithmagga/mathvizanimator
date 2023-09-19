@@ -17,6 +17,49 @@ ApplicationWindow {
     property var dragItem: null
     property bool objectDragActive: false
 
+    menuBar: MenuBar {
+        Menu {
+            title: qsTr("&File")
+            Action {
+                text: qsTr("&New...")
+            }
+            Action {
+                id: loadAction
+
+                text: qsTr("&Open...")
+                onTriggered: main_window.load()
+            }
+            Action {
+                id: saveAction
+
+                text: qsTr("&Save")
+                onTriggered: main_window.save(selectArea.objs)
+            }
+            Action {
+                text: qsTr("Save &As...")
+            }
+            MenuSeparator {}
+            Action {
+                text: qsTr("&Quit")
+            }
+        }
+        Menu {
+            title: qsTr("&Project")
+            Action {
+                text: qsTr("&Render")
+            }
+            Action {
+                text: qsTr("&Snapshot")
+            }
+        }
+        Menu {
+            title: qsTr("&Help")
+            Action {
+                text: qsTr("&About")
+            }
+        }
+    }
+
     RowLayout {
         anchors.fill: parent
 
@@ -45,6 +88,7 @@ ApplicationWindow {
 
         DropArea {
             id: selectArea
+            objectName: "selectArea"
 
             Layout.minimumWidth: 600
             Layout.minimumHeight: 400

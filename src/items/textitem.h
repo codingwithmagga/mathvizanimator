@@ -14,14 +14,12 @@ public:
     TextItem(QQuickItem *parent = nullptr);
 
     ObjectType getObjectType() const override { return m_object_type_; };
-    ObjectContour getObjectContour() const override { return ObjectContour{}; }
-    ObjectStyle getObjectStyle() const override { return ObjectStyle{}; };
-    void setObjectStyle(const ObjectStyle object_style) override{};
-    QVector<AbstractItem *> getSubObjects() const override { return QVector<AbstractItem *>{}; }
 
     QFileInfo getSvgFile() const { return m_svg_file; }
 
     void paint(QPainter *painter) override;
+
+    QJsonObject toJson() const;
 
 private:
     ObjectType m_object_type_ = ObjectType::TEXT;
