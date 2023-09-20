@@ -8,6 +8,7 @@ Item {
     property alias item: circleItem
     property bool dragActive: false
     property string dragKey: ""
+    property bool init: false
 
     width: 100
     height: 100

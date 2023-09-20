@@ -48,7 +48,7 @@ ApplicationWindow {
         anchors.centerIn: parent
         modal: true
         focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
         width: 500
 
@@ -111,6 +111,7 @@ ApplicationWindow {
             MenuSeparator {}
             Action {
                 text: qsTr("&Quit")
+                onTriggered: root.close()
             }
         }
         Menu {
@@ -189,7 +190,8 @@ ApplicationWindow {
                                abstractItem = component.createObject(
                                    selectArea, {
                                        "x": drag.x,
-                                       "y": drag.y
+                                       "y": drag.y,
+                                       "init": true
                                    })
 
                                mObjectsListModel.append({
