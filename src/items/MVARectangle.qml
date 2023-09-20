@@ -6,7 +6,6 @@ Item {
     id: rootMVARectangle
 
     property alias item: rectangleItem
-    property string file: "qrc:/qt/qml/cwa/mva/items/MVARectangle.qml"
     property bool dragActive: false
     property string dragKey: ""
 

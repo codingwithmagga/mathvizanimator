@@ -182,7 +182,7 @@ ApplicationWindow {
                            drop.accept(Qt.MoveAction)
 
                            const component = Qt.createComponent(
-                               drag.source.file)
+                               drag.source.item.file)
 
                            if (component.status === Component.Ready) {
 

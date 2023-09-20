@@ -6,7 +6,6 @@ Item {
     id: rootMVACircle
 
     property alias item: circleItem
-    property string file: "qrc:/qt/qml/cwa/mva/items/MVACircle.qml"
     property bool dragActive: false
     property string dragKey: ""
 

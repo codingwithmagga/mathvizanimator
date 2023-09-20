@@ -6,7 +6,6 @@ Item {
     id: rootMVAText
 
     property alias item: textItem
-    property string file: "qrc:/qt/qml/cwa/mva/items/MVAText.qml"
     property bool dragActive: false
     property string dragKey: ""
 
@@ -29,4 +28,8 @@ Item {
             anchors.fill: parent
         }
     }
+
+    //    Component.onCompleted: {
+    //        init(Param1, Param2)
+    //    }
 }
