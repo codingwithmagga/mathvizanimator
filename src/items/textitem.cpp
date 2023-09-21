@@ -10,10 +10,19 @@ TextItem::TextItem(QQuickItem *parent)
     : AbstractItem{"qrc:/qt/qml/cwa/mva/items/MVAText.qml", parent}
 {}
 
+void TextItem::setSvgFile(const QFileInfo &newSvgFile)
+{
+    m_svg_file = newSvgFile;
+    update();
+}
+
+void TextItem::setSvgFile(const QString &newSvgFile)
+{
+    setSvgFile(QFileInfo(newSvgFile));
+}
+
 void TextItem::paint(QPainter *painter)
 {
-    qInfo() << "painting";
-
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing, true);
 
@@ -31,7 +40,12 @@ void TextItem::paint(QPainter *painter)
 
 QJsonObject TextItem::toJson() const
 {
-    return AbstractItem::toJson();
+    auto json = AbstractItem::toJson();
+
+    json["item.latexSource"] = m_latex_source;
+    json["item.svgFile"] = m_svg_file.absoluteFilePath();
+
+    return json;
 }
 
 QString TextItem::getLatexSource() const
@@ -59,6 +73,12 @@ void TextItem::setLatexSource(const QString &newLatexSource)
 
     qInfo() << "hash: " << hash;
 
+    QFileInfo svgFile(hash + ".svg");
+    if (svgFile.exists()) {
+        setSvgFile(svgFile);
+        return;
+    }
+
     QFile latexFile(hash + ".tex");
     if (!latexFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Cannot open: " << latexFile.fileName();
@@ -76,8 +96,5 @@ void TextItem::setLatexSource(const QString &newLatexSource)
                                                << "-o" << hash + ".svg");
     qInfo() << QProcess::execute("latexmk", QStringList{} << "-C");
 
-    m_svg_file = QFileInfo(hash + ".svg");
-    qInfo() << "m_svg_file: " << m_svg_file.absoluteFilePath();
-
-    update();
+    setSvgFile(QFileInfo(hash + ".svg"));
 }

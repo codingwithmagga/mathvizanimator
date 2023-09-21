@@ -3,11 +3,16 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml/QQmlExtensionPlugin>
+#include <iostream>
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
+    qSetMessagePattern("%{time dd.MM.yyyy hh:mm:ss.zzz} | "
+                       "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{if-"
+                       "critical}CRT%{endif}%{if-fatal}FTL%{endif} | %{category} | %{message}");
+
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;

@@ -37,7 +37,7 @@ QJsonObject AbstractItem::toJson() const
     json["height"] = parentItem()->height();
     json["item.color"] = m_color.name();
     json["item.name"] = m_name;
-    json["file"] = m_qml_file;
+    json["item.file"] = m_qml_file;
 
     return json;
 }

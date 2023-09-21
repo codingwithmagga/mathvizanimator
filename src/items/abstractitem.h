@@ -12,7 +12,7 @@ class AbstractItem : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QColor color READ color WRITE setColor)
-    Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
+    Q_PROPERTY(QString file MEMBER m_qml_file)
 
 public:
     enum class ObjectType { BEZIER, TEXT };
@@ -34,7 +34,7 @@ private:
     QString m_name;
     QColor m_color;
 
-    const QString m_qml_file;
+    QString m_qml_file;
 };
 
 Q_DECLARE_METATYPE(AbstractItem)

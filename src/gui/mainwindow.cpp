@@ -12,7 +12,7 @@
 #include <QThread>
 
 #include "abstractitem.h"
-#include "rectangle.h"
+#include "logging.h"
 
 QProcess *myProcess = new QProcess();
 
@@ -44,8 +44,11 @@ void MainWindow::buttonClicked(const QVariantList &list)
 
     connect(myProcess, &QProcess::started, this, &MainWindow::processStarted);
     connect(myProcess, &QProcess::finished, this, &MainWindow::processFinished);
+    connect(myProcess, &QProcess::readyRead, [=] {
+        qCInfo(ffmpeg) << myProcess->readAllStandardOutput();
+    });
 
-    myProcess->setProcessChannelMode(QProcess::ProcessChannelMode::ForwardedChannels);
+    myProcess->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 
     myProcess->start(program, arguments);
 }
@@ -85,7 +88,7 @@ void MainWindow::processStarted()
 
 void MainWindow::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    qDebug() << "Process finished with status: " << exitStatus;
+    qCDebug(rendering) << "Process finished with status: " << exitStatus;
 }
 
 void MainWindow::save(const QVariant &file, const QVariantList &scene_elements) const
@@ -139,7 +142,7 @@ void MainWindow::load(const QVariant &file) const
     foreach (const QString &elementKey, json.keys()) {
         auto element = json[elementKey].toObject();
 
-        QQmlComponent component(m_qml_engine, QUrl(element["file"].toString()));
+        QQmlComponent component(m_qml_engine, QUrl(element["item.file"].toString()));
 
         QObject *comp = component.createWithInitialProperties(element.toVariantMap());
         if (!comp) {

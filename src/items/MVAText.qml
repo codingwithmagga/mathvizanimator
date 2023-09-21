@@ -59,7 +59,7 @@ Item {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                anchors.margins: 40
+                anchors.margins: 60
 
                 background: Rectangle {
                     color: "black"

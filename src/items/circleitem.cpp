@@ -21,9 +21,3 @@ void CircleItem::paint(QPainter *painter)
                          height() - pen_width);
     painter->restore();
 }
-
-QJsonObject CircleItem::toJson() const
-{
-    return AbstractItem::toJson();
-    ;
-}

@@ -11,6 +11,7 @@ qt_add_executable(mva-app
     main.cpp
     gui/mainwindow.cpp
     models/objectmodel.cpp
+    workflow/logging.cpp
 )
 
 qt_add_qml_module(mva-app
@@ -52,6 +53,7 @@ target_include_directories(mva-app
         items
         models
         gui
+        workflow
 )
 
 install(TARGETS mva-app

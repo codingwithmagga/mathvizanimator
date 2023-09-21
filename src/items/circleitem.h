@@ -15,8 +15,6 @@ public:
 
     void paint(QPainter *painter) override;
 
-    QJsonObject toJson() const;
-
 private:
     ObjectType object_type_ = ObjectType::BEZIER;
 };

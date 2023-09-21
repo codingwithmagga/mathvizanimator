@@ -12,14 +12,16 @@ class TextItem : public AbstractItem
     QML_ELEMENT
 
     Q_PROPERTY(QString latexSource READ getLatexSource WRITE setLatexSource)
-    Q_PROPERTY(QFileInfo svgFile READ getSvgFile)
+    Q_PROPERTY(QString svgFile READ getSvgFile WRITE setSvgFile)
 
 public:
     TextItem(QQuickItem *parent = nullptr);
 
     ObjectType getObjectType() const override { return m_object_type_; };
 
-    QFileInfo getSvgFile() const { return m_svg_file; }
+    QString getSvgFile() const { return m_svg_file.absoluteFilePath(); }
+    void setSvgFile(const QFileInfo &newSvgFile);
+    void setSvgFile(const QString &newSvgFile);
 
     void paint(QPainter *painter) override;
 
