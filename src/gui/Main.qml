@@ -21,6 +21,18 @@ ApplicationWindow {
     property var dragItem: null
     property bool objectDragActive: false
 
+    onActiveFocusItemChanged: print("activeFocusItem", activeFocusItem)
+
+    Shortcut {
+        sequences: [StandardKey.Delete]
+        onActivated: {
+            mObjectsListModel.remove(mObjectsListView.currentIndex)
+
+            // only works first time
+            selectArea.objs[mObjectsListView.currentIndex].destroy()
+        }
+    }
+
     FileDialog {
         id: loadFileDialog
         currentFolder: StandardPaths.standardLocations(

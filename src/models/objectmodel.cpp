@@ -13,6 +13,11 @@ void MObjectModel::addMObject(AbstractItem *object)
     endInsertRows();
 }
 
+void MObjectModel::removeMObject(const int index)
+{
+    m_objects.remove(index);
+}
+
 int MObjectModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);

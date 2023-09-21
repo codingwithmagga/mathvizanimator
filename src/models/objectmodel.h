@@ -19,6 +19,7 @@ public:
 
 public slots:
     void addMObject(AbstractItem *object);
+    void removeMObject(const int index);
 
 private:
     QList<AbstractItem *> m_objects;
