@@ -24,10 +24,7 @@ ApplicationWindow {
     Shortcut {
         sequences: [StandardKey.Delete]
         onActivated: {
-            mObjectsListModel.remove(mObjectsListView.currentIndex)
-
-            // only works first time
-            selectArea.objs[mObjectsListView.currentIndex].destroy()
+            main_window.removeRow(mObjectsListView.currentRow)
         }
     }
 
@@ -50,7 +47,7 @@ ApplicationWindow {
         fileMode: FileDialog.SaveFile
         nameFilters: ["JSON (*.json)"]
 
-        onAccepted: main_window.save(selectedFile, selectArea.objs)
+        onAccepted: main_window.save(selectedFile)
     }
 
     Popup {
@@ -98,14 +95,7 @@ ApplicationWindow {
 
                 text: qsTr("&New...")
                 onTriggered: {
-
-                    function destroyElement(value) {
-                        value.destroy()
-                    }
-
-                    mObjectsListModel.clear()
-                    selectArea.objs.forEach(destroyElement)
-                    selectArea.objs = []
+                    main_window.clearAllItems()
                 }
             }
             Action {
@@ -137,7 +127,7 @@ ApplicationWindow {
             Action {
                 text: qsTr("&Render")
 
-                onTriggered: main_window.buttonClicked(selectArea.objs)
+                onTriggered: main_window.render()
             }
             Action {
                 text: qsTr("&Snapshot")
@@ -191,7 +181,6 @@ ApplicationWindow {
 
             property var abstractItem: null
             property var abstractComponent: null
-            property var objs: []
 
             signal itemAdded(Item item)
 
@@ -200,6 +189,13 @@ ApplicationWindow {
             Drag.keys: [root.thekey]
 
             onDropped: drop => {
+                           function itemClicked(itemName) {
+                               var row = main_window.getRowByItemName(itemName)
+                               selectionModel.setCurrentIndex(
+                                           selectionModel.model.index(row, 0),
+                                           ItemSelectionModel.Current)
+                           }
+
                            drop.accept(Qt.MoveAction)
 
                            const component = Qt.createComponent(
@@ -214,8 +210,9 @@ ApplicationWindow {
                                        "init": true
                                    })
 
+                               abstractItem.clicked.connect(itemClicked)
+
                                itemAdded(abstractItem)
-                               objs.push(abstractItem.item)
                            } else {
                                console.log("Error creating object")
                            }
@@ -227,6 +224,14 @@ ApplicationWindow {
 
                 anchors.fill: parent
                 color: "white"
+            }
+
+            TapHandler {
+                onTapped: {
+                    selectionModel.setCurrentIndex(
+                                selectionModel.model.index(-1, 0),
+                                ItemSelectionModel.Current)
+                }
             }
         }
 

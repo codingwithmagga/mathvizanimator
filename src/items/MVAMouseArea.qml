@@ -6,6 +6,7 @@ MouseArea {
     property var highlightRect: null
     property int highlightRectMargin: 10
 
+    //onClicked:
     onPressed: mouse => {
                    dragActive = true
                    drag.target = parent

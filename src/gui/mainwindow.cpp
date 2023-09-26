@@ -28,10 +28,8 @@ MainWindow::MainWindow(QQmlApplicationEngine *const engine)
     m_itemModel.setHorizontalHeaderItem(1, headerItemRight);
 }
 
-void MainWindow::buttonClicked(const QVariantList &list)
+void MainWindow::render()
 {
-    scene_elements = list;
-
     QString program = "/usr/bin/ffmpeg";
     QStringList arguments;
     arguments << "-y"
@@ -66,24 +64,19 @@ void MainWindow::processStarted()
     const int num_frames = 72;
 
     for (int frame = 0; frame < num_frames; ++frame) {
-        auto alphaval = (double) frame / (double) num_frames;
+        //        auto alphaval = (double) frame / (double) num_frames;
 
         QImage image(600, 400, QImage::Format::Format_ARGB32);
         image.fill("white");
         QPainter painter(&image);
 
-        for (const auto &element : scene_elements) {
-            const auto qobj = qvariant_cast<AbstractItem *>(element);
+        for (const auto &item : m_item_list) {
+            const auto qobj = qvariant_cast<AbstractItem *>(item->property("item"));
 
             painter.save();
             painter.translate(qobj->parentItem()->position());
             qobj->paint(&painter);
             painter.restore();
-
-            //            for (int i = 0; i < qobj->metaObject()->propertyCount(); ++i) {
-            //                qDebug() << qobj->metaObject()->property(i).name()
-            //                         << qobj->metaObject()->property(i).read(qobj);
-            //            }
         }
 
         auto imageData = reinterpret_cast<const char *>(image.bits());
@@ -96,17 +89,19 @@ void MainWindow::processStarted()
 
 void MainWindow::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    Q_UNUSED(exitCode)
+
     qCDebug(rendering) << "Process finished with status: " << exitStatus;
 }
 
-void MainWindow::save(const QVariant &file, const QVariantList &scene_elements) const
+void MainWindow::save(const QVariant &file) const
 {
     QJsonObject save_json;
     int count = 0;
     QString element_prefix = "element_";
 
-    for (const auto &element : scene_elements) {
-        const auto qobj = qvariant_cast<AbstractItem *>(element);
+    for (const auto &item : m_item_list) {
+        const auto qobj = qvariant_cast<AbstractItem *>(item->property("item"));
 
         const auto json_element = qobj->toJson();
         save_json[element_prefix + QString::number(count)] = json_element;
@@ -123,7 +118,7 @@ void MainWindow::save(const QVariant &file, const QVariantList &scene_elements) 
     saveFile.write(QJsonDocument(save_json).toJson());
 }
 
-void MainWindow::load(const QVariant &file) const
+void MainWindow::load(const QVariant &file)
 {
     QFile loadFile(file.toUrl().toLocalFile());
 
@@ -161,18 +156,84 @@ void MainWindow::load(const QVariant &file) const
             qWarning("item  not found!");
         }
         item->setParentItem(qobject_cast<QQuickItem *>(oSelectArea));
+        addItem(item);
     }
 }
 
 void MainWindow::addItem(QQuickItem *item)
 {
     const auto qobj = item;
-    //qvariant_cast<QQuickItem *>(item);
     m_item_list.append(qobj);
 
     const auto abstractItem = qvariant_cast<AbstractItem *>(item->property("item"));
 
-    QStandardItem *itemName = new QStandardItem(abstractItem->name());
-    QStandardItem *itemType = new QStandardItem(abstractItem->metaObject()->className());
-    m_itemModel.appendRow(QList<QStandardItem *>{itemName, itemType});
+    const auto itemName = abstractItem->name();
+
+    int nameCounter = 0;
+    for (const auto item : m_item_list) {
+        const auto checkItemName = qvariant_cast<AbstractItem *>(item->property("item"))->name();
+
+        if (checkItemName.startsWith(itemName)) {
+            ++nameCounter;
+        }
+    }
+
+    abstractItem->setName(itemName + "_" + QString::number(nameCounter));
+
+    QStandardItem *stdItemName(new QStandardItem(abstractItem->name()));
+    QStandardItem *stdItemType(new QStandardItem(abstractItem->metaObject()->className()));
+    m_itemModel.appendRow(QList<QStandardItem *>{stdItemName, stdItemType});
+}
+
+void MainWindow::removeItem(QQuickItem *item)
+{
+    m_item_list.removeOne(item);
+
+    auto itemNameList = m_itemModel.findItems("itemName");
+    for (auto &item : itemNameList) {
+        m_itemModel.removeRow(item->row());
+    }
+
+    item->deleteLater();
+}
+
+void MainWindow::removeRow(const int row)
+{
+    if (row == -1) {
+        return;
+    }
+
+    m_itemModel.removeRow(row);
+
+    if (m_item_list.size() <= row) {
+        qCCritical(rendering) << "Row to delete is larger than item size!";
+        return;
+    }
+
+    auto item = m_item_list.at(row);
+    m_item_list.removeAt(row);
+
+    item->deleteLater();
+}
+
+int MainWindow::getRowByItemName(QVariant name)
+{
+    const auto itemName = name.toString();
+
+    const auto itemList = m_itemModel.findItems(itemName);
+
+    if (itemList.isEmpty()) {
+        qCCritical(rendering) << "Can't find clicked item. This shouldn't happen!";
+        return -1;
+    }
+
+    return itemList.at(0)->row();
+}
+
+void MainWindow::clearAllItems()
+{
+    qDeleteAll(m_item_list.begin(), m_item_list.end());
+    m_item_list.clear();
+
+    m_itemModel.removeRows(0, m_itemModel.rowCount());
 }

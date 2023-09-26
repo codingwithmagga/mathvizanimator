@@ -10,6 +10,8 @@ Item {
     property string dragKey: ""
     property bool init: false
 
+    signal clicked(string name)
+
     width: 100
     height: 100
 
@@ -27,6 +29,11 @@ Item {
 
         MVAMouseArea {
             anchors.fill: parent
+
+            onClicked: {
+                rootMVARectangle.clicked(rectangleItem.name)
+                console.log(rectangleItem.name + " clicked")
+            }
         }
     }
 }
