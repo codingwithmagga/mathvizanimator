@@ -5,6 +5,8 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <iostream>
 
+#include <QQuickItem>
+
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
@@ -30,6 +32,16 @@ int main(int argc, char *argv[])
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.load(url);
+
+    const auto rootObject = engine.rootObjects().first();
+    const auto selectArea = rootObject->findChild<QObject *>("selectArea");
+
+    // clang-format off
+    QObject::connect(selectArea,
+                     SIGNAL(itemAdded(QQuickItem*)),
+                     &main_window,
+                     SLOT(addItem(QQuickItem*)));
+    // clang-format on
 
     return app.exec();
 }

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QProcess>
 #include <QQmlApplicationEngine>
+#include <QQuickItem>
+#include <QStandardItemModel>
 
 class MainWindow : public QObject
 {
@@ -21,8 +23,13 @@ public slots:
     void save(const QVariant &file, const QVariantList &scene_elements) const;
     void load(const QVariant &file) const;
 
+    void addItem(QQuickItem *item);
+
 private:
     QVariantList scene_elements;
+    QList<QQuickItem *> m_item_list;
+
+    QStandardItemModel m_itemModel;
 
     QQmlApplicationEngine *m_qml_engine;
 };

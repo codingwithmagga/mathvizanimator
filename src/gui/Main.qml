@@ -21,8 +21,6 @@ ApplicationWindow {
     property var dragItem: null
     property bool objectDragActive: false
 
-    onActiveFocusItemChanged: print("activeFocusItem", activeFocusItem)
-
     Shortcut {
         sequences: [StandardKey.Delete]
         onActivated: {
@@ -85,8 +83,16 @@ ApplicationWindow {
     }
 
     menuBar: MenuBar {
+        anchors.leftMargin: 0
+        anchors.rightMargin: 0
+
+        background: Rectangle {
+            color: palette.dark
+        }
+
         Menu {
             title: qsTr("&File")
+
             Action {
                 id: newAction
 
@@ -187,6 +193,8 @@ ApplicationWindow {
             property var abstractComponent: null
             property var objs: []
 
+            signal itemAdded(Item item)
+
             clip: true
 
             Drag.keys: [root.thekey]
@@ -206,9 +214,7 @@ ApplicationWindow {
                                        "init": true
                                    })
 
-                               mObjectsListModel.append({
-                                                            "name": abstractItem.item.name
-                                                        })
+                               itemAdded(abstractItem)
                                objs.push(abstractItem.item)
                            } else {
                                console.log("Error creating object")
@@ -224,56 +230,64 @@ ApplicationWindow {
             }
         }
 
-        ColumnLayout {
-
-            spacing: 5
-
-            Layout.minimumWidth: 50
-            Layout.preferredWidth: 100
-            Layout.maximumWidth: 100
-            Layout.minimumHeight: 150
-            Layout.fillHeight: true
-            Layout.margins: 20
-
-            Button {
-                text: "Render"
-                onClicked: main_window.buttonClicked(selectArea.objs)
-            }
-        }
-
-        ListView {
-            id: mObjectsListView
-
+        Rectangle {
+            color: palette.dark
             Layout.minimumWidth: 150
-            Layout.preferredWidth: 200
-            Layout.maximumWidth: 300
+            Layout.preferredWidth: 300
+            Layout.maximumWidth: 400
             Layout.minimumHeight: 150
             Layout.fillHeight: true
             Layout.margins: 20
 
-            model: ListModel {
-                id: mObjectsListModel
-            }
+            TableView {
+                id: mObjectsListView
 
-            highlight: Rectangle {
-                color: "lightsteelblue"
-                radius: 5
-            }
-            focus: true
+                anchors.fill: parent
 
-            delegate: Label {
+                rowSpacing: 4
+                columnSpacing: 2
+                anchors.topMargin: horizontalHeader.implicitHeight
 
-                text: 'Name: ' + name
-
-                MouseArea {
-                    id: mObjectsListViewItemMouseArea
-                    anchors.fill: parent
-
-                    onClicked: mObjectsListView.currentIndex = index
+                columnWidthProvider: function (column) {
+                    return mObjectsListView.width / 2
                 }
+
+                model: item_model
+
+                selectionModel: ItemSelectionModel {
+                    id: selectionModel
+
+                    // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
+                    // maybe happens when using the same model twice?
+                    model: item_model
+                }
+
+                delegate: Label {
+                    required property bool current
+
+                    id: delegateLabel
+
+                    text: display
+                    padding: 10
+
+                    color: row === mObjectsListView.currentRow ? palette.highlightedText : palette.text
+                    background: Rectangle {
+                        anchors.fill: parent
+
+                        color: row === mObjectsListView.currentRow ? palette.highlight : palette.dark
+                    }
+                }
+
+                onCurrentRowChanged: console.log("current row changed")
             }
 
-            onCurrentIndexChanged: console.log("current index changed")
+            HorizontalHeaderView {
+                id: horizontalHeader
+                syncView: mObjectsListView
+                anchors.left: mObjectsListView.left
+                anchors.top: parent.top
+                clip: true
+            }
         }
     }
 }

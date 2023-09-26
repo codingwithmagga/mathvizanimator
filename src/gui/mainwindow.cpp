@@ -13,12 +13,20 @@
 
 #include "abstractitem.h"
 #include "logging.h"
+#include "qqmlcontext.h"
 
 QProcess *myProcess = new QProcess();
 
 MainWindow::MainWindow(QQmlApplicationEngine *const engine)
     : m_qml_engine(engine)
-{}
+{
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"), &m_itemModel);
+
+    QStandardItem *headerItemLeft = new QStandardItem(tr("Name"));
+    QStandardItem *headerItemRight = new QStandardItem(tr("Type"));
+    m_itemModel.setHorizontalHeaderItem(0, headerItemLeft);
+    m_itemModel.setHorizontalHeaderItem(1, headerItemRight);
+}
 
 void MainWindow::buttonClicked(const QVariantList &list)
 {
@@ -154,4 +162,17 @@ void MainWindow::load(const QVariant &file) const
         }
         item->setParentItem(qobject_cast<QQuickItem *>(oSelectArea));
     }
+}
+
+void MainWindow::addItem(QQuickItem *item)
+{
+    const auto qobj = item;
+    //qvariant_cast<QQuickItem *>(item);
+    m_item_list.append(qobj);
+
+    const auto abstractItem = qvariant_cast<AbstractItem *>(item->property("item"));
+
+    QStandardItem *itemName = new QStandardItem(abstractItem->name());
+    QStandardItem *itemType = new QStandardItem(abstractItem->metaObject()->className());
+    m_itemModel.appendRow(QList<QStandardItem *>{itemName, itemType});
 }
