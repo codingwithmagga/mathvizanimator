@@ -38,6 +38,7 @@ jobs:
         working-directory: '${{ runner.temp }}\build'
         run: |
           cmake ${{ env.SOURCE_DIR }}
+          ls
           cmake --build .
       - name: (8) Zip build
         working-directory: '${{ runner.temp }}'
