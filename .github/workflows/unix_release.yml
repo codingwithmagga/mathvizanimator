@@ -32,15 +32,6 @@ jobs:
           dir: '${{ runner.temp }}'
           setup-python: false
           aqtversion: ==3.1.*
-      - name: (4) Download JOM
-        uses: suisei-cn/actions-download-file@v1
-        with:
-          url: 'http://download.qt.io/official_releases/jom/jom.zip'
-          target: '${{ runner.temp }}\'
-      - name: (5) Unzip JOM
-        working-directory: '${{ runner.temp }}'
-        run: |
-          7z x jom.zip -ojom
       - name: (6) Create build directory
         run: 'mkdir ${{ runner.temp }}\build'
       - name: (7) Build
