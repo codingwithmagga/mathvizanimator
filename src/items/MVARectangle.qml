@@ -32,7 +32,6 @@ Item {
 
             onClicked: {
                 rootMVARectangle.clicked(rectangleItem.name)
-                console.log(rectangleItem.name + " clicked")
             }
         }
     }

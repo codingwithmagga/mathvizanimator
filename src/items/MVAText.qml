@@ -12,6 +12,8 @@ Item {
     property bool init: false
     property string dragKey: ""
 
+    signal clicked(string name)
+
     Drag.active: dragActive
     Drag.keys: dragKey
 
@@ -29,6 +31,10 @@ Item {
 
         MVAMouseArea {
             anchors.fill: parent
+
+            onClicked: {
+                rootMVAText.clicked(textItem.name)
+            }
         }
     }
 
