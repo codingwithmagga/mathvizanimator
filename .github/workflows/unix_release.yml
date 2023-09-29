@@ -19,10 +19,10 @@ jobs:
     runs-on:  ubuntu-latest
 
     steps:
-		- name: (1) Checkout repo
-		    uses: actions/checkout@v3
-		    with:
-		      submodules: recursive
+        - name: (1) Checkout repo
+            uses: actions/checkout@v3
+            with:
+                submodules: recursive
 
 		- name: (2) Get all tags for correct version determination
 		    working-directory:  ${{ github.workspace }}
