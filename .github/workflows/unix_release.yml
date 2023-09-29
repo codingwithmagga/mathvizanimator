@@ -9,7 +9,7 @@ defaults:
 env:
   SOURCE_DIR: '${{ github.workspace }}'
   QT_VERSION: 6.5.1
-  ARTIFACT: qt-mva-build.zip
+  ARTIFACT: mva-ubuntu-release
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,20 +32,20 @@ jobs:
           dir: '${{ runner.temp }}'
           setup-python: false
           aqtversion: ==3.1.*
-      - name: (6) Create build directory
+      - name: (4) Create build directory
         run: 'mkdir ${{ runner.temp }}/build'
-      - name: (7) Build
+      - name: (5) Build
         working-directory: '${{ runner.temp }}/build'
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
-      - name: (8) Zip build
+      - name: (6) Zip build
         working-directory: '${{ runner.temp }}'
         run: |
           7z a qt-mva-build.zip ${{ runner.temp }}/build/* -r
           ls
-      - name: (9) Save build artifact
+      - name: (7) Save build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: 'mva-build'
-          path: '${{ runner.temp }}/${{ env.ARTIFACT }}'
+          name: '${{ env.ARTIFACT }}'
+          path: '${{ runner.temp }}/build/'
