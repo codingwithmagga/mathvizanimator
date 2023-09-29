@@ -33,9 +33,9 @@ jobs:
           setup-python: false
           aqtversion: ==3.1.*
       - name: (6) Create build directory
-        run: 'mkdir ${{ runner.temp }}\build'
+        run: 'mkdir ${{ runner.temp }}/build'
       - name: (7) Build
-        working-directory: '${{ runner.temp }}\build'
+        working-directory: '${{ runner.temp }}/build'
         run: |
           cmake ${{ env.SOURCE_DIR }}
           ls
@@ -43,9 +43,9 @@ jobs:
       - name: (8) Zip build
         working-directory: '${{ runner.temp }}'
         run: |
-          7z a qt-mva-build.zip ${{ runner.temp }}\build\* -r
+          7z a qt-mva-build.zip ${{ runner.temp }}/build/* -r
       - name: (9) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: '${{ env.ARTIFACT }}'
-          path: '${{ runner.temp }}\${{ env.ARTIFACT }}'
+          path: '${{ runner.temp }}/${{ env.ARTIFACT }}'
