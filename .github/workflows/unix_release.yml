@@ -8,7 +8,7 @@ defaults:
     shell: bash
 env:
   SOURCE_DIR: '${{ github.workspace }}'
-  QT_VERSION: 6.5.2
+  QT_VERSION: 6.5.1
   ARTIFACT: qt-mva-build.zip
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
       - name: (7) Build
         working-directory: '${{ runner.temp }}/build'
         run: |
-          cmake ${{ env.SOURCE_DIR }}
+          cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           ls
           cmake --build .
       - name: (8) Zip build
