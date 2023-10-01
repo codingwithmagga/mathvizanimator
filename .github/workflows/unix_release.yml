@@ -2,7 +2,7 @@ run-name: 'Deploy to ubuntu by @${{ github.actor }}'
 'on':
   push:
     branches:
-      - pre_alpha
+      - pre_alpha*
 defaults:
   run:
     shell: bash
