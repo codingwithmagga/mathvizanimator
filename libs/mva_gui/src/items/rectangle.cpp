@@ -4,7 +4,7 @@
 #include <QPen>
 
 RectangleItem::RectangleItem(QQuickItem *parent)
-    : AbstractItem{"qrc:/qt/qml/cwa/mva/items/MVARectangle.qml", parent}
+    : AbstractItem{"qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml", parent}
 {}
 
 void RectangleItem::paint(QPainter *painter)

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import cwa.mva
+import cwa.mva.gui
 
 Item {
     id: rootMVAText

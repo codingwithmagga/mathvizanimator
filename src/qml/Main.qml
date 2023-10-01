@@ -6,7 +6,7 @@ import QtQuick.Dialogs
 
 import QtCore
 
-import cwa.mva
+import cwa.mva.gui
 
 ApplicationWindow {
     id: root
@@ -198,6 +198,7 @@ ApplicationWindow {
 
                            drop.accept(Qt.MoveAction)
 
+                           console.log("qml file: " + drag.source.item.file)
                            const component = Qt.createComponent(
                                drag.source.item.file)
 

@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     //        qDebug() << it.next();
     //    }
 
-    const QUrl url("qrc:/qt/qml/cwa/mva/gui/Main.qml");
+    const QUrl url("qrc:/qt/qml/cwa/mva/app/qml/Main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);

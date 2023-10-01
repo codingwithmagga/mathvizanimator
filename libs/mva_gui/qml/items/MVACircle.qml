@@ -1,6 +1,6 @@
 import QtQuick
 
-import cwa.mva
+import cwa.mva.gui
 
 Item {
     id: rootMVACircle

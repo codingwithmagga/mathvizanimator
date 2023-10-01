@@ -7,7 +7,7 @@
 #include <QSvgRenderer>
 
 TextItem::TextItem(QQuickItem *parent)
-    : AbstractItem{"qrc:/qt/qml/cwa/mva/items/MVAText.qml", parent}
+    : AbstractItem{"qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent}
 {}
 
 void TextItem::setSvgFile(const QFileInfo &newSvgFile)
