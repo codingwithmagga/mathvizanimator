@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    engine.addImportPath(QStringLiteral(":/"));
 
     MainWindow main_window(&engine);
     engine.rootContext()->setContextProperty(QStringLiteral("main_window"), &main_window);

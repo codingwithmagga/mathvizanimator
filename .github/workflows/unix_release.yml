@@ -39,12 +39,16 @@ jobs:
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
-      - name: (6) Zip build
+      - name: (6) Run tests
+        working-directory: '${{ runner.temp }}/build/tests'
+        run: |
+          ctest --output-on-failure 
+      - name: (7) Zip build
         working-directory: '${{ runner.temp }}'
         run: |
           7z a qt-mva-build.zip ${{ runner.temp }}/build/* -r
           ls
-      - name: (7) Save build artifact
+      - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: '${{ env.ARTIFACT }}'

@@ -147,7 +147,9 @@ void MainWindow::load(const QVariant &file)
 
         QQmlComponent component(m_qml_engine, QUrl(element["item.file"].toString()));
 
-        QObject *comp = component.createWithInitialProperties(element.toVariantMap());
+        auto elementProperties = element.toVariantMap();
+        elementProperties.insert("parent", QVariant::fromValue(oSelectArea));
+        QObject *comp = component.createWithInitialProperties(elementProperties);
         if (!comp) {
             qWarning("comp not found!");
         }
@@ -155,7 +157,7 @@ void MainWindow::load(const QVariant &file)
         if (!item) {
             qWarning("item  not found!");
         }
-        item->setParentItem(qobject_cast<QQuickItem *>(oSelectArea));
+        //item->setParentItem(qobject_cast<QQuickItem *>(oSelectArea));
         addItem(item);
     }
 }

@@ -17,4 +17,6 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 
 qt_standard_project_setup()
 
+add_subdirectory(libs/mva_workflow)
 add_subdirectory(src)
+add_subdirectory(tests)
