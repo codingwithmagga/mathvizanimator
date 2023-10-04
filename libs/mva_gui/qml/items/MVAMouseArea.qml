@@ -6,7 +6,6 @@ MouseArea {
     property var highlightRect: null
     property int highlightRectMargin: 10
 
-    //onClicked:
     onPressed: mouse => {
                    dragActive = true
                    drag.target = parent
@@ -17,12 +16,13 @@ MouseArea {
                        highlightRect = component.createObject(parent, {})
                    } else {
                        console.log(
-                           "Error creating Highlight Rectangle when moving item.")
+                           "Error creating Highlight Rectangle while moving item.")
                    }
                }
 
     onReleased: {
         dragActive = false
+        drag.target = null
         highlightRect.destroy()
     }
 }

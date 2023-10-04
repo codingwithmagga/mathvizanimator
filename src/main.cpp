@@ -20,13 +20,15 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     engine.addImportPath(QStringLiteral(":/"));
 
+    qDebug() << "import list: " << engine.importPathList();
+
     MainWindow main_window(&engine);
     engine.rootContext()->setContextProperty(QStringLiteral("main_window"), &main_window);
 
-    //    QDirIterator it(":", QDirIterator::Subdirectories);
-    //    while (it.hasNext()) {
-    //        qDebug() << it.next();
-    //    }
+    QDirIterator it(":", QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        qDebug() << it.next();
+    }
 
     const QUrl url("qrc:/qt/qml/cwa/mva/app/qml/Main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,

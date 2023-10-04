@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 
 project(mathvizanimator-app VERSION ${PROJECT_VERSION} LANGUAGES CXX)
-
-set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/libs/mva/gui CACHE STRING "" FORCE)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Svg)
 
@@ -37,6 +35,7 @@ target_link_libraries(mva-app
         Qt6::Quick
         Qt6::Svg
         mva::gui
+        mva::guiplugin
 )
 
 target_include_directories(mva-app

@@ -15,12 +15,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(PROJECT_MAIN_VERSION ${PROJECT_VERSION})
+# For QtCreator to recognize the qml gui lib
+set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/libs/mva_gui CACHE STRING "" FORCE)
 
 enable_cxx_compiler_flag_if_supported("-Wall")
 enable_cxx_compiler_flag_if_supported("-Werror")
 enable_cxx_compiler_flag_if_supported("-Wextra")
 enable_cxx_compiler_flag_if_supported("-pedantic")
-
-message("here")
-

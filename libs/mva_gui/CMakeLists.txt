@@ -9,16 +9,14 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Svg)
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
-qt_add_library(mva_gui
-    SHARED
+qt_add_library(cwa.mva.gui
+    STATIC
     include/private/logging.h
 
     src/logging.cpp
 )
 
-add_library(mva::gui ALIAS mva_gui)
-
-qt_add_qml_module(mva_gui
+qt_add_qml_module(cwa.mva.gui
     URI cwa.mva.gui
     VERSION ${PROJECT_VERSION}
     QML_FILES
@@ -43,15 +41,24 @@ qt_add_qml_module(mva_gui
     OUTPUT_DIRECTORY cwa/mva/gui
 )
 
-target_link_libraries(mva_gui
+target_link_libraries(cwa.mva.gui
     PRIVATE
         Qt6::Quick
         Qt6::Svg
 )
 
-target_include_directories(mva_gui
+target_include_directories(cwa.mva.gui
     PUBLIC
         include/items
     PRIVATE
         include/private
 )
+
+add_library(mva::gui ALIAS cwa.mva.gui)
+add_library(mva::guiplugin ALIAS cwa.mva.guiplugin)
+
+# TODO: Needs to be changed for other systems (Windows, MAC)
+configure_file(templates/template.tex $ENV{HOME}/.config/mathvizanimator/templates/template.tex)
+configure_file(templates/test.svg $ENV{HOME}/.config/mathvizanimator/templates/test.svg)
+
+add_subdirectory(tests)

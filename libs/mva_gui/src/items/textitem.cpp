@@ -1,6 +1,7 @@
 #include "textitem.h"
 
 #include <QCryptographicHash>
+#include <QDir>
 #include <QPainter>
 #include <QPen>
 #include <QProcess>
@@ -14,6 +15,7 @@ void TextItem::setSvgFile(const QFileInfo &newSvgFile)
 {
     m_svg_file = newSvgFile;
     update();
+    emit svgFileChanged(newSvgFile);
 }
 
 void TextItem::setSvgFile(const QString &newSvgFile)
@@ -55,23 +57,20 @@ QString TextItem::getLatexSource() const
 
 void TextItem::setLatexSource(const QString &newLatexSource)
 {
-    m_latex_source = newLatexSource;
-
-    QFile latexTemplateFile("template.tex");
+    QFile latexTemplateFile(
+        QDir::home().absoluteFilePath(".config/mathvizanimator/templates/template.tex"));
     if (!latexTemplateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Cannot open: " << latexTemplateFile.fileName();
+        qCritical() << "Cannot open: " << latexTemplateFile.fileName();
         return;
     }
 
     QString latexTemplate = latexTemplateFile.readAll();
     latexTemplateFile.close();
 
-    latexTemplate.replace("%PLACEHOLDER%", m_latex_source);
+    latexTemplate.replace("%PLACEHOLDER%", newLatexSource);
 
     const auto hash = QString(
         QCryptographicHash::hash(latexTemplate.toUtf8(), QCryptographicHash::Md5).toHex());
-
-    qInfo() << "hash: " << hash;
 
     QFileInfo svgFile(hash + ".svg");
     if (svgFile.exists()) {
@@ -97,4 +96,7 @@ void TextItem::setLatexSource(const QString &newLatexSource)
     qInfo() << QProcess::execute("latexmk", QStringList{} << "-C");
 
     setSvgFile(QFileInfo(hash + ".svg"));
+
+    m_latex_source = newLatexSource;
+    emit latexSourceChanged(newLatexSource);
 }
