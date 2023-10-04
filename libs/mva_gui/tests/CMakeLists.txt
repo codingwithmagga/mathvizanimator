@@ -7,12 +7,12 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS QuickTest)
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
-qt_add_executable(item_tests main.cpp)
+qt_add_executable(qml_item_tests qml/main.cpp)
 
-add_test(NAME item_tests COMMAND item_tests)
+add_test(NAME qml_item_tests COMMAND qml_item_tests)
 
 target_link_libraries(
-    item_tests
+    qml_item_tests
     PRIVATE Qt6::QuickTest
     PRIVATE Qt6::Qml
     PRIVATE mva::gui

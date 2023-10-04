@@ -40,7 +40,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
       - name: (6) Run tests
-        working-directory: '${{ runner.temp }}/build/tests'
+        working-directory: '${{ runner.temp }}/build'
         run: |
           ctest --output-on-failure 
       - name: (7) Zip build
