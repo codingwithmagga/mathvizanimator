@@ -32,10 +32,6 @@ jobs:
           dir: '${{ runner.temp }}'
           setup-python: false
           aqtversion: ==3.1.*
-      - name: (3.1) Install libxcb
-        working-directory: '${{ github.workspace }}'
-        run: |
-           sudo apt-get install -y libxcb-xinerama0
       - name: (4) Create build directory
         run: 'mkdir ${{ runner.temp }}/build'
       - name: (5) Build
@@ -46,6 +42,7 @@ jobs:
       - name: (6) Run tests
         working-directory: '${{ runner.temp }}/build'
         run: |
+          export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
       - name: (7) Zip build
         working-directory: '${{ runner.temp }}'
