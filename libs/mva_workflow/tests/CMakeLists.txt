@@ -10,8 +10,6 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Test)
 
 qt_standard_project_setup()
 
-enable_testing(true)
-
 qt_add_executable(sfh_test_exe workflow/tst_savefilehandler.cpp)
 add_test(NAME sfh_test COMMAND sfh_test_exe)
 

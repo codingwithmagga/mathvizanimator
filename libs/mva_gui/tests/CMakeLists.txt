@@ -7,8 +7,6 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS QuickTest)
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
-enable_testing(true)
-
 qt_add_executable(item_tests main.cpp)
 
 add_test(NAME item_tests COMMAND item_tests)
