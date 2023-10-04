@@ -7,21 +7,26 @@
 #include <QQuickItem>
 #include <QStandardItemModel>
 
-class MainWindow : public QObject
+#include "savefilehandler.h"
+
+class MainWindowHandler : public QObject
 {
 
     Q_OBJECT
 
 public:
-    MainWindow(QQmlApplicationEngine *const engine);
+    MainWindowHandler(QQmlApplicationEngine *const engine);
+
+    void init();
 
 public slots:
+
     void render();
 
     void processStarted();
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
-    void save(const QVariant &file) const;
+    void save(const QVariant &file);
     void load(const QVariant &file);
 
     void addItem(QQuickItem *item);
@@ -34,10 +39,12 @@ public slots:
 
 private:
     QList<QQuickItem *> m_item_list;
-
     QStandardItemModel m_itemModel;
 
     QQmlApplicationEngine *m_qml_engine;
+    QObject *m_qml_creation_area;
+
+    SaveFileHandler m_savefile_handler;
 };
 
 #endif // MAINWINDOW_H

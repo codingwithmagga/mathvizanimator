@@ -1,4 +1,3 @@
-#include <QDirIterator>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -18,17 +17,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.addImportPath(QStringLiteral(":/"));
 
-    qDebug() << "import list: " << engine.importPathList();
-
-    MainWindow main_window(&engine);
-    engine.rootContext()->setContextProperty(QStringLiteral("main_window"), &main_window);
-
-    QDirIterator it(":", QDirIterator::Subdirectories);
-    while (it.hasNext()) {
-        qDebug() << it.next();
-    }
+    MainWindowHandler main_window(&engine);
 
     const QUrl url("qrc:/qt/qml/cwa/mva/app/qml/Main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
@@ -36,15 +26,7 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection);
     engine.load(url);
 
-    const auto rootObject = engine.rootObjects().first();
-    const auto selectArea = rootObject->findChild<QObject *>("selectArea");
-
-    // clang-format off
-    QObject::connect(selectArea,
-                     SIGNAL(itemAdded(QQuickItem*)),
-                     &main_window,
-                     SLOT(addItem(QQuickItem*)));
-    // clang-format on
+    main_window.init();
 
     return app.exec();
 }

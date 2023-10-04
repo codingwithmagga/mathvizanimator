@@ -10,7 +10,6 @@ qt_standard_project_setup()
 qt_add_executable(mva-app
     main.cpp
     gui/mainwindow.cpp
-    models/objectmodel.cpp
     workflow/logging.cpp
 )
 
@@ -23,7 +22,7 @@ qt_add_qml_module(mva-app
 )
 
 set_target_properties(mva-app PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+    MACOSX_BUNDLE_GUI_IDENTIFIER cwa.mva.app
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -32,16 +31,14 @@ set_target_properties(mva-app PROPERTIES
 
 target_link_libraries(mva-app
     PRIVATE
-        Qt6::Quick
-        Qt6::Svg
         mva::gui
         mva::guiplugin
+        mva::workflow
 )
 
 target_include_directories(mva-app
     PRIVATE
         items
-        models
         gui
         workflow
 )

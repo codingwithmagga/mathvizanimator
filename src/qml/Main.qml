@@ -170,8 +170,8 @@ ApplicationWindow {
         }
 
         DropArea {
-            id: selectArea
-            objectName: "selectArea"
+            id: creationArea
+            objectName: "creationArea"
 
             Layout.minimumWidth: 600
             Layout.minimumHeight: 400
@@ -205,7 +205,7 @@ ApplicationWindow {
                            if (component.status === Component.Ready) {
 
                                abstractItem = component.createObject(
-                                   selectArea, {
+                                   creationArea, {
                                        "x": drag.x,
                                        "y": drag.y,
                                        "init": true
