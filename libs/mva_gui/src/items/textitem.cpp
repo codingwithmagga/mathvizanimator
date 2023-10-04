@@ -74,6 +74,9 @@ void TextItem::setLatexSource(const QString &newLatexSource)
 
     QFileInfo svgFile(hash + ".svg");
     if (svgFile.exists()) {
+        m_latex_source = newLatexSource;
+        emit latexSourceChanged(newLatexSource);
+
         setSvgFile(svgFile);
         return;
     }

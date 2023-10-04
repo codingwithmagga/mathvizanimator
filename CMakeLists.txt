@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 
 set(PROJECT_VERSION 0.0.1)
 project(mathvizanimator VERSION ${PROJECT_VERSION} LANGUAGES CXX)

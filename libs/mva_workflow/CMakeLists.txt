@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 
 project(mva_workflow VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
@@ -18,7 +18,7 @@ qt_add_library(workflow
 add_library(mva::workflow ALIAS workflow)
 
 target_link_libraries(workflow
-    PRIVATE
+    PUBLIC
         Qt6::Core
 )
 

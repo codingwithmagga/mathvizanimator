@@ -42,7 +42,7 @@ qt_add_qml_module(cwa.mva.gui
 )
 
 target_link_libraries(cwa.mva.gui
-    PRIVATE
+    PUBLIC
         Qt6::Quick
         Qt6::Svg
 )

@@ -10,6 +10,7 @@
 class AbstractItem : public QQuickPaintedItem
 {
     Q_OBJECT
+    // TODO: Notify signal or MEMBER keyword
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(QColor color READ color WRITE setColor)
     Q_PROPERTY(QString file MEMBER m_qml_file)
