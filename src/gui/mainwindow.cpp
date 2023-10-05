@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QThread>
 
 #include "abstractitem.h"
@@ -17,18 +18,47 @@
 
 QProcess *myProcess = new QProcess();
 
-MainWindow::MainWindow(QQmlApplicationEngine *const engine)
+MainWindowHandler::MainWindowHandler(QQmlApplicationEngine *const engine)
     : m_qml_engine(engine)
 {
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("main_window"), this);
     m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"), &m_itemModel);
 
     QStandardItem *headerItemLeft = new QStandardItem(tr("Name"));
     QStandardItem *headerItemRight = new QStandardItem(tr("Type"));
     m_itemModel.setHorizontalHeaderItem(0, headerItemLeft);
     m_itemModel.setHorizontalHeaderItem(1, headerItemRight);
+
+    m_savefile_handler.setSaveDir(
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
 }
 
-void MainWindow::render()
+void MainWindowHandler::init()
+{
+    const auto rootObjects = m_qml_engine->rootObjects();
+
+    if (rootObjects.isEmpty()) {
+        qCCritical(mainwindow_handler)
+            << "No root objects found in current qml engine. Init aborted.";
+        return;
+    }
+
+    m_qml_creation_area = rootObjects.first()->findChild<QObject *>("creationArea");
+
+    if (!m_qml_creation_area) {
+        qCCritical(mainwindow_handler) << "Can't find creation area for videos. Init aborted.";
+        return;
+    }
+
+    // clang-format off
+    QObject::connect(m_qml_creation_area,
+                     SIGNAL(itemAdded(QQuickItem*)),
+                     this,
+                     SLOT(addItem(QQuickItem*)));
+    // clang-format on
+}
+
+void MainWindowHandler::render()
 {
     QString program = "/usr/bin/ffmpeg";
     QStringList arguments;
@@ -48,8 +78,8 @@ void MainWindow::render()
               << "libx264"
               << "render_test.mp4";
 
-    connect(myProcess, &QProcess::started, this, &MainWindow::processStarted);
-    connect(myProcess, &QProcess::finished, this, &MainWindow::processFinished);
+    connect(myProcess, &QProcess::started, this, &MainWindowHandler::processStarted);
+    connect(myProcess, &QProcess::finished, this, &MainWindowHandler::processFinished);
     connect(myProcess, &QProcess::readyRead, [=] {
         qCInfo(ffmpeg) << myProcess->readAllStandardOutput();
     });
@@ -59,7 +89,7 @@ void MainWindow::render()
     myProcess->start(program, arguments);
 }
 
-void MainWindow::processStarted()
+void MainWindowHandler::processStarted()
 {
     const int num_frames = 72;
 
@@ -87,14 +117,14 @@ void MainWindow::processStarted()
     myProcess->waitForFinished();
 }
 
-void MainWindow::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void MainWindowHandler::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     Q_UNUSED(exitCode)
 
     qCDebug(rendering) << "Process finished with status: " << exitStatus;
 }
 
-void MainWindow::save(const QVariant &file) const
+void MainWindowHandler::save(const QVariant &file)
 {
     QJsonObject save_json;
     int count = 0;
@@ -108,38 +138,17 @@ void MainWindow::save(const QVariant &file) const
         count++;
     }
 
-    QFile saveFile(file.toUrl().toLocalFile());
-
-    if (!saveFile.open(QIODevice::WriteOnly)) {
-        qWarning("Couldn't open save file.");
-        return;
-    }
-
-    saveFile.write(QJsonDocument(save_json).toJson());
+    QFileInfo save_fileinfo(file.toUrl().toLocalFile());
+    m_savefile_handler.setSaveDir(save_fileinfo.absoluteDir());
+    m_savefile_handler.saveJSON(save_fileinfo.fileName(), save_json);
 }
 
-void MainWindow::load(const QVariant &file)
+// TODO: Issue when loading data, items can't be selected anymore
+// Also _1 is appended every time.
+void MainWindowHandler::load(const QVariant &file)
 {
-    QFile loadFile(file.toUrl().toLocalFile());
-
-    if (!loadFile.open(QIODevice::ReadOnly)) {
-        qWarning() << "Couldn't open save file. " << file.toUrl();
-        return;
-    }
-
-    QByteArray saveData = loadFile.readAll();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-    QObject *oRootObject = dynamic_cast<QObject *>(m_qml_engine->rootObjects()[0]);
-    QObject *oSelectArea = oRootObject->findChild<QObject *>("selectArea");
-
-    if (!oRootObject) {
-        qWarning("oRootObject not found!");
-    }
-    if (!oSelectArea) {
-        qWarning("oSelectArea not found!");
-    }
+    QFileInfo load_fileinfo(file.toUrl().toLocalFile());
+    QJsonDocument loadDoc = m_savefile_handler.loadJSON(load_fileinfo);
 
     QJsonObject json = loadDoc.object();
     foreach (const QString &elementKey, json.keys()) {
@@ -147,7 +156,9 @@ void MainWindow::load(const QVariant &file)
 
         QQmlComponent component(m_qml_engine, QUrl(element["item.file"].toString()));
 
-        QObject *comp = component.createWithInitialProperties(element.toVariantMap());
+        auto elementProperties = element.toVariantMap();
+        elementProperties.insert("parent", QVariant::fromValue(m_qml_creation_area));
+        QObject *comp = component.createWithInitialProperties(elementProperties);
         if (!comp) {
             qWarning("comp not found!");
         }
@@ -155,12 +166,12 @@ void MainWindow::load(const QVariant &file)
         if (!item) {
             qWarning("item  not found!");
         }
-        item->setParentItem(qobject_cast<QQuickItem *>(oSelectArea));
+
         addItem(item);
     }
 }
 
-void MainWindow::addItem(QQuickItem *item)
+void MainWindowHandler::addItem(QQuickItem *item)
 {
     const auto qobj = item;
     m_item_list.append(qobj);
@@ -185,7 +196,7 @@ void MainWindow::addItem(QQuickItem *item)
     m_itemModel.appendRow(QList<QStandardItem *>{stdItemName, stdItemType});
 }
 
-void MainWindow::removeItem(QQuickItem *item)
+void MainWindowHandler::removeItem(QQuickItem *item)
 {
     m_item_list.removeOne(item);
 
@@ -197,7 +208,7 @@ void MainWindow::removeItem(QQuickItem *item)
     item->deleteLater();
 }
 
-void MainWindow::removeRow(const int row)
+void MainWindowHandler::removeRow(const int row)
 {
     if (row == -1) {
         return;
@@ -216,7 +227,7 @@ void MainWindow::removeRow(const int row)
     item->deleteLater();
 }
 
-int MainWindow::getRowByItemName(QVariant name)
+int MainWindowHandler::getRowByItemName(QVariant name)
 {
     const auto itemName = name.toString();
 
@@ -230,7 +241,7 @@ int MainWindow::getRowByItemName(QVariant name)
     return itemList.at(0)->row();
 }
 
-void MainWindow::clearAllItems()
+void MainWindowHandler::clearAllItems()
 {
     qDeleteAll(m_item_list.begin(), m_item_list.end());
     m_item_list.clear();

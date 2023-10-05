@@ -2,7 +2,7 @@ run-name: 'Deploy to ubuntu by @${{ github.actor }}'
 'on':
   push:
     branches:
-      - pre_alpha
+      - pre_alpha*
 defaults:
   run:
     shell: bash
@@ -32,6 +32,10 @@ jobs:
           dir: '${{ runner.temp }}'
           setup-python: false
           aqtversion: ==3.1.*
+      - name: (3.1) Install Latex
+        working-directory: '${{ github.workspace }}'
+        run: |
+          sudo apt-get install -y texlive-latex-extra latexmk
       - name: (4) Create build directory
         run: 'mkdir ${{ runner.temp }}/build'
       - name: (5) Build
@@ -39,12 +43,17 @@ jobs:
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
-      - name: (6) Zip build
+      - name: (6) Run tests
+        working-directory: '${{ runner.temp }}/build'
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          ctest --output-on-failure 
+      - name: (7) Zip build
         working-directory: '${{ runner.temp }}'
         run: |
           7z a qt-mva-build.zip ${{ runner.temp }}/build/* -r
           ls
-      - name: (7) Save build artifact
+      - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: '${{ env.ARTIFACT }}'

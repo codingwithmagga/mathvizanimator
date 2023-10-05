@@ -6,7 +6,7 @@ import QtQuick.Dialogs
 
 import QtCore
 
-import cwa.mva
+import cwa.mva.gui
 
 ApplicationWindow {
     id: root
@@ -170,8 +170,8 @@ ApplicationWindow {
         }
 
         DropArea {
-            id: selectArea
-            objectName: "selectArea"
+            id: creationArea
+            objectName: "creationArea"
 
             Layout.minimumWidth: 600
             Layout.minimumHeight: 400
@@ -198,13 +198,14 @@ ApplicationWindow {
 
                            drop.accept(Qt.MoveAction)
 
+                           console.log("qml file: " + drag.source.item.file)
                            const component = Qt.createComponent(
                                drag.source.item.file)
 
                            if (component.status === Component.Ready) {
 
                                abstractItem = component.createObject(
-                                   selectArea, {
+                                   creationArea, {
                                        "x": drag.x,
                                        "y": drag.y,
                                        "init": true

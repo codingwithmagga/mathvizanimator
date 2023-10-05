@@ -11,6 +11,8 @@ Item {
         function createShadow(file, mouse) {
             var point = mapToItem(root, mouseX, mouseY)
 
+            console.log("file: " + file)
+
             const component = Qt.createComponent(file)
             if (component.status === Component.Ready) {
                 var object = component.createObject(root, {

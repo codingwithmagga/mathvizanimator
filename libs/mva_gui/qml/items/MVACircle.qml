@@ -1,22 +1,11 @@
 import QtQuick
 
-import cwa.mva
+import cwa.mva.gui
 
-Item {
+MVABasicItem {
     id: rootMVACircle
 
     property alias item: circleItem
-    property bool dragActive: false
-    property string dragKey: ""
-    property bool init: false
-
-    signal clicked(string name)
-
-    width: 100
-    height: 100
-
-    Drag.active: dragActive
-    Drag.keys: dragKey
 
     CircleItem {
         id: circleItem

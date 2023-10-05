@@ -4,7 +4,7 @@
 #include <QPen>
 
 CircleItem::CircleItem(QQuickItem *parent)
-    : AbstractItem{"qrc:/qt/qml/cwa/mva/items/MVACircle.qml", parent}
+    : AbstractItem{"qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml", parent}
 {}
 
 void CircleItem::paint(QPainter *painter)

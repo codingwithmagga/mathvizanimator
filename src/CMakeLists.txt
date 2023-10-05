@@ -1,17 +1,4 @@
-include(CheckCXXCompilerFlag)
-
-function(enable_cxx_compiler_flag_if_supported flag)
-    string(FIND "${CMAKE_CXX_FLAGS}" "${flag}" flag_already_set)
-    if(flag_already_set EQUAL -1)
-        check_cxx_compiler_flag("${flag}" flag_supported)
-        if(flag_supported)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}" PARENT_SCOPE)
-        endif()
-        unset(flag_supported CACHE)
-    endif()
-endfunction()
-
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.24)
 
 project(mathvizanimator-app VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
@@ -23,32 +10,19 @@ qt_standard_project_setup()
 qt_add_executable(mva-app
     main.cpp
     gui/mainwindow.cpp
-    models/objectmodel.cpp
     workflow/logging.cpp
 )
 
 qt_add_qml_module(mva-app
-    URI cwa.mva
+    URI cwa.mva.app
     VERSION ${PROJECT_VERSION}
     QML_FILES
-        gui/Main.qml
-        models/MVAItemModel.qml
-        models/MVAItemDelegate.qml
-        items/MVACircle.qml
-        items/MVARectangle.qml
-        items/MVAText.qml
-        items/MVAMouseArea.qml
-        items/MVASurroundingRectangle.qml
-    SOURCES
-        items/abstractitem.cpp
-        items/circleitem.cpp
-        items/rectangle.cpp
-        items/textitem.cpp
+        qml/Main.qml
     DEPENDENCIES QtQuick
 )
 
 set_target_properties(mva-app PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+    MACOSX_BUNDLE_GUI_IDENTIFIER cwa.mva.app
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
@@ -57,27 +31,20 @@ set_target_properties(mva-app PROPERTIES
 
 target_link_libraries(mva-app
     PRIVATE
-        Qt6::Quick
-        Qt6::Svg
+        mva::gui
+        mva::guiplugin
+        mva::workflow
 )
 
 target_include_directories(mva-app
     PRIVATE
         items
-        models
         gui
         workflow
 )
-enable_cxx_compiler_flag_if_supported("-Wall")
-enable_cxx_compiler_flag_if_supported("-Wextra")
-enable_cxx_compiler_flag_if_supported("-pedantic")
 
 install(TARGETS mva-app
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
-# Showing header files in Qt Creator project view
-FILE(GLOB_RECURSE HeaderFiles "*.h")
-add_custom_target(headers SOURCES ${HeaderFiles})

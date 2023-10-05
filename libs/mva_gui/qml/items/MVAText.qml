@@ -2,23 +2,12 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 
-import cwa.mva
+import cwa.mva.gui
 
-Item {
+MVABasicItem {
     id: rootMVAText
 
     property alias item: textItem
-    property bool dragActive: false
-    property bool init: false
-    property string dragKey: ""
-
-    signal clicked(string name)
-
-    Drag.active: dragActive
-    Drag.keys: dragKey
-
-    height: 10
-    width: 10
 
     TextItem {
         id: textItem
