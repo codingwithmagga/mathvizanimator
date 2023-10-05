@@ -32,6 +32,7 @@ jobs:
           dir: '${{ runner.temp }}'
           setup-python: false
           aqtversion: ==3.1.*
+          modules: 'qtmultimedia' 
       - name: (3.1) Install Latex
         working-directory: '${{ github.workspace }}'
         run: |
