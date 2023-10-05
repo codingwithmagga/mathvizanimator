@@ -47,7 +47,7 @@ jobs:
         working-directory: '${{ runner.temp }}/build'
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest --output-on-failure 
+          ctest --output-on-failure -VV
       - name: (7) Zip build
         working-directory: '${{ runner.temp }}'
         run: |
