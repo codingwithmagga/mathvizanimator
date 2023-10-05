@@ -1,3 +1,4 @@
+#include <QPainter>
 #include <QTest>
 
 #include "circleitem.h"
@@ -9,12 +10,13 @@ private slots:
     void initTestCase();
 
     void toJsonTest();
+    void paintTest();
 
 private:
-    const qreal m_test_x = 46;
-    const qreal m_test_y = 98;
-    const qreal m_test_width = 124;
-    const qreal m_test_height = 276;
+    const qreal m_test_x = 123;
+    const qreal m_test_y = 212;
+    const qreal m_test_width = 150;
+    const qreal m_test_height = 150;
 
     const QString m_test_color = "#0000ff";
     const QString m_test_name = "test_circle_name";
@@ -33,6 +35,9 @@ void TestCircleItem::initTestCase()
     m_test_circle.setParentItem(&m_test_parent_item);
     m_test_circle.setColor(QColor(m_test_color));
     m_test_circle.setName(m_test_name);
+
+    m_test_circle.setWidth(m_test_width);
+    m_test_circle.setHeight(m_test_width);
 }
 
 void TestCircleItem::toJsonTest()
@@ -49,6 +54,23 @@ void TestCircleItem::toJsonTest()
     const auto circle_json = m_test_circle.toJson();
 
     QCOMPARE(circle_json, expected_json);
+}
+
+void TestCircleItem::paintTest()
+{
+    QImage image(600, 400, QImage::Format::Format_ARGB32);
+    QImage expected_image = image;
+    image.fill("white");
+    QPainter painter(&image);
+
+    painter.save();
+    painter.translate(m_test_circle.parentItem()->position());
+    m_test_circle.paint(&painter);
+    painter.restore();
+
+    expected_image.load("circleitem/test_circle.png");
+
+    QCOMPARE(image, expected_image);
 }
 
 QTEST_MAIN(TestCircleItem)

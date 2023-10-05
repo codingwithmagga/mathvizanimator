@@ -143,6 +143,8 @@ void MainWindowHandler::save(const QVariant &file)
     m_savefile_handler.saveJSON(save_fileinfo.fileName(), save_json);
 }
 
+// TODO: Issue when loading data, items can't be selected anymore
+// Also _1 is appended every time.
 void MainWindowHandler::load(const QVariant &file)
 {
     QFileInfo load_fileinfo(file.toUrl().toLocalFile());

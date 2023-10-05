@@ -1,3 +1,4 @@
+#include <QPainter>
 #include <QTest>
 
 #include "textitem.h"
@@ -10,6 +11,7 @@ private slots:
 
     void toJsonTest();
     void latexRenderTest();
+    void paintTest();
 
 private:
     const qreal m_test_x = 46;
@@ -62,6 +64,23 @@ void TestTextItem::latexRenderTest()
     QCOMPARE(m_test_text.getLatexSource(), test_latex);
     QCOMPARE(m_test_text.getSvgFile(),
              QDir::current().absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
+}
+
+void TestTextItem::paintTest()
+{
+    QImage image(600, 400, QImage::Format::Format_ARGB32);
+    QImage expected_image = image;
+    image.fill("white");
+    QPainter painter(&image);
+
+    painter.save();
+    painter.translate(m_test_text.parentItem()->position());
+    m_test_text.paint(&painter);
+    painter.restore();
+
+    expected_image.load("textitem/test_text.png");
+
+    QCOMPARE(image, expected_image);
 }
 
 QTEST_MAIN(TestTextItem)
