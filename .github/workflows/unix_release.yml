@@ -35,7 +35,7 @@ jobs:
       - name: (3.1) Install Latex
         working-directory: '${{ github.workspace }}'
         run: |
-          sudo apt-get install -y texlive-base latexmk
+          sudo apt-get install -y texlive-latex-extra latexmk
       - name: (4) Create build directory
         run: 'mkdir ${{ runner.temp }}/build'
       - name: (5) Build
