@@ -100,7 +100,8 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         run: |
           brew install --cask basictex
-          sudo tlmgr update --self
+          echo $PATH
+          sudo /opt/texbin/tlmgr update --self --all
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
@@ -128,7 +129,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         shell: bash
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -B"\${{ env.SOURCE_DIR }}\build" -S"\${{ env.SOURCE_DIR }}"
+          cmake -DCMAKE_BUILD_TYPE=Release -B"${{ env.SOURCE_DIR }}\build" -S"${{ env.SOURCE_DIR }}"
           cmake --build .
 
       - name: (6) Run tests unix
