@@ -7,7 +7,7 @@ defaults:
   run:
     shell: bash
 env:
-  SOURCE_DIR: '$GITHUB_WORKSPACE'
+  SOURCE_DIR: $GITHUB_WORKSPACE
   QT_VERSION: 6.5.1
 
 jobs:
