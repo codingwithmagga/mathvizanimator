@@ -37,8 +37,8 @@ jobs:
         working-directory: ${{ env.SOURCE_DIR }}
         shell: bash
         run: |
-          echo ${{ github.workspace }}
-          echo ${{ runner.workspace }}
+          echo "${{ github.workspace }}"
+          echo "${{ runner.workspace }}"
           git fetch --all --tags -f
 
       - name: (3) Install Qt
