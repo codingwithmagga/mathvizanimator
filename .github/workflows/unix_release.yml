@@ -118,7 +118,7 @@ jobs:
           brew install ffmpeg
 
       - name: (4) Create build directory
-        run: 'mkdir ${{ runner.temp }}/build'
+        run: 'mkdir -p ${{ runner.temp }}/build'
 
       - name: (5) Build
         working-directory: '${{ runner.temp }}/build'
