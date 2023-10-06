@@ -1,4 +1,4 @@
-run-name: 'Deploy to ubuntu by @${{ github.actor }}'
+run-name: 'Deploy package by @${{ github.actor }}'
 'on':
   push:
     branches:
@@ -99,47 +99,34 @@ jobs:
         run: |
           brew install --cask mactex
 
-      - name: (3.2) Install ffmpeg on ubuntu
-        if: startsWith(matrix.os, 'ubuntu')
-        working-directory: '${{ github.workspace }}'
-        run: |
-          sudo apt-get install -y ffmpeg
-
-      - name: (3.2) Install ffmpeg on windows
-        if: startsWith(matrix.os, 'windows')
-        working-directory: '${{ github.workspace }}'
-        run: |
-          ls 
-
-      - name: (3.2) Install ffmpeg on mac
-        if: startsWith(matrix.os, 'macos')
-        working-directory: '${{ github.workspace }}'
-        run: |
-          brew install ffmpeg
+      - name: (3.2) Setup ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v2
+        id: setup-ffmpeg
 
       - name: (4) Create build directory
-        run: 'mkdir -p ${{ runner.temp }}/build'
+        run: |
+          mkdir -p ${{ github.workspace }}/build
 
       - name: (5) Build
-        working-directory: '${{ runner.temp }}/build'
+        working-directory: '${{ github.workspace }}/build'
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
 
       - name: (6) Run tests
-        working-directory: '${{ runner.temp }}/build'
+        working-directory: '${{ github.workspace }}/build'
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
 
       - name: (7) Zip build
-        working-directory: '${{ runner.temp }}'
+        working-directory: '${{ github.workspace }}'
         run: |
-          7z a qt-mva-build.zip ${{ runner.temp }}/build/* -r
+          7z a qt-mva-build.zip ${{ github.workspace }}/build/* -r
           ls
 
       - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: '${{ env.ARTIFACT }}'
-          path: '${{ runner.temp }}/build/'
+          path: '${{ github.workspace }}/build/'
