@@ -99,7 +99,8 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         working-directory: '${{ github.workspace }}'
         run: |
-          brew install --cask mactex
+          brew install --cask basictex
+          tlmgr install standalone
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
@@ -125,6 +126,7 @@ jobs:
       - name: (5) Build windows
         if: startsWith(matrix.os, 'windows')
         working-directory: '${{ github.workspace }}\build'
+        shell: bash
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .

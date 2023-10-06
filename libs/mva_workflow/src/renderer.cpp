@@ -13,7 +13,7 @@ Renderer::Renderer(QObject *parent)
 
 void Renderer::render(const QList<AbstractItem *> &item_list)
 {
-    QString program = "/usr/bin/ffmpeg";
+    QString program = "ffmpeg";
     QStringList arguments;
     arguments << "-y"
               << "-f"
