@@ -45,7 +45,7 @@ jobs:
           host: ${{ matrix.qt-os }}
           target: desktop
           arch: ${{ matrix.qt-arch }}
-          dir: '${{ runner.temp }}'
+          dir: '${{ github.workspace }}'
           setup-python: false
           aqtversion: ==3.1.*
           modules: 'qtmultimedia' 
@@ -106,50 +106,50 @@ jobs:
 
       - name: (4) Create build directory
         run: |
-          mkdir -p ${{ runner.temp }}/build
+          mkdir -p ${{ github.workspace }}/build
 
       - name: (5) Build unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
-        working-directory: '${{ runner.temp }}/build'
+        working-directory: '${{ github.workspace }}/build'
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
      
       - name: (5) Build windows
         if: startsWith(matrix.os, 'windows')
-        working-directory: '${{ runner.temp }}\build'
+        working-directory: '${{ github.workspace }}\build'
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
 
       - name: (6) Run tests unix
-        working-directory: '${{ runner.temp }}/build'
+        working-directory: '${{ github.workspace }}/build'
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
       
       - name: (6) Run tests windows
-        working-directory: '${{ runner.temp }}\build'
+        working-directory: '${{ github.workspace }}\build'
         if: startsWith(matrix.os, 'windows')
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
 
       - name: (7) Zip build unix
-        working-directory: '${{ runner.temp }}'
+        working-directory: '${{ github.workspace }}'
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip ${{ runner.temp }}/build/* -r
+          7z a qt-mva-build-${{matrix.os}}.zip ${{ github.workspace }}/build/* -r
           
       - name: (7) Zip build
         if: startsWith(matrix.os, 'windows')
-        working-directory: '${{ runner.temp }}'
+        working-directory: '${{ github.workspace }}'
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip ${{ runner.temp }}\build\* -r
+          7z a qt-mva-build-${{matrix.os}}.zip ${{ github.workspace }}\build\* -r
 
       - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: '${{ env.ARTIFACT }}'
-          path: '${{ runner.temp }}/build/'
+          path: '${{ github.workspace }}/build/'
