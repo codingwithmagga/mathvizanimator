@@ -100,6 +100,7 @@ jobs:
         working-directory: '${{ github.workspace }}'
         run: |
           brew install --cask basictex
+          brew install texlive
           tlmgr install standalone
 
       - name: (3.2) Setup ffmpeg
@@ -118,42 +119,43 @@ jobs:
 
       - name: (5) Build unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
-        working-directory: '${{ github.workspace }}/build'
+        working-directory: ${{ github.workspace }}/build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
      
       - name: (5) Build windows
         if: startsWith(matrix.os, 'windows')
-        working-directory: '${{ github.workspace }}\build'
+        working-directory: ${{ github.workspace }}
         shell: bash
         run: |
+          cd build
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
 
       - name: (6) Run tests unix
-        working-directory: '${{ github.workspace }}/build'
+        working-directory: ${{ github.workspace }}/build
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
       
       - name: (6) Run tests windows
-        working-directory: '${{ github.workspace }}\build'
+        working-directory: ${{ github.workspace }}\build
         if: startsWith(matrix.os, 'windows')
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
 
       - name: (7) Zip build unix
-        working-directory: '${{ github.workspace }}'
+        working-directory: ${{ github.workspace }}
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           7z a qt-mva-build-${{matrix.os}}.zip ${{ github.workspace }}/build/* -r
           
       - name: (7) Zip build
         if: startsWith(matrix.os, 'windows')
-        working-directory: '${{ github.workspace }}'
+        working-directory: ${{ github.workspace }}
         run: |
           7z a qt-mva-build-${{matrix.os}}.zip ${{ github.workspace }}\build\* -r
 
