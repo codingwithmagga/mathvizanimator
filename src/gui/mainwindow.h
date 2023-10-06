@@ -7,6 +7,7 @@
 #include <QQuickItem>
 #include <QStandardItemModel>
 
+#include "renderer.h"
 #include "savefilehandler.h"
 
 class MainWindowHandler : public QObject
@@ -22,9 +23,6 @@ public:
 public slots:
 
     void render();
-
-    void processStarted();
-    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
     void save(const QVariant &file);
     void load(const QVariant &file);
@@ -45,6 +43,7 @@ private:
     QObject *m_qml_creation_area;
 
     SaveFileHandler m_savefile_handler;
+    Renderer m_renderer;
 };
 
 #endif // MAINWINDOW_H

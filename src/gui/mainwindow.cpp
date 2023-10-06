@@ -16,8 +16,6 @@
 #include "logging.h"
 #include "qqmlcontext.h"
 
-QProcess *myProcess = new QProcess();
-
 MainWindowHandler::MainWindowHandler(QQmlApplicationEngine *const engine)
     : m_qml_engine(engine)
 {
@@ -60,68 +58,12 @@ void MainWindowHandler::init()
 
 void MainWindowHandler::render()
 {
-    QString program = "/usr/bin/ffmpeg";
-    QStringList arguments;
-    arguments << "-y"
-              << "-f"
-              << "rawvideo"
-              << "-video_size"
-              << "600x400"
-              << "-pix_fmt"
-              << "bgra"
-              << "-r"
-              << "24"
-              << "-i"
-              << "-"
-              << "-an"
-              << "-vcodec"
-              << "libx264"
-              << "render_test.mp4";
+    QList<AbstractItem *> abstractitem_list;
 
-    connect(myProcess, &QProcess::started, this, &MainWindowHandler::processStarted);
-    connect(myProcess, &QProcess::finished, this, &MainWindowHandler::processFinished);
-    connect(myProcess, &QProcess::readyRead, [=] {
-        qCInfo(ffmpeg) << myProcess->readAllStandardOutput();
-    });
-
-    myProcess->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
-
-    myProcess->start(program, arguments);
-}
-
-void MainWindowHandler::processStarted()
-{
-    const int num_frames = 72;
-
-    for (int frame = 0; frame < num_frames; ++frame) {
-        //        auto alphaval = (double) frame / (double) num_frames;
-
-        QImage image(600, 400, QImage::Format::Format_ARGB32);
-        image.fill("white");
-        QPainter painter(&image);
-
-        for (const auto &item : m_item_list) {
-            const auto qobj = qvariant_cast<AbstractItem *>(item->property("item"));
-
-            painter.save();
-            painter.translate(qobj->parentItem()->position());
-            qobj->paint(&painter);
-            painter.restore();
-        }
-
-        auto imageData = reinterpret_cast<const char *>(image.bits());
-        myProcess->write(imageData, 600 * 400 * 4);
+    for (const auto &item : m_item_list) {
+        abstractitem_list.push_back(qvariant_cast<AbstractItem *>(item->property("item")));
     }
-
-    myProcess->closeWriteChannel();
-    myProcess->waitForFinished();
-}
-
-void MainWindowHandler::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-    Q_UNUSED(exitCode)
-
-    qCDebug(rendering) << "Process finished with status: " << exitStatus;
+    m_renderer.render(abstractitem_list);
 }
 
 void MainWindowHandler::save(const QVariant &file)
