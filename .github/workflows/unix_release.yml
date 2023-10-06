@@ -106,7 +106,7 @@ jobs:
 
       - name: (4) Create build directory
         run: |
-          mkdir -p ${{ runner.temp }}/build'
+          mkdir -p ${{ runner.temp }}/build
 
       - name: (5) Build unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
