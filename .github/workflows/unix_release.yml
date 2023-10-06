@@ -7,7 +7,7 @@ defaults:
   run:
     shell: bash
 env:
-  SOURCE_DIR: '${{ github.workspace }}'
+  SOURCE_DIR: '$GITHUB_WORKSPACE'
   QT_VERSION: 6.5.1
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 0
 
       - name: (2) Get all tags for correct version determination
-        working-directory: '${{ github.workspace }}'
+        working-directory: ${{ env.SOURCE_DIR }}
         run: |
           git fetch --all --tags -f
 
@@ -45,21 +45,21 @@ jobs:
           host: ${{ matrix.qt-os }}
           target: desktop
           arch: ${{ matrix.qt-arch }}
-          dir: '${{ github.workspace }}'
+          dir: ${{ env.SOURCE_DIR }}
           setup-python: false
           aqtversion: ==3.1.*
           modules: 'qtmultimedia' 
 
       - name: (3.1) Install Latex on ubuntu
         if: startsWith(matrix.os, 'ubuntu')
-        working-directory: '${{ github.workspace }}'
+        working-directory: ${{ env.SOURCE_DIR }}
         run: |
           sudo apt-get update && sudo apt-get upgrade
           sudo apt-get install -y texlive-latex-extra latexmk
 
       - name: (3.1) Install Latex on windows
         if: startsWith(matrix.os, 'windows')
-        working-directory: '${{ github.workspace }}'
+        working-directory: ${{ env.SOURCE_DIR }}
         shell: bash
         env:
           MIKTEX_ZIP: miktexsetup-5.5.0+1763023-x64.zip
@@ -96,9 +96,10 @@ jobs:
 
       - name: (3.1) Install Latex on mac
         if: startsWith(matrix.os, 'macos')
-        working-directory: '${{ github.workspace }}'
+        working-directory: ${{ env.SOURCE_DIR }}
         run: |
           brew install --cask basictex
+          sudo tlmgr update --self
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
@@ -107,56 +108,56 @@ jobs:
       - name: (4) Create build directory unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
-          mkdir -p ${{ github.workspace }}/build
+          mkdir -p ${{ env.SOURCE_DIR }}/build
       
       - name: (4) Create build directory windows
         if: startsWith(matrix.os, 'windows')
         run: |
-          mkdir -p ${{ github.workspace }}\build
+          mkdir -p ${{ env.SOURCE_DIR }}\build
 
       - name: (5) Build unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
-        working-directory: ${{ github.workspace }}/build
+        working-directory: ${{ env.SOURCE_DIR }}/build
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release ${{ env.SOURCE_DIR }}
           cmake --build .
      
       - name: (5) Build windows
         if: startsWith(matrix.os, 'windows')
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ env.SOURCE_DIR }}
         shell: bash
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -B\${{ github.workspace }}\build -S\${{ env.SOURCE_DIR }}
+          cmake -DCMAKE_BUILD_TYPE=Release -B\${{ env.SOURCE_DIR }}\build -S\${{ env.SOURCE_DIR }}
           cmake --build .
 
       - name: (6) Run tests unix
-        working-directory: ${{ github.workspace }}/build
+        working-directory: ${{ env.SOURCE_DIR }}/build
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
       
       - name: (6) Run tests windows
-        working-directory: ${{ github.workspace }}\build
+        working-directory: ${{ env.SOURCE_DIR }}\build
         if: startsWith(matrix.os, 'windows')
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
 
       - name: (7) Zip build unix
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ env.SOURCE_DIR }}
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip ${{ github.workspace }}/build/* -r
+          7z a qt-mva-build-${{matrix.os}}.zip ${{ env.SOURCE_DIR }}/build/* -r
           
       - name: (7) Zip build
         if: startsWith(matrix.os, 'windows')
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ env.SOURCE_DIR }}
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip ${{ github.workspace }}\build\* -r
+          7z a qt-mva-build-${{matrix.os}}.zip ${{ env.SOURCE_DIR }}\build\* -r
 
       - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
           name: 'qt-mva-build-${{matrix.os}}'
-          path: '${{ github.workspace }}/build/'
+          path: '${{ env.SOURCE_DIR }}/build/'
