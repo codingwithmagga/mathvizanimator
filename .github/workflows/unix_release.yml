@@ -114,11 +114,11 @@ jobs:
       - name: (4) Create build directory windows
         if: startsWith(matrix.os, 'windows')
         run: |
-          mkdir -p "${{ env.SOURCE_DIR }}"\build
+          mkdir -p "${{ env.SOURCE_DIR }}\build"
 
       - name: (5) Build unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
-        working-directory: "${{ env.SOURCE_DIR }}"/build
+        working-directory: "${{ env.SOURCE_DIR }}/build"
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}"
           cmake --build .
@@ -128,18 +128,18 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         shell: bash
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -B\"${{ env.SOURCE_DIR }}"\build -S\"${{ env.SOURCE_DIR }}"
+          cmake -DCMAKE_BUILD_TYPE=Release -B"\${{ env.SOURCE_DIR }}\build" -S"\${{ env.SOURCE_DIR }}"
           cmake --build .
 
       - name: (6) Run tests unix
-        working-directory: "${{ env.SOURCE_DIR }}"/build
+        working-directory: "${{ env.SOURCE_DIR }}/build"
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest --output-on-failure 
       
       - name: (6) Run tests windows
-        working-directory: "${{ env.SOURCE_DIR }}"\build
+        working-directory: "${{ env.SOURCE_DIR }}\build"
         if: startsWith(matrix.os, 'windows')
         run: |
           export QT_QPA_PLATFORM=offscreen
@@ -149,16 +149,16 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}"/build/* -r
+          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}/build/*" -r
           
       - name: (7) Zip build
         if: startsWith(matrix.os, 'windows')
         working-directory: "${{ env.SOURCE_DIR }}"
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}"\build\* -r
+          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}\build\*" -r
 
       - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: 'qt-mva-build-${{matrix.os}}'
-          path: '"${{ env.SOURCE_DIR }}"/build/'
+          name: "qt-mva-build-${{matrix.os}}"
+          path: "${{ env.SOURCE_DIR }}/build/"
