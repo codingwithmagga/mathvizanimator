@@ -23,8 +23,3 @@ void RectangleItem::paint(QPainter *painter)
                       height() - pen_width);
     painter->restore();
 }
-
-QJsonObject RectangleItem::toJson() const
-{
-    return AbstractItem::toJson();
-}
