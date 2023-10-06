@@ -9,10 +9,11 @@ defaults:
 env:
   SOURCE_DIR: '${{ github.workspace }}'
   QT_VERSION: 6.5.1
-  ARTIFACT: mva-ubuntu-release
+
 jobs:
   example_matrix:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest windows-latest macos-latest]
         include:
@@ -104,9 +105,15 @@ jobs:
         uses: FedericoCarboni/setup-ffmpeg@v2
         id: setup-ffmpeg
 
-      - name: (4) Create build directory
+      - name: (4) Create build directory unix
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           mkdir -p ${{ github.workspace }}/build
+      
+      - name: (4) Create build directory windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          mkdir -p ${{ github.workspace }}\build
 
       - name: (5) Build unix
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
@@ -151,5 +158,5 @@ jobs:
       - name: (8) Save build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: '${{ env.ARTIFACT }}'
+          name: 'qt-mva-build-${{matrix.os}}'
           path: '${{ github.workspace }}/build/'
