@@ -100,8 +100,10 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         run: |
           brew install --cask basictex
-          ll /usr/local
-          ll /usr/local/texlive
+          ls /usr/local
+          ls /usr/local/texlive
+          ls 
+          ls /
           PATH=/usr/local/texlive/2022/bin/universal-darwin:"${PATH}"
           sudo /opt/texbin/tlmgr update --self --all
 
@@ -132,6 +134,7 @@ jobs:
         shell: bash
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release -B"${{ env.SOURCE_DIR }}\build" -S"${{ env.SOURCE_DIR }}"
+          cd build
           cmake --build .
 
       - name: (6) Run tests unix
