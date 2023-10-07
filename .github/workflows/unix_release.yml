@@ -33,6 +33,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: (3.1) Install Latex on mac
+        if: startsWith(matrix.os, 'macos')
+        working-directory: "${{ env.SOURCE_DIR }}"
+        run: |
+            brew install --cask basictex
+            echo here
+            ls /usr/local/texlive/2023basic
+            echo here
+            PATH=/usr/local/texlive/2023basic/bin/universal-darwin:"${PATH}"
+            sudo tlmgr update --self --all
+
       - name: (2) Get all tags for correct version determination
         working-directory: "${{ env.SOURCE_DIR }}"
         shell: bash
@@ -95,17 +106,7 @@ jobs:
           mpm --find-updates
           mpm --admin --find-updates
 
-      - name: (3.1) Install Latex on mac
-        if: startsWith(matrix.os, 'macos')
-        working-directory: "${{ env.SOURCE_DIR }}"
-        run: |
-          brew install --cask basictex
-          ls /usr/local
-          ls /usr/local/texlive
-          ls 
-          ls /
-          PATH=/usr/local/texlive/2022/bin/universal-darwin:"${PATH}"
-          sudo /opt/texbin/tlmgr update --self --all
+
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
