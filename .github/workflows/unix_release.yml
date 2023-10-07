@@ -100,7 +100,9 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         run: |
           brew install --cask basictex
-          echo $PATH
+          ll /usr/local
+          ll /usr/local/texlive
+          PATH=/usr/local/texlive/2022/bin/universal-darwin:"${PATH}"
           sudo /opt/texbin/tlmgr update --self --all
 
       - name: (3.2) Setup ffmpeg
