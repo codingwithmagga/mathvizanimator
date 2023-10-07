@@ -142,7 +142,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest --output-on-failure 
+          ctest -VV
       
       - name: (6) Run tests windows
         working-directory: "${{ env.SOURCE_DIR }}\build"

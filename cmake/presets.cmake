@@ -23,7 +23,9 @@ if (MSVC)
     enable_cxx_compiler_flag_if_supported("/WX")
     enable_cxx_compiler_flag_if_supported("/external:anglebrackets")
     enable_cxx_compiler_flag_if_supported("/external:W0")
-    enable_cxx_compiler_flag_if_supported('/external:I "C:\\Qt" ')
+
+    # TODO: Find a way to make this path independent
+    enable_cxx_compiler_flag_if_supported('/external:I "D:\\a\\mathvizanimator\\mathvizanimator\\Qt\\6.5.1\\msvc2019_64" ')
 else()
     enable_cxx_compiler_flag_if_supported("-Wall")
     enable_cxx_compiler_flag_if_supported("-Werror")
