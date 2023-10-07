@@ -95,15 +95,15 @@ jobs:
           mpm --find-updates
           mpm --admin --find-updates
 
-       - name: (3.1) Install Latex on mac
-         if: startsWith(matrix.os, 'macos')
-         working-directory: "${{ env.SOURCE_DIR }}"
-         run: |
-           brew install --cask basictex
-           PATH=/usr/local/texlive/2023basic/bin/universal-darwin:"${PATH}"
-           sudo tlmgr update --self --all
-           sudo tlmgr install latexmk
-           sudo tlmgr install standalone
+      - name: (3.1) Install Latex on mac
+        if: startsWith(matrix.os, 'macos')
+        working-directory: "${{ env.SOURCE_DIR }}"
+        run: |
+          brew install --cask basictex
+          PATH=/usr/local/texlive/2023basic/bin/universal-darwin:"${PATH}"
+          sudo tlmgr update --self --all
+          sudo tlmgr install latexmk
+          sudo tlmgr install standalone
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
