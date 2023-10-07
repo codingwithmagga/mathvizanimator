@@ -104,6 +104,8 @@ jobs:
           sudo tlmgr update --self --all
           sudo tlmgr install latexmk
           sudo tlmgr install standalone
+          sudo tlmgr path add
+          which latexmk
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
