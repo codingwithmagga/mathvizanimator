@@ -9,12 +9,12 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QProcess>
+#include <QQmlContext>
 #include <QStandardPaths>
 #include <QThread>
 
 #include "abstractitem.h"
 #include "logging.h"
-#include "qqmlcontext.h"
 
 MainWindowHandler::MainWindowHandler(QQmlApplicationEngine *const engine)
     : m_qml_engine(engine)
