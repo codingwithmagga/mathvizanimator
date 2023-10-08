@@ -60,7 +60,7 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem *> &item_list)
             painter.restore();
         }
 
-        auto imageData = reinterpret_cast<const char *>(image.bits());
+        auto imageData = reinterpret_cast<char *>(image.bits());
         renderProcess.write(imageData, 600 * 400 * 4);
     }
 
