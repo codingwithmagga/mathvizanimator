@@ -19,7 +19,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/libs/mva_gui CACHE STRING "" FORCE)
 
 if (MSVC)
-    enable_cxx_compiler_flag_if_supported("/Wall")
+    enable_cxx_compiler_flag_if_supported("/W4")
     enable_cxx_compiler_flag_if_supported("/WX")
     enable_cxx_compiler_flag_if_supported("/external:anglebrackets")
     enable_cxx_compiler_flag_if_supported("/external:W0")

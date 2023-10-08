@@ -110,9 +110,8 @@ jobs:
           brew install --cask basictex
           PATH=/usr/local/texlive/2023basic/bin/universal-darwin:"${PATH}"
           sudo tlmgr update --self --all
-          sudo tlmgr install latexmk standalone preview
+          sudo tlmgr install latexmk standalone preview dvisvgm
           sudo tlmgr path add
-          sudo port install dvisvgm
 
       - name: (3.2) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
