@@ -135,8 +135,8 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}"
-          cmake --build .
+          cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}" --verbose
+          cmake --build . --verbose
      
       - name: (5) Build windows
         if: startsWith(matrix.os, 'windows')
