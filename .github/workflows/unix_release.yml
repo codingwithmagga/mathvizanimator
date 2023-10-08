@@ -144,9 +144,9 @@ jobs:
         timeout-minutes: 15
         shell: bash
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -B"${{ env.SOURCE_DIR }}\build" -S"${{ env.SOURCE_DIR }}" --verbose
+          cmake -DCMAKE_BUILD_TYPE=Release -B"${{ env.SOURCE_DIR }}\build" -S"${{ env.SOURCE_DIR }}" -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
           cd build
-          cmake --build . --verbose
+          cmake --build . 
 
       - name: (6) Run tests unix
         working-directory: "${{ env.SOURCE_DIR }}/build"
