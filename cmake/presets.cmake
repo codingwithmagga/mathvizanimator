@@ -20,9 +20,13 @@ set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/libs/mva_gui CACHE STRING "" FORCE)
 
 if (MSVC)
     enable_cxx_compiler_flag_if_supported("/Wall")
-    enable_cxx_compiler_flag_if_supported("/WX")
-    #enable_cxx_compiler_flag_if_supported("/external:anglebrackets")
-    #enable_cxx_compiler_flag_if_supported("/external:W0")
+    # The flag "/WX" treats warnings as errors. Unfortunately not all warnings from Qt headers are suppressed using the external flags below.
+    # So currently this flag is disabled. Maybe someone finds a solution for this. The Qt headers are included as /external:I in github actions
+    # so this seems to work correctly.
+    #enable_cxx_compiler_flag_if_supported("/WX")
+    enable_cxx_compiler_flag_if_supported("/external:anglebrackets")
+    enable_cxx_compiler_flag_if_supported("/external:W0")
+    enable_cxx_compiler_flag_if_supported("/external:templates-")
 else()
     enable_cxx_compiler_flag_if_supported("-Wall")
     enable_cxx_compiler_flag_if_supported("-Werror")

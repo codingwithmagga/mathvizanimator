@@ -5,8 +5,6 @@ project(mathvizanimator VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
 include(cmake/presets.cmake)
 
-message("cxx flags: ${CMAKE_CXX_FLAGS}")
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 enable_testing(true)

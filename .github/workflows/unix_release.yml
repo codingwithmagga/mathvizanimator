@@ -16,15 +16,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - os: ubuntu-latest
-          #   qt-os: linux
-          #   qt-arch: gcc_64
+           - os: ubuntu-latest
+             qt-os: linux
+             qt-arch: gcc_64
            - os: windows-latest
              qt-os: windows
              qt-arch: 'win64_msvc2019_64'
-          # - os: macos-latest
-          #   qt-os: mac
-          #   qt-arch: 'clang_64'
+           - os: macos-latest
+             qt-os: mac
+             qt-arch: 'clang_64'
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
