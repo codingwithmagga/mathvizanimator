@@ -152,7 +152,7 @@ jobs:
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest -VV -C Release
+          ctest -VV -C Release --output-on-failure
 
       - name: (7) Zip build unix
         working-directory: "${{ env.SOURCE_DIR }}"
