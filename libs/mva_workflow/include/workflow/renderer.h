@@ -6,8 +6,9 @@
 #include <QProcess>
 
 #include "abstractitem.h"
+#include "workflow_global.h"
 
-class Renderer : public QObject
+class WORKFLOW_EXPORT Renderer : public QObject
 {
     Q_OBJECT
 public:

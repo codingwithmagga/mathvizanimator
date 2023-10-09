@@ -17,6 +17,7 @@ qt_add_library(workflow
 
     include/workflow/savefilehandler.h
     include/workflow/renderer.h
+    include/workflow/workflow_global.h
     include/private/logging.h
 )
 add_library(mva::workflow ALIAS workflow)

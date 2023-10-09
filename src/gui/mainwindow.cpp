@@ -113,12 +113,12 @@ void MainWindowHandler::load(const QVariant &file)
     }
 }
 
-void MainWindowHandler::addItem(QQuickItem *item)
+void MainWindowHandler::addItem(QQuickItem *quick_item)
 {
-    const auto qobj = item;
+    const auto qobj = quick_item;
     m_item_list.append(qobj);
 
-    const auto abstractItem = qvariant_cast<AbstractItem *>(item->property("item"));
+    const auto abstractItem = qvariant_cast<AbstractItem *>(quick_item->property("item"));
 
     const auto itemName = abstractItem->name();
 
@@ -138,16 +138,16 @@ void MainWindowHandler::addItem(QQuickItem *item)
     m_itemModel.appendRow(QList<QStandardItem *>{stdItemName, stdItemType});
 }
 
-void MainWindowHandler::removeItem(QQuickItem *item)
+void MainWindowHandler::removeItem(QQuickItem *quick_item)
 {
-    m_item_list.removeOne(item);
+    m_item_list.removeOne(quick_item);
 
     auto itemNameList = m_itemModel.findItems("itemName");
     for (auto &item : itemNameList) {
         m_itemModel.removeRow(item->row());
     }
 
-    item->deleteLater();
+    quick_item->deleteLater();
 }
 
 void MainWindowHandler::removeRow(const int row)

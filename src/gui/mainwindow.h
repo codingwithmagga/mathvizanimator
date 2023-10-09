@@ -27,8 +27,8 @@ public slots:
     void save(const QVariant &file);
     void load(const QVariant &file);
 
-    void addItem(QQuickItem *item);
-    void removeItem(QQuickItem *item);
+    void addItem(QQuickItem *quick_item);
+    void removeItem(QQuickItem *quick_item);
     void removeRow(const int row);
 
     int getRowByItemName(QVariant name);
