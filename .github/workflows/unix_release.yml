@@ -130,39 +130,19 @@ jobs:
         run: |
           mkdir -p "${{ env.SOURCE_DIR }}\build"
 
-      - name: (5) Build unix
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
+      - name: (5) Build 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
           cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}" 
           cmake --build . 
-     
-      - name: (5) Build windows
-        if: startsWith(matrix.os, 'windows')
-        working-directory: "${{ env.SOURCE_DIR }}"
-        timeout-minutes: 15
-        shell: bash
-        run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -B"${{ env.SOURCE_DIR }}\build" -S"${{ env.SOURCE_DIR }}" -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-          cd build
-          cmake --build . 
-
-      - name: (6) Run tests unix
+      
+      - name: (6) Run tests 
         working-directory: "${{ env.SOURCE_DIR }}/build"
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest -VV
-      
-      - name: (6) Run tests windows
-        working-directory: "${{ env.SOURCE_DIR }}\build"
-        if: startsWith(matrix.os, 'windows')
-        timeout-minutes: 15
-        run: |
-          export QT_QPA_PLATFORM=offscreen
-          ctest --output-on-failure 
 
       - name: (7) Zip build unix
         working-directory: "${{ env.SOURCE_DIR }}"

@@ -10,6 +10,11 @@
  * While Qt can tell us if it was make for WIN32, MAC, or LINUX, It cannot
  * tell us if we are being statically or dynamically linked. That is why
  * this is using the CMake variables instead of Qt
+ * 
+ * This export symbol is only necessary for classes which are inherited from QObject.
+ * All other classes are exported correctly using 
+ *   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+ * in CMake. 
  */
 #if defined(_WIN32)
 // cmake makes this variable if your a shared library (projectname_EXPORTS)
