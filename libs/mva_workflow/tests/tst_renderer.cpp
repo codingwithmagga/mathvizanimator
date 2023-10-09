@@ -79,7 +79,7 @@ void TestRenderer::render()
                  QSize(600, 400));
     });
 
-    QVERIFY(spy.wait(100000));
+    QVERIFY(spy.wait(10000));
 }
 
 void TestRenderer::cleanupTestCase()

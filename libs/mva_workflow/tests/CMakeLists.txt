@@ -18,11 +18,16 @@ target_link_libraries(sfh_test_exe
         mva::workflow
 )
 
-qt_add_executable(renderer_test_exe tst_renderer.cpp)
-add_test(NAME renderer_test COMMAND renderer_test_exe)
-target_link_libraries(renderer_test_exe
-    PRIVATE
-        Qt::Test
-        mva::workflow
-        Qt6::Multimedia
-)
+# Currently disabled for windows since I can't get it to run on github actions
+# There is also no output so it is really hard to debug.
+# See also https://github.com/actions/runner/issues/1206
+if(NOT WIN32)
+    qt_add_executable(renderer_test_exe tst_renderer.cpp)
+    add_test(NAME renderer_test COMMAND renderer_test_exe)
+    target_link_libraries(renderer_test_exe
+        PRIVATE
+            Qt::Test
+            mva::workflow
+            Qt6::Multimedia
+    )
+endif()
