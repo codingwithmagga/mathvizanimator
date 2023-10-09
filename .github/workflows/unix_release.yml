@@ -128,7 +128,6 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         timeout-minutes: 1
         run: |
-          ffmpeg -h
           mkdir -p "${{ env.SOURCE_DIR }}\build"
 
       - name: (5) Build unix
