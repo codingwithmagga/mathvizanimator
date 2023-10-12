@@ -29,4 +29,8 @@ int main(int argc, char *argv[])
     main_window.init();
 
     return app.exec();
+
+    // TODO: When quitting program crashes with
+    // malloc_consolidate(): unaligned fastbin chunk detected
+    // Maybe it has sth to do with my library structure
 }

@@ -7,6 +7,7 @@
 #include <QQuickItem>
 #include <QStandardItemModel>
 
+#include "itemhandler.h"
 #include "renderer.h"
 #include "savefilehandler.h"
 
@@ -36,14 +37,12 @@ public slots:
     void clearAllItems();
 
 private:
-    QList<QQuickItem *> m_item_list;
-    QStandardItemModel m_itemModel;
-
     QQmlApplicationEngine *m_qml_engine;
     QObject *m_qml_creation_area;
 
     SaveFileHandler m_savefile_handler;
     Renderer m_renderer;
+    ItemHandler m_itemhandler;
 };
 
 #endif // MAINWINDOW_H

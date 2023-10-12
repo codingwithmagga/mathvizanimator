@@ -18,6 +18,14 @@ target_link_libraries(sfh_test_exe
         mva::workflow
 )
 
+qt_add_executable(itemhandler_test_exe tst_itemhandler.cpp)
+add_test(NAME itemhandler_test COMMAND itemhandler_test_exe)
+target_link_libraries(itemhandler_test_exe
+    PRIVATE
+        Qt::Test
+        mva::workflow
+)
+
 # Currently disabled for windows since I can't get it to run on github actions
 # There is also no output so it is really hard to debug.
 # See also https://github.com/actions/runner/issues/1206

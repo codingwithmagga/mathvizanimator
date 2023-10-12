@@ -14,11 +14,13 @@ qt_add_library(workflow
     src/savefilehandler.cpp
     src/logging.cpp
     src/renderer.cpp
+    src/itemhandler.cpp
 
+    include/private/logging.h
     include/workflow/savefilehandler.h
     include/workflow/renderer.h
     include/workflow/workflow_global.h
-    include/private/logging.h
+    include/workflow/itemhandler.h
 )
 add_library(mva::workflow ALIAS workflow)
 
@@ -26,6 +28,7 @@ target_link_libraries(workflow
     PUBLIC
         Qt6::Core
         mva::gui
+        mva::guiplugin
 )
 
 target_include_directories(workflow

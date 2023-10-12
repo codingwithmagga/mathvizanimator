@@ -55,9 +55,6 @@ void TestRenderer::initTestCase()
     rect->setParentItem(parent_item_2);
     rect->setColor("blue");
 
-    qDebug() << circle->parentItem()->position();
-    qDebug() << rect->parentItem()->position();
-
     m_item_list.push_back(circle);
     m_item_list.push_back(rect);
 }

@@ -50,7 +50,7 @@ target_link_libraries(
 )
 
 # Copy qml test files to build folder. I'm not sure if this is the right way to do it.
-# Maybe use file(COPY ...) for this task
+# TODO: Maybe use file(COPY ...) for this task
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
 configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
