@@ -1,9 +1,9 @@
 run-name: 'Deploy package by @${{ github.actor }}'
-'on':
+on:
   pull_request:
     branches:
-      - 'master'
-      - 'pre_alpha'
+      - master
+      - pre_alpha
 defaults:
   run:
     shell: bash
