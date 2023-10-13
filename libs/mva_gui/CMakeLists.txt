@@ -40,6 +40,7 @@ qt_add_qml_module(cwa.mva.gui
         src/items/textitem.cpp
     DEPENDENCIES QtQuick
     OUTPUT_DIRECTORY cwa/mva/gui
+    RESOURCES mva_gui_resources.qrc
 )
 
 target_link_libraries(cwa.mva.gui
@@ -58,8 +59,9 @@ target_include_directories(cwa.mva.gui
 add_library(mva::gui ALIAS cwa.mva.gui)
 add_library(mva::guiplugin ALIAS cwa.mva.guiplugin)
 
-# TODO: Needs to be changed for other systems (Windows, MAC)
-configure_file(templates/template.tex $ENV{HOME}/.config/mathvizanimator/templates/template.tex)
-configure_file(templates/test.svg $ENV{HOME}/.config/mathvizanimator/templates/test.svg)
+# TODO: Add these files to a user path, so that they can be changed by the user
+# Currently they are provided by a resource file
+# configure_file(templates/template.tex $ENV{HOME}/.config/mathvizanimator/templates/template.tex)
+# configure_file(templates/test.svg $ENV{HOME}/.config/mathvizanimator/templates/test.svg)
 
 add_subdirectory(tests)

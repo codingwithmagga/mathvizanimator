@@ -8,8 +8,9 @@ find_package(Qt6 REQUIRED COMPONENTS Core Quick Svg)
 
 qt_standard_project_setup()
 
+# Needs to be a static library, otherwise Windows can't link it correctly for the unit tests
 qt_add_library(workflow
-    SHARED
+    STATIC
 
     src/savefilehandler.cpp
     src/logging.cpp
@@ -19,7 +20,6 @@ qt_add_library(workflow
     include/private/logging.h
     include/workflow/savefilehandler.h
     include/workflow/renderer.h
-    include/workflow/workflow_global.h
     include/workflow/itemhandler.h
 )
 add_library(mva::workflow ALIAS workflow)

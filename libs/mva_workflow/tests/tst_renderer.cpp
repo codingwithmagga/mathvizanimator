@@ -8,8 +8,7 @@
 #include "circleitem.h"
 #include "rectangle.h"
 
-class TestRenderer : public QObject
-{
+class TestRenderer : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase();
@@ -21,7 +20,7 @@ private slots:
 private:
     Renderer m_renderer;
 
-    QList<AbstractItem *> m_item_list;
+    QList<AbstractItem*> m_item_list;
 };
 
 void TestRenderer::initTestCase()
@@ -63,8 +62,7 @@ void TestRenderer::render()
 {
     QSignalSpy spy(&m_renderer, &Renderer::finishedRendering);
 
-    m_renderer.render(m_item_list);
-    connect(&m_renderer, &Renderer::finishedRendering, [](const QFileInfo &file) {
+    connect(&m_renderer, &Renderer::finishedRendering, [](const QFileInfo& file) {
         QVERIFY(file.exists());
 
         QMediaPlayer media_player;
@@ -73,10 +71,13 @@ void TestRenderer::render()
         QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), 24);
         QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 3000);
         QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-                 QSize(600, 400));
+            QSize(600, 400));
     });
 
+    m_renderer.render(m_item_list);
+    //  if (spy.count() == 0) {
     QVERIFY(spy.wait(10000));
+    //  }
 }
 
 void TestRenderer::cleanupTestCase()

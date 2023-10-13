@@ -3,8 +3,7 @@
 
 #include "rectangle.h"
 
-class TestRectangleItem : public QObject
-{
+class TestRectangleItem : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase();
@@ -68,9 +67,7 @@ void TestRectangleItem::paintTest()
     m_test_rect.paint(&painter);
     painter.restore();
 
-    image.save("test_rectangle.png");
-
-    expected_image.load("rectangleitem/test_rectangle.png");
+    expected_image.load("://test_images/test_rectangle_image.png");
 
     QCOMPARE(image, expected_image);
 }
