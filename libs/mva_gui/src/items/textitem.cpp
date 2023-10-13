@@ -2,28 +2,31 @@
 
 #include <QCryptographicHash>
 #include <QDir>
+#include <QDirIterator>
 #include <QPainter>
 #include <QPen>
 #include <QProcess>
 #include <QSvgRenderer>
 
-TextItem::TextItem(QQuickItem *parent)
-    : AbstractItem{"qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent}
-{}
+TextItem::TextItem(QQuickItem* parent)
+    : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent }
+{
+    Q_INIT_RESOURCE(mva_gui_resources);
+}
 
-void TextItem::setSvgFile(const QFileInfo &newSvgFile)
+void TextItem::setSvgFile(const QFileInfo& newSvgFile)
 {
     m_svg_file = newSvgFile;
     update();
     emit svgFileChanged(newSvgFile);
 }
 
-void TextItem::setSvgFile(const QString &newSvgFile)
+void TextItem::setSvgFile(const QString& newSvgFile)
 {
     setSvgFile(QFileInfo(newSvgFile));
 }
 
-void TextItem::paint(QPainter *painter)
+void TextItem::paint(QPainter* painter)
 {
     painter->save();
     painter->setRenderHints(QPainter::Antialiasing, true);
@@ -55,10 +58,9 @@ QString TextItem::getLatexSource() const
     return m_latex_source;
 }
 
-void TextItem::setLatexSource(const QString &newLatexSource)
+void TextItem::setLatexSource(const QString& newLatexSource)
 {
-    QFile latexTemplateFile(
-        QDir::home().absoluteFilePath(".config/mathvizanimator/templates/template.tex"));
+    QFile latexTemplateFile("://templates/template.tex");
     if (!latexTemplateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qCritical() << "Cannot open: " << latexTemplateFile.fileName();
         return;
@@ -91,12 +93,12 @@ void TextItem::setLatexSource(const QString &newLatexSource)
     stream << latexTemplate;
     latexFile.close();
 
-    qInfo() << QProcess::execute("latexmk", QStringList{} << "-dvi" << latexFile.fileName());
+    qInfo() << QProcess::execute("latexmk", QStringList {} << "-dvi" << latexFile.fileName());
     qInfo() << QProcess::execute("dvisvgm",
-                                 QStringList{} << hash + ".dvi"
-                                               << "-n"
-                                               << "-o" << hash + ".svg");
-    qInfo() << QProcess::execute("latexmk", QStringList{} << "-C");
+        QStringList {} << hash + ".dvi"
+                       << "-n"
+                       << "-o" << hash + ".svg");
+    qInfo() << QProcess::execute("latexmk", QStringList {} << "-C");
 
     setSvgFile(QFileInfo(hash + ".svg"));
 

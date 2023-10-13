@@ -8,9 +8,9 @@ qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
 qt_add_executable(qml_item_tests qml/main.cpp)
-qt_add_executable(circleitem_test items/circleitem/tst_circleitem.cpp)
-qt_add_executable(rectangleitem_test items/rectangleitem/tst_rectangleitem.cpp)
-qt_add_executable(textitem_test items/textitem/tst_textitem.cpp)
+qt_add_executable(circleitem_test items/circleitem/tst_circleitem.cpp test_images.qrc)
+qt_add_executable(rectangleitem_test items/rectangleitem/tst_rectangleitem.cpp test_images.qrc)
+qt_add_executable(textitem_test items/textitem/tst_textitem.cpp test_images.qrc)
 
 add_test(NAME qml_item_tests COMMAND qml_item_tests)
 add_test(NAME circleitem_test COMMAND circleitem_test)
@@ -50,7 +50,7 @@ target_link_libraries(
 )
 
 # Copy qml test files to build folder. I'm not sure if this is the right way to do it.
-# Maybe use file(COPY ...) for this task
+# TODO: Maybe use file(COPY ...) for this task
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
 configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)

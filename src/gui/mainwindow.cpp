@@ -20,12 +20,8 @@ MainWindowHandler::MainWindowHandler(QQmlApplicationEngine *const engine)
     : m_qml_engine(engine)
 {
     m_qml_engine->rootContext()->setContextProperty(QStringLiteral("main_window"), this);
-    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"), &m_itemModel);
-
-    QStandardItem *headerItemLeft = new QStandardItem(tr("Name"));
-    QStandardItem *headerItemRight = new QStandardItem(tr("Type"));
-    m_itemModel.setHorizontalHeaderItem(0, headerItemLeft);
-    m_itemModel.setHorizontalHeaderItem(1, headerItemRight);
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"),
+                                                    m_itemhandler.model());
 
     m_savefile_handler.setSaveDir(
         QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
@@ -60,7 +56,8 @@ void MainWindowHandler::render()
 {
     QList<AbstractItem *> abstractitem_list;
 
-    for (const auto &item : m_item_list) {
+    const auto item_list = m_itemhandler.items();
+    for (const auto &item : item_list) {
         abstractitem_list.push_back(qvariant_cast<AbstractItem *>(item->property("item")));
     }
     m_renderer.render(abstractitem_list);
@@ -71,8 +68,9 @@ void MainWindowHandler::save(const QVariant &file)
     QJsonObject save_json;
     int count = 0;
     QString element_prefix = "element_";
+    const auto item_list = m_itemhandler.items();
 
-    for (const auto &item : m_item_list) {
+    for (const auto &item : item_list) {
         const auto qobj = qvariant_cast<AbstractItem *>(item->property("item"));
 
         const auto json_element = qobj->toJson();
@@ -115,39 +113,12 @@ void MainWindowHandler::load(const QVariant &file)
 
 void MainWindowHandler::addItem(QQuickItem *quick_item)
 {
-    const auto qobj = quick_item;
-    m_item_list.append(qobj);
-
-    const auto abstractItem = qvariant_cast<AbstractItem *>(quick_item->property("item"));
-
-    const auto itemName = abstractItem->name();
-
-    int nameCounter = 0;
-    for (const auto item : m_item_list) {
-        const auto checkItemName = qvariant_cast<AbstractItem *>(item->property("item"))->name();
-
-        if (checkItemName.startsWith(itemName)) {
-            ++nameCounter;
-        }
-    }
-
-    abstractItem->setName(itemName + "_" + QString::number(nameCounter));
-
-    QStandardItem *stdItemName(new QStandardItem(abstractItem->name()));
-    QStandardItem *stdItemType(new QStandardItem(abstractItem->metaObject()->className()));
-    m_itemModel.appendRow(QList<QStandardItem *>{stdItemName, stdItemType});
+    m_itemhandler.addItem(quick_item);
 }
 
 void MainWindowHandler::removeItem(QQuickItem *quick_item)
 {
-    m_item_list.removeOne(quick_item);
-
-    auto itemNameList = m_itemModel.findItems("itemName");
-    for (auto &item : itemNameList) {
-        m_itemModel.removeRow(item->row());
-    }
-
-    quick_item->deleteLater();
+    m_itemhandler.removeItem(quick_item);
 }
 
 void MainWindowHandler::removeRow(const int row)
@@ -156,24 +127,14 @@ void MainWindowHandler::removeRow(const int row)
         return;
     }
 
-    m_itemModel.removeRow(row);
-
-    if (m_item_list.size() <= row) {
-        qCCritical(rendering) << "Row to delete is larger than item size!";
-        return;
-    }
-
-    auto item = m_item_list.at(row);
-    m_item_list.removeAt(row);
-
-    item->deleteLater();
+    m_itemhandler.model()->removeRow(row);
 }
 
 int MainWindowHandler::getRowByItemName(QVariant name)
 {
     const auto itemName = name.toString();
 
-    const auto itemList = m_itemModel.findItems(itemName);
+    const auto itemList = m_itemhandler.model()->findItems(itemName);
 
     if (itemList.isEmpty()) {
         qCCritical(rendering) << "Can't find clicked item. This shouldn't happen!";
@@ -185,8 +146,5 @@ int MainWindowHandler::getRowByItemName(QVariant name)
 
 void MainWindowHandler::clearAllItems()
 {
-    qDeleteAll(m_item_list.begin(), m_item_list.end());
-    m_item_list.clear();
-
-    m_itemModel.removeRows(0, m_itemModel.rowCount());
+    m_itemhandler.clear();
 }

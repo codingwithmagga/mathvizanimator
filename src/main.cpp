@@ -4,11 +4,11 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <iostream>
 
-#include <QQuickItem>
+#include <QDirIterator>
 
 #include "mainwindow.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     qSetMessagePattern("%{time dd.MM.yyyy hh:mm:ss.zzz} | "
                        "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{if-"
@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     MainWindowHandler main_window(&engine);
 
     const QUrl url("qrc:/qt/qml/cwa/mva/app/qml/Main.qml");
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+    QObject::connect(
+        &engine, &QQmlApplicationEngine::objectCreationFailed,
         &app, []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.load(url);
@@ -29,4 +30,8 @@ int main(int argc, char *argv[])
     main_window.init();
 
     return app.exec();
+
+    // TODO: When quitting program crashes in Linux with
+    // malloc_consolidate(): unaligned fastbin chunk detected
+    // Maybe it has sth to do with my library structure
 }

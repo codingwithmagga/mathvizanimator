@@ -6,10 +6,14 @@ Item {
     height: 40
     width: parent.width
 
+    required property string image_src
+    required property string name
+    required property string file
+
     MouseArea {
 
-        function createShadow(file, mouse) {
-            var point = mapToItem(root, mouseX, mouseY)
+        function createShadow(file) {
+            var point = mapToItem(null, mouseX, mouseY)
 
             console.log("file: " + file)
 
@@ -35,9 +39,7 @@ Item {
         id: dragArea
 
         anchors.fill: parent
-        onPressed: mouse => {
-                       drag.target = createShadow(file, mouse)
-                   }
+        onPressed:  drag.target = createShadow(file)
 
         onReleased: mouse => {
                         drag.target.Drag.drop()

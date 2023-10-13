@@ -3,8 +3,7 @@
 
 #include "textitem.h"
 
-class TestTextItem : public QObject
-{
+class TestTextItem : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase();
@@ -63,7 +62,7 @@ void TestTextItem::latexRenderTest()
 
     QCOMPARE(m_test_text.getLatexSource(), test_latex);
     QCOMPARE(m_test_text.getSvgFile(),
-             QDir::current().absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
+        QDir::current().absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
 }
 
 void TestTextItem::paintTest()
@@ -78,7 +77,7 @@ void TestTextItem::paintTest()
     m_test_text.paint(&painter);
     painter.restore();
 
-    expected_image.load("textitem/test_text.png");
+    expected_image.load("://test_images/test_text_image.png");
 
     QCOMPARE(image, expected_image);
 }

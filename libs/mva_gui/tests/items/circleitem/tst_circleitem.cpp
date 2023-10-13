@@ -3,8 +3,7 @@
 
 #include "circleitem.h"
 
-class TestCircleItem : public QObject
-{
+class TestCircleItem : public QObject {
     Q_OBJECT
 private slots:
     void initTestCase();
@@ -68,7 +67,7 @@ void TestCircleItem::paintTest()
     m_test_circle.paint(&painter);
     painter.restore();
 
-    expected_image.load("circleitem/test_circle.png");
+    expected_image.load("://test_images/test_circle_image.png");
 
     QCOMPARE(image, expected_image);
 }

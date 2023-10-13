@@ -16,6 +16,7 @@ ApplicationWindow {
     height: 600
     title: qsTr("mathvizanimator")
 
+    property ApplicationWindow appWindow: root
     property string thekey: "specialkeyhere"
     property url saveFile: ""
     property var dragItem: null
@@ -237,6 +238,8 @@ ApplicationWindow {
         }
 
         Rectangle {
+            id: mObjectsListViewRect
+
             color: palette.dark
             Layout.minimumWidth: 150
             Layout.preferredWidth: 300
@@ -250,21 +253,20 @@ ApplicationWindow {
 
                 anchors.fill: parent
 
-                rowSpacing: 4
-                columnSpacing: 2
+                alternatingRows: true
+
                 anchors.topMargin: horizontalHeader.implicitHeight
 
                 columnWidthProvider: function (column) {
                     return mObjectsListView.width / 2
                 }
-
                 model: item_model
 
                 selectionModel: ItemSelectionModel {
                     id: selectionModel
 
                     // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
-                    // maybe happens when using the same model twice?
+                    // maybe happens when using the same model twice? Watched on linux, windows don't have this problem...
                     model: item_model
                 }
 
@@ -280,7 +282,7 @@ ApplicationWindow {
                     background: Rectangle {
                         anchors.fill: parent
 
-                        color: row === mObjectsListView.currentRow ? palette.highlight : palette.dark
+                        color: row === mObjectsListView.currentRow ? palette.highlight : (mObjectsListView.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
                     }
                 }
 
