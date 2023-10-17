@@ -11,6 +11,12 @@ ItemHandler::ItemHandler(QObject *parent)
 
     m_itemmodel.setHorizontalHeaderItem(0, headerItemLeft);
     m_itemmodel.setHorizontalHeaderItem(1, headerItemRight);
+
+    QStandardItem *propertyHeaderItemLeft = new QStandardItem(tr("Name"));
+    QStandardItem *propertyHeaderItemRight = new QStandardItem(tr("Value"));
+
+    m_propertymodel.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
+    m_propertymodel.setHorizontalHeaderItem(1, propertyHeaderItemRight);
 }
 
 QList<QQuickItem *> ItemHandler::items()
@@ -71,6 +77,44 @@ void ItemHandler::removeItem(QQuickItem *const quick_item)
     for (auto &item : item_name_list) {
         m_itemmodel.removeRow(item->row());
     }
+}
+
+void ItemHandler::setCurrentRow(const int row)
+{
+    m_propertymodel.removeRows(0, m_propertymodel.rowCount());
+
+    if (row == -1) {
+        return;
+    }
+
+    const auto quick_item
+        = m_itemmodel.item(row)->data(ItemHandler::ItemRoles::QUICKITEM).value<QQuickItem *>();
+    const auto o = extractAbstractItem(quick_item).item;
+
+    auto mo = o->metaObject();
+    qDebug() << "## Properties of" << o << "##";
+    do {
+        if (QString(mo->className()).compare("QQuickPaintedItem") == 0) {
+            break;
+        }
+        qDebug() << "### Class" << mo->className() << "###";
+        std::vector<std::pair<QString, QVariant> > v;
+        v.reserve(mo->propertyCount() - mo->propertyOffset());
+        for (int i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
+            if (QString(mo->property(i).name()) == "file") {
+                continue;
+            }
+            v.emplace_back(mo->property(i).name(), mo->property(i).read(o));
+        }
+        for (auto &i : v) {
+            qDebug() << i.first << "=>" << i.second;
+
+            auto stdItemName(new QStandardItem(i.first));
+            auto stdItemValue(new QStandardItem(i.second.toString()));
+
+            m_propertymodel.appendRow(QList<QStandardItem *>{stdItemName, stdItemValue});
+        }
+    } while ((mo = mo->superClass()));
 }
 
 bool ItemHandler::itemAlreadyExists(QQuickItem *const quick_item)

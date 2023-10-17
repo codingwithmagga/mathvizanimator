@@ -36,6 +36,8 @@ public slots:
 
     void clearAllItems();
 
+    void currentRowChanged(const int row);
+
 private:
     QQmlApplicationEngine *m_qml_engine;
     QObject *m_qml_creation_area;

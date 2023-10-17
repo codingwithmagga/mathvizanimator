@@ -22,6 +22,8 @@ MainWindowHandler::MainWindowHandler(QQmlApplicationEngine *const engine)
     m_qml_engine->rootContext()->setContextProperty(QStringLiteral("main_window"), this);
     m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"),
                                                     m_itemhandler.model());
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("property_model"),
+                                                    m_itemhandler.propertyModel());
 
     m_savefile_handler.setSaveDir(
         QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
@@ -147,4 +149,9 @@ int MainWindowHandler::getRowByItemName(QVariant name)
 void MainWindowHandler::clearAllItems()
 {
     m_itemhandler.clear();
+}
+
+void MainWindowHandler::currentRowChanged(const int row)
+{
+    m_itemhandler.setCurrentRow(row);
 }

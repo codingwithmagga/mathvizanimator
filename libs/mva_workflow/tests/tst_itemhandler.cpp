@@ -17,6 +17,8 @@ private slots:
     void addIncompatibleItem();
 
     void checkItemData();
+    void checkItemProperties();
+
     void getItems();
 
     void removeItem();
@@ -150,6 +152,29 @@ void TestItemHandler::checkItemData()
     QCOMPARE(rect_item_1->data(ItemHandler::ItemRoles::QUICKITEM).value<QQuickItem *>()->height(),
              rectHeight);
     QCOMPARE(rect_item_2->data(Qt::DisplayRole), "RectangleItem");
+}
+
+void TestItemHandler::checkItemProperties()
+{
+    auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+    auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
+
+    const auto circle_item = qvariant_cast<AbstractItem *>(circle->property("item"));
+
+    ItemHandler itemhandler;
+    itemhandler.addItem(circle);
+    itemhandler.addItem(rect);
+    itemhandler.setCurrentRow(0);
+
+    const auto propModel = itemhandler.propertyModel();
+
+    QVERIFY(propModel->rowCount() > 0);
+
+    const auto prop_1_type = propModel->item(0);
+    const auto prop_1_val = propModel->item(0, 1);
+
+    QCOMPARE(prop_1_type->data(Qt::DisplayRole).toString(), "name");
+    QCOMPARE(prop_1_val->data(Qt::DisplayRole).toString(), circle_item->name());
 }
 
 void TestItemHandler::getItems()

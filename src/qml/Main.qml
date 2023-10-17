@@ -12,9 +12,12 @@ ApplicationWindow {
     id: root
 
     visible: true
-    width: 1200
+    width: 1400
     height: 600
     title: qsTr("mathvizanimator")
+
+    minimumHeight: 500
+    minimumWidth: 1200
 
     property ApplicationWindow appWindow: root
     property string thekey: "specialkeyhere"
@@ -154,7 +157,7 @@ ApplicationWindow {
             id: itemView
 
             Layout.minimumWidth: 50
-            Layout.preferredWidth: 150
+            Layout.preferredWidth: 100
             Layout.maximumWidth: 300
             Layout.minimumHeight: 150
             Layout.fillHeight: true
@@ -244,57 +247,150 @@ ApplicationWindow {
             Layout.minimumWidth: 150
             Layout.preferredWidth: 300
             Layout.maximumWidth: 400
-            Layout.minimumHeight: 150
+            Layout.minimumHeight: 200
             Layout.fillHeight: true
-            Layout.margins: 20
+            Layout.margins: 10
 
-            TableView {
-                id: mObjectsListView
+            ColumnLayout {
 
-                anchors.fill: parent
+                spacing: 0
 
-                alternatingRows: true
-
-                anchors.topMargin: horizontalHeader.implicitHeight
-
-                columnWidthProvider: function (column) {
-                    return mObjectsListView.width / 2
-                }
-                model: item_model
-
-                selectionModel: ItemSelectionModel {
-                    id: selectionModel
-
-                    // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
-                    // maybe happens when using the same model twice? Watched on linux, windows don't have this problem...
-                    model: item_model
+                HorizontalHeaderView {
+                    id: horizontalHeader
+                    syncView: mObjectsListView
+                    Layout.alignment: Qt.AlignTop
+                    clip: true
                 }
 
-                delegate: Label {
-                    required property bool current
+                ScrollView {
+                    id: mObjectsListViewScrollView
 
-                    id: delegateLabel
+                    Layout.preferredHeight: mObjectsListViewRect.height / 2
+                    Layout.preferredWidth: mObjectsListViewRect.width
+                    Layout.maximumWidth: mObjectsListViewRect.width
+                    Layout.minimumHeight: 100
+                    Layout.alignment: Qt.AlignTop
 
-                    text: display
-                    padding: 10
+                    contentWidth: mObjectsListView.width
+                    contentHeight: mObjectsListView.height
 
-                    color: row === mObjectsListView.currentRow ? palette.highlightedText : palette.text
-                    background: Rectangle {
-                        anchors.fill: parent
+                    ScrollBar.horizontal.policy: mObjectsListView.contentWidth > mObjectsListView.width ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                    ScrollBar.vertical.policy: mObjectsListView.contentHeight > mObjectsListView.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
 
-                        color: row === mObjectsListView.currentRow ? palette.highlight : (mObjectsListView.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+                    TableView {
+                        id: mObjectsListView
+
+                        width: mObjectsListViewRect.width
+                        height: mObjectsListViewRect.height / 2
+
+                        alternatingRows: true
+                        clip: true
+
+                        columnWidthProvider: function (column) {
+                            return mObjectsListView.model ? mObjectsListView.width
+                                                            / mObjectsListView.model.columnCount(
+                                                                ) : 0
+                        }
+
+                        model: item_model
+
+                        selectionModel: ItemSelectionModel {
+                            id: selectionModel
+
+                            // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
+                            // maybe happens when using the same model twice? Watched on linux, windows don't have this problem...
+                            model: item_model
+                        }
+
+                        delegate: Label {
+                            required property bool current
+
+                            id: delegateLabel
+
+                            text: display
+                            padding: 10
+
+                            color: row === mObjectsListView.currentRow ? palette.highlightedText : palette.text
+                            background: Rectangle {
+                                anchors.fill: parent
+
+                                color: row === mObjectsListView.currentRow ? palette.highlight : (mObjectsListView.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+                            }
+                        }
+
+                        onCurrentRowChanged: {
+                            main_window.currentRowChanged(currentRow)
+                        }
                     }
                 }
 
-                onCurrentRowChanged: console.log("current row changed")
-            }
+                HorizontalHeaderView {
+                    id: hHeaderPropTable
+                    syncView: mPropertyTable
+                    Layout.alignment: Qt.AlignTop
+                    Layout.preferredWidth: mPropertyTableScrollView.width
+                    clip: true
+                }
 
-            HorizontalHeaderView {
-                id: horizontalHeader
-                syncView: mObjectsListView
-                anchors.left: mObjectsListView.left
-                anchors.top: parent.top
-                clip: true
+                ScrollView {
+                    id: mPropertyTableScrollView
+
+                    Layout.preferredHeight: mObjectsListViewRect.height / 2
+                    Layout.preferredWidth: mObjectsListViewRect.width
+                    Layout.maximumWidth: mObjectsListViewRect.width
+                    Layout.minimumHeight: 100
+                    Layout.alignment: Qt.AlignTop
+
+                    contentWidth: mPropertyTable.width
+                    contentHeight: mPropertyTable.height
+
+                    ScrollBar.horizontal.policy: mPropertyTable.contentWidth > mPropertyTable.width ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                    ScrollBar.vertical.policy: mPropertyTable.contentHeight > mPropertyTable.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
+                    TableView {
+                        id: mPropertyTable
+
+                        width: parent.width
+                        height: parent.height
+
+                        alternatingRows: true
+                        clip: true
+
+                        columnWidthProvider: function (column) {
+                            return mPropertyTable.model ? mPropertyTable.width
+                                                          / mPropertyTable.model.columnCount(
+                                                              ) : 0
+                        }
+
+                        model: property_model
+
+                        selectionModel: ItemSelectionModel {
+                            id: mPropertyTableSelectionModel
+
+                            // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
+                            // maybe happens when using the same model twice? Watched on linux, windows don't have this problem...
+                            model: property_model
+                        }
+
+                        delegate: Label {
+                            required property bool current
+
+                            id: mPropertyTableDelegate
+
+                            text: display
+                            padding: 10
+
+                            color: row === mPropertyTable.currentRow ? palette.highlightedText : palette.text
+                            background: Rectangle {
+                                anchors.fill: parent
+
+                                color: row === mPropertyTable.currentRow ? palette.highlight : (mPropertyTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+                            }
+                        }
+
+                        onCurrentRowChanged: console.log("current row changed")
+                    }
+                }
             }
         }
     }

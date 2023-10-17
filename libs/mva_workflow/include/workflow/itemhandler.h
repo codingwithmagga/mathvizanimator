@@ -15,13 +15,17 @@ public:
     explicit ItemHandler(QObject* parent = nullptr);
 
     qsizetype numItems() const { return m_itemmodel.rowCount(); }
-    QStandardItemModel* model() { return &m_itemmodel; }
+    QStandardItemModel *model() { return &m_itemmodel; }
+    QStandardItemModel *propertyModel() { return &m_propertymodel; }
     QList<QQuickItem*> items();
 
 public slots:
     void clear();
-    void addItem(QQuickItem* const quick_item);
-    void removeItem(QQuickItem* const quick_item);
+
+    void addItem(QQuickItem *const quick_item);
+    void removeItem(QQuickItem *const quick_item);
+
+    void setCurrentRow(const int row);
 
 private:
     struct ItemExtract {
@@ -36,6 +40,7 @@ private:
     QString prepareNewItemName(const QString& old_item_name);
 
     QStandardItemModel m_itemmodel;
+    QStandardItemModel m_propertymodel;
 };
 
 class ItemModelItem : public QStandardItem {
