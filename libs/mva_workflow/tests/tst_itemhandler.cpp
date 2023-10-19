@@ -19,6 +19,8 @@ private slots:
     void checkItemData();
     void checkItemProperties();
 
+    void changeItemProperty();
+
     void getItems();
 
     void removeItem();
@@ -175,6 +177,28 @@ void TestItemHandler::checkItemProperties()
 
     QCOMPARE(prop_1_type->data(Qt::DisplayRole).toString(), "name");
     QCOMPARE(prop_1_val->data(Qt::DisplayRole).toString(), circle_item->name());
+}
+
+void TestItemHandler::changeItemProperty()
+{
+    auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+    const auto circle_item = qvariant_cast<AbstractItem *>(circle->property("item"));
+
+    ItemHandler itemhandler;
+    itemhandler.addItem(circle);
+    itemhandler.setCurrentRow(0);
+
+    const auto prop_model = itemhandler.propertyModel();
+    const QString new_name("newName");
+    const QColor new_color("green");
+    prop_model->setData(prop_model->index(0, 1), new_name);
+    prop_model->setData(prop_model->index(1, 1), new_color);
+
+    const auto item_model = itemhandler.model();
+    const auto item_model_circle = item_model->item(0);
+    QCOMPARE(circle_item->name(), new_name);
+    QCOMPARE(circle_item->color(), new_color);
+    QCOMPARE(item_model_circle->data(Qt::DisplayRole).toString(), new_name);
 }
 
 void TestItemHandler::getItems()

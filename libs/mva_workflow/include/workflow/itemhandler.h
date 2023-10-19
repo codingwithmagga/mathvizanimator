@@ -7,7 +7,14 @@
 
 #include "abstractitem.h"
 
-class ItemHandler : public QObject {
+class PropertyModel : public QStandardItemModel
+{
+public:
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+};
+
+class ItemHandler : public QObject
+{
     Q_OBJECT
 public:
     enum ItemRoles { QUICKITEM = Qt::UserRole + 1 };
@@ -27,6 +34,11 @@ public slots:
 
     void setCurrentRow(const int row);
 
+private slots:
+    void propertyDataChanged(const QModelIndex &topLeft,
+                             const QModelIndex &bottomRight,
+                             const QList<int> &roles = QList<int>());
+
 private:
     struct ItemExtract {
         AbstractItem* item;
@@ -40,12 +52,15 @@ private:
     QString prepareNewItemName(const QString& old_item_name);
 
     QStandardItemModel m_itemmodel;
-    QStandardItemModel m_propertymodel;
+    PropertyModel m_propertymodel;
+
+    int m_currentItemRow = -1;
 };
 
 class ItemModelItem : public QStandardItem {
 public:
-    explicit ItemModelItem(const QString& text);
+    explicit ItemModelItem(const QString &text);
+
     ~ItemModelItem();
 };
 

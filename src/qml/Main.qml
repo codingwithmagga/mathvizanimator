@@ -265,11 +265,14 @@ ApplicationWindow {
                 ScrollView {
                     id: mObjectsListViewScrollView
 
-                    Layout.preferredHeight: mObjectsListViewRect.height / 2
+                    Layout.preferredHeight: (mObjectsListViewRect.height
+                                             - horizontalHeader.implicitHeight
+                                             - hHeaderPropTable.implicitHeight) / 2
                     Layout.preferredWidth: mObjectsListViewRect.width
                     Layout.maximumWidth: mObjectsListViewRect.width
                     Layout.minimumHeight: 100
                     Layout.alignment: Qt.AlignTop
+                    Layout.fillHeight: true
 
                     contentWidth: mObjectsListView.width
                     contentHeight: mObjectsListView.height
@@ -328,18 +331,20 @@ ApplicationWindow {
                     id: hHeaderPropTable
                     syncView: mPropertyTable
                     Layout.alignment: Qt.AlignTop
-                    Layout.preferredWidth: mPropertyTableScrollView.width
                     clip: true
                 }
 
                 ScrollView {
                     id: mPropertyTableScrollView
 
-                    Layout.preferredHeight: mObjectsListViewRect.height / 2
+                    Layout.preferredHeight: (mObjectsListViewRect.height
+                                             - horizontalHeader.implicitHeight
+                                             - hHeaderPropTable.implicitHeight) / 2
                     Layout.preferredWidth: mObjectsListViewRect.width
                     Layout.maximumWidth: mObjectsListViewRect.width
                     Layout.minimumHeight: 100
                     Layout.alignment: Qt.AlignTop
+                    Layout.fillHeight: true
 
                     contentWidth: mPropertyTable.width
                     contentHeight: mPropertyTable.height
@@ -349,9 +354,6 @@ ApplicationWindow {
 
                     TableView {
                         id: mPropertyTable
-
-                        width: parent.width
-                        height: parent.height
 
                         alternatingRows: true
                         clip: true
@@ -386,9 +388,19 @@ ApplicationWindow {
 
                                 color: row === mPropertyTable.currentRow ? palette.highlight : (mPropertyTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
                             }
-                        }
 
-                        onCurrentRowChanged: console.log("current row changed")
+                            TableView.editDelegate: TextField {
+                                anchors.fill: parent
+                                text: display
+                                horizontalAlignment: TextInput.AlignHCenter
+                                verticalAlignment: TextInput.AlignVCenter
+                                Component.onCompleted: selectAll()
+
+                                TableView.onCommit: {
+                                    display = text
+                                }
+                            }
+                        }
                     }
                 }
             }

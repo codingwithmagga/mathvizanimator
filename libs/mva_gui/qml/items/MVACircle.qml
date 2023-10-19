@@ -18,6 +18,7 @@ MVABasicItem {
 
         MVAMouseArea {
             anchors.fill: parent
+            basicItem: rootMVACircle
 
             onClicked: {
                 rootMVACircle.clicked(circleItem.name)

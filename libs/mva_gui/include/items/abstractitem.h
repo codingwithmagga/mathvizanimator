@@ -7,29 +7,35 @@
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
-class AbstractItem : public QQuickPaintedItem
-{
+class AbstractItem : public QQuickPaintedItem {
     Q_OBJECT
-    // TODO: Notify signal or MEMBER keyword
-    Q_PROPERTY(QString name READ name WRITE setName)
-    Q_PROPERTY(QColor color READ color WRITE setColor)
-    Q_PROPERTY(QString file MEMBER m_qml_file)
+
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+    Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
 
 public:
-    enum class ObjectType { BEZIER, TEXT };
+    struct EditableProperties {
+        QStringList abstract_item_properties;
+        QStringList quick_item_properties;
+    };
 
-    AbstractItem(const QString &qml_file, QQuickItem *parent = nullptr);
-
-    virtual ObjectType getObjectType() const = 0;
+    AbstractItem(const QString& qml_file, QQuickItem* parent = nullptr);
 
     QString name() const;
-    void setName(const QString &name);
+    void setName(const QString& name);
 
     QColor color() const;
-    void setColor(const QColor &color);
+    void setColor(const QColor& color);
 
     virtual QJsonObject toJson() const;
-    virtual void setPropertiesFromJson(const QJsonObject &json);
+    virtual void setPropertiesFromJson(const QJsonObject& json);
+
+    virtual EditableProperties editableProperties() const;
+
+signals:
+    void nameChanged(const QString& new_name);
+    void colorChanged(const QColor& new_color);
 
 private:
     QString m_name;

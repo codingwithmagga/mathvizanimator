@@ -13,11 +13,10 @@ class TextItem : public AbstractItem {
 
     Q_PROPERTY(QString latexSource READ getLatexSource WRITE setLatexSource NOTIFY latexSourceChanged)
     Q_PROPERTY(QString svgFile READ getSvgFile WRITE setSvgFile NOTIFY svgFileChanged)
+    Q_PROPERTY(qreal scaleText READ getScaleText WRITE setScaleText NOTIFY scaleTextChanged)
 
 public:
     TextItem(QQuickItem* parent = nullptr);
-
-    ObjectType getObjectType() const override { return m_object_type_; };
 
     QString getSvgFile() const { return m_svg_file.absoluteFilePath(); }
     void setSvgFile(const QFileInfo& newSvgFile);
@@ -30,15 +29,20 @@ public:
     QString getLatexSource() const;
     void setLatexSource(const QString& newLatexSource);
 
+    qreal getScaleText() const;
+    void setScaleText(qreal newScaleText);
+
+    EditableProperties editableProperties() const override;
+
 signals:
     void latexSourceChanged(const QString& new_latex_source);
     void svgFileChanged(const QFileInfo& new_svg_file);
+    void scaleTextChanged(const qreal new_scale_text);
 
 private:
-    ObjectType m_object_type_ = ObjectType::TEXT;
-
     QFileInfo m_svg_file = QFileInfo("://templates/test.svg");
     QString m_latex_source;
+    qreal m_scale_text = 1.0;
 };
 
 #endif // TEXTITEM_H
