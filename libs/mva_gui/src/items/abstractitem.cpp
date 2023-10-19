@@ -2,19 +2,24 @@
 
 #include "abstractitem.h"
 
-AbstractItem::AbstractItem(const QString &qml_file, QQuickItem *parent)
+AbstractItem::AbstractItem(const QString& qml_file, QQuickItem* parent)
     : QQuickPaintedItem(parent)
     , m_qml_file(qml_file)
-{}
+{
+}
 
 QString AbstractItem::name() const
 {
     return m_name;
 }
 
-void AbstractItem::setName(const QString &name)
+void AbstractItem::setName(const QString& name)
 {
+    if (m_name == name) {
+        return;
+    }
     m_name = name;
+    nameChanged(m_name);
 }
 
 QColor AbstractItem::color() const
@@ -22,9 +27,13 @@ QColor AbstractItem::color() const
     return m_color;
 }
 
-void AbstractItem::setColor(const QColor &color)
+void AbstractItem::setColor(const QColor& color)
 {
+    if (m_color == color) {
+        return;
+    }
     m_color = color;
+    colorChanged(m_color);
 }
 
 QJsonObject AbstractItem::toJson() const
@@ -42,7 +51,7 @@ QJsonObject AbstractItem::toJson() const
     return json;
 }
 
-void AbstractItem::setPropertiesFromJson(const QJsonObject &json)
+void AbstractItem::setPropertiesFromJson(const QJsonObject& json)
 {
     if (const QJsonValue v = json["x"]; v.isDouble()) {
         parentItem()->setX(v.toDouble());
@@ -67,4 +76,14 @@ void AbstractItem::setPropertiesFromJson(const QJsonObject &json)
     if (const QJsonValue v = json["name"]; v.isString()) {
         m_name = v.toString();
     }
+}
+
+AbstractItem::EditableProperties AbstractItem::editableProperties() const
+{
+    EditableProperties editableProperties;
+
+    editableProperties.abstract_item_properties = QStringList { "name", "color" };
+    editableProperties.quick_item_properties = QStringList { "width", "height", "opacity", "rotation" };
+
+    return editableProperties;
 }

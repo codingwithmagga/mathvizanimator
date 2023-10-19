@@ -33,16 +33,21 @@ void TextItem::paint(QPainter* painter)
 
     QSvgRenderer renderer(m_svg_file.absoluteFilePath());
 
-    const auto size = renderer.defaultSize();
+    // Add 10 percent (1.1) additional space, because otherwise some text is cut off
+    // a little bit, for example the bottom of a small 't'
+    const auto add_space = 1.1;
+
+    const auto size = renderer.defaultSize() * m_scale_text * add_space;
     parentItem()->setWidth(size.width());
     parentItem()->setHeight(size.height());
     setWidth(size.width());
     setHeight(size.height());
 
-    renderer.render(painter, QRect(QPoint(x(), y()), size));
+    renderer.render(painter, QRect(QPoint(x(), y()), size / add_space));
     painter->restore();
 }
 
+// TODO: save everything from editableProperties()
 QJsonObject TextItem::toJson() const
 {
     auto json = AbstractItem::toJson();
@@ -58,6 +63,7 @@ QString TextItem::getLatexSource() const
     return m_latex_source;
 }
 
+// TODO: Refactor this function
 void TextItem::setLatexSource(const QString& newLatexSource)
 {
     QFile latexTemplateFile("://templates/template.tex");
@@ -104,4 +110,32 @@ void TextItem::setLatexSource(const QString& newLatexSource)
 
     m_latex_source = newLatexSource;
     emit latexSourceChanged(newLatexSource);
+}
+
+qreal TextItem::getScaleText() const
+{
+    return m_scale_text;
+}
+
+void TextItem::setScaleText(qreal newScaleText)
+{
+    if (qFuzzyCompare(m_scale_text, newScaleText)) {
+        return;
+    }
+
+    m_scale_text = newScaleText;
+    emit scaleTextChanged(m_scale_text);
+}
+
+AbstractItem::EditableProperties TextItem::editableProperties() const
+{
+    auto abstractList = AbstractItem::editableProperties();
+    abstractList.quick_item_properties.removeOne("width");
+    abstractList.quick_item_properties.removeOne("height");
+    abstractList.abstract_item_properties.removeOne("color");
+
+    abstractList.abstract_item_properties.append("latexSource");
+    abstractList.abstract_item_properties.append("scaleText");
+
+    return abstractList;
 }

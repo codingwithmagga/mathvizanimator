@@ -7,7 +7,14 @@
 
 #include "abstractitem.h"
 
-class ItemHandler : public QObject {
+class PropertyModel : public QStandardItemModel
+{
+public:
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+};
+
+class ItemHandler : public QObject
+{
     Q_OBJECT
 public:
     enum ItemRoles { QUICKITEM = Qt::UserRole + 1 };
@@ -15,13 +22,22 @@ public:
     explicit ItemHandler(QObject* parent = nullptr);
 
     qsizetype numItems() const { return m_itemmodel.rowCount(); }
-    QStandardItemModel* model() { return &m_itemmodel; }
+    QStandardItemModel *model() { return &m_itemmodel; }
+    QStandardItemModel *propertyModel() { return &m_propertymodel; }
     QList<QQuickItem*> items();
 
 public slots:
     void clear();
-    void addItem(QQuickItem* const quick_item);
-    void removeItem(QQuickItem* const quick_item);
+
+    void addItem(QQuickItem *const quick_item);
+    void removeItem(QQuickItem *const quick_item);
+
+    void setCurrentRow(const int row);
+
+private slots:
+    void propertyDataChanged(const QModelIndex &topLeft,
+                             const QModelIndex &bottomRight,
+                             const QList<int> &roles = QList<int>());
 
 private:
     struct ItemExtract {
@@ -36,11 +52,15 @@ private:
     QString prepareNewItemName(const QString& old_item_name);
 
     QStandardItemModel m_itemmodel;
+    PropertyModel m_propertymodel;
+
+    int m_currentItemRow = -1;
 };
 
 class ItemModelItem : public QStandardItem {
 public:
-    explicit ItemModelItem(const QString& text);
+    explicit ItemModelItem(const QString &text);
+
     ~ItemModelItem();
 };
 

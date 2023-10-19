@@ -3,12 +3,13 @@ import QtQuick
 MouseArea {
     id: mvaMouseArea
 
+    required property var basicItem
     property var highlightRect: null
     property int highlightRectMargin: 10
 
     onPressed: mouse => {
                    dragActive = true
-                   drag.target = parent
+                   drag.target = basicItem
 
                    const component = Qt.createComponent(
                        "MVASurroundingRectangle.qml")

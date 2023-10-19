@@ -13,13 +13,13 @@ MVABasicItem {
         id: textItem
 
         name: "text"
-        color: "black"
 
         height: parent.height
         width: parent.width
 
         MVAMouseArea {
             anchors.fill: parent
+            basicItem: rootMVAText
 
             onClicked: {
                 rootMVAText.clicked(textItem.name)
@@ -43,6 +43,10 @@ MVABasicItem {
 
         width: 400
 
+        background: Rectangle {
+            color: palette.window
+        }
+
         ColumnLayout {
             anchors.fill: parent
             spacing: 20
@@ -57,7 +61,7 @@ MVABasicItem {
                 anchors.margins: 60
 
                 background: Rectangle {
-                    color: "black"
+                    color: palette.base
                 }
 
                 focus: true

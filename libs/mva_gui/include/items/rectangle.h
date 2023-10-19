@@ -3,21 +3,16 @@
 
 #include "abstractitem.h"
 
-class RectangleItem : public AbstractItem
-{
+class RectangleItem : public AbstractItem {
     Q_OBJECT
     QML_ELEMENT
 
 public:
-    explicit RectangleItem(QQuickItem *parent = nullptr);
+    explicit RectangleItem(QQuickItem* parent = nullptr);
 
-    ObjectType getObjectType() const override { return object_type_; };
+    void paint(QPainter* painter) override;
 
-    void paint(QPainter *painter) override;
-
-private:
-    ObjectType object_type_ = ObjectType::BEZIER;
+    EditableProperties editableProperties() const override;
 };
-
 
 #endif // RECTANGLE_H

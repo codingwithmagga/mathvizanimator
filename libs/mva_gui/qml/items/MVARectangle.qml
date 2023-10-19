@@ -18,6 +18,7 @@ MVABasicItem {
 
         MVAMouseArea {
             anchors.fill: parent
+            basicItem: rootMVARectangle
 
             onClicked: {
                 rootMVARectangle.clicked(rectangleItem.name)

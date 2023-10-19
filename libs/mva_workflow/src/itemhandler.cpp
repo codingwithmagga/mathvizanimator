@@ -3,23 +3,34 @@
 #include "abstractitem.h"
 #include "logging.h"
 
-ItemHandler::ItemHandler(QObject *parent)
-    : QObject{parent}
+ItemHandler::ItemHandler(QObject* parent)
+    : QObject { parent }
 {
-    QStandardItem *headerItemLeft = new QStandardItem(tr("Name"));
-    QStandardItem *headerItemRight = new QStandardItem(tr("Type"));
+    QStandardItem* headerItemLeft = new QStandardItem(tr("Name"));
+    QStandardItem* headerItemRight = new QStandardItem(tr("Type"));
 
     m_itemmodel.setHorizontalHeaderItem(0, headerItemLeft);
     m_itemmodel.setHorizontalHeaderItem(1, headerItemRight);
+
+    QStandardItem* propertyHeaderItemLeft = new QStandardItem(tr("Name"));
+    QStandardItem* propertyHeaderItemRight = new QStandardItem(tr("Value"));
+
+    m_propertymodel.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
+    m_propertymodel.setHorizontalHeaderItem(1, propertyHeaderItemRight);
+
+    connect(&m_propertymodel,
+        &QStandardItemModel::dataChanged,
+        this,
+        &ItemHandler::propertyDataChanged);
 }
 
-QList<QQuickItem *> ItemHandler::items()
+QList<QQuickItem*> ItemHandler::items()
 {
-    QList<QQuickItem *> item_list;
+    QList<QQuickItem*> item_list;
 
     for (int row = 0; row < m_itemmodel.rowCount(); ++row) {
         const auto model_item = m_itemmodel.item(row)->data(ItemRoles::QUICKITEM);
-        item_list.append(model_item.value<QQuickItem *>());
+        item_list.append(model_item.value<QQuickItem*>());
     }
 
     return item_list;
@@ -30,7 +41,7 @@ void ItemHandler::clear()
     m_itemmodel.removeRows(0, m_itemmodel.rowCount());
 }
 
-void ItemHandler::addItem(QQuickItem *const quick_item)
+void ItemHandler::addItem(QQuickItem* const quick_item)
 {
     if (itemAlreadyExists(quick_item)) {
         return;
@@ -54,10 +65,10 @@ void ItemHandler::addItem(QQuickItem *const quick_item)
 
     stdItemName->setData(QVariant::fromValue(quick_item), ItemRoles::QUICKITEM);
 
-    m_itemmodel.appendRow(QList<QStandardItem *>{stdItemName, stdItemType});
+    m_itemmodel.appendRow(QList<QStandardItem*> { stdItemName, stdItemType });
 }
 
-void ItemHandler::removeItem(QQuickItem *const quick_item)
+void ItemHandler::removeItem(QQuickItem* const quick_item)
 {
     const auto item_extract = extractAbstractItem(quick_item);
 
@@ -68,23 +79,134 @@ void ItemHandler::removeItem(QQuickItem *const quick_item)
     const auto remove_item_name = item_extract.item->name();
 
     auto item_name_list = m_itemmodel.findItems(remove_item_name);
-    for (auto &item : item_name_list) {
+    for (auto& item : item_name_list) {
         m_itemmodel.removeRow(item->row());
     }
 }
 
-bool ItemHandler::itemAlreadyExists(QQuickItem *const quick_item)
+// TODO: Refactor this function, give usefull var names
+void ItemHandler::setCurrentRow(const int row)
+{
+    m_propertymodel.removeRows(0, m_propertymodel.rowCount());
+    m_currentItemRow = row;
+
+    if (row == -1) {
+        return;
+    }
+
+    const auto quick_item
+        = m_itemmodel.item(row)->data(ItemHandler::ItemRoles::QUICKITEM).value<QQuickItem*>();
+    const auto o = extractAbstractItem(quick_item);
+
+    if (o.error) {
+        return;
+    }
+
+    auto mo_abstract = o.item->metaObject();
+    auto mo = quick_item->metaObject();
+
+    const auto allowedProperties = o.item->editableProperties();
+
+    do {
+        if (QString(mo_abstract->className()) == "QQuickPaintedItem") {
+            break;
+        }
+        QList<std::pair<QString, QVariant>> propList;
+        for (int i = mo_abstract->propertyOffset(); i < mo_abstract->propertyCount(); ++i) {
+            if (allowedProperties.abstract_item_properties.contains(QString(mo_abstract->property(i).name()))) {
+                propList.emplace_back(mo_abstract->property(i).name(), mo_abstract->property(i).read(o.item));
+            }
+        }
+
+        for (auto& property : propList) {
+            auto stdItemName(new QStandardItem(property.first));
+            auto stdItemValue(new QStandardItem(property.second.toString()));
+
+            m_propertymodel.appendRow(QList<QStandardItem*> { stdItemName, stdItemValue });
+        }
+
+    } while ((mo_abstract = mo_abstract->superClass()));
+
+    do {
+        QList<std::pair<QString, QVariant>> propList;
+        for (int i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
+            if (allowedProperties.quick_item_properties.contains(QString(mo->property(i).name()))) {
+                propList.emplace_back(mo->property(i).name(), mo->property(i).read(quick_item));
+            }
+        }
+
+        for (auto& property : propList) {
+            auto stdItemName(new QStandardItem(property.first));
+            auto stdItemValue(new QStandardItem(property.second.toString()));
+
+            m_propertymodel.appendRow(QList<QStandardItem*> { stdItemName, stdItemValue });
+        }
+
+    } while ((mo = mo->superClass()));
+
+    // TODO: sort elements?
+}
+
+// TODO: Refactor this
+// TODO: Create custom ItemModels and items which contain pointers to the data, s.t. this will be done automatically
+void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
+    const QModelIndex& bottomRight,
+    const QList<int>& roles)
+{
+    // Assume only two roles (display + edit) and one Item is changed at a time, otherwise return
+    if (topLeft != bottomRight || roles.size() != 2) {
+        return;
+    }
+
+    // TODO: Prevent editing other columns
+    if (topLeft.column() != 1) {
+        qCWarning(itemhandler) << "Dont change values in column " << topLeft.column()
+                               << "in property editor.";
+        return;
+    }
+
+    if (!roles.contains(Qt::DisplayRole)) {
+        return;
+    }
+
+    // Set new name in item model
+    if (m_propertymodel.data(m_propertymodel.index(topLeft.row(), 0)).toString() == "name") {
+        QMap<int, QVariant> changedValue;
+        changedValue.insert(roles[0], m_propertymodel.data(topLeft));
+        m_itemmodel.setItemData(m_itemmodel.index(m_currentItemRow, 0), changedValue);
+    }
+
+    // Update item
+    auto item = m_itemmodel.item(m_currentItemRow, 0);
+    auto quick_item = item->data(ItemRoles::QUICKITEM).value<QQuickItem*>();
+    auto itemExtract = extractAbstractItem(item->data(ItemRoles::QUICKITEM).value<QQuickItem*>());
+
+    if (itemExtract.error) {
+        return;
+    }
+
+    auto property = m_propertymodel.data(m_propertymodel.index(topLeft.row(), 0)).toString();
+    if (itemExtract.item->editableProperties().abstract_item_properties.contains(property)) {
+        itemExtract.item->setProperty(property.toUtf8(), m_propertymodel.data(topLeft));
+        itemExtract.item->update();
+        return;
+    }
+    quick_item->setProperty(property.toUtf8(), m_propertymodel.data(topLeft));
+    quick_item->update();
+}
+
+bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item)
 {
     for (int row = 0; row < m_itemmodel.rowCount(); ++row) {
         const auto model_item = m_itemmodel.item(row)->data(ItemRoles::QUICKITEM);
-        if (model_item.value<QQuickItem *>() == quick_item) {
+        if (model_item.value<QQuickItem*>() == quick_item) {
             return true;
         }
     }
     return false;
 }
 
-bool ItemHandler::itemNameAlreadyExists(const QString &name)
+bool ItemHandler::itemNameAlreadyExists(const QString& name)
 {
     for (int row = 0; row < m_itemmodel.rowCount(); ++row) {
         const auto rowItemName = m_itemmodel.item(row)->data(Qt::DisplayRole).toString();
@@ -95,12 +217,12 @@ bool ItemHandler::itemNameAlreadyExists(const QString &name)
     return false;
 }
 
-ItemHandler::ItemExtract ItemHandler::extractAbstractItem(QQuickItem *const quick_item)
+ItemHandler::ItemExtract ItemHandler::extractAbstractItem(QQuickItem* const quick_item)
 {
     ItemHandler::ItemExtract item_extract;
 
     item_extract.error = false;
-    item_extract.item = qvariant_cast<AbstractItem *>(quick_item->property("item"));
+    item_extract.item = qvariant_cast<AbstractItem*>(quick_item->property("item"));
 
     if (!item_extract.item) {
         qCWarning(itemhandler) << "Given QQuickItem has no item property. Task can't be fullfilled";
@@ -110,7 +232,7 @@ ItemHandler::ItemExtract ItemHandler::extractAbstractItem(QQuickItem *const quic
     return item_extract;
 }
 
-QString ItemHandler::prepareNewItemName(const QString &old_item_name)
+QString ItemHandler::prepareNewItemName(const QString& old_item_name)
 {
     int trailing_num = 1;
     QString new_item_name = old_item_name + "_" + QString::number(trailing_num);
@@ -123,19 +245,31 @@ QString ItemHandler::prepareNewItemName(const QString &old_item_name)
     return new_item_name;
 }
 
-ItemModelItem::ItemModelItem(const QString &text)
+ItemModelItem::ItemModelItem(const QString& text)
     : QStandardItem(text)
-{}
+{
+}
 
 ItemModelItem::~ItemModelItem()
 {
     auto storedQuickItem = data(ItemHandler::ItemRoles::QUICKITEM);
 
     if (storedQuickItem.isValid()) {
-        auto quickItem = storedQuickItem.value<QQuickItem *>();
+        auto quickItem = storedQuickItem.value<QQuickItem*>();
 
         if (quickItem) {
             quickItem->deleteLater();
         }
     }
+}
+
+Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
+{
+    auto flags = QAbstractItemModel::flags(index);
+
+    if (index.column() == 1) {
+        flags |= Qt::ItemIsEditable;
+        return flags;
+    }
+    return QAbstractItemModel::flags(index);
 }

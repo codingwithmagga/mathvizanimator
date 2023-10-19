@@ -11,6 +11,7 @@ private slots:
     void toJsonTest();
     void latexRenderTest();
     void paintTest();
+    void paintTestScaled();
 
 private:
     const qreal m_test_x = 46;
@@ -78,6 +79,25 @@ void TestTextItem::paintTest()
     painter.restore();
 
     expected_image.load("://test_images/test_text_image.png");
+
+    QCOMPARE(image, expected_image);
+}
+
+void TestTextItem::paintTestScaled()
+{
+    QImage image(600, 400, QImage::Format::Format_ARGB32);
+    QImage expected_image = image;
+    image.fill("white");
+    QPainter painter(&image);
+
+    m_test_text.setScaleText(2.4);
+
+    painter.save();
+    painter.translate(m_test_text.parentItem()->position());
+    m_test_text.paint(&painter);
+    painter.restore();
+
+    expected_image.load("://test_images/test_text_image_scaled.png");
 
     QCOMPARE(image, expected_image);
 }
