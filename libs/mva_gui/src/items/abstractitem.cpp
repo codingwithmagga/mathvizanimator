@@ -83,7 +83,7 @@ AbstractItem::EditableProperties AbstractItem::editableProperties() const
     EditableProperties editableProperties;
 
     editableProperties.abstract_item_properties = QStringList { "name", "color" };
-    editableProperties.quick_item_properties = QStringList { "width", "height", "opacity", "rotation" };
+    editableProperties.quick_item_properties = QStringList { "width", "height", "opacity", "rotation", "x", "y" };
 
     return editableProperties;
 }

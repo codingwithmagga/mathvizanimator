@@ -18,7 +18,7 @@ void Renderer::render(const QList<AbstractItem*>& item_list)
               << "-f"
               << "rawvideo"
               << "-video_size"
-              << "600x400"
+              << "1024x768"
               << "-pix_fmt"
               << "bgra"
               << "-r"
@@ -50,7 +50,7 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list)
     const int num_frames = 72;
 
     for (int frame = 0; frame < num_frames; ++frame) {
-        QImage image(600, 400, QImage::Format::Format_ARGB32);
+        QImage image(1024, 768, QImage::Format::Format_ARGB32);
         image.fill("white");
         QPainter painter(&image);
 
@@ -62,7 +62,7 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list)
         }
 
         auto imageData = reinterpret_cast<char*>(image.bits());
-        renderProcess.write(imageData, 600 * 400 * 4);
+        renderProcess.write(imageData, 1024 * 768 * 4);
     }
 
     renderProcess.closeWriteChannel();
