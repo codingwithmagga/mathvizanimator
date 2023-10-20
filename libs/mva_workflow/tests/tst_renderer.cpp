@@ -71,13 +71,11 @@ void TestRenderer::render()
         QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), 24);
         QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 3000);
         QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-            QSize(600, 400));
+            QSize(1024, 768));
     });
 
     m_renderer.render(m_item_list);
-    //  if (spy.count() == 0) {
     QVERIFY(spy.wait(10000));
-    //  }
 }
 
 void TestRenderer::cleanupTestCase()

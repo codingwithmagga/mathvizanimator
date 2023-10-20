@@ -15,8 +15,6 @@ Item {
         function createShadow(file) {
             var point = mapToItem(null, mouseX, mouseY)
 
-            console.log("file: " + file)
-
             const component = Qt.createComponent(file)
             if (component.status === Component.Ready) {
                 var object = component.createObject(root, {
@@ -39,7 +37,7 @@ Item {
         id: dragArea
 
         anchors.fill: parent
-        onPressed:  drag.target = createShadow(file)
+        onPressed: drag.target = createShadow(file)
 
         onReleased: mouse => {
                         drag.target.Drag.drop()

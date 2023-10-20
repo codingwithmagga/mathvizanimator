@@ -173,9 +173,8 @@ ApplicationWindow {
             }
         }
 
-        DropArea {
-            id: creationArea
-            objectName: "creationArea"
+        Rectangle {
+            id: dropRectangle
 
             Layout.minimumWidth: 600
             Layout.minimumHeight: 400
@@ -183,59 +182,93 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.margins: 20
 
-            property var abstractItem: null
-            property var abstractComponent: null
+            color: palette.dark
 
-            signal itemAdded(Item item)
+            // TODO: Put this in a reusable component
+            Item {
+                id: dropAreaContainer
 
-            clip: true
+                property real aimedRatio: 768 / 1024
 
-            Drag.keys: [root.thekey]
+                property bool parentIsLarge: parentRatio > aimedRatio
+                property double parentRatio: parent.height / parent.width
 
-            onDropped: drop => {
-                           function itemClicked(itemName) {
-                               var row = main_window.getRowByItemName(itemName)
-                               selectionModel.setCurrentIndex(
-                                           selectionModel.model.index(row, 0),
-                                           ItemSelectionModel.Current)
-                           }
+                anchors.horizontalCenter: dropRectangle.horizontalCenter
+                anchors.verticalCenter: dropRectangle.verticalCenter
 
-                           drop.accept(Qt.MoveAction)
+                height: parentIsLarge ? width * aimedRatio : parent.height
+                width: parentIsLarge ? parent.width : height / aimedRatio
 
-                           console.log("qml file: " + drag.source.item.file)
-                           const component = Qt.createComponent(
-                               drag.source.item.file)
+                DropArea {
+                    id: creationArea
+                    objectName: "creationArea"
 
-                           if (component.status === Component.Ready) {
+                    property var abstractItem: null
+                    property var abstractComponent: null
 
-                               abstractItem = component.createObject(
-                                   creationArea, {
-                                       "x": drag.x,
-                                       "y": drag.y,
-                                       "init": true
-                                   })
+                    property double baseWidth: 1024
+                    property double baseHeight: baseWidth * dropAreaContainer.aimedRatio
+                    property double scaleFactor: parent.width / baseWidth
 
-                               abstractItem.clicked.connect(itemClicked)
+                    signal itemAdded(Item item)
 
-                               itemAdded(abstractItem)
-                           } else {
-                               console.log("Error creating object")
-                           }
-                       }
+                    anchors.centerIn: parent
 
-            Rectangle {
+                    width: baseWidth
+                    height: baseHeight
+                    scale: scaleFactor
 
-                id: dropZone
+                    clip: true
 
-                anchors.fill: parent
-                color: "white"
-            }
+                    Drag.keys: [root.thekey]
 
-            TapHandler {
-                onTapped: {
-                    selectionModel.setCurrentIndex(
-                                selectionModel.model.index(-1, 0),
-                                ItemSelectionModel.Current)
+                    onDropped: drop => {
+                                   function itemClicked(itemName) {
+                                       var row = main_window.getRowByItemName(
+                                                   itemName)
+                                       selectionModel.setCurrentIndex(
+                                                   selectionModel.model.index(
+                                                       row, 0),
+                                                   ItemSelectionModel.Current)
+                                   }
+
+                                   drop.accept(Qt.MoveAction)
+
+                                   const component = Qt.createComponent(
+                                       drag.source.item.file)
+
+                                   if (component.status === Component.Ready) {
+
+                                       abstractItem = component.createObject(
+                                           creationArea, {
+                                               "x": drag.x,
+                                               "y": drag.y,
+                                               "init": true
+                                           })
+
+                                       abstractItem.clicked.connect(itemClicked)
+
+                                       itemAdded(abstractItem)
+                                   } else {
+                                       console.log("Error creating object")
+                                   }
+                               }
+
+                    Rectangle {
+
+                        id: dropZone
+
+                        anchors.fill: parent
+                        color: "white"
+                    }
+
+                    TapHandler {
+                        onTapped: {
+                            selectionModel.setCurrentIndex(
+                                        selectionModel.model.index(-1, 0),
+                                        ItemSelectionModel.Current)
+                        }
+                    }
                 }
             }
         }
