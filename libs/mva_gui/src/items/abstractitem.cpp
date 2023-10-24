@@ -19,7 +19,7 @@ void AbstractItem::setName(const QString& name)
         return;
     }
     m_name = name;
-    nameChanged(m_name);
+    emit nameChanged(m_name);
 }
 
 QColor AbstractItem::color() const
@@ -33,7 +33,7 @@ void AbstractItem::setColor(const QColor& color)
         return;
     }
     m_color = color;
-    colorChanged(m_color);
+    emit colorChanged(m_color);
 }
 
 QJsonObject AbstractItem::toJson() const

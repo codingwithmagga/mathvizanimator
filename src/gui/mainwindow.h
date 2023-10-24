@@ -13,13 +13,17 @@
 
 class MainWindowHandler : public QObject
 {
-
     Q_OBJECT
 
+    Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY pixelWidthChanged)
+    Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY pixelHeightChanged)
+    Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
+
 public:
-    MainWindowHandler(QQmlApplicationEngine *const engine);
+    MainWindowHandler();
 
     void init();
+    void initEngine(QQmlApplicationEngine *const engine);
 
 public slots:
 
@@ -34,9 +38,24 @@ public slots:
 
     int getRowByItemName(QVariant name);
 
+    void updateProjectSettings(QVariantList newProjectSettings);
+
     void clearAllItems();
 
     void currentRowChanged(const int row);
+
+    qint32 pixelWidth() const;
+    qint32 pixelHeight() const;
+    qint32 fps() const;
+
+    void setPixelWidth(qint32 new_pixel_width);
+    void setPixelHeight(qint32 new_pixel_height);
+    void setFPS(qint32 new_fps);
+
+signals:
+    void pixelWidthChanged(const qint32 new_pixel_width);
+    void pixelHeightChanged(const qint32 new_pixel_height);
+    void fpsChanged(const qint32 new_fps);
 
 private:
     QQmlApplicationEngine *m_qml_engine;

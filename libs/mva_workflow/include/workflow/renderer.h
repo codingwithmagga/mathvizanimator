@@ -10,7 +10,16 @@
 class Renderer : public QObject {
     Q_OBJECT
 public:
+    struct ProjectSettings {
+        qint32 width = 1024;
+        qint32 height = 768;
+        qint32 fps = 24;
+    };
+
     explicit Renderer(QObject* parent = nullptr);
+
+    ProjectSettings projectSettings() const;
+    void setProjectSettings(const ProjectSettings& new_project_settings);
 
 public slots:
     void render(const QList<AbstractItem*>& item_list);
@@ -23,7 +32,8 @@ private slots:
     void renderingProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-    QProcess renderProcess;
+    QProcess m_render_process;
+    ProjectSettings m_project_settings;
 };
 
 #endif // RENDERER_H

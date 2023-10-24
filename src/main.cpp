@@ -16,9 +16,10 @@ int main(int argc, char* argv[])
 
     QGuiApplication app(argc, argv);
 
+    MainWindowHandler main_window;
     QQmlApplicationEngine engine;
 
-    MainWindowHandler main_window(&engine);
+    main_window.initEngine(&engine);
 
     const QUrl url("qrc:/qt/qml/cwa/mva/app/qml/Main.qml");
     QObject::connect(
@@ -30,8 +31,4 @@ int main(int argc, char* argv[])
     main_window.init();
 
     return app.exec();
-
-    // TODO: When quitting program crashes in Linux with
-    // malloc_consolidate(): unaligned fastbin chunk detected
-    // Maybe it has sth to do with my library structure
 }
