@@ -16,6 +16,8 @@ ApplicationWindow {
     height: 600
     title: qsTr("mathvizanimator")
 
+    font.pointSize: 14
+
     minimumHeight: 500
     minimumWidth: 1200
 
@@ -83,6 +85,120 @@ ApplicationWindow {
         }
     }
 
+    Popup {
+        id: projectSettingsPopup
+        anchors.centerIn: parent
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+        padding: 12
+
+        property list<int> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text]
+
+        ColumnLayout {
+            id: mainLayout
+
+            anchors.fill: parent
+            Layout.alignment: Qt.AlignHCenter
+
+            spacing: 40
+
+            GridLayout {
+
+                columns: 2
+
+                rowSpacing: 20
+                columnSpacing: 20
+
+                Label {
+                    text: qsTr("Width (px):")
+
+                    Layout.alignment: Qt.AlignRight
+
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                TextField {
+                    id: widthInputField
+
+                    text: main_window.pixel_width
+
+                    horizontalAlignment: TextInput.AlignRight
+
+                    validator: IntValidator {
+                        bottom: 50
+                        top: 4096
+                    }
+                }
+
+                Label {
+                    text: qsTr("Height (px):")
+
+                    Layout.alignment: Qt.AlignRight
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                TextField {
+                    id: heightInputField
+
+                    text: main_window.pixel_height
+
+                    horizontalAlignment: TextInput.AlignRight
+
+                    validator: IntValidator {
+                        bottom: 50
+                        top: 2160
+                    }
+                }
+
+                Label {
+                    text: qsTr("fps:")
+
+                    Layout.alignment: Qt.AlignRight
+
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                TextField {
+                    id: fpsInputField
+
+                    text: main_window.fps
+
+                    horizontalAlignment: TextInput.AlignRight
+
+                    validator: IntValidator {
+                        bottom: 1
+                        top: 120
+                    }
+                }
+            }
+
+            Row {
+                spacing: 10
+
+                Layout.alignment: Qt.AlignRight
+
+                Button {
+                    text: qsTr("Save")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    // TODO: Validate data before sending, validators themselves are not enough
+                    onClicked: {
+                        main_window.updateProjectSettings(
+                                    projectSettingsPopup.projectData)
+                        projectSettingsPopup.close()
+                    }
+                }
+                Button {
+                    text: qsTr("Close")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    onClicked: projectSettingsPopup.close()
+                }
+            }
+        }
+    }
+
     menuBar: MenuBar {
         anchors.leftMargin: 0
         anchors.rightMargin: 0
@@ -136,6 +252,11 @@ ApplicationWindow {
             Action {
                 text: qsTr("&Snapshot")
             }
+            Action {
+                text: qsTr("Pro&ject Settings")
+
+                onTriggered: projectSettingsPopup.open()
+            }
         }
         Menu {
             title: qsTr("&Help")
@@ -188,16 +309,13 @@ ApplicationWindow {
             Item {
                 id: dropAreaContainer
 
-                property real aimedRatio: 768 / 1024
+                property real aimedRatio: main_window.pixel_height / main_window.pixel_width
 
                 property bool parentIsLarge: parentRatio > aimedRatio
-                property double parentRatio: parent.height / parent.width
+                property real parentRatio: parent.height / parent.width
+                property real availableWidth: parentIsLarge ? parent.width : height / aimedRatio
 
-                anchors.horizontalCenter: dropRectangle.horizontalCenter
-                anchors.verticalCenter: dropRectangle.verticalCenter
-
-                height: parentIsLarge ? width * aimedRatio : parent.height
-                width: parentIsLarge ? parent.width : height / aimedRatio
+                anchors.fill: parent
 
                 DropArea {
                     id: creationArea
@@ -206,9 +324,9 @@ ApplicationWindow {
                     property var abstractItem: null
                     property var abstractComponent: null
 
-                    property double baseWidth: 1024
+                    property double baseWidth: main_window.pixel_width
                     property double baseHeight: baseWidth * dropAreaContainer.aimedRatio
-                    property double scaleFactor: parent.width / baseWidth
+                    property double scaleFactor: dropAreaContainer.availableWidth / baseWidth
 
                     signal itemAdded(Item item)
 

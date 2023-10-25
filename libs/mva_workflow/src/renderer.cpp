@@ -18,11 +18,11 @@ void Renderer::render(const QList<AbstractItem*>& item_list)
               << "-f"
               << "rawvideo"
               << "-video_size"
-              << "1024x768"
+              << QString::number(m_project_settings.width) + "x" + QString::number(m_project_settings.height)
               << "-pix_fmt"
               << "bgra"
               << "-r"
-              << "24"
+              << QString::number(m_project_settings.fps)
               << "-i"
               << "-"
               << "-an"
@@ -31,18 +31,18 @@ void Renderer::render(const QList<AbstractItem*>& item_list)
               << "render_test.mp4";
 
     connect(
-        &renderProcess, &QProcess::started, this, [item_list, this] {
+        &m_render_process, &QProcess::started, this, [item_list, this] {
             renderingProcessStarted(item_list);
         });
-    connect(&renderProcess, &QProcess::finished, this, &Renderer::renderingProcessFinished);
+    connect(&m_render_process, &QProcess::finished, this, &Renderer::renderingProcessFinished);
     connect(
-        &renderProcess, &QProcess::readyRead, this, [this] {
-            qCInfo(renderer) << renderProcess.readAllStandardOutput();
+        &m_render_process, &QProcess::readyRead, this, [this] {
+            qCInfo(renderer) << m_render_process.readAllStandardOutput();
         });
 
-    renderProcess.setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
+    m_render_process.setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 
-    renderProcess.start(program, arguments);
+    m_render_process.start(program, arguments);
 }
 
 void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list)
@@ -50,7 +50,7 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list)
     const int num_frames = 72;
 
     for (int frame = 0; frame < num_frames; ++frame) {
-        QImage image(1024, 768, QImage::Format::Format_ARGB32);
+        QImage image(m_project_settings.width, m_project_settings.height, QImage::Format::Format_ARGB32);
         image.fill("white");
         QPainter painter(&image);
 
@@ -62,10 +62,10 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list)
         }
 
         auto imageData = reinterpret_cast<char*>(image.bits());
-        renderProcess.write(imageData, 1024 * 768 * 4);
+        m_render_process.write(imageData, m_project_settings.width * m_project_settings.height * 4);
     }
 
-    renderProcess.closeWriteChannel();
+    m_render_process.closeWriteChannel();
 }
 
 void Renderer::renderingProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -74,4 +74,14 @@ void Renderer::renderingProcessFinished(int exitCode, QProcess::ExitStatus exitS
 
     qCDebug(renderer) << "Process finished with status: " << exitStatus;
     emit finishedRendering(QFileInfo("render_test.mp4"));
+}
+
+Renderer::ProjectSettings Renderer::projectSettings() const
+{
+    return m_project_settings;
+}
+
+void Renderer::setProjectSettings(const Renderer::ProjectSettings& new_project_settings)
+{
+    m_project_settings = new_project_settings;
 }

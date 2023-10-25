@@ -147,6 +147,42 @@ void ItemHandler::setCurrentRow(const int row)
     // TODO: sort elements?
 }
 
+void ItemHandler::recalcItemsX(const qreal ratio)
+{
+    const auto itemList = items();
+
+    for (auto &item : itemList) {
+        item->setX(qRound(item->x() * ratio));
+    }
+}
+
+void ItemHandler::recalcItemsY(const qreal ratio)
+{
+    const auto itemList = items();
+
+    for (auto &item : itemList) {
+        item->setY(qRound(item->y() * ratio));
+    }
+}
+
+void ItemHandler::recalcItemsWidth(const qreal ratio)
+{
+    const auto itemList = items();
+
+    for (auto &item : itemList) {
+        item->setWidth(qRound(item->width() * ratio));
+    }
+}
+
+void ItemHandler::recalcItemsHeight(const qreal ratio)
+{
+    const auto itemList = items();
+
+    for (auto &item : itemList) {
+        item->setHeight(qRound(item->height() * ratio));
+    }
+}
+
 // TODO: Refactor this
 // TODO: Create custom ItemModels and items which contain pointers to the data, s.t. this will be done automatically
 void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,

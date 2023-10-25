@@ -14,12 +14,11 @@ private slots:
     void initTestCase();
 
     void render();
+    void renderSetting();
 
     void cleanupTestCase();
 
 private:
-    Renderer m_renderer;
-
     QList<AbstractItem*> m_item_list;
 };
 
@@ -60,9 +59,11 @@ void TestRenderer::initTestCase()
 
 void TestRenderer::render()
 {
-    QSignalSpy spy(&m_renderer, &Renderer::finishedRendering);
+    Renderer renderer;
 
-    connect(&m_renderer, &Renderer::finishedRendering, [](const QFileInfo& file) {
+    QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+
+    connect(&renderer, &Renderer::finishedRendering, [](const QFileInfo& file) {
         QVERIFY(file.exists());
 
         QMediaPlayer media_player;
@@ -74,7 +75,36 @@ void TestRenderer::render()
             QSize(1024, 768));
     });
 
-    m_renderer.render(m_item_list);
+    renderer.render(m_item_list);
+    QVERIFY(spy.wait(10000));
+}
+
+void TestRenderer::renderSetting()
+{
+    Renderer renderer;
+
+    QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+
+    connect(&renderer, &Renderer::finishedRendering, [](const QFileInfo& file) {
+        QVERIFY(file.exists());
+
+        QMediaPlayer media_player;
+        media_player.setSource(QUrl(file.absoluteFilePath()));
+
+        QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), 32);
+        QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 2250);
+        QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
+            QSize(600, 400));
+    });
+
+    Renderer::ProjectSettings project_settings;
+    project_settings.width = 600;
+    project_settings.height = 400;
+    project_settings.fps = 32;
+
+    renderer.setProjectSettings(project_settings);
+    renderer.render(m_item_list);
+
     QVERIFY(spy.wait(10000));
 }
 
