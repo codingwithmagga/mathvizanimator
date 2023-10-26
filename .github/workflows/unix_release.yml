@@ -57,13 +57,14 @@ jobs:
           aqtversion: ==3.1.*
           modules: 'qtmultimedia' 
 
-      - name: (3.1) Install Latex on ubuntu
+      - name: (3.1) Install Latex & gcov on ubuntu
         working-directory: "${{ env.SOURCE_DIR }}"
         if: startsWith(matrix.os, 'ubuntu')
         timeout-minutes: 10
         run: |
           sudo apt-get update && sudo apt-get upgrade
-          sudo apt-get install -y texlive-latex-extra latexmk
+          sudo apt-get install -y texlive-latex-extra latexmk 
+          pip install gcovr
 
       - name: (3.1) Install Latex on windows
         working-directory: "${{ env.SOURCE_DIR }}"
