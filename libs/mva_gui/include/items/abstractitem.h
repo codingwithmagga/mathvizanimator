@@ -44,6 +44,6 @@ private:
     QString m_qml_file;
 };
 
-Q_DECLARE_METATYPE(AbstractItem)
+Q_DECLARE_METATYPE(AbstractItem) // GCOVR_EXCL_LINE
 
 #endif // ABSTRACTITEM_H

@@ -132,7 +132,15 @@ jobs:
           mkdir -p "${{ env.SOURCE_DIR }}\build"
 
       - name: (5) Build unix
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
+        if: startsWith(matrix.os, 'ubuntu') 
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}" 
+          cmake --build . 
+          
+      - name: (5) Build macos
+        if: startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
@@ -155,23 +163,9 @@ jobs:
           export QT_QPA_PLATFORM=offscreen
           ctest -VV -C Release --output-on-failure
 
-      - name: (7) Zip build unix
-        working-directory: "${{ env.SOURCE_DIR }}"
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
-        timeout-minutes: 5 
-        run: |
-          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}/build/*" -r
-          
-      - name: (7) Zip build
-        if: startsWith(matrix.os, 'windows')
-        working-directory: "${{ env.SOURCE_DIR }}"
-        timeout-minutes: 5
-        run: |
-          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}\build\*" -r
+      - name: (7) Upload coverage reports to Codecov
+        if: startsWith(matrix.os, 'ubuntu') 
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: (8) Save build artifact
-        uses: actions/upload-artifact@v3
-        timeout-minutes: 10
-        with:
-          name: "qt-mva-build-${{matrix.os}}"
-          path: "${{ env.SOURCE_DIR }}/build/"

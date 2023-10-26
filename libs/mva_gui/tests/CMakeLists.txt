@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(mva_gui_tests VERSION ${PROJECT_VERSION} LANGUAGES CXX)
+project(mva_gui_tests VERSION ${PROJECT_VERSION} LANGUAGES CXX C)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS QuickTest)
 
@@ -50,7 +50,7 @@ target_link_libraries(
 )
 
 # Copy qml test files to build folder. I'm not sure if this is the right way to do it.
-# TODO: Maybe use file(COPY ...) for this task
+# TODO: Maybe use file(COPY ...) for this task or save it in a resource file
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
 configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
