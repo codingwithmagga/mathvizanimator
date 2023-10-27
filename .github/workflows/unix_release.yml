@@ -164,7 +164,14 @@ jobs:
           export QT_QPA_PLATFORM=offscreen
           ctest -VV -C Release --output-on-failure
 
-      - name: (7) Upload coverage reports to Codecov
+      - name: (7) Run code coverage on unix 
+        if: startsWith(matrix.os, 'ubuntu')
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          cmake --build . --target mva_test_coverage -j4
+
+      - name: (8) Upload coverage reports to Codecov
         if: startsWith(matrix.os, 'ubuntu') 
         uses: codecov/codecov-action@v3
         env:
