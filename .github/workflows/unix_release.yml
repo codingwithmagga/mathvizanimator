@@ -168,5 +168,8 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu') 
         uses: codecov/codecov-action@v3
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./mva_test_coverage.xml
+          flags: unittests
+          name: codecov-mva
 
