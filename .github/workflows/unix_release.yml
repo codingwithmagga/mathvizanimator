@@ -57,13 +57,14 @@ jobs:
           aqtversion: ==3.1.*
           modules: 'qtmultimedia' 
 
-      - name: (3.1) Install Latex on ubuntu
+      - name: (3.1) Install Latex & gcov on ubuntu
         working-directory: "${{ env.SOURCE_DIR }}"
         if: startsWith(matrix.os, 'ubuntu')
         timeout-minutes: 10
         run: |
           sudo apt-get update && sudo apt-get upgrade
-          sudo apt-get install -y texlive-latex-extra latexmk
+          sudo apt-get install -y texlive-latex-extra latexmk 
+          pip install gcovr
 
       - name: (3.1) Install Latex on windows
         working-directory: "${{ env.SOURCE_DIR }}"
@@ -132,7 +133,15 @@ jobs:
           mkdir -p "${{ env.SOURCE_DIR }}\build"
 
       - name: (5) Build unix
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
+        if: startsWith(matrix.os, 'ubuntu') 
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}" 
+          cmake --build . 
+          
+      - name: (5) Build macos
+        if: startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
@@ -148,30 +157,28 @@ jobs:
           cmake "${{ env.SOURCE_DIR }}" 
           cmake --build . --config Release
       
-      - name: (6) Run tests 
+      - name: (6) Run tests on windows and macos
+        if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest -VV -C Release --output-on-failure
 
-      - name: (7) Zip build unix
-        working-directory: "${{ env.SOURCE_DIR }}"
-        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
-        timeout-minutes: 5 
+      - name: (7) Run tests and code coverage on unix 
+        if: startsWith(matrix.os, 'ubuntu')
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
         run: |
-          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}/build/*" -r
-          
-      - name: (7) Zip build
-        if: startsWith(matrix.os, 'windows')
-        working-directory: "${{ env.SOURCE_DIR }}"
-        timeout-minutes: 5
-        run: |
-          7z a qt-mva-build-${{matrix.os}}.zip "${{ env.SOURCE_DIR }}\build\*" -r
+          export QT_QPA_PLATFORM=offscreen
+          cmake --build . --target mva_test_coverage -j4
 
-      - name: (8) Save build artifact
-        uses: actions/upload-artifact@v3
-        timeout-minutes: 10
-        with:
-          name: "qt-mva-build-${{matrix.os}}"
-          path: "${{ env.SOURCE_DIR }}/build/"
+      - name: (8) Upload coverage reports to Codecov
+        if: startsWith(matrix.os, 'ubuntu') 
+        uses: codecov/codecov-action@v3
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: build/mva_test_coverage.xml
+          flags: unittests
+          name: codecov-mva
+

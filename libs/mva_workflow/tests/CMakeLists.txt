@@ -11,7 +11,7 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Test Multimedia)
 qt_standard_project_setup()
 
 qt_add_executable(sfh_test_exe tst_savefilehandler.cpp)
-add_test(NAME sfh_test COMMAND sfh_test_exe)
+add_test(NAME sfh_test_exe COMMAND sfh_test_exe)
 target_link_libraries(sfh_test_exe
     PRIVATE
         Qt::Test
@@ -19,7 +19,7 @@ target_link_libraries(sfh_test_exe
 )
 
 qt_add_executable(itemhandler_test_exe tst_itemhandler.cpp)
-add_test(NAME itemhandler_test COMMAND itemhandler_test_exe)
+add_test(NAME itemhandler_test_exe COMMAND itemhandler_test_exe)
 target_link_libraries(itemhandler_test_exe
     PRIVATE
         Qt::Test
@@ -28,7 +28,7 @@ target_link_libraries(itemhandler_test_exe
 
 
 qt_add_executable(renderer_test_exe tst_renderer.cpp)
-add_test(NAME renderer_test COMMAND renderer_test_exe)
+add_test(NAME renderer_test_exe COMMAND renderer_test_exe)
 target_link_libraries(renderer_test_exe
     PRIVATE
         Qt::Test
