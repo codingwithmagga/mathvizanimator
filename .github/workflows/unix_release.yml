@@ -169,6 +169,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
+          export QT_QPA_PLATFORM=offscreen
           cmake --build . --target mva_test_coverage -j4
 
       - name: (8) Upload coverage reports to Codecov
