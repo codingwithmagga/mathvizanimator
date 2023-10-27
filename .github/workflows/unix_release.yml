@@ -157,14 +157,15 @@ jobs:
           cmake "${{ env.SOURCE_DIR }}" 
           cmake --build . --config Release
       
-      - name: (6) Run tests 
+      - name: (6) Run tests on windows and macos
+        if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest -VV -C Release --output-on-failure
 
-      - name: (7) Run code coverage on unix 
+      - name: (7) Run tests and code coverage on unix 
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
@@ -177,7 +178,7 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./mva_test_coverage.xml
+          files: build/mva_test_coverage.xml
           flags: unittests
           name: codecov-mva
 
