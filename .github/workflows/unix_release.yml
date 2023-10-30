@@ -157,8 +157,16 @@ jobs:
           cmake "${{ env.SOURCE_DIR }}" 
           cmake --build . --config Release
       
-      - name: (6) Run tests on windows and macos
-        if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos') 
+      - name: (6) Run tests on windows
+        if: startsWith(matrix.os, 'windows') 
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          ctest -VV -C Release --output-on-failure -LE SKIP*   
+          
+      - name: (6) Run tests on macos
+        if: startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
