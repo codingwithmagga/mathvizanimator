@@ -17,6 +17,14 @@ TextItem::TextItem(QQuickItem *parent)
     if (!m_svg_location.exists()) {
         m_svg_location.mkpath(".");
     }
+
+    // FallbackLocation
+    if (!QFileInfo(m_svg_location.absolutePath()).isWritable()) {
+        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
+        if (!m_svg_location.exists()) {
+            m_svg_location.mkpath(".");
+        }
+    }
 }
 
 void TextItem::setSvgFile(const QFileInfo& newSvgFile)

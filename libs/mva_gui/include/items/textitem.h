@@ -49,7 +49,7 @@ private:
     qreal m_scale_text = 1.0;
 
     // TODO: Relocate to a SvgHandler class or LatexHandler or similar
-    const QDir m_svg_location;
+    QDir m_svg_location;
 };
 
 #endif // TEXTITEM_H
