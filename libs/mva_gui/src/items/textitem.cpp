@@ -20,7 +20,7 @@ TextItem::TextItem(QQuickItem *parent)
 
     // FallbackLocation
     if (!QFileInfo(m_svg_location.absolutePath()).isWritable()) {
-        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
+        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
         if (!m_svg_location.exists()) {
             m_svg_location.mkpath(".");
         }
