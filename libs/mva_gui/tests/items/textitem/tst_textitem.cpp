@@ -58,12 +58,14 @@ void TestTextItem::toJsonTest()
 
 void TestTextItem::latexRenderTest()
 {
+    const QDir appPath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
+
     const QString test_latex = R"($\theta_1 = \delta + \epsilon$)";
     m_test_text.setLatexSource(test_latex);
 
     QCOMPARE(m_test_text.getLatexSource(), test_latex);
     QCOMPARE(m_test_text.getSvgFile(),
-        QDir::current().absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
+             appPath.absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
 }
 
 void TestTextItem::paintTest()
