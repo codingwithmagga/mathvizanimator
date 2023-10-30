@@ -20,10 +20,18 @@ TextItem::TextItem(QQuickItem *parent)
 
     // FallbackLocation
     if (!QFileInfo(m_svg_location.absolutePath()).isWritable()) {
-        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
         if (!m_svg_location.exists()) {
             m_svg_location.mkpath(".");
         }
+    }
+
+    m_latexmk_path = QStandardPaths::findExecutable("latexmk");
+    m_dvisvgm_path = QStandardPaths::findExecutable("dvisvgm");
+
+    // TODO: This needs to be in it's own class
+    if (m_latexmk_path.isEmpty() || m_dvisvgm_path.isEmpty()) {
+        qCritical() << "Latex or dvisvgm not found!";
     }
 }
 
@@ -114,12 +122,12 @@ void TextItem::setLatexSource(const QString& newLatexSource)
 
     QProcess latexmk_process;
     latexmk_process.setWorkingDirectory(m_svg_location.absolutePath());
-    latexmk_process.start("latexmk", QStringList{} << "-dvi" << latexFile.fileName());
+    latexmk_process.start(m_latexmk_path, QStringList{} << "-dvi" << latexFile.fileName());
     latexmk_process.waitForFinished();
 
     QProcess dvisvgm_process;
     dvisvgm_process.setWorkingDirectory(m_svg_location.absolutePath());
-    dvisvgm_process.start("dvisvgm",
+    dvisvgm_process.start(m_dvisvgm_path,
                           QStringList{} << hash + ".dvi"
                                         << "-n"
                                         << "-o" << hash + ".svg");
@@ -127,7 +135,7 @@ void TextItem::setLatexSource(const QString& newLatexSource)
 
     QProcess latexmk_process_2;
     latexmk_process_2.setWorkingDirectory(m_svg_location.absolutePath());
-    latexmk_process_2.start("latexmk", QStringList{} << "-C");
+    latexmk_process_2.start(m_latexmk_path, QStringList{} << "-C");
     latexmk_process_2.waitForFinished();
 
     setSvgFile(svgFile);
