@@ -52,6 +52,8 @@ public slots:
     void setPixelHeight(qint32 new_pixel_height);
     void setFPS(qint32 new_fps);
 
+    void openSVGFolder() const;
+
 signals:
     void pixelWidthChanged(const qint32 new_pixel_width);
     void pixelHeightChanged(const qint32 new_pixel_height);

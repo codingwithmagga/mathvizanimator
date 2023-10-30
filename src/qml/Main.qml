@@ -257,6 +257,11 @@ ApplicationWindow {
 
                 onTriggered: projectSettingsPopup.open()
             }
+            Action {
+                text: qsTr("&Open SVG Folder")
+
+                onTriggered: main_window.openSVGFolder()
+            }
         }
         Menu {
             title: qsTr("&Help")
