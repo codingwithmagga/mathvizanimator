@@ -117,14 +117,18 @@ void TextItem::setLatexSource(const QString& newLatexSource)
     latexmk_process.start("latexmk", QStringList{} << "-dvi" << latexFile.fileName());
     latexmk_process.waitForFinished();
 
-    latexmk_process.start("dvisvgm",
+    QProcess dvisvgm_process;
+    dvisvgm_process.setWorkingDirectory(m_svg_location.absolutePath());
+    dvisvgm_process.start("dvisvgm",
                           QStringList{} << hash + ".dvi"
                                         << "-n"
                                         << "-o" << hash + ".svg");
-    latexmk_process.waitForFinished();
+    dvisvgm_process.waitForFinished();
 
-    latexmk_process.start("latexmk", QStringList{} << "-C");
-    latexmk_process.waitForFinished();
+    QProcess latexmk_process_2;
+    latexmk_process_2.setWorkingDirectory(m_svg_location.absolutePath());
+    latexmk_process_2.start("latexmk", QStringList{} << "-C");
+    latexmk_process_2.waitForFinished();
 
     setSvgFile(svgFile);
 
