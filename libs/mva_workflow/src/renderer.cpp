@@ -47,7 +47,7 @@ void Renderer::render(const QList<AbstractItem*>& item_list)
 
 void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list)
 {
-    const int num_frames = 72;
+    const int num_frames = m_project_settings.fps * m_project_settings.video_length;
 
     for (int frame = 0; frame < num_frames; ++frame) {
         QImage image(m_project_settings.width, m_project_settings.height, QImage::Format::Format_ARGB32);
