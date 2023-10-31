@@ -22,7 +22,6 @@ target_link_libraries(
     PRIVATE Qt6::QuickTest
     PRIVATE Qt6::Qml
     PRIVATE mva::gui
-    PRIVATE mva::guiplugin
 )
 
 target_link_libraries(
@@ -30,7 +29,6 @@ target_link_libraries(
     PRIVATE Qt6::QuickTest
     PRIVATE Qt6::Qml
     PRIVATE mva::gui
-    PRIVATE mva::guiplugin
 )
 
 target_link_libraries(
@@ -38,7 +36,6 @@ target_link_libraries(
     PRIVATE Qt6::QuickTest
     PRIVATE Qt6::Qml
     PRIVATE mva::gui
-    PRIVATE mva::guiplugin
 )
 
 target_link_libraries(
@@ -46,7 +43,6 @@ target_link_libraries(
     PRIVATE Qt6::QuickTest
     PRIVATE Qt6::Qml
     PRIVATE mva::gui
-    PRIVATE mva::guiplugin
 )
 
 # Currently disabled for windows. Dunno why it don't work on github actions, locally

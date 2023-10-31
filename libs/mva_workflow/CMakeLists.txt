@@ -28,7 +28,6 @@ target_link_libraries(workflow
     PUBLIC
         Qt6::Core
         mva::gui
-        mva::guiplugin
 )
 
 target_include_directories(workflow

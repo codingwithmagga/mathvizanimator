@@ -32,7 +32,6 @@ set_target_properties(mva-app PROPERTIES
 target_link_libraries(mva-app
     PRIVATE
         mva::gui
-        mva::guiplugin
         mva::workflow
 )
 
