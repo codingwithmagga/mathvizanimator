@@ -2,7 +2,7 @@ run-name: 'Deploy package by @${{ github.actor }}'
 on:
   pull_request:
     branches:
-      - master
+      - main
       - pre_alpha
 defaults:
   run:
