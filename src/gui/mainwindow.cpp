@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QDesktopServices>
 #include <QList>
 #include <QQmlContext>
 #include <QStandardPaths>
@@ -225,4 +226,10 @@ void MainWindowHandler::setFPS(qint32 new_fps)
     m_renderer.setProjectSettings(projectSettings);
 
     emit pixelWidthChanged(new_fps);
+}
+
+void MainWindowHandler::openSVGFolder() const
+{
+    QDesktopServices::openUrl(
+        QUrl(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)));
 }

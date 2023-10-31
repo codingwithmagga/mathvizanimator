@@ -8,10 +8,31 @@
 #include <QProcess>
 #include <QSvgRenderer>
 
-TextItem::TextItem(QQuickItem* parent)
-    : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent }
+TextItem::TextItem(QQuickItem *parent)
+    : AbstractItem{"qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent}
+    , m_svg_location(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
 {
     Q_INIT_RESOURCE(mva_gui_resources);
+
+    if (!m_svg_location.exists()) {
+        m_svg_location.mkpath(".");
+    }
+
+    // FallbackLocation
+    if (!QFileInfo(m_svg_location.absolutePath()).isWritable()) {
+        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
+        if (!m_svg_location.exists()) {
+            m_svg_location.mkpath(".");
+        }
+    }
+
+    m_latexmk_path = QStandardPaths::findExecutable("latexmk");
+    m_dvisvgm_path = QStandardPaths::findExecutable("dvisvgm");
+
+    // TODO: This needs to be in it's own class
+    if (m_latexmk_path.isEmpty() || m_dvisvgm_path.isEmpty()) {
+        qCritical() << "Latex or dvisvgm not found!";
+    }
 }
 
 void TextItem::setSvgFile(const QFileInfo& newSvgFile)
@@ -80,7 +101,7 @@ void TextItem::setLatexSource(const QString& newLatexSource)
     const auto hash = QString(
         QCryptographicHash::hash(latexTemplate.toUtf8(), QCryptographicHash::Md5).toHex());
 
-    QFileInfo svgFile(hash + ".svg");
+    QFileInfo svgFile(m_svg_location.absoluteFilePath(hash + ".svg"));
     if (svgFile.exists()) {
         m_latex_source = newLatexSource;
         emit latexSourceChanged(newLatexSource);
@@ -89,7 +110,7 @@ void TextItem::setLatexSource(const QString& newLatexSource)
         return;
     }
 
-    QFile latexFile(hash + ".tex");
+    QFile latexFile(m_svg_location.absoluteFilePath(hash + ".tex"));
     if (!latexFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qWarning() << "Cannot open: " << latexFile.fileName();
         return;
@@ -99,14 +120,25 @@ void TextItem::setLatexSource(const QString& newLatexSource)
     stream << latexTemplate;
     latexFile.close();
 
-    qInfo() << QProcess::execute("latexmk", QStringList {} << "-dvi" << latexFile.fileName());
-    qInfo() << QProcess::execute("dvisvgm",
-        QStringList {} << hash + ".dvi"
-                       << "-n"
-                       << "-o" << hash + ".svg");
-    qInfo() << QProcess::execute("latexmk", QStringList {} << "-C");
+    QProcess latexmk_process;
+    latexmk_process.setWorkingDirectory(m_svg_location.absolutePath());
+    latexmk_process.start(m_latexmk_path, QStringList{} << "-dvi" << latexFile.fileName());
+    latexmk_process.waitForFinished();
 
-    setSvgFile(QFileInfo(hash + ".svg"));
+    QProcess dvisvgm_process;
+    dvisvgm_process.setWorkingDirectory(m_svg_location.absolutePath());
+    dvisvgm_process.start(m_dvisvgm_path,
+                          QStringList{} << hash + ".dvi"
+                                        << "-n"
+                                        << "-o" << hash + ".svg");
+    dvisvgm_process.waitForFinished();
+
+    QProcess latexmk_process_2;
+    latexmk_process_2.setWorkingDirectory(m_svg_location.absolutePath());
+    latexmk_process_2.start(m_latexmk_path, QStringList{} << "-C");
+    latexmk_process_2.waitForFinished();
+
+    setSvgFile(svgFile);
 
     m_latex_source = newLatexSource;
     emit latexSourceChanged(newLatexSource);

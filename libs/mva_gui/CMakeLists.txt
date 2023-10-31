@@ -4,7 +4,7 @@ project(mva_gui VERSION ${PROJECT_VERSION} LANGUAGES CXX C)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Svg)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Quick Svg)
 
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
@@ -45,6 +45,7 @@ qt_add_qml_module(cwa.mva.gui
 
 target_link_libraries(cwa.mva.gui
     PUBLIC
+        Qt6::Core
         Qt6::Quick
         Qt6::Svg
 )
@@ -62,6 +63,6 @@ add_library(mva::guiplugin ALIAS cwa.mva.guiplugin)
 # TODO: Add these files to a user path, so that they can be changed by the user
 # Currently they are provided by a resource file
 # configure_file(templates/template.tex $ENV{HOME}/.config/mathvizanimator/templates/template.tex)
-# configure_file(templates/test.svg $ENV{HOME}/.config/mathvizanimator/templates/test.svg)
+# configure_file(templates/placeholder.svg $ENV{HOME}/.config/mathvizanimator/templates/placeholder.svg)
 
 add_subdirectory(tests)

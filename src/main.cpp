@@ -14,6 +14,9 @@ int main(int argc, char* argv[])
                        "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{if-"
                        "critical}CRT%{endif}%{if-fatal}FTL%{endif} | %{category} | %{message}");
 
+    QCoreApplication::setApplicationName("mathvizanimator");
+    QCoreApplication::setOrganizationName("codingwithmagga");
+
     QGuiApplication app(argc, argv);
 
     MainWindowHandler main_window;
