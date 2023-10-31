@@ -14,6 +14,7 @@ public:
         qint32 width = 1024;
         qint32 height = 768;
         qint32 fps = 24;
+        qint32 video_length = 5;
     };
 
     explicit Renderer(QObject* parent = nullptr);

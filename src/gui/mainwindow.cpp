@@ -142,7 +142,7 @@ int MainWindowHandler::getRowByItemName(QVariant name)
 
 void MainWindowHandler::updateProjectSettings(QVariantList newProjectSettings)
 {
-    if (newProjectSettings.size() != 3) {
+    if (newProjectSettings.size() != 4) {
         qCCritical(mainwindow_handler)
             << "Internal error. Wrong number of project settings delivered.";
         return;
@@ -151,6 +151,7 @@ void MainWindowHandler::updateProjectSettings(QVariantList newProjectSettings)
     setPixelWidth(newProjectSettings[0].toInt());
     setPixelHeight(newProjectSettings[1].toInt());
     setFPS(newProjectSettings[2].toInt());
+    setVideoLength(newProjectSettings[3].toInt());
 }
 
 void MainWindowHandler::clearAllItems()
@@ -176,6 +177,11 @@ qint32 MainWindowHandler::pixelHeight() const
 qint32 MainWindowHandler::fps() const
 {
     return m_renderer.projectSettings().fps;
+}
+
+qint32 MainWindowHandler::videoLength() const
+{
+    return m_renderer.projectSettings().video_length;
 }
 
 void MainWindowHandler::setPixelWidth(qint32 new_pixel_width)
@@ -226,6 +232,20 @@ void MainWindowHandler::setFPS(qint32 new_fps)
     m_renderer.setProjectSettings(projectSettings);
 
     emit pixelWidthChanged(new_fps);
+}
+
+void MainWindowHandler::setVideoLength(qint32 new_video_length)
+{
+    auto projectSettings = m_renderer.projectSettings();
+
+    if (projectSettings.video_length == new_video_length) {
+        return;
+    }
+
+    projectSettings.video_length = new_video_length;
+    m_renderer.setProjectSettings(projectSettings);
+
+    emit videoLengthChanged(new_video_length);
 }
 
 void MainWindowHandler::openSVGFolder() const

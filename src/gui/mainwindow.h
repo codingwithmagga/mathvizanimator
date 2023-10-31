@@ -18,6 +18,7 @@ class MainWindowHandler : public QObject
     Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY pixelWidthChanged)
     Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY pixelHeightChanged)
     Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
+    Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY videoLengthChanged)
 
 public:
     MainWindowHandler();
@@ -47,10 +48,12 @@ public slots:
     qint32 pixelWidth() const;
     qint32 pixelHeight() const;
     qint32 fps() const;
+    qint32 videoLength() const;
 
     void setPixelWidth(qint32 new_pixel_width);
     void setPixelHeight(qint32 new_pixel_height);
     void setFPS(qint32 new_fps);
+    void setVideoLength(qint32 new_video_length);
 
     void openSVGFolder() const;
 
@@ -58,6 +61,7 @@ signals:
     void pixelWidthChanged(const qint32 new_pixel_width);
     void pixelHeightChanged(const qint32 new_pixel_height);
     void fpsChanged(const qint32 new_fps);
+    void videoLengthChanged(const qint32 new_video_length);
 
 private:
     QQmlApplicationEngine *m_qml_engine;

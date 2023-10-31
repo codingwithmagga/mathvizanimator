@@ -93,7 +93,7 @@ ApplicationWindow {
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         padding: 12
 
-        property list<int> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text]
+        property list<int> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text, videoLengthInputField.text]
 
         ColumnLayout {
             id: mainLayout
@@ -169,6 +169,27 @@ ApplicationWindow {
                     validator: IntValidator {
                         bottom: 1
                         top: 120
+                    }
+                }
+
+                Label {
+                    text: qsTr("Video length (s):")
+
+                    Layout.alignment: Qt.AlignRight
+
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                TextField {
+                    id: videoLengthInputField
+
+                    text: main_window.video_length
+
+                    horizontalAlignment: TextInput.AlignRight
+
+                    validator: IntValidator {
+                        bottom: 1
+                        top: 9999
                     }
                 }
             }

@@ -70,7 +70,7 @@ void TestRenderer::render()
         media_player.setSource(QUrl(file.absoluteFilePath()));
 
         QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), 24);
-        QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 3000);
+        QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 5000);
         QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
             QSize(1024, 768));
     });
@@ -92,7 +92,7 @@ void TestRenderer::renderSetting()
         media_player.setSource(QUrl(file.absoluteFilePath()));
 
         QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), 32);
-        QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 2250);
+        QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), 10000);
         QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
             QSize(600, 400));
     });
@@ -101,6 +101,7 @@ void TestRenderer::renderSetting()
     project_settings.width = 600;
     project_settings.height = 400;
     project_settings.fps = 32;
+    project_settings.video_length = 10;
 
     renderer.setProjectSettings(project_settings);
     renderer.render(m_item_list);
