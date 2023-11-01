@@ -1,5 +1,7 @@
+---
+name: Build
 run-name: 'Deploy package by @${{ github.actor }}'
-on:
+"on":
   pull_request:
     branches:
       - main
@@ -63,7 +65,7 @@ jobs:
         timeout-minutes: 10
         run: |
           sudo apt-get update && sudo apt-get upgrade
-          sudo apt-get install -y texlive-latex-extra latexmk 
+          sudo apt-get install -y texlive-latex-extra latexmk
           pip install gcovr
 
       - name: (3.1) Install Latex on windows
@@ -78,23 +80,23 @@ jobs:
           BIN_DIR_WINDOWS:      'C:/Program Files/MiKTeX/miktex/bin/x64/'
           BIN_DIR_WINDOWS_UNIX: '/c/Program Files/MiKTeX/miktex/bin/x64/'
         run: |
-          curl --location --remote-name $MIKTEX_BASE_URL/setup/windows-x64/$MIKTEX_ZIP
-          unzip $MIKTEX_ZIP
+          curl --location --remote-name "$MIKTEX_BASE_URL/setup/windows-x64/$MIKTEX_ZIP"
+          unzip "$MIKTEX_ZIP"
 
           ./miktexsetup_standalone --verbose \
-            --local-package-repository=$LOCAL_MIKTEX_REPO \
+            --local-package-repository="$LOCAL_MIKTEX_REPO" \
             --remote-package-repository="$MIKTEX_BASE_URL/tm/packages/" \
             --package-set=essential \
             download
 
           ./miktexsetup_standalone --verbose \
-            --local-package-repository=$LOCAL_MIKTEX_REPO \
+            --local-package-repository="$LOCAL_MIKTEX_REPO" \
             --package-set=essential \
             --shared=yes \
             install
 
           # Adding MiKTeX bin folder to PATH and to GITHUB_PATH
-          echo "$BIN_DIR_WINDOWS" >> $GITHUB_PATH
+          echo "$BIN_DIR_WINDOWS" >> "$GITHUB_PATH"
           export PATH="$BIN_DIR_WINDOWS_UNIX:$PATH"
 
           # Configure MiKTeX to install missing packages on the fly"
@@ -137,7 +139,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}" 
+          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}"
           cmake --build . 
           
       - name: (5) Build macos
@@ -145,7 +147,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}" 
+          cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}"
           cmake --build . 
      
       - name: (5) Build windows
@@ -154,7 +156,7 @@ jobs:
         timeout-minutes: 15
         shell: bash
         run: |
-          cmake "${{ env.SOURCE_DIR }}" 
+          cmake "${{ env.SOURCE_DIR }}"
           cmake --build . --config Release
       
       - name: (6) Run tests on windows
