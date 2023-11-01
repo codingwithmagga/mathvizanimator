@@ -35,7 +35,7 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
-# Explicity setting permissios to read-all to prevent CKV2_GHA_1 error from checkov
+# Explicitly setting permissions to read-all to prevent CKV2_GHA_1 error from checkov
 permissions: read-all
 
 jobs:
