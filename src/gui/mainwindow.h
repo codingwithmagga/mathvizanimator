@@ -1,5 +1,5 @@
 /* mathvizanimator
- * Copyright (C) 2023  codingwithmagga
+ * Copyright (C) 2023 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef SRC_GUI_MAINWINDOW_H_
+#define SRC_GUI_MAINWINDOW_H_
 
 #include <QObject>
 #include <QProcess>
@@ -91,4 +91,4 @@ class MainWindowHandler : public QObject {
   ItemHandler m_itemhandler;
 };
 
-#endif  // MAINWINDOW_H
+#endif  // SRC_GUI_MAINWINDOW_H_

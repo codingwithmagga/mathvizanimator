@@ -203,7 +203,7 @@ ApplicationWindow {
                     text: qsTr("Save")
                     Layout.alignment: Qt.AlignHCenter
 
-                    // TODO: Validate data before sending, validators themselves are not enough
+                    // TODO(codingwithmagga): Validate data before sending, validators themselves are not enough
                     onClicked: {
                         main_window.updateProjectSettings(
                                     projectSettingsPopup.projectData)
@@ -331,7 +331,7 @@ ApplicationWindow {
 
             color: palette.dark
 
-            // TODO: Put this in a reusable component
+            // TODO(codingwithmagga): Put this in a reusable component
             Item {
                 id: dropAreaContainer
 

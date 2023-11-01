@@ -60,7 +60,7 @@ target_include_directories(cwa.mva.gui
 add_library(mva::gui ALIAS cwa.mva.gui)
 add_library(mva::guiplugin ALIAS cwa.mva.guiplugin)
 
-# TODO: Add these files to a user path, so that they can be changed by the user
+# TODO(codingwithmagga): Add these files to a user path, so that they can be changed by the user
 # Currently they are provided by a resource file
 # configure_file(templates/template.tex $ENV{HOME}/.config/mathvizanimator/templates/template.tex)
 # configure_file(templates/placeholder.svg $ENV{HOME}/.config/mathvizanimator/templates/placeholder.svg)

@@ -30,7 +30,7 @@ TextItem::TextItem(QQuickItem* parent)
   m_latexmk_path = QStandardPaths::findExecutable("latexmk");
   m_dvisvgm_path = QStandardPaths::findExecutable("dvisvgm");
 
-  // TODO: This needs to be in it's own class
+  // TODO(codingwithmagga): This needs to be in it's own class
   if (m_latexmk_path.isEmpty() || m_dvisvgm_path.isEmpty()) {
     qCritical() << "Latex or dvisvgm not found!";
   }
@@ -66,7 +66,7 @@ void TextItem::paint(QPainter* painter) {
   painter->restore();
 }
 
-// TODO: save everything from editableProperties()
+// TODO(codingwithmagga): save everything from editableProperties()
 QJsonObject TextItem::toJson() const {
   auto json = AbstractItem::toJson();
 
@@ -78,7 +78,7 @@ QJsonObject TextItem::toJson() const {
 
 QString TextItem::getLatexSource() const { return m_latex_source; }
 
-// TODO: Refactor this function
+// TODO(codingwithmagga): Refactor this function
 void TextItem::setLatexSource(const QString& newLatexSource) {
   QFile latexTemplateFile("://templates/template.tex");
   if (!latexTemplateFile.open(QIODevice::ReadOnly | QIODevice::Text)) {

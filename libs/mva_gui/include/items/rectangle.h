@@ -1,5 +1,5 @@
 /* mathvizanimator
- * Copyright (C) 2023  codingwithmagga
+ * Copyright (C) 2023 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RECTANGLE_H
-#define RECTANGLE_H
+#ifndef LIBS_MVA_GUI_INCLUDE_ITEMS_RECTANGLE_H_
+#define LIBS_MVA_GUI_INCLUDE_ITEMS_RECTANGLE_H_
 
 #include "abstractitem.h"
 
@@ -32,4 +32,4 @@ class RectangleItem : public AbstractItem {
   EditableProperties editableProperties() const override;
 };
 
-#endif  // RECTANGLE_H
+#endif  // LIBS_MVA_GUI_INCLUDE_ITEMS_RECTANGLE_H_

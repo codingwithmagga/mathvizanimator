@@ -1,5 +1,5 @@
 /* mathvizanimator
- * Copyright (C) 2023  codingwithmagga
+ * Copyright (C) 2023 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGGING_H
-#define LOGGING_H
+#ifndef LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
+#define LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
 
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(tbd)
 
-#endif  // LOGGING_H
+#endif  // LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_

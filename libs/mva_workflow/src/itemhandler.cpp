@@ -1,3 +1,20 @@
+/* mathvizanimator
+ * Copyright (C) 2023 codingwithmagga
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "itemhandler.h"
 
 #include "abstractitem.h"
@@ -75,7 +92,7 @@ void ItemHandler::removeItem(QQuickItem* const quick_item) {
   }
 }
 
-// TODO: Refactor this function, give useful var names
+// TODO(codingwithmagga): Refactor this function, give useful var names
 void ItemHandler::setCurrentRow(const int row) {
   m_propertymodel.removeRows(0, m_propertymodel.rowCount());
   m_currentItemRow = row;
@@ -142,7 +159,7 @@ void ItemHandler::setCurrentRow(const int row) {
 
   } while ((mo = mo->superClass()));
 
-  // TODO: sort elements?
+  // TODO(codingwithmagga): sort elements?
 }
 
 void ItemHandler::scaleItemsX(const qreal ratio) {
@@ -177,8 +194,8 @@ void ItemHandler::scaleItemsHeight(const qreal ratio) {
   }
 }
 
-// TODO: Refactor this
-// TODO: Create custom ItemModels and items which contain pointers to the data,
+// TODO(codingwithmagga): Refactor this
+// TODO(codingwithmagga): Create custom ItemModels and items which contain pointers to the data,
 // s.t. this will be done automatically
 void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
                                       const QModelIndex& bottomRight,
@@ -189,7 +206,7 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
     return;
   }
 
-  // TODO: Prevent editing other columns
+  // TODO(codingwithmagga): Prevent editing other columns
   if (topLeft.column() != 1) {
     qCWarning(itemhandler) << "Dont change values in column "
                            << topLeft.column() << "in property editor.";

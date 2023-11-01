@@ -1,5 +1,5 @@
 /* mathvizanimator
- * Copyright (C) 2023  codingwithmagga
+ * Copyright (C) 2023 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CIRCLEITEM_H
-#define CIRCLEITEM_H
+#ifndef LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
+#define LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
 
 #include "abstractitem.h"
 
@@ -25,11 +25,11 @@ class CircleItem : public AbstractItem {
   QML_ELEMENT
 
  public:
-  CircleItem(QQuickItem* parent = nullptr);
+  explicit CircleItem(QQuickItem* parent = nullptr);
 
   void paint(QPainter* painter) override;
 
   EditableProperties editableProperties() const override;
 };
 
-#endif  // CIRCLEITEM_H
+#endif  // LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_

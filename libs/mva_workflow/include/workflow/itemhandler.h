@@ -1,5 +1,5 @@
 /* mathvizanimator
- * Copyright (C) 2023  codingwithmagga
+ * Copyright (C) 2023 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ class PropertyModel : public QStandardItemModel {
 
 class ItemHandler : public QObject {
   Q_OBJECT
+
  public:
   enum ItemRoles { QUICKITEM = Qt::UserRole + 1 };
 

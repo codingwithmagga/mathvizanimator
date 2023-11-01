@@ -54,7 +54,7 @@ target_link_libraries(
 set_tests_properties(textitem_test PROPERTIES LABELS "SKIP_WINDOWS")
 
 # Copy qml test files to build folder. I'm not sure if this is the right way to do it.
-# TODO: Maybe use file(COPY ...) for this task or save it in a resource file
+# TODO(codingwithmagga): Maybe use file(COPY ...) for this task or save it in a resource file
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
 configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
