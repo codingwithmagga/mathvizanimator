@@ -71,7 +71,7 @@ void TestSaveFileHandler::cleanup() {
   QDir save_dir = m_savefile_handler.saveDir();
   save_dir.setNameFilters(QStringList() << "*.*");
   save_dir.setFilter(QDir::Files);
-  foreach (QString dirFile, save_dir.entryList()) {
+  for (const auto &dirFile : save_dir.entryList()) {
     save_dir.remove(dirFile);
   }
 }

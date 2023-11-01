@@ -103,7 +103,7 @@ void MainWindowHandler::load(const QVariant &file) {
   QJsonDocument loadDoc = m_savefile_handler.loadJSON(load_fileinfo);
 
   QJsonObject json = loadDoc.object();
-  foreach (const QString &elementKey, json.keys()) {
+  for (const QString &elementKey : json.keys()) {
     auto element = json[elementKey].toObject();
 
     QQmlComponent component(m_qml_engine,

@@ -157,9 +157,7 @@ void ItemHandler::setCurrentRow(const int row) {
           QList<QStandardItem*>{stdItemName, stdItemValue});
     }
 
-  } while ((mo = mo->superClass()));
-
-  // TODO(codingwithmagga): sort elements?
+  } while ((mo = mo->superClass()));  // TODO(codingwithmagga): sort elements?
 }
 
 void ItemHandler::scaleItemsX(const qreal ratio) {
@@ -195,8 +193,8 @@ void ItemHandler::scaleItemsHeight(const qreal ratio) {
 }
 
 // TODO(codingwithmagga): Refactor this
-// TODO(codingwithmagga): Create custom ItemModels and items which contain pointers to the data,
-// s.t. this will be done automatically
+// TODO(codingwithmagga): Create custom ItemModels and items which contain
+// pointers to the data, s.t. this will be done automatically
 void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
                                       const QModelIndex& bottomRight,
                                       const QList<int>& roles) {
