@@ -84,7 +84,7 @@ void ItemHandler::removeItem(QQuickItem* const quick_item)
     }
 }
 
-// TODO: Refactor this function, give usefull var names
+// TODO: Refactor this function, give useful var names
 void ItemHandler::setCurrentRow(const int row)
 {
     m_propertymodel.removeRows(0, m_propertymodel.rowCount());
@@ -147,7 +147,7 @@ void ItemHandler::setCurrentRow(const int row)
     // TODO: sort elements?
 }
 
-void ItemHandler::recalcItemsX(const qreal ratio)
+void ItemHandler::scaleItemsX(const qreal ratio)
 {
     const auto itemList = items();
 
@@ -156,7 +156,7 @@ void ItemHandler::recalcItemsX(const qreal ratio)
     }
 }
 
-void ItemHandler::recalcItemsY(const qreal ratio)
+void ItemHandler::scaleItemsY(const qreal ratio)
 {
     const auto itemList = items();
 
@@ -165,7 +165,7 @@ void ItemHandler::recalcItemsY(const qreal ratio)
     }
 }
 
-void ItemHandler::recalcItemsWidth(const qreal ratio)
+void ItemHandler::scaleItemsWidth(const qreal ratio)
 {
     const auto itemList = items();
 
@@ -174,7 +174,7 @@ void ItemHandler::recalcItemsWidth(const qreal ratio)
     }
 }
 
-void ItemHandler::recalcItemsHeight(const qreal ratio)
+void ItemHandler::scaleItemsHeight(const qreal ratio)
 {
     const auto itemList = items();
 
@@ -261,7 +261,7 @@ ItemHandler::ItemExtract ItemHandler::extractAbstractItem(QQuickItem* const quic
     item_extract.item = qvariant_cast<AbstractItem*>(quick_item->property("item"));
 
     if (!item_extract.item) {
-        qCWarning(itemhandler) << "Given QQuickItem has no item property. Task can't be fullfilled";
+        qCWarning(itemhandler) << "Given QQuickItem has no item property. Task can't be fulfilled";
         item_extract.error = true;
     }
 

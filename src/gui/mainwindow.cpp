@@ -69,9 +69,9 @@ void MainWindowHandler::save(const QVariant &file)
     const auto item_list = m_itemhandler.items();
 
     for (const auto &item : item_list) {
-        const auto qobj = qvariant_cast<AbstractItem *>(item->property("item"));
+        const auto abstract_item = qvariant_cast<AbstractItem *>(item->property("item"));
 
-        const auto json_element = qobj->toJson();
+        const auto json_element = abstract_item->toJson();
         save_json[element_prefix + QString::number(count)] = json_element;
         count++;
     }
@@ -193,8 +193,8 @@ void MainWindowHandler::setPixelWidth(qint32 new_pixel_width)
     }
 
     const qreal ratio = new_pixel_width / qreal(projectSettings.width);
-    m_itemhandler.recalcItemsX(ratio);
-    m_itemhandler.recalcItemsWidth(ratio);
+    m_itemhandler.scaleItemsX(ratio);
+    m_itemhandler.scaleItemsWidth(ratio);
 
     projectSettings.width = new_pixel_width;
     m_renderer.setProjectSettings(projectSettings);
@@ -211,8 +211,8 @@ void MainWindowHandler::setPixelHeight(qint32 new_pixel_height)
     }
 
     const qreal ratio = new_pixel_height / qreal(projectSettings.height);
-    m_itemhandler.recalcItemsY(ratio);
-    m_itemhandler.recalcItemsHeight(ratio);
+    m_itemhandler.scaleItemsY(ratio);
+    m_itemhandler.scaleItemsHeight(ratio);
 
     projectSettings.height = new_pixel_height;
     m_renderer.setProjectSettings(projectSettings);

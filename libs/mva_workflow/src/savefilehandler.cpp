@@ -60,7 +60,7 @@ QString SaveFileHandler::prepareFileName(const QString &extension, const QFileIn
     return file_name;
 }
 
-QDir SaveFileHandler::savedir() const
+QDir SaveFileHandler::saveDir() const
 {
     return m_save_dir;
 }

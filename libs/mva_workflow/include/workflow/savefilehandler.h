@@ -11,7 +11,7 @@ class SaveFileHandler
 public:
     SaveFileHandler() = default;
 
-    QDir savedir() const;
+    QDir saveDir() const;
     void setSaveDir(const QDir &new_save_dir);
 
     bool saveJSON(const QString &file_name, const QJsonObject json_data) const;

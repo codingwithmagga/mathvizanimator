@@ -32,11 +32,11 @@ public slots:
 
     void setCurrentRow(const int row);
 
-    void recalcItemsX(const qreal ratio);
-    void recalcItemsY(const qreal ratio);
+    void scaleItemsX(const qreal ratio);
+    void scaleItemsY(const qreal ratio);
 
-    void recalcItemsWidth(const qreal ratio);
-    void recalcItemsHeight(const qreal ratio);
+    void scaleItemsWidth(const qreal ratio);
+    void scaleItemsHeight(const qreal ratio);
 
 private slots:
     void propertyDataChanged(const QModelIndex& topLeft,

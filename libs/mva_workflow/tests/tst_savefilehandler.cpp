@@ -55,7 +55,7 @@ void TestSaveFileHandler::init()
 
 void TestSaveFileHandler::cleanup()
 {
-    QDir save_dir = m_savefile_handler.savedir();
+    QDir save_dir = m_savefile_handler.saveDir();
     save_dir.setNameFilters(QStringList() << "*.*");
     save_dir.setFilter(QDir::Files);
     foreach (QString dirFile, save_dir.entryList()) {
@@ -66,14 +66,14 @@ void TestSaveFileHandler::cleanup()
 void TestSaveFileHandler::saveFileExists()
 {
     QVERIFY(m_savefile_handler.saveJSON("saveTest", m_test_json_data));
-    QVERIFY(QFileInfo::exists(m_savefile_handler.savedir().absoluteFilePath("saveTest.json")));
+    QVERIFY(QFileInfo::exists(m_savefile_handler.saveDir().absoluteFilePath("saveTest.json")));
 }
 
 void TestSaveFileHandler::loadFile()
 {
     QVERIFY(m_savefile_handler.saveJSON("saveTest", m_test_json_data));
 
-    const QString save_file = m_savefile_handler.savedir().absoluteFilePath("saveTest.json");
+    const QString save_file = m_savefile_handler.saveDir().absoluteFilePath("saveTest.json");
     QJsonDocument jsonDoc(m_test_json_data);
 
     QCOMPARE(m_savefile_handler.loadJSON(QFileInfo(save_file)), jsonDoc);
@@ -86,8 +86,8 @@ void TestSaveFileHandler::wrongExtension()
 
 void TestSaveFileHandler::cantOpenSaveFile()
 {
-    QDir non_exitsing_dir("nonexistingdironfilesystem");
-    m_savefile_handler.setSaveDir(non_exitsing_dir);
+    QDir non_existing_dir("random_dir");
+    m_savefile_handler.setSaveDir(non_existing_dir);
 
     QVERIFY(!m_savefile_handler.saveJSON("saveTest", m_test_json_data));
 }
