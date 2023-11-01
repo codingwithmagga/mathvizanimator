@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SAVEFILEHANDLER_H
-#define SAVEFILEHANDLER_H
+#ifndef LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_SAVEFILEHANDLER_H_
+#define LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_SAVEFILEHANDLER_H_
 
 #include <QDir>
 #include <QJsonDocument>
@@ -43,4 +43,4 @@ class SaveFileHandler {
   QDir m_save_dir = QDir::home();
 };
 
-#endif  // SAVEFILEHANDLER_H
+#endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_SAVEFILEHANDLER_H_

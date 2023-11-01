@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_RENDERER_H_
+#define LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_RENDERER_H_
 
 #include <QFileInfo>
 #include <QObject>
@@ -26,6 +26,7 @@
 
 class Renderer : public QObject {
   Q_OBJECT
+
  public:
   struct ProjectSettings {
     qint32 width = 1024;
@@ -54,4 +55,4 @@ class Renderer : public QObject {
   ProjectSettings m_project_settings;
 };
 
-#endif  // RENDERER_H
+#endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_RENDERER_H_

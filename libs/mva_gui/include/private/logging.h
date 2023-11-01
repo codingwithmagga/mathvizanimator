@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
-#define LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
+#ifndef LIBS_MVA_GUI_INCLUDE_PRIVATE_LOGGING_H_
+#define LIBS_MVA_GUI_INCLUDE_PRIVATE_LOGGING_H_
 
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(tbd)
 
-#endif  // LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
+#endif  // LIBS_MVA_GUI_INCLUDE_PRIVATE_LOGGING_H_

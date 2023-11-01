@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ITEMHANDLER_H
-#define ITEMHANDLER_H
+#ifndef LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_
+#define LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_
 
 #include <QObject>
 #include <QQuickItem>
@@ -86,4 +86,4 @@ class ItemModelItem : public QStandardItem {
   ~ItemModelItem();
 };
 
-#endif  // ITEMHANDLER_H
+#endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_

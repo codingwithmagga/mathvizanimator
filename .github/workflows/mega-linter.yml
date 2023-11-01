@@ -87,6 +87,7 @@ jobs:
           #   }}
           VALIDATE_ALL_CODEBASE: true
           C_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir"
+          CPP_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir"
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

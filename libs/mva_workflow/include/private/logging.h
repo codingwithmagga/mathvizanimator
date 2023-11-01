@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGGING_H
-#define LOGGING_H
+#ifndef LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
+#define LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
 
 #include <QLoggingCategory>
 
@@ -24,4 +24,4 @@ Q_DECLARE_LOGGING_CATEGORY(savefilehandler)
 Q_DECLARE_LOGGING_CATEGORY(renderer)
 Q_DECLARE_LOGGING_CATEGORY(itemhandler)
 
-#endif  // LOGGING_H
+#endif  // LIBS_MVA_WORKFLOW_INCLUDE_PRIVATE_LOGGING_H_
