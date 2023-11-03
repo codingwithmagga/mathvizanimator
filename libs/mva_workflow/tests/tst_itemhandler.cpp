@@ -282,19 +282,17 @@ void TestItemHandler::scaleItemsWidth() {
   auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
   auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
+  ItemHandler itemhandler;
+  itemhandler.addItem(circle);
+  itemhandler.addItem(rect);
+
   const qreal circle_width_old = 222;
   const qreal circle_height_old = 133;
   const qreal rect_width_old = 116;
   const qreal rect_height_old = 332;
 
-  circle->setWidth(circle_width_old);
-  circle->setHeight(circle_height_old);
-  rect->setWidth(rect_width_old);
-  rect->setHeight(rect_height_old);
-
-  ItemHandler itemhandler;
-  itemhandler.addItem(circle);
-  itemhandler.addItem(rect);
+  circle->setSize(QSizeF(circle_width_old, circle_height_old));
+  rect->setSize(QSizeF(rect_width_old, rect_height_old));
 
   const qreal ratio = 1.2;
   itemhandler.scaleItemsWidth(ratio);
@@ -314,10 +312,8 @@ void TestItemHandler::scaleItemsHeight() {
   const qreal rect_width_old = 454;
   const qreal rect_height_old = 238;
 
-  circle->setWidth(circle_width_old);
-  circle->setHeight(circle_height_old);
-  rect->setWidth(rect_width_old);
-  rect->setHeight(rect_height_old);
+  circle->setSize(QSizeF(circle_width_old, circle_height_old));
+  rect->setSize(QSizeF(rect_width_old, rect_height_old));
 
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
