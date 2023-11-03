@@ -279,28 +279,26 @@ void TestItemHandler::scaleItemsPosY() {
 }
 
 void TestItemHandler::scaleItemsWidth() {
-  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
-
   ItemHandler itemhandler;
-  itemhandler.addItem(circle);
-  itemhandler.addItem(rect);
+  auto items = prepareItemHandler(
+      &itemhandler,
+      QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
   const qreal circle_width_old = 222;
   const qreal circle_height_old = 133;
   const qreal rect_width_old = 116;
   const qreal rect_height_old = 332;
 
-  circle->setSize(QSizeF(circle_width_old, circle_height_old));
-  rect->setSize(QSizeF(rect_width_old, rect_height_old));
+  items[0]->setSize(QSizeF(circle_width_old, circle_height_old));
+  items[1]->setSize(QSizeF(rect_width_old, rect_height_old));
 
   const qreal ratio = 1.2;
   itemhandler.scaleItemsWidth(ratio);
 
-  QCOMPARE(circle->width(), qRound(circle_width_old * ratio));
-  QCOMPARE(circle->height(), circle_height_old);
-  QCOMPARE(rect->width(), qRound(rect_width_old * ratio));
-  QCOMPARE(rect->height(), rect_height_old);
+  QCOMPARE(items[0]->width(), qRound(circle_width_old * ratio));
+  QCOMPARE(items[0]->height(), circle_height_old);
+  QCOMPARE(items[1]->width(), qRound(rect_width_old * ratio));
+  QCOMPARE(items[1]->height(), rect_height_old);
 }
 
 void TestItemHandler::scaleItemsHeight() {
