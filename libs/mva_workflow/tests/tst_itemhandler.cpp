@@ -51,6 +51,9 @@ class TestItemHandler : public QObject {
   void clearHandler();
 
  private:
+  QList<QQuickItem *> prepareItemHandler(ItemHandler &itemhandler,
+                                         QList<QQmlComponent *> qml_components);
+
   QQmlEngine m_engine;
   QQmlComponent m_circle_component = QQmlComponent(
       &m_engine,
@@ -61,8 +64,8 @@ class TestItemHandler : public QObject {
 };
 
 void TestItemHandler::addItem() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
   ItemHandler itemhandler;
   QCOMPARE(itemhandler.numItems(), 0);
@@ -75,7 +78,7 @@ void TestItemHandler::addItem() {
 }
 
 void TestItemHandler::addItemDuplicate() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
 
   ItemHandler itemhandler;
 
@@ -86,8 +89,8 @@ void TestItemHandler::addItemDuplicate() {
 }
 
 void TestItemHandler::addItemWithSameName() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto circle_1 = dynamic_cast<QQuickItem*>(m_circle_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto circle_1 = dynamic_cast<QQuickItem *>(m_circle_component.create());
 
   ItemHandler itemhandler;
 
@@ -105,9 +108,9 @@ void TestItemHandler::addItemWithSameName() {
 }
 
 void TestItemHandler::addItemWithSameName2() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto circle_1 = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto circle_2 = dynamic_cast<QQuickItem*>(m_circle_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto circle_1 = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto circle_2 = dynamic_cast<QQuickItem *>(m_circle_component.create());
 
   ItemHandler itemhandler;
 
@@ -138,8 +141,8 @@ void TestItemHandler::addIncompatibleItem() {
 }
 
 void TestItemHandler::checkItemData() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
   const int circleHeight = 123;
   const int rectHeight = 123;
@@ -147,8 +150,8 @@ void TestItemHandler::checkItemData() {
   rect->setHeight(rectHeight);
 
   const auto circle_item =
-      qvariant_cast<AbstractItem*>(circle->property("item"));
-  const auto rect_item = qvariant_cast<AbstractItem*>(rect->property("item"));
+      qvariant_cast<AbstractItem *>(circle->property("item"));
+  const auto rect_item = qvariant_cast<AbstractItem *>(rect->property("item"));
 
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
@@ -162,30 +165,30 @@ void TestItemHandler::checkItemData() {
 
   QCOMPARE(circle_item_1->data(Qt::DisplayRole), circle_item->name());
   QCOMPARE(circle_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem*>(),
+               .value<QQuickItem *>(),
            circle);
   QCOMPARE(circle_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem*>()
+               .value<QQuickItem *>()
                ->height(),
            circleHeight);
   QCOMPARE(circle_item_2->data(Qt::DisplayRole), "CircleItem");
   QCOMPARE(rect_item_1->data(Qt::DisplayRole), rect_item->name());
-  QCOMPARE(
-      rect_item_1->data(ItemHandler::ItemRoles::QUICKITEM).value<QQuickItem*>(),
-      rect);
   QCOMPARE(rect_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem*>()
+               .value<QQuickItem *>(),
+           rect);
+  QCOMPARE(rect_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
+               .value<QQuickItem *>()
                ->height(),
            rectHeight);
   QCOMPARE(rect_item_2->data(Qt::DisplayRole), "RectangleItem");
 }
 
 void TestItemHandler::checkItemProperties() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
   const auto circle_item =
-      qvariant_cast<AbstractItem*>(circle->property("item"));
+      qvariant_cast<AbstractItem *>(circle->property("item"));
 
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
@@ -204,9 +207,9 @@ void TestItemHandler::checkItemProperties() {
 }
 
 void TestItemHandler::changeItemProperty() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
   const auto circle_item =
-      qvariant_cast<AbstractItem*>(circle->property("item"));
+      qvariant_cast<AbstractItem *>(circle->property("item"));
 
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
@@ -226,12 +229,12 @@ void TestItemHandler::changeItemProperty() {
 }
 
 void TestItemHandler::scaleItemsPosX() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
-  const qreal circle_x_old = 200;
-  const qreal circle_y_old = 100;
-  const qreal rect_x_old = 154;
+  const qreal circle_x_old = 220;
+  const qreal circle_y_old = 111;
+  const qreal rect_x_old = 254;
   const qreal rect_y_old = 432;
 
   circle->setX(circle_x_old);
@@ -253,13 +256,13 @@ void TestItemHandler::scaleItemsPosX() {
 }
 
 void TestItemHandler::scaleItemsPosY() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
-  const qreal circle_x_old = 200;
-  const qreal circle_y_old = 100;
-  const qreal rect_x_old = 154;
-  const qreal rect_y_old = 432;
+  const qreal circle_x_old = 201;
+  const qreal circle_y_old = 152;
+  const qreal rect_x_old = 158;
+  const qreal rect_y_old = 472;
 
   circle->setX(circle_x_old);
   circle->setY(circle_y_old);
@@ -280,13 +283,13 @@ void TestItemHandler::scaleItemsPosY() {
 }
 
 void TestItemHandler::scaleItemsWidth() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
-  const qreal circle_width_old = 200;
-  const qreal circle_height_old = 130;
-  const qreal rect_width_old = 154;
-  const qreal rect_height_old = 432;
+  const qreal circle_width_old = 222;
+  const qreal circle_height_old = 133;
+  const qreal rect_width_old = 116;
+  const qreal rect_height_old = 332;
 
   circle->setWidth(circle_width_old);
   circle->setHeight(circle_height_old);
@@ -307,13 +310,13 @@ void TestItemHandler::scaleItemsWidth() {
 }
 
 void TestItemHandler::scaleItemsHeight() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
-  const qreal circle_width_old = 200;
-  const qreal circle_height_old = 130;
-  const qreal rect_width_old = 154;
-  const qreal rect_height_old = 432;
+  const qreal circle_width_old = 202;
+  const qreal circle_height_old = 276;
+  const qreal rect_width_old = 454;
+  const qreal rect_height_old = 238;
 
   circle->setWidth(circle_width_old);
   circle->setHeight(circle_height_old);
@@ -334,69 +337,72 @@ void TestItemHandler::scaleItemsHeight() {
 }
 
 void TestItemHandler::getItems() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
-
   ItemHandler itemhandler;
-  itemhandler.addItem(circle);
-  itemhandler.addItem(rect);
+  auto items = prepareItemHandler(
+      itemhandler,
+      QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
   const auto item_list = itemhandler.items();
 
-  QVERIFY(item_list.contains(circle));
-  QVERIFY(item_list.contains(rect));
+  QVERIFY(item_list.contains(items[0]));
+  QVERIFY(item_list.contains(items[1]));
 }
 
 void TestItemHandler::removeItem() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-
   ItemHandler itemhandler;
+  auto items = prepareItemHandler(itemhandler,
+                                  QList<QQmlComponent *>{&m_circle_component});
 
-  itemhandler.addItem(circle);
-  itemhandler.removeItem(circle);
+  itemhandler.removeItem(items[0]);
 
   QCOMPARE(itemhandler.numItems(), 0);
 }
 
 void TestItemHandler::removeMultipleItems() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
-
   ItemHandler itemhandler;
+  auto items = prepareItemHandler(
+      itemhandler,
+      QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
-  itemhandler.addItem(circle);
-  itemhandler.addItem(rect);
-
-  itemhandler.removeItem(rect);
+  itemhandler.removeItem(items[1]);
   QCOMPARE(itemhandler.numItems(), 1);
 
-  itemhandler.removeItem(circle);
+  itemhandler.removeItem(items[0]);
   QCOMPARE(itemhandler.numItems(), 0);
 }
 
 void TestItemHandler::removeNonExistingItem() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
-
   ItemHandler itemhandler;
+  auto items = prepareItemHandler(
+      itemhandler,
+      QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
-  itemhandler.addItem(circle);
-
-  itemhandler.removeItem(rect);
+  itemhandler.removeItem(items[1]);
   QCOMPARE(itemhandler.numItems(), 1);
 }
 
 void TestItemHandler::clearHandler() {
-  auto circle = dynamic_cast<QQuickItem*>(m_circle_component.create());
-  auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
-
   ItemHandler itemhandler;
-
-  itemhandler.addItem(circle);
-  itemhandler.addItem(rect);
+  prepareItemHandler(itemhandler, QList<QQmlComponent *>{&m_circle_component,
+                                                         &m_rect_component});
 
   itemhandler.clear();
   QCOMPARE(itemhandler.numItems(), 0);
+}
+
+QList<QQuickItem *> TestItemHandler::prepareItemHandler(
+    ItemHandler &itemhandler, QList<QQmlComponent *> qml_components) {
+  QList<QQuickItem *> items;
+
+  for (auto &component : qml_components) {
+    items.push_back(dynamic_cast<QQuickItem *>(component->create()));
+  }
+
+  for (const auto &item : items) {
+    itemhandler.addItem(item);
+  }
+
+  return items;
 }
 
 QTEST_MAIN(TestItemHandler)

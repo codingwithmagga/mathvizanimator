@@ -29,44 +29,44 @@ class TestRectangleItem : public QObject {
   void paintTest();
 
  private:
-  const qreal m_test_x = 46;
-  const qreal m_test_y = 98;
-  const qreal m_test_width = 276;
-  const qreal m_test_height = 124;
+  const qreal m_rect_x = 46;
+  const qreal m_rect_y = 98;
+  const qreal m_rect_width = 276;
+  const qreal m_rect_height = 124;
 
-  const QString m_test_color = "#0000ff";
-  const QString m_test_name = "test_rect_name";
+  const QString m_rect_color = "#0000ff";
+  const QString m_rect_name = "test_rect_name";
 
-  QQuickItem m_test_parent_item;
-  RectangleItem m_test_rect;
+  QQuickItem m_rect_parent_item;
+  RectangleItem m_rect_item;
 };
 
 void TestRectangleItem::initTestCase() {
-  m_test_parent_item.setX(m_test_x);
-  m_test_parent_item.setY(m_test_y);
-  m_test_parent_item.setWidth(m_test_width);
-  m_test_parent_item.setHeight(m_test_height);
+  m_rect_parent_item.setX(m_rect_x);
+  m_rect_parent_item.setY(m_rect_y);
+  m_rect_parent_item.setWidth(m_rect_width);
+  m_rect_parent_item.setHeight(m_rect_height);
 
-  m_test_rect.setParentItem(&m_test_parent_item);
-  m_test_rect.setColor(QColor(m_test_color));
-  m_test_rect.setName(m_test_name);
+  m_rect_item.setParentItem(&m_rect_parent_item);
+  m_rect_item.setColor(QColor(m_rect_color));
+  m_rect_item.setName(m_rect_name);
 
-  m_test_rect.setWidth(m_test_width);
-  m_test_rect.setHeight(m_test_height);
+  m_rect_item.setWidth(m_rect_width);
+  m_rect_item.setHeight(m_rect_height);
 }
 
 void TestRectangleItem::toJsonTest() {
   QJsonObject expected_json;
-  expected_json["x"] = m_test_x;
-  expected_json["y"] = m_test_y;
-  expected_json["width"] = m_test_width;
-  expected_json["height"] = m_test_height;
-  expected_json["item.color"] = m_test_color;
-  expected_json["item.name"] = m_test_name;
+  expected_json["x"] = m_rect_x;
+  expected_json["y"] = m_rect_y;
+  expected_json["width"] = m_rect_width;
+  expected_json["height"] = m_rect_height;
+  expected_json["item.color"] = m_rect_color;
+  expected_json["item.name"] = m_rect_name;
   expected_json["item.file"] =
       "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml";
 
-  const auto rect_json = m_test_rect.toJson();
+  const auto rect_json = m_rect_item.toJson();
 
   QCOMPARE(rect_json, expected_json);
 }
@@ -78,8 +78,8 @@ void TestRectangleItem::paintTest() {
   QPainter painter(&image);
 
   painter.save();
-  painter.translate(m_test_rect.parentItem()->position());
-  m_test_rect.paint(&painter);
+  painter.translate(m_rect_item.parentItem()->position());
+  m_rect_item.paint(&painter);
   painter.restore();
 
   expected_image.load("://test_images/test_rectangle_image.png");

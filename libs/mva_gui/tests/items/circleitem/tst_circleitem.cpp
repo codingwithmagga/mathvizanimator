@@ -29,44 +29,44 @@ class TestCircleItem : public QObject {
   void paintTest();
 
  private:
-  const qreal m_test_x = 123;
-  const qreal m_test_y = 212;
-  const qreal m_test_width = 150;
-  const qreal m_test_height = 150;
+  const qreal m_circle_x = 123;
+  const qreal m_circle_y = 212;
+  const qreal m_circle_width = 150;
+  const qreal m_circle_height = 150;
 
-  const QString m_test_color = "#0000ff";
-  const QString m_test_name = "test_circle_name";
+  const QString m_circle_color = "#0000ff";
+  const QString m_circle_name = "test_circle_name";
 
-  QQuickItem m_test_parent_item;
-  CircleItem m_test_circle;
+  QQuickItem m_circle_parent_item;
+  CircleItem m_circle_item;
 };
 
 void TestCircleItem::initTestCase() {
-  m_test_parent_item.setX(m_test_x);
-  m_test_parent_item.setY(m_test_y);
-  m_test_parent_item.setWidth(m_test_width);
-  m_test_parent_item.setHeight(m_test_height);
+  m_circle_parent_item.setX(m_circle_x);
+  m_circle_parent_item.setY(m_circle_y);
+  m_circle_parent_item.setWidth(m_circle_width);
+  m_circle_parent_item.setHeight(m_circle_height);
 
-  m_test_circle.setParentItem(&m_test_parent_item);
-  m_test_circle.setColor(QColor(m_test_color));
-  m_test_circle.setName(m_test_name);
+  m_circle_item.setParentItem(&m_circle_parent_item);
+  m_circle_item.setColor(QColor(m_circle_color));
+  m_circle_item.setName(m_circle_name);
 
-  m_test_circle.setWidth(m_test_width);
-  m_test_circle.setHeight(m_test_width);
+  m_circle_item.setWidth(m_circle_width);
+  m_circle_item.setHeight(m_circle_width);
 }
 
 void TestCircleItem::toJsonTest() {
   QJsonObject expected_json;
-  expected_json["x"] = m_test_x;
-  expected_json["y"] = m_test_y;
-  expected_json["width"] = m_test_width;
-  expected_json["height"] = m_test_height;
-  expected_json["item.color"] = m_test_color;
-  expected_json["item.name"] = m_test_name;
+  expected_json["x"] = m_circle_x;
+  expected_json["y"] = m_circle_y;
+  expected_json["width"] = m_circle_width;
+  expected_json["height"] = m_circle_height;
+  expected_json["item.color"] = m_circle_color;
+  expected_json["item.name"] = m_circle_name;
   expected_json["item.file"] =
       "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
 
-  const auto circle_json = m_test_circle.toJson();
+  const auto circle_json = m_circle_item.toJson();
 
   QCOMPARE(circle_json, expected_json);
 }
@@ -78,8 +78,8 @@ void TestCircleItem::paintTest() {
   QPainter painter(&image);
 
   painter.save();
-  painter.translate(m_test_circle.parentItem()->position());
-  m_test_circle.paint(&painter);
+  painter.translate(m_circle_item.parentItem()->position());
+  m_circle_item.paint(&painter);
   painter.restore();
 
   expected_image.load("://test_images/test_circle_image.png");

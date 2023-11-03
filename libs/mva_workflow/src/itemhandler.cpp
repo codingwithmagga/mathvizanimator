@@ -93,6 +93,27 @@ void ItemHandler::removeItem(QQuickItem* const quick_item) {
 }
 
 // TODO(codingwithmagga): Refactor this function, give useful var names
+void ItemHandler::appendProperties(const auto o, auto mo_abstract,
+                                   const QStringList& allowedProperties) {
+  QList<std::pair<QString, QVariant>> propList;
+
+  for (int i = mo_abstract->propertyOffset(); i < mo_abstract->propertyCount();
+       ++i) {
+    if (allowedProperties.contains(QString(mo_abstract->property(i).name()))) {
+      propList.emplace_back(mo_abstract->property(i).name(),
+                            mo_abstract->property(i).read(o.item));
+    }
+  }
+
+  for (auto& property : propList) {
+    auto stdItemName(new QStandardItem(property.first));
+    auto stdItemValue(new QStandardItem(property.second.toString()));
+
+    m_propertymodel.appendRow(QList<QStandardItem*>{stdItemName, stdItemValue});
+  }
+}
+
+// TODO(codingwithmagga): Refactor this function, give useful var names
 void ItemHandler::setCurrentRow(const int row) {
   m_propertymodel.removeRows(0, m_propertymodel.rowCount());
   m_currentItemRow = row;
@@ -119,44 +140,12 @@ void ItemHandler::setCurrentRow(const int row) {
     if (QString(mo_abstract->className()) == "QQuickPaintedItem") {
       break;
     }
-    QList<std::pair<QString, QVariant>> propList;
-    for (int i = mo_abstract->propertyOffset();
-         i < mo_abstract->propertyCount(); ++i) {
-      if (allowedProperties.abstract_item_properties.contains(
-              QString(mo_abstract->property(i).name()))) {
-        propList.emplace_back(mo_abstract->property(i).name(),
-                              mo_abstract->property(i).read(o.item));
-      }
-    }
-
-    for (auto& property : propList) {
-      auto stdItemName(new QStandardItem(property.first));
-      auto stdItemValue(new QStandardItem(property.second.toString()));
-
-      m_propertymodel.appendRow(
-          QList<QStandardItem*>{stdItemName, stdItemValue});
-    }
-
+    appendProperties(o, mo_abstract,
+                     allowedProperties.abstract_item_properties);
   } while ((mo_abstract = mo_abstract->superClass()));
 
   do {
-    QList<std::pair<QString, QVariant>> propList;
-    for (int i = mo->propertyOffset(); i < mo->propertyCount(); ++i) {
-      if (allowedProperties.quick_item_properties.contains(
-              QString(mo->property(i).name()))) {
-        propList.emplace_back(mo->property(i).name(),
-                              mo->property(i).read(quick_item));
-      }
-    }
-
-    for (auto& property : propList) {
-      auto stdItemName(new QStandardItem(property.first));
-      auto stdItemValue(new QStandardItem(property.second.toString()));
-
-      m_propertymodel.appendRow(
-          QList<QStandardItem*>{stdItemName, stdItemValue});
-    }
-
+    appendProperties(o, mo, allowedProperties.quick_item_properties);
   } while ((mo = mo->superClass()));  // TODO(codingwithmagga): sort elements?
 }
 

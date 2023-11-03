@@ -30,7 +30,7 @@ class TestRenderer : public QObject {
   void initTestCase();
 
   void render();
-  void renderSetting();
+  void render_data();
 
   void cleanupTestCase();
 
@@ -72,57 +72,56 @@ void TestRenderer::initTestCase() {
   m_item_list.push_back(rect);
 }
 
-void TestRenderer::render() {
-  Renderer renderer;
+void TestRenderer::render_data() {
+  QTest::addColumn<qint32>("height");
+  QTest::addColumn<qint32>("width");
+  QTest::addColumn<qint32>("fps");
+  QTest::addColumn<qint32>("video_length");
 
-  QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+  Renderer::ProjectSettings defaultProjectSettings;
 
-  connect(&renderer, &Renderer::finishedRendering, [](const QFileInfo& file) {
-    QVERIFY(file.exists());
-
-    QMediaPlayer media_player;
-    media_player.setSource(QUrl(file.absoluteFilePath()));
-
-    QCOMPARE(
-        media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(),
-        24);
-    QCOMPARE(
-        media_player.metaData().value(QMediaMetaData::Duration).toLongLong(),
-        5000);
-    QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-             QSize(1024, 768));
-  });
-
-  renderer.render(m_item_list);
-  QVERIFY(spy.wait(10000));
+  QTest::newRow("default_setup")
+      << defaultProjectSettings.height << defaultProjectSettings.width
+      << defaultProjectSettings.fps << defaultProjectSettings.video_length;
+  QTest::newRow("mod_values") << 600 << 400 << 32 << 10;
 }
 
-void TestRenderer::renderSetting() {
+void TestRenderer::render() {
+  QFETCH(qint32, height);
+  QFETCH(qint32, width);
+  QFETCH(qint32, fps);
+  QFETCH(qint32, video_length);
+
   Renderer renderer;
 
   QSignalSpy spy(&renderer, &Renderer::finishedRendering);
 
-  connect(&renderer, &Renderer::finishedRendering, [](const QFileInfo& file) {
-    QVERIFY(file.exists());
+  connect(
+      &renderer, &Renderer::finishedRendering, this,
+      [&height, &width, &fps, &video_length](const QFileInfo& file) {
+        QVERIFY(file.exists());
 
-    QMediaPlayer media_player;
-    media_player.setSource(QUrl(file.absoluteFilePath()));
+        QMediaPlayer media_player;
+        media_player.setSource(QUrl(file.absoluteFilePath()));
 
-    QCOMPARE(
-        media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(),
-        32);
-    QCOMPARE(
-        media_player.metaData().value(QMediaMetaData::Duration).toLongLong(),
-        10000);
-    QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-             QSize(600, 400));
-  });
+        QCOMPARE(media_player.metaData()
+                     .value(QMediaMetaData::VideoFrameRate)
+                     .toInt(),
+                 fps);
+        QCOMPARE(media_player.metaData()
+                     .value(QMediaMetaData::Duration)
+                     .toLongLong(),
+                 video_length * 1000);
+        QCOMPARE(
+            media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
+            QSize(width, height));
+      });
 
   Renderer::ProjectSettings project_settings;
-  project_settings.width = 600;
-  project_settings.height = 400;
-  project_settings.fps = 32;
-  project_settings.video_length = 10;
+  project_settings.width = width;
+  project_settings.height = height;
+  project_settings.fps = fps;
+  project_settings.video_length = video_length;
 
   renderer.setProjectSettings(project_settings);
   renderer.render(m_item_list);
