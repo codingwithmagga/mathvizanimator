@@ -51,7 +51,7 @@ class TestItemHandler : public QObject {
   void clearHandler();
 
  private:
-  QList<QQuickItem *> prepareItemHandler(ItemHandler &itemhandler,
+  QList<QQuickItem *> prepareItemHandler(ItemHandler *itemhandler,
                                          QList<QQmlComponent *> qml_components);
 
   QQmlEngine m_engine;
@@ -237,10 +237,8 @@ void TestItemHandler::scaleItemsPosX() {
   const qreal rect_x_old = 254;
   const qreal rect_y_old = 432;
 
-  circle->setX(circle_x_old);
-  circle->setY(circle_y_old);
-  rect->setX(rect_x_old);
-  rect->setY(rect_y_old);
+  circle->setPosition(QPointF(circle_x_old, circle_y_old));
+  rect->setPosition(QPointF(rect_x_old, rect_y_old));
 
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
@@ -259,19 +257,17 @@ void TestItemHandler::scaleItemsPosY() {
   auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
   auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
+  ItemHandler itemhandler;
+  itemhandler.addItem(circle);
+  itemhandler.addItem(rect);
+
   const qreal circle_x_old = 201;
   const qreal circle_y_old = 152;
   const qreal rect_x_old = 158;
   const qreal rect_y_old = 472;
 
-  circle->setX(circle_x_old);
-  circle->setY(circle_y_old);
-  rect->setX(rect_x_old);
-  rect->setY(rect_y_old);
-
-  ItemHandler itemhandler;
-  itemhandler.addItem(circle);
-  itemhandler.addItem(rect);
+  circle->setPosition(QPointF(circle_x_old, circle_y_old));
+  rect->setPosition(QPointF(rect_x_old, rect_y_old));
 
   const qreal ratio = 1.4;
   itemhandler.scaleItemsY(ratio);
@@ -339,7 +335,7 @@ void TestItemHandler::scaleItemsHeight() {
 void TestItemHandler::getItems() {
   ItemHandler itemhandler;
   auto items = prepareItemHandler(
-      itemhandler,
+      &itemhandler,
       QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
   const auto item_list = itemhandler.items();
@@ -350,7 +346,7 @@ void TestItemHandler::getItems() {
 
 void TestItemHandler::removeItem() {
   ItemHandler itemhandler;
-  auto items = prepareItemHandler(itemhandler,
+  auto items = prepareItemHandler(&itemhandler,
                                   QList<QQmlComponent *>{&m_circle_component});
 
   itemhandler.removeItem(items[0]);
@@ -361,7 +357,7 @@ void TestItemHandler::removeItem() {
 void TestItemHandler::removeMultipleItems() {
   ItemHandler itemhandler;
   auto items = prepareItemHandler(
-      itemhandler,
+      &itemhandler,
       QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
   itemhandler.removeItem(items[1]);
@@ -374,7 +370,7 @@ void TestItemHandler::removeMultipleItems() {
 void TestItemHandler::removeNonExistingItem() {
   ItemHandler itemhandler;
   auto items = prepareItemHandler(
-      itemhandler,
+      &itemhandler,
       QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
   itemhandler.removeItem(items[1]);
@@ -383,15 +379,15 @@ void TestItemHandler::removeNonExistingItem() {
 
 void TestItemHandler::clearHandler() {
   ItemHandler itemhandler;
-  prepareItemHandler(itemhandler, QList<QQmlComponent *>{&m_circle_component,
-                                                         &m_rect_component});
+  prepareItemHandler(&itemhandler, QList<QQmlComponent *>{&m_circle_component,
+                                                          &m_rect_component});
 
   itemhandler.clear();
   QCOMPARE(itemhandler.numItems(), 0);
 }
 
 QList<QQuickItem *> TestItemHandler::prepareItemHandler(
-    ItemHandler &itemhandler, QList<QQmlComponent *> qml_components) {
+    ItemHandler *itemhandler, QList<QQmlComponent *> qml_components) {
   QList<QQuickItem *> items;
 
   for (auto &component : qml_components) {
@@ -399,7 +395,7 @@ QList<QQuickItem *> TestItemHandler::prepareItemHandler(
   }
 
   for (const auto &item : items) {
-    itemhandler.addItem(item);
+    itemhandler->addItem(item);
   }
 
   return items;

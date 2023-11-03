@@ -33,6 +33,7 @@
     "METATYPE",
     "MIKTEX",
     "QCOMPARE",
+    "QFETCH",
     "QTEST",
     "QUICKITEM",
     "QVERIFY",
