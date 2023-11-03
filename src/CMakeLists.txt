@@ -10,7 +10,9 @@ qt_standard_project_setup()
 qt_add_executable(mva-app
     main.cpp
     gui/mainwindow.cpp
+    gui/mainwindow.h
     workflow/logging.cpp
+    workflow/logging.h
 )
 
 qt_add_qml_module(mva-app
