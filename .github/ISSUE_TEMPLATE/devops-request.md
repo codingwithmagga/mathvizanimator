@@ -2,7 +2,7 @@
 name: DevOps request
 about: Suggest something to change in the build pipeline.
 title: "[DEVOPS]"
-labels: DevOps
+labels: ''
 assignees: ''
 
 ---
