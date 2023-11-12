@@ -19,12 +19,17 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QSurfaceFormat>
 #include <QtQml/QQmlExtensionPlugin>
 #include <iostream>
 
 #include "mainwindow.h"
 
 int main(int argc, char* argv[]) {
+  QSurfaceFormat format = QSurfaceFormat::defaultFormat();
+  format.setSamples(4);
+  QSurfaceFormat::setDefaultFormat(format);
+
   qSetMessagePattern(
       "%{time dd.MM.yyyy hh:mm:ss.zzz} | "
       "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{if-"

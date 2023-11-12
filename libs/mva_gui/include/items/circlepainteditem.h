@@ -1,4 +1,3 @@
-
 /* mathvizanimator
  * Copyright (C) 2023 codingwithmagga
  *
@@ -15,35 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick
 
-import cwa.mva.gui
+#ifndef LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEPAINTEDITEM_H_
+#define LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEPAINTEDITEM_H_
 
-MVABasicItem {
-    id: rootMVACircle
+#include "abstractitem.h"
 
-    property alias item: circleItem
+class CirclePaintedItem : public AbstractItem {
+  Q_OBJECT
+  QML_ELEMENT
 
-    layer.enabled: true
-    layer.samples: 4
+ public:
+  explicit CirclePaintedItem(QQuickItem *parent = nullptr);
 
-    CircleItem {
-        id: circleItem
+  void paint(QPainter *painter) override;
 
-        name: "circle"
-        color: "blue"
+  EditableProperties editableProperties() const override;
+};
 
-        height: parent.width
-        width: height
-
-        MVAMouseArea {
-            anchors.fill: parent
-            basicItem: rootMVACircle
-
-            onClicked: {
-                rootMVACircle.clicked(circleItem.name)
-                console.log(rootMVACircle.layer.samples)
-            }
-        }
-    }
-}
+#endif  // LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEPAINTEDITEM_H_

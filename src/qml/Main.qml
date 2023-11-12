@@ -377,8 +377,8 @@ ApplicationWindow {
 
                     width: baseWidth
                     height: baseHeight
-                    scale: scaleFactor
 
+                    scale: scaleFactor
                     clip: true
 
                     Drag.keys: [root.thekey]

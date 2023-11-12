@@ -33,6 +33,7 @@ Item {
             var point = mapToItem(null, mouseX, mouseY)
 
             const component = Qt.createComponent(file)
+            console.log(file)
             if (component.status === Component.Ready) {
                 var object = component.createObject(root, {
                                                         "x": point.x - 15,

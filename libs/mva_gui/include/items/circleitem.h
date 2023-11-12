@@ -25,9 +25,10 @@ class CircleItem : public AbstractItem {
   QML_ELEMENT
 
  public:
-  explicit CircleItem(QQuickItem* parent = nullptr);
+  explicit CircleItem(QQuickItem *parent = nullptr);
 
-  void paint(QPainter* painter) override;
+  void paint(QPainter *painter) override;
+  QSGNode *updatePaintNode(QSGNode *node, UpdatePaintNodeData *) override;
 
   EditableProperties editableProperties() const override;
 };

@@ -23,6 +23,7 @@ qt_add_qml_module(cwa.mva.gui
         qml/models/MVAItemModel.qml
         qml/models/MVAItemDelegate.qml
         qml/items/MVACircle.qml
+        qml/items/MVAPaintedCircle.qml
         qml/items/MVARectangle.qml
         qml/items/MVAText.qml
         qml/items/MVAMouseArea.qml
@@ -31,11 +32,13 @@ qt_add_qml_module(cwa.mva.gui
     SOURCES
         include/items/abstractitem.h
         include/items/circleitem.h
+        include/items/circlepainteditem.h
         include/items/rectangle.h
         include/items/textitem.h
 
         src/items/abstractitem.cpp
         src/items/circleitem.cpp
+        src/items/circlepainteditem.cpp
         src/items/rectangle.cpp
         src/items/textitem.cpp
     DEPENDENCIES QtQuick

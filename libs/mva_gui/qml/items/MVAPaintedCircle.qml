@@ -20,15 +20,12 @@ import QtQuick
 import cwa.mva.gui
 
 MVABasicItem {
-    id: rootMVACircle
+    id: rootMVAPaintedCircle
 
-    property alias item: circleItem
+    property alias item: circlePaintedItem
 
-    layer.enabled: true
-    layer.samples: 4
-
-    CircleItem {
-        id: circleItem
+    CirclePaintedItem {
+        id: circlePaintedItem
 
         name: "circle"
         color: "blue"
@@ -38,11 +35,11 @@ MVABasicItem {
 
         MVAMouseArea {
             anchors.fill: parent
-            basicItem: rootMVACircle
+            basicItem: rootMVAPaintedCircle
 
             onClicked: {
-                rootMVACircle.clicked(circleItem.name)
-                console.log(rootMVACircle.layer.samples)
+                rootMVAPaintedCircle.clicked(circlePaintedItem.name)
+                console.log(rootMVAPaintedCircle.layer.samples)
             }
         }
     }
