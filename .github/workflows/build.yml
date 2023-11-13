@@ -166,8 +166,7 @@ jobs:
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest -VV -C Release --output-on-failure -LE SKIP* --output-log log.txt > $null
-          type test_log.txt 
+          ctest -VV -C Release --output-on-failure -LE SKIP* --output-log "log.txt" 
           
       - name: (6) Run tests on macos
         if: startsWith(matrix.os, 'macos') 
@@ -193,4 +192,8 @@ jobs:
           files: build/mva_test_coverage.xml
           flags: unittests
           name: codecov-mva
+
+      - name: (9) Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
 
