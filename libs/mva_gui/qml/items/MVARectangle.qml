@@ -30,8 +30,7 @@ MVABasicItem {
         name: "rect"
         color: "red"
 
-        width: parent.width
-        height: parent.height
+        anchors.fill: parent
 
         MVAMouseArea {
             anchors.fill: parent

@@ -49,7 +49,7 @@ jobs:
 
       - name: (3) Install Qt
         uses: jurplel/install-qt-action@v3
-        timeout-minutes: 10
+        timeout-minutes: 30
         with:
           version: '${{ env.QT_VERSION }}'
           host: ${{ matrix.qt-os }}

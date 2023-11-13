@@ -31,8 +31,7 @@ MVABasicItem {
 
         name: "text"
 
-        height: parent.height
-        width: parent.width
+        anchors.fill: parent
 
         MVAMouseArea {
             anchors.fill: parent
