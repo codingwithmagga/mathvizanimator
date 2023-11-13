@@ -93,15 +93,15 @@ void ItemHandler::removeItem(QQuickItem* const quick_item) {
 }
 
 // TODO(codingwithmagga): Refactor this function, give useful var names
-void ItemHandler::appendProperties(const auto o, auto mo_abstract,
+void ItemHandler::appendProperties(const auto obj, auto meta_object,
                                    const QStringList& allowedProperties) {
   QList<std::pair<QString, QVariant>> propList;
 
-  for (int i = mo_abstract->propertyOffset(); i < mo_abstract->propertyCount();
+  for (int i = meta_object->propertyOffset(); i < meta_object->propertyCount();
        ++i) {
-    if (allowedProperties.contains(QString(mo_abstract->property(i).name()))) {
-      propList.emplace_back(mo_abstract->property(i).name(),
-                            mo_abstract->property(i).read(o.item));
+    if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
+      propList.emplace_back(meta_object->property(i).name(),
+                            meta_object->property(i).read(obj));
     }
   }
 
@@ -137,15 +137,12 @@ void ItemHandler::setCurrentRow(const int row) {
   const auto allowedProperties = o.item->editableProperties();
 
   do {
-    if (QString(mo_abstract->className()) == "QQuickPaintedItem") {
-      break;
-    }
-    appendProperties(o, mo_abstract,
+    appendProperties(o.item, mo_abstract,
                      allowedProperties.abstract_item_properties);
   } while ((mo_abstract = mo_abstract->superClass()));
 
   do {
-    appendProperties(o, mo, allowedProperties.quick_item_properties);
+    appendProperties(quick_item, mo, allowedProperties.quick_item_properties);
   } while ((mo = mo->superClass()));  // TODO(codingwithmagga): sort elements?
 }
 

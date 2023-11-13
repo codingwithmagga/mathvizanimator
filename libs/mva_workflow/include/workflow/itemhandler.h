@@ -73,7 +73,7 @@ class ItemHandler : public QObject {
 
   QString prepareNewItemName(const QString& old_item_name);
 
-  void appendProperties(const auto o, auto mo_abstract,
+  void appendProperties(const auto obj, auto meta_object,
                         const QStringList& allowedProperties);
 
   QStandardItemModel m_itemmodel;

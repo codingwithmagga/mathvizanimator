@@ -69,6 +69,8 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
     for (const auto& item : item_list) {
       painter.save();
       painter.translate(item->parentItem()->position());
+      painter.setOpacity(item->opacity());
+      painter.rotate(item->rotation());
       item->paint(&painter);
       painter.restore();
     }
