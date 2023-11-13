@@ -166,7 +166,7 @@ jobs:
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest -VV -C Release --output-on-failure -LE SKIP* --output-log "log.txt" 
+          ctest -VV -C Release --output-on-failure -LE SKIP*
           
       - name: (6) Run tests on macos
         if: startsWith(matrix.os, 'macos') 
@@ -195,5 +195,6 @@ jobs:
 
       - name: (9) Setup tmate session
         if: ${{ failure() }}
+        timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
 

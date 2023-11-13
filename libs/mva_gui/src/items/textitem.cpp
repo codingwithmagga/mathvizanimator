@@ -133,9 +133,14 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
 
   QProcess latexmk_process;
   latexmk_process.setWorkingDirectory(m_svg_location.absolutePath());
+  latexmk_process.setProcessChannelMode(
+      QProcess::ProcessChannelMode::MergedChannels);
   latexmk_process.start(m_latexmk_path,
                         QStringList{} << "-dvi" << latexFile.fileName());
-  latexmk_process.waitForFinished();
+  if (!latexmk_process.waitForFinished())
+    qDebug() << "Make failed:" << latexmk_process.errorString();
+  else
+    qDebug() << "Make output:" << latexmk_process.readAll();
 
   QProcess dvisvgm_process;
   dvisvgm_process.setWorkingDirectory(m_svg_location.absolutePath());
