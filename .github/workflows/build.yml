@@ -124,7 +124,7 @@ jobs:
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest -VV -C Release --output-on-failure -LE SKIP*
+          ctest -VV -C Release --output-on-failure
           
       - name: (6) Run tests on macos
         if: startsWith(matrix.os, 'macos') 
