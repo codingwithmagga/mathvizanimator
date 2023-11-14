@@ -44,7 +44,7 @@ TextItem::TextItem(QQuickItem* parent)
     }
   }
 
-  m_latexmk_path = QStandardPaths::findExecutable("latexmk");
+  m_latexmk_path = QStandardPaths::findExecutable("latex");
   m_dvisvgm_path = QStandardPaths::findExecutable("dvisvgm");
 
   // TODO(codingwithmagga): This needs to be in it's own class
