@@ -78,7 +78,6 @@ jobs:
           BIN_DIR_WINDOWS_UNIX: '/c/Program Files/MiKTeX/miktex/bin/x64/'
         run: |
           choco install miktex --no-progress
-          echo "C:\Program Files\MiKTeX\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
           initexmf --admin --verbose --set-config-value=[MPM]AutoInstall=1
           miktex --admin --verbose packages update-package-database
           miktex --admin --verbose packages update
