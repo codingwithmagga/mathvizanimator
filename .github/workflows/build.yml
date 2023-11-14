@@ -70,7 +70,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         if: startsWith(matrix.os, 'windows')
         timeout-minutes: 10
-        - uses: teatimeguest/setup-texlive-action@v3
+        uses: teatimeguest/setup-texlive-action@v3
           with:
             packages: >-
               scheme-basic
