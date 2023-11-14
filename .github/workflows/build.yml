@@ -71,11 +71,11 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         timeout-minutes: 10
         uses: teatimeguest/setup-texlive-action@v3
-          with:
-            packages: >-
-              scheme-basic
-              preview
-              latexmk
+        with:
+          packages: >-
+            scheme-basic
+            preview
+            latexmk
 
       - name: (3.1) Install Latex & dvisvgm on mac
         working-directory: "${{ env.SOURCE_DIR }}"
