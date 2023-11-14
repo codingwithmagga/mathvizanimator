@@ -137,7 +137,7 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
       QProcess::ProcessChannelMode::MergedChannels);
   latexmk_process.start(m_latexmk_path,
                         QStringList{} << "-dvi" << latexFile.fileName());
-  if (!latexmk_process.waitForFinished())
+  if (!latexmk_process.waitForFinished(300000))
     qDebug() << "Make failed:" << latexmk_process.errorString();
   else
     qDebug() << "Make output:" << latexmk_process.readAll();
