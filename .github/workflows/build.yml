@@ -70,25 +70,12 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}"
         if: startsWith(matrix.os, 'windows')
         timeout-minutes: 10
-        shell: pwsh
-        env:
-          MIKTEX_ZIP: miktexsetup-5.5.0+1763023-x64.zip
-          MIKTEX_BASE_URL: 'https://ctan.math.illinois.edu/systems/win32/miktex'
-          LOCAL_MIKTEX_REPO: 'C:/MiKTeX-Repo'
-          BIN_DIR_WINDOWS:      'C:/Program Files/MiKTeX/miktex/bin/x64/'
-          BIN_DIR_WINDOWS_UNIX: '/c/Program Files/MiKTeX/miktex/bin/x64/'
-        run: |
-          choco install miktex --no-progress
-          echo "C:\Program Files\MiKTeX\miktex\bin\x64" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
-          initexmf --admin --verbose --set-config-value=[MPM]AutoInstall=1
-          miktex --admin --verbose packages update-package-database
-          miktex --admin --verbose packages update
-          miktex --verbose packages update
-          miktex --admin --verbose packages install cm-super
-          miktex --admin --verbose fndb refresh
-          initexmf --admin --verbose --update-fndb
-          initexmf --admin --verbose --mklinks --force
-          updmap --admin
+        - uses: teatimeguest/setup-texlive-action@v3
+          with:
+            packages: >-
+              scheme-basic
+              preview
+              latexmk
 
       - name: (3.1) Install Latex & dvisvgm on mac
         working-directory: "${{ env.SOURCE_DIR }}"
