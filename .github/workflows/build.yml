@@ -132,6 +132,7 @@ jobs:
       - name: (6) Run tests on windows
         if: startsWith(matrix.os, 'windows') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
+        shell: bash
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
@@ -162,8 +163,8 @@ jobs:
           flags: unittests
           name: codecov-mva
 
-      - name: (9) Setup tmate session
-        if: ${{ failure() }}
-        timeout-minutes: 60
-        uses: mxschmitt/action-tmate@v3
+      #- name: (9) Setup tmate session
+      #  if: ${{ failure() }}
+      #  timeout-minutes: 60
+      #  uses: mxschmitt/action-tmate@v3
 
