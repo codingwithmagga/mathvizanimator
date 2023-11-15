@@ -75,12 +75,19 @@ void TestTextItem::latexRenderTest() {
   const QDir appPath =
       QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
 
+  auto svg_file =
+      QFile(appPath.absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
+  if (svg_file.exists()) {
+    QVERIFY(svg_file.remove());
+  }
+
   const QString test_latex = R"($\theta_1 = \delta + \epsilon$)";
   m_text_item.setLatexSource(test_latex);
 
+  QVERIFY(svg_file.exists());
   QCOMPARE(m_text_item.getLatexSource(), test_latex);
   QCOMPARE(m_text_item.getSvgFile(),
-           appPath.absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
+           appPath.absoluteFilePath(svg_file.fileName()));
 }
 
 void TestTextItem::paintTest() {

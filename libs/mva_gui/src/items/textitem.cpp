@@ -44,11 +44,11 @@ TextItem::TextItem(QQuickItem* parent)
     }
   }
 
-  m_latexmk_path = QStandardPaths::findExecutable("latex");
+  m_latex_path = QStandardPaths::findExecutable("latex");
   m_dvisvgm_path = QStandardPaths::findExecutable("dvisvgm");
 
   // TODO(codingwithmagga): This needs to be in it's own class
-  if (m_latexmk_path.isEmpty() || m_dvisvgm_path.isEmpty()) {
+  if (m_latex_path.isEmpty() || m_dvisvgm_path.isEmpty()) {
     qCritical() << "Latex or dvisvgm not found!";
   }
 }
@@ -135,9 +135,10 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
   latexmk_process.setWorkingDirectory(m_svg_location.absolutePath());
   latexmk_process.setProcessChannelMode(
       QProcess::ProcessChannelMode::MergedChannels);
-  latexmk_process.start(m_latexmk_path,
-                        QStringList{} << "-dvi" << latexFile.fileName());
-  if (!latexmk_process.waitForFinished(300000))
+  latexmk_process.start(m_latex_path, QStringList{} << "-output-format=dvi"
+                                                    << "-interaction=batchmode"
+                                                    << latexFile.fileName());
+  if (!latexmk_process.waitForFinished())
     qDebug() << "Make failed:" << latexmk_process.errorString();
   else
     qDebug() << "Make output:" << latexmk_process.readAll();
@@ -148,11 +149,6 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
                                                       << "-n"
                                                       << "-o" << hash + ".svg");
   dvisvgm_process.waitForFinished();
-
-  QProcess latexmk_process_2;
-  latexmk_process_2.setWorkingDirectory(m_svg_location.absolutePath());
-  latexmk_process_2.start(m_latexmk_path, QStringList{} << "-C");
-  latexmk_process_2.waitForFinished();
 
   setSvgFile(svgFile);
 
