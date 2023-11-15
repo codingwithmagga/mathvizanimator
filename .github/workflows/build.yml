@@ -52,6 +52,7 @@ jobs:
             scheme-basic
             preview
             latexmk
+            standalone
             dvisvgm
 
       - name: (3.2) Install Qt
