@@ -53,6 +53,8 @@ jobs:
             preview
             latexmk
             standalone
+            xcolor
+            amssymb
             dvisvgm
 
       - name: (3.2) Install Qt
