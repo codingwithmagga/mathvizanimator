@@ -73,7 +73,7 @@ class TextItem : public AbstractItem {
   // TODO(codingwithmagga): Relocate to a SvgHandler class or LatexHandler or
   // similar
   QDir m_svg_location;
-  QString m_latexmk_path;
+  QString m_latex_path;
   QString m_dvisvgm_path;
 };
 

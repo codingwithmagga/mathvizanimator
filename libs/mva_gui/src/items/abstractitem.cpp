@@ -83,9 +83,10 @@ void AbstractItem::setPropertiesFromJson(const QJsonObject& json) {
 AbstractItem::EditableProperties AbstractItem::editableProperties() const {
   EditableProperties editableProperties;
 
-  editableProperties.abstract_item_properties = QStringList{"name", "color"};
+  editableProperties.abstract_item_properties =
+      QStringList{"name", "color", "opacity", "rotation"};
   editableProperties.quick_item_properties =
-      QStringList{"width", "height", "opacity", "rotation", "x", "y"};
+      QStringList{"width", "height", "x", "y"};
 
   return editableProperties;
 }

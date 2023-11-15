@@ -42,6 +42,7 @@
     "abstractitem",
     "aqtversion",
     "basictex",
+    "batchmode",
     "circleitem",
     "codecov",
     "codingwithmagga",
@@ -64,6 +65,7 @@
     "miktex",
     "miktexsetup",
     "msvc",
+    "mxschmitt",
     "oxsecurity",
     "propertymodel",
     "qobject",
@@ -77,11 +79,14 @@
     "smod",
     "stefanzweifel",
     "subdir",
+    "teatimeguest",
     "texlive",
     "textitem",
     "tlmgr",
     "unittests",
     "vcodec",
-    "venv"
+    "venv",
+    "vframes",
+    "xcolor"
 ]
 }

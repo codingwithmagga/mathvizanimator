@@ -7,9 +7,6 @@ run-name: 'Deploy package by @${{ github.actor }}'
     branches:
       - main
       - pre_alpha
-defaults:
-  run:
-    shell: bash
 env:
   SOURCE_DIR: ${{ github.workspace }}
   QT_VERSION: 6.5.1
@@ -47,9 +44,21 @@ jobs:
         run: |
           git fetch --all --tags -f
 
-      - name: (3) Install Qt
-        uses: jurplel/install-qt-action@v3
+      - name: (3.1) Install Latex 
+        uses: teatimeguest/setup-texlive-action@v3
         timeout-minutes: 10
+        with:
+          packages: >-
+            scheme-basic
+            preview
+            latexmk
+            standalone
+            xcolor
+            dvisvgm
+
+      - name: (3.2) Install Qt
+        uses: jurplel/install-qt-action@v3
+        timeout-minutes: 30
         with:
           version: '${{ env.QT_VERSION }}'
           host: ${{ matrix.qt-os }}
@@ -58,67 +67,17 @@ jobs:
           dir: "${{ env.SOURCE_DIR }}"
           setup-python: false
           aqtversion: ==3.1.*
-          modules: 'qtmultimedia' 
-
-      - name: (3.1) Install Latex & gcov on ubuntu
+          modules: 'qtmultimedia'  
+      
+      - name: (3.3) Install gcov on ubuntu
         working-directory: "${{ env.SOURCE_DIR }}"
         if: startsWith(matrix.os, 'ubuntu')
         timeout-minutes: 10
         run: |
           sudo apt-get update && sudo apt-get upgrade
-          sudo apt-get install -y texlive-latex-extra latexmk
           pip install gcovr
 
-      - name: (3.1) Install Latex on windows
-        working-directory: "${{ env.SOURCE_DIR }}"
-        if: startsWith(matrix.os, 'windows')
-        timeout-minutes: 10
-        shell: bash
-        env:
-          MIKTEX_ZIP: miktexsetup-5.5.0+1763023-x64.zip
-          MIKTEX_BASE_URL: 'https://ctan.math.illinois.edu/systems/win32/miktex'
-          LOCAL_MIKTEX_REPO: 'C:/MiKTeX-Repo'
-          BIN_DIR_WINDOWS:      'C:/Program Files/MiKTeX/miktex/bin/x64/'
-          BIN_DIR_WINDOWS_UNIX: '/c/Program Files/MiKTeX/miktex/bin/x64/'
-        run: |
-          curl --location --remote-name "$MIKTEX_BASE_URL/setup/windows-x64/$MIKTEX_ZIP"
-          unzip "$MIKTEX_ZIP"
-
-          ./miktexsetup_standalone --verbose \
-            --local-package-repository="$LOCAL_MIKTEX_REPO" \
-            --remote-package-repository="$MIKTEX_BASE_URL/tm/packages/" \
-            --package-set=essential \
-            download
-
-          ./miktexsetup_standalone --verbose \
-            --local-package-repository="$LOCAL_MIKTEX_REPO" \
-            --package-set=essential \
-            --shared=yes \
-            install
-
-          # Adding MiKTeX bin folder to PATH and to GITHUB_PATH
-          echo "$BIN_DIR_WINDOWS" >> "$GITHUB_PATH"
-          export PATH="$BIN_DIR_WINDOWS_UNIX:$PATH"
-
-          # Configure MiKTeX to install missing packages on the fly"
-          initexmf --admin --verbose --set-config-value='[MPM]AutoInstall=1'
-          # Configure default mirror for packages
-          mpm --admin --set-repository="$MIKTEX_BASE_URL/tm/packages/"
-          mpm --find-updates
-          mpm --admin --find-updates
-
-      - name: (3.1) Install Latex & dvisvgm on mac
-        working-directory: "${{ env.SOURCE_DIR }}"
-        if: startsWith(matrix.os, 'macos')
-        timeout-minutes: 10
-        run: |
-          brew install --cask basictex
-          PATH=/usr/local/texlive/2023basic/bin/universal-darwin:"${PATH}"
-          sudo tlmgr update --self --all
-          sudo tlmgr install latexmk standalone preview dvisvgm
-          sudo tlmgr path add
-
-      - name: (3.2) Setup ffmpeg
+      - name: (3.4) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2
         timeout-minutes: 5
         id: setup-ffmpeg
@@ -160,23 +119,16 @@ jobs:
           cmake "${{ env.SOURCE_DIR }}"
           cmake --build . --config Release
       
-      - name: (6) Run tests on windows
-        if: startsWith(matrix.os, 'windows') 
+      - name: (6) Run tests on windows and macos
+        if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
-        timeout-minutes: 15
-        run: |
-          export QT_QPA_PLATFORM=offscreen
-          ctest -VV -C Release --output-on-failure -LE SKIP*   
-          
-      - name: (6) Run tests on macos
-        if: startsWith(matrix.os, 'macos') 
-        working-directory: "${{ env.SOURCE_DIR }}/build"
+        shell: bash
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest -VV -C Release --output-on-failure
 
-      - name: (7) Run tests and code coverage on unix 
+      - name: (6) Run tests and code coverage on unix 
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
@@ -184,7 +136,7 @@ jobs:
           export QT_QPA_PLATFORM=offscreen
           cmake --build . --target mva_test_coverage -j4
 
-      - name: (8) Upload coverage reports to Codecov
+      - name: (7) Upload coverage reports to Codecov
         if: startsWith(matrix.os, 'ubuntu') 
         uses: codecov/codecov-action@v3
         env:
@@ -192,4 +144,9 @@ jobs:
           files: build/mva_test_coverage.xml
           flags: unittests
           name: codecov-mva
+
+      #- name: (8) Setup tmate session
+      #  if: ${{ failure() }}
+      #  timeout-minutes: 60
+      #  uses: mxschmitt/action-tmate@v3
 

@@ -30,8 +30,7 @@ MVABasicItem {
         name: "circle"
         color: "blue"
 
-        height: parent.width
-        width: height
+        anchors.fill: parent
 
         MVAMouseArea {
             anchors.fill: parent
