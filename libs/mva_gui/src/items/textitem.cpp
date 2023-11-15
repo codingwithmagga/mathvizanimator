@@ -148,7 +148,12 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
   dvisvgm_process.start(m_dvisvgm_path, QStringList{} << hash + ".dvi"
                                                       << "-n"
                                                       << "-o" << hash + ".svg");
-  dvisvgm_process.waitForFinished();
+  if (!dvisvgm_process.waitForFinished())
+    qDebug() << "Make failed:" << dvisvgm_process.errorString();
+  else {
+    qDebug() << "Make output:" << dvisvgm_process.readAll();
+    qDebug() << "File exists:" << QFile(hash + ".svg").exists();
+  }
 
   setSvgFile(svgFile);
 
