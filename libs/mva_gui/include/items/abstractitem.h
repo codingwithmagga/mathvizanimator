@@ -46,15 +46,21 @@ class AbstractItem : public QQuickPaintedItem {
   void setColor(const QColor& color);
 
   virtual QJsonObject toJson() const;
-  virtual void setPropertiesFromJson(const QJsonObject& json);
 
   virtual EditableProperties editableProperties() const;
+
+  QList<QPair<QString, QVariant>> getItemProperties() const;
+  QList<QPair<QString, QVariant>> getParentItemProperties() const;
 
  signals:
   void nameChanged(const QString& new_name);
   void colorChanged(const QColor& new_color);
 
  private:
+  QList<std::pair<QString, QVariant>> appendProperties(
+      const auto obj, auto meta_object,
+      const QStringList& allowedProperties) const;
+
   QString m_name;
   QColor m_color;
 

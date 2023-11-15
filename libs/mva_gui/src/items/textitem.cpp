@@ -83,16 +83,6 @@ void TextItem::paint(QPainter* painter) {
   painter->restore();
 }
 
-// TODO(codingwithmagga): save everything from editableProperties()
-QJsonObject TextItem::toJson() const {
-  auto json = AbstractItem::toJson();
-
-  json["item.latexSource"] = m_latex_source;
-  json["item.svgFile"] = m_svg_file.absoluteFilePath();
-
-  return json;
-}
-
 QString TextItem::getLatexSource() const { return m_latex_source; }
 
 // TODO(codingwithmagga): Refactor this function

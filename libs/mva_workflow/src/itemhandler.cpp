@@ -113,7 +113,8 @@ void ItemHandler::appendProperties(const auto obj, auto meta_object,
   }
 }
 
-// TODO(codingwithmagga): Refactor this function, give useful var names
+// TODO(codingwithmagga): Refactor this function, give useful var names and use
+// AbstractItem::getItemProperties()
 void ItemHandler::setCurrentRow(const int row) {
   m_propertymodel.removeRows(0, m_propertymodel.rowCount());
   m_currentItemRow = row;

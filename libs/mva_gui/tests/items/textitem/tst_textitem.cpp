@@ -28,16 +28,16 @@ class TestTextItem : public QObject {
   void toJsonTest();
   void latexRenderTest();
   void paintTest();
-  void paintTestScaled();
 
  private:
   const qreal m_text_x = 46;
   const qreal m_text_y = 98;
-  const qreal m_text_width = 124;
-  const qreal m_text_height = 276;
 
   const QString m_text_color = "#0000ff";
   const QString m_text_name = "test_text_name";
+  const qreal m_text_rot = 43;
+  const qreal m_text_opac = 0.8;
+  const qreal m_text_scale = 4.2;
 
   QQuickItem m_text_parent_item;
   TextItem m_text_item;
@@ -46,29 +46,29 @@ class TestTextItem : public QObject {
 void TestTextItem::initTestCase() {
   m_text_parent_item.setX(m_text_x);
   m_text_parent_item.setY(m_text_y);
-  m_text_parent_item.setWidth(m_text_width);
-  m_text_parent_item.setHeight(m_text_height);
 
   m_text_item.setParentItem(&m_text_parent_item);
   m_text_item.setColor(QColor(m_text_color));
   m_text_item.setName(m_text_name);
+  m_text_item.setRotation(m_text_rot);
+  m_text_item.setOpacity(m_text_opac);
+  m_text_item.setScaleText(m_text_scale);
 }
 
 void TestTextItem::toJsonTest() {
   QJsonObject expected_json;
-  expected_json["x"] = m_text_x;
-  expected_json["y"] = m_text_y;
-  expected_json["width"] = m_text_width;
-  expected_json["height"] = m_text_height;
-  expected_json["item.color"] = m_text_color;
+  expected_json["x"] = QString::number(m_text_x);
+  expected_json["y"] = QString::number(m_text_y);
   expected_json["item.name"] = m_text_name;
+  expected_json["item.rotation"] = QString::number(m_text_rot);
+  expected_json["item.opacity"] = QString::number(m_text_opac);
+  expected_json["item.scaleText"] = QString::number(m_text_scale);
   expected_json["item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml";
   expected_json["item.latexSource"] = "";
-  expected_json["item.svgFile"] = m_text_item.getSvgFile();
 
-  const auto rect_json = m_text_item.toJson();
+  const auto text_json = m_text_item.toJson();
 
-  QCOMPARE(rect_json, expected_json);
+  QCOMPARE(text_json, expected_json);
 }
 
 void TestTextItem::latexRenderTest() {
@@ -98,28 +98,18 @@ void TestTextItem::paintTest() {
 
   painter.save();
   painter.translate(m_text_item.parentItem()->position());
+  painter.setOpacity(m_text_item.opacity());
+  if (m_text_item.rotation() != 0) {
+    QPointF item_middle_point(m_text_item.width() / 2.0,
+                              m_text_item.height() / 2.0);
+    painter.translate(item_middle_point);
+    painter.rotate(m_text_item.rotation());
+    painter.translate(-item_middle_point);
+  }
   m_text_item.paint(&painter);
   painter.restore();
 
   expected_image.load("://test_images/test_text_image.png");
-
-  QCOMPARE(image, expected_image);
-}
-
-void TestTextItem::paintTestScaled() {
-  QImage image(600, 400, QImage::Format::Format_ARGB32);
-  QImage expected_image = image;
-  image.fill("white");
-  QPainter painter(&image);
-
-  m_text_item.setScaleText(2.4);
-
-  painter.save();
-  painter.translate(m_text_item.parentItem()->position());
-  m_text_item.paint(&painter);
-  painter.restore();
-
-  expected_image.load("://test_images/test_text_image_scaled.png");
 
   QCOMPARE(image, expected_image);
 }
