@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>templates/template.tex</file>
+        <file>templates/placeholder.svg</file>
+    </qresource>
+</RCC>
