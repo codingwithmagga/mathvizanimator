@@ -82,14 +82,14 @@ QList<QPair<QString, QVariant>> AbstractItem::getParentItemProperties() const {
     prop_list.append(appendProperties(parentItem(), parent_meta_object,
                                       properties.quick_item_properties));
   } while ((parent_meta_object = parent_meta_object->superClass()));
-  
+
   return prop_list;
 }
 
-QList<std::pair<QString, QVariant>> AbstractItem::appendProperties(
+QList<QPair<QString, QVariant>> AbstractItem::appendProperties(
     const auto obj, auto meta_object,
     const QStringList& allowedProperties) const {
-  QList<std::pair<QString, QVariant>> prop_list;
+  QList<QPair<QString, QVariant>> prop_list;
 
   for (int i = meta_object->propertyOffset(); i < meta_object->propertyCount();
        ++i) {

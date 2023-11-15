@@ -35,8 +35,8 @@ class TestTextItem : public QObject {
 
   const QString m_text_color = "#0000ff";
   const QString m_text_name = "test_text_name";
-  const qreal m_text_rot = 43;
-  const qreal m_text_opac = 0.8;
+  const qreal m_text_rotation = 43;
+  const qreal m_text_opacity = 0.8;
   const qreal m_text_scale = 4.2;
 
   QQuickItem m_text_parent_item;
@@ -50,8 +50,8 @@ void TestTextItem::initTestCase() {
   m_text_item.setParentItem(&m_text_parent_item);
   m_text_item.setColor(QColor(m_text_color));
   m_text_item.setName(m_text_name);
-  m_text_item.setRotation(m_text_rot);
-  m_text_item.setOpacity(m_text_opac);
+  m_text_item.setRotation(m_text_rotation);
+  m_text_item.setOpacity(m_text_opacity);
   m_text_item.setScaleText(m_text_scale);
 }
 
@@ -60,8 +60,8 @@ void TestTextItem::toJsonTest() {
   expected_json["x"] = QString::number(m_text_x);
   expected_json["y"] = QString::number(m_text_y);
   expected_json["item.name"] = m_text_name;
-  expected_json["item.rotation"] = QString::number(m_text_rot);
-  expected_json["item.opacity"] = QString::number(m_text_opac);
+  expected_json["item.rotation"] = QString::number(m_text_rotation);
+  expected_json["item.opacity"] = QString::number(m_text_opacity);
   expected_json["item.scaleText"] = QString::number(m_text_scale);
   expected_json["item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml";
   expected_json["item.latexSource"] = "";

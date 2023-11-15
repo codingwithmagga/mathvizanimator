@@ -21,6 +21,7 @@
 #include <QColor>
 #include <QFile>
 #include <QJsonObject>
+#include <QPair>
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
@@ -57,7 +58,7 @@ class AbstractItem : public QQuickPaintedItem {
   void colorChanged(const QColor& new_color);
 
  private:
-  QList<std::pair<QString, QVariant>> appendProperties(
+  QList<QPair<QString, QVariant>> appendProperties(
       const auto obj, auto meta_object,
       const QStringList& allowedProperties) const;
 
