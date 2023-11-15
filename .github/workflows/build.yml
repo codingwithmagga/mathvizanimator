@@ -151,8 +151,8 @@ jobs:
           flags: unittests
           name: codecov-mva
 
-      #- name: (9) Setup tmate session
-      #  if: ${{ failure() }}
-      #  timeout-minutes: 60
-      #  uses: mxschmitt/action-tmate@v3
+      - name: (9) Setup tmate session
+        if: ${{ failure() }}
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
 
