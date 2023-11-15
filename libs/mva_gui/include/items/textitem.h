@@ -48,8 +48,6 @@ class TextItem : public AbstractItem {
 
   void paint(QPainter* painter) override;
 
-  QJsonObject toJson() const override;
-
   QString getLatexSource() const;
   // TODO(codingwithmagga): Relocate to a SvgHandler class or LatexHandler or
   // similar

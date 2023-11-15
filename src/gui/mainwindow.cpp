@@ -110,6 +110,11 @@ void MainWindowHandler::load(const QVariant &file) {
                             QUrl(element["item.file"].toString()));
 
     auto elementProperties = element.toVariantMap();
+
+    // "file" is a read-only property which will be set when the item is
+    // created. It is not possible (or necessary) to set it in this context.
+    elementProperties.remove("item.file");
+
     elementProperties.insert("parent",
                              QVariant::fromValue(m_qml_creation_area));
     QObject *comp = component.createWithInitialProperties(elementProperties);

@@ -36,6 +36,8 @@ class TestRectangleItem : public QObject {
 
   const QString m_rect_color = "#0000ff";
   const QString m_rect_name = "test_rect_name";
+  const qreal m_rect_opacity = 0.05;
+  const qreal m_rect_rotation = -65;
 
   QQuickItem m_rect_parent_item;
   RectangleItem m_rect_item;
@@ -50,6 +52,8 @@ void TestRectangleItem::initTestCase() {
   m_rect_item.setParentItem(&m_rect_parent_item);
   m_rect_item.setColor(QColor(m_rect_color));
   m_rect_item.setName(m_rect_name);
+  m_rect_item.setOpacity(m_rect_opacity);
+  m_rect_item.setRotation(m_rect_rotation);
 
   m_rect_item.setWidth(m_rect_width);
   m_rect_item.setHeight(m_rect_height);
@@ -57,12 +61,14 @@ void TestRectangleItem::initTestCase() {
 
 void TestRectangleItem::toJsonTest() {
   QJsonObject expected_json;
-  expected_json["x"] = m_rect_x;
-  expected_json["y"] = m_rect_y;
-  expected_json["width"] = m_rect_width;
-  expected_json["height"] = m_rect_height;
+  expected_json["x"] = QString::number(m_rect_x);
+  expected_json["y"] = QString::number(m_rect_y);
+  expected_json["width"] = QString::number(m_rect_width);
+  expected_json["height"] = QString::number(m_rect_height);
   expected_json["item.color"] = m_rect_color;
   expected_json["item.name"] = m_rect_name;
+  expected_json["item.rotation"] = QString::number(m_rect_rotation);
+  expected_json["item.opacity"] = QString::number(m_rect_opacity);
   expected_json["item.file"] =
       "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml";
 
@@ -79,6 +85,14 @@ void TestRectangleItem::paintTest() {
 
   painter.save();
   painter.translate(m_rect_item.parentItem()->position());
+  painter.setOpacity(m_rect_item.opacity());
+  if (m_rect_item.rotation() != 0) {
+    QPointF item_middle_point(m_rect_item.width() / 2.0,
+                              m_rect_item.height() / 2.0);
+    painter.translate(item_middle_point);
+    painter.rotate(m_rect_item.rotation());
+    painter.translate(-item_middle_point);
+  }
   m_rect_item.paint(&painter);
   painter.restore();
 

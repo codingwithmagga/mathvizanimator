@@ -54,7 +54,3 @@ target_link_libraries(
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
 configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
-
-configure_file(items/circleitem/test_circle.png circleitem/test_circle.png COPYONLY)
-configure_file(items/rectangleitem/test_rectangle.png rectangleitem/test_rectangle.png COPYONLY)
-configure_file(items/textitem/test_text.png textitem/test_text.png COPYONLY)

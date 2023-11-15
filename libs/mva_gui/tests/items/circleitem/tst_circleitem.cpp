@@ -36,6 +36,8 @@ class TestCircleItem : public QObject {
 
   const QString m_circle_color = "#0000ff";
   const QString m_circle_name = "test_circle_name";
+  const qreal m_circle_opacity = 0.6;
+  const qreal m_circle_rotation = 32;
 
   QQuickItem m_circle_parent_item;
   CircleItem m_circle_item;
@@ -50,6 +52,8 @@ void TestCircleItem::initTestCase() {
   m_circle_item.setParentItem(&m_circle_parent_item);
   m_circle_item.setColor(QColor(m_circle_color));
   m_circle_item.setName(m_circle_name);
+  m_circle_item.setOpacity(m_circle_opacity);
+  m_circle_item.setRotation(m_circle_rotation);
 
   m_circle_item.setWidth(m_circle_width);
   m_circle_item.setHeight(m_circle_width);
@@ -57,12 +61,14 @@ void TestCircleItem::initTestCase() {
 
 void TestCircleItem::toJsonTest() {
   QJsonObject expected_json;
-  expected_json["x"] = m_circle_x;
-  expected_json["y"] = m_circle_y;
-  expected_json["width"] = m_circle_width;
-  expected_json["height"] = m_circle_height;
+  expected_json["x"] = QString::number(m_circle_x);
+  expected_json["y"] = QString::number(m_circle_y);
+  expected_json["width"] = QString::number(m_circle_width);
+  expected_json["height"] = QString::number(m_circle_height);
   expected_json["item.color"] = m_circle_color;
   expected_json["item.name"] = m_circle_name;
+  expected_json["item.rotation"] = QString::number(m_circle_rotation);
+  expected_json["item.opacity"] = QString::number(m_circle_opacity);
   expected_json["item.file"] =
       "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
 
@@ -79,6 +85,14 @@ void TestCircleItem::paintTest() {
 
   painter.save();
   painter.translate(m_circle_item.parentItem()->position());
+  painter.setOpacity(m_circle_item.opacity());
+  if (m_circle_item.rotation() != 0) {
+    QPointF item_middle_point(m_circle_item.width() / 2.0,
+                              m_circle_item.height() / 2.0);
+    painter.translate(item_middle_point);
+    painter.rotate(m_circle_item.rotation());
+    painter.translate(-item_middle_point);
+  }
   m_circle_item.paint(&painter);
   painter.restore();
 

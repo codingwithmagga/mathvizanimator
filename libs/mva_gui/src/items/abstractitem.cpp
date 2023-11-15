@@ -42,51 +42,73 @@ void AbstractItem::setColor(const QColor& color) {
 
 QJsonObject AbstractItem::toJson() const {
   QJsonObject json;
+  auto properties = getItemProperties();
+  auto parent_properties = getParentItemProperties();
 
-  json["x"] = parentItem()->x();
-  json["y"] = parentItem()->y();
-  json["width"] = parentItem()->width();
-  json["height"] = parentItem()->height();
-  json["item.color"] = m_color.name();
-  json["item.name"] = m_name;
-  json["item.file"] = m_qml_file;
+  properties.append(QPair<QString, QVariant>{"file", m_qml_file});
+
+  for (auto& property : properties) {
+    json["item." + property.first] = property.second.toString();
+  }
+
+  for (auto& property : parent_properties) {
+    json[property.first] = property.second.toString();
+  }
 
   return json;
 }
 
-void AbstractItem::setPropertiesFromJson(const QJsonObject& json) {
-  if (const QJsonValue v = json["x"]; v.isDouble()) {
-    parentItem()->setX(v.toDouble());
+QList<QPair<QString, QVariant>> AbstractItem::getItemProperties() const {
+  auto meta_object = metaObject();
+  const auto properties = editableProperties();
+
+  QList<QPair<QString, QVariant>> prop_list;
+
+  do {
+    prop_list.append(appendProperties(this, meta_object,
+                                      properties.abstract_item_properties));
+  } while ((meta_object = meta_object->superClass()));
+
+  return prop_list;
+}
+
+QList<QPair<QString, QVariant>> AbstractItem::getParentItemProperties() const {
+  auto parent_meta_object = parentItem()->metaObject();
+  const auto properties = editableProperties();
+
+  QList<QPair<QString, QVariant>> prop_list;
+
+  do {
+    prop_list.append(appendProperties(parentItem(), parent_meta_object,
+                                      properties.quick_item_properties));
+  } while ((parent_meta_object = parent_meta_object->superClass()));
+
+  return prop_list;
+}
+
+QList<QPair<QString, QVariant>> AbstractItem::appendProperties(
+    const auto obj, auto meta_object,
+    const QStringList& allowedProperties) const {
+  QList<QPair<QString, QVariant>> prop_list;
+
+  for (int i = meta_object->propertyOffset(); i < meta_object->propertyCount();
+       ++i) {
+    if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
+      prop_list.emplace_back(meta_object->property(i).name(),
+                             meta_object->property(i).read(obj));
+    }
   }
 
-  if (const QJsonValue v = json["y"]; v.isDouble()) {
-    parentItem()->setY(v.toDouble());
-  }
-
-  if (const QJsonValue v = json["width"]; v.isDouble()) {
-    parentItem()->setWidth(v.toDouble());
-  }
-
-  if (const QJsonValue v = json["height"]; v.isDouble()) {
-    parentItem()->setHeight(v.toDouble());
-  }
-
-  if (const QJsonValue v = json["color"]; v.isString()) {
-    m_color = v.toString();
-  }
-
-  if (const QJsonValue v = json["name"]; v.isString()) {
-    m_name = v.toString();
-  }
+  return prop_list;
 }
 
 AbstractItem::EditableProperties AbstractItem::editableProperties() const {
-  EditableProperties editableProperties;
+  EditableProperties editable_properties;
 
-  editableProperties.abstract_item_properties =
+  editable_properties.abstract_item_properties =
       QStringList{"name", "color", "opacity", "rotation"};
-  editableProperties.quick_item_properties =
+  editable_properties.quick_item_properties =
       QStringList{"width", "height", "x", "y"};
 
-  return editableProperties;
+  return editable_properties;
 }
