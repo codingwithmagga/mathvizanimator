@@ -138,21 +138,19 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
   latexmk_process.start(m_latex_path, QStringList{} << "-output-format=dvi"
                                                     << "-interaction=batchmode"
                                                     << latexFile.fileName());
-  if (!latexmk_process.waitForFinished())
+  if (!latexmk_process.waitForFinished()) {
     qDebug() << "Make failed:" << latexmk_process.errorString();
-  else
-    qDebug() << "Make output:" << latexmk_process.readAll();
+    return;
+  }
 
   QProcess dvisvgm_process;
   dvisvgm_process.setWorkingDirectory(m_svg_location.absolutePath());
   dvisvgm_process.start(m_dvisvgm_path, QStringList{} << hash + ".dvi"
                                                       << "-n"
                                                       << "-o" << hash + ".svg");
-  if (!dvisvgm_process.waitForFinished())
+  if (!dvisvgm_process.waitForFinished()) {
     qDebug() << "Make failed:" << dvisvgm_process.errorString();
-  else {
-    qDebug() << "Make output:" << dvisvgm_process.readAll();
-    qDebug() << "File exists:" << QFile(hash + ".svg").exists();
+    return;
   }
 
   setSvgFile(svgFile);

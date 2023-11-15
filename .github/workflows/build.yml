@@ -119,24 +119,16 @@ jobs:
           cmake "${{ env.SOURCE_DIR }}"
           cmake --build . --config Release
       
-      - name: (6) Run tests on windows
-        if: startsWith(matrix.os, 'windows') 
+      - name: (6) Run tests on windows and macos
+        if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos') 
         working-directory: "${{ env.SOURCE_DIR }}/build"
         shell: bash
         timeout-minutes: 15
         run: |
           export QT_QPA_PLATFORM=offscreen
           ctest -VV -C Release --output-on-failure
-          
-      - name: (6) Run tests on macos
-        if: startsWith(matrix.os, 'macos') 
-        working-directory: "${{ env.SOURCE_DIR }}/build"
-        timeout-minutes: 15
-        run: |
-          export QT_QPA_PLATFORM=offscreen
-          ctest -VV -C Release --output-on-failure
 
-      - name: (7) Run tests and code coverage on unix 
+      - name: (6) Run tests and code coverage on unix 
         if: startsWith(matrix.os, 'ubuntu')
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
@@ -144,7 +136,7 @@ jobs:
           export QT_QPA_PLATFORM=offscreen
           cmake --build . --target mva_test_coverage -j4
 
-      - name: (8) Upload coverage reports to Codecov
+      - name: (7) Upload coverage reports to Codecov
         if: startsWith(matrix.os, 'ubuntu') 
         uses: codecov/codecov-action@v3
         env:
@@ -153,8 +145,8 @@ jobs:
           flags: unittests
           name: codecov-mva
 
-      - name: (9) Setup tmate session
-        if: ${{ failure() }}
-        timeout-minutes: 60
-        uses: mxschmitt/action-tmate@v3
+      #- name: (8) Setup tmate session
+      #  if: ${{ failure() }}
+      #  timeout-minutes: 60
+      #  uses: mxschmitt/action-tmate@v3
 

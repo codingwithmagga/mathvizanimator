@@ -15,7 +15,7 @@ add_subdirectory(src)
 get_all_cmake_tests(TEST_TARGETS ${CMAKE_CURRENT_LIST_DIR})
 
 if(CMAKE_COMPILER_IS_GNUCC AND RUN_CODE_COVERAGE)
-    set(GCOVR_ADDITIONAL_ARGS "--exclude-unreachable-branches")
+    set(GCOVR_ADDITIONAL_ARGS "--exclude-unreachable-branches;--exclude-throw-branches")
     setup_target_for_coverage_gcovr_xml(
         NAME mva_test_coverage
         EXECUTABLE ctest --schedule-random -j 4 --output-on-failure
