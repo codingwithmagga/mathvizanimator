@@ -80,7 +80,7 @@ void MainWindowHandler::render() {
 
 void MainWindowHandler::save(const QVariant &file) {
   QJsonObject save_json;
-  int count = 0;
+  qint32 count = 0;
   QString element_prefix = "element_";
   const auto item_list = m_itemhandler.items();
 
@@ -138,7 +138,7 @@ void MainWindowHandler::removeItem(QQuickItem *quick_item) {
   m_itemhandler.removeItem(quick_item);
 }
 
-void MainWindowHandler::removeRow(const int row) {
+void MainWindowHandler::removeRow(const qint32 row) {
   if (row == -1) {
     return;
   }
@@ -146,7 +146,7 @@ void MainWindowHandler::removeRow(const int row) {
   m_itemhandler.model()->removeRow(row);
 }
 
-int MainWindowHandler::getRowByItemName(QVariant name) {
+qint32 MainWindowHandler::getRowByItemName(QVariant name) {
   const auto itemName = name.toString();
 
   const auto itemList = m_itemhandler.model()->findItems(itemName);
@@ -174,7 +174,7 @@ void MainWindowHandler::updateProjectSettings(QVariantList newProjectSettings) {
 
 void MainWindowHandler::clearAllItems() { m_itemhandler.clear(); }
 
-void MainWindowHandler::currentRowChanged(const int row) {
+void MainWindowHandler::currentRowChanged(const qint32 row) {
   m_itemhandler.setCurrentRow(row);
 }
 
