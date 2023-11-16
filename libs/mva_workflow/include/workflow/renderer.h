@@ -48,7 +48,8 @@ class Renderer : public QObject {
 
  private slots:
   void renderingProcessStarted(const QList<AbstractItem*>& item_list);
-  void renderingProcessFinished(qint32 exitCode, QProcess::ExitStatus exitStatus);
+  void renderingProcessFinished(qint32 exitCode,
+                                QProcess::ExitStatus exitStatus);
 
  private:
   QProcess m_render_process;
