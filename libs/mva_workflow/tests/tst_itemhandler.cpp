@@ -144,8 +144,8 @@ void TestItemHandler::checkItemData() {
   auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
   auto rect = dynamic_cast<QQuickItem *>(m_rect_component.create());
 
-  const int circleHeight = 123;
-  const int rectHeight = 123;
+  const qint32 circleHeight = 123;
+  const qint32 rectHeight = 123;
   circle->setHeight(circleHeight);
   rect->setHeight(rectHeight);
 

@@ -40,7 +40,7 @@ ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
 QList<QQuickItem*> ItemHandler::items() {
   QList<QQuickItem*> item_list;
 
-  for (int row = 0; row < m_itemmodel.rowCount(); ++row) {
+  for (qint32 row = 0; row < m_itemmodel.rowCount(); ++row) {
     const auto model_item = m_itemmodel.item(row)->data(ItemRoles::QUICKITEM);
     item_list.append(model_item.value<QQuickItem*>());
   }
@@ -97,7 +97,7 @@ void ItemHandler::appendProperties(const auto obj, auto meta_object,
                                    const QStringList& allowedProperties) {
   QList<std::pair<QString, QVariant>> propList;
 
-  for (int i = meta_object->propertyOffset(); i < meta_object->propertyCount();
+  for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount();
        ++i) {
     if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
       propList.emplace_back(meta_object->property(i).name(),
@@ -115,7 +115,7 @@ void ItemHandler::appendProperties(const auto obj, auto meta_object,
 
 // TODO(codingwithmagga): Refactor this function, give useful var names and use
 // AbstractItem::getItemProperties()
-void ItemHandler::setCurrentRow(const int row) {
+void ItemHandler::setCurrentRow(const qint32 row) {
   m_propertymodel.removeRows(0, m_propertymodel.rowCount());
   m_currentItemRow = row;
 
@@ -184,7 +184,7 @@ void ItemHandler::scaleItemsHeight(const qreal ratio) {
 // pointers to the data, s.t. this will be done automatically
 void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
                                       const QModelIndex& bottomRight,
-                                      const QList<int>& roles) {
+                                      const QList<qint32>& roles) {
   // Assume only two roles (display + edit) and one Item is changed at a time,
   // otherwise return
   if (topLeft != bottomRight || roles.size() != 2) {
@@ -205,7 +205,7 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   // Set new name in item model
   if (m_propertymodel.data(m_propertymodel.index(topLeft.row(), 0))
           .toString() == "name") {
-    QMap<int, QVariant> changedValue;
+    QMap<qint32, QVariant> changedValue;
     changedValue.insert(roles[0], m_propertymodel.data(topLeft));
     m_itemmodel.setItemData(m_itemmodel.index(m_currentItemRow, 0),
                             changedValue);
@@ -235,7 +235,7 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
 }
 
 bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item) {
-  for (int row = 0; row < m_itemmodel.rowCount(); ++row) {
+  for (qint32 row = 0; row < m_itemmodel.rowCount(); ++row) {
     const auto model_item = m_itemmodel.item(row)->data(ItemRoles::QUICKITEM);
     if (model_item.value<QQuickItem*>() == quick_item) {
       return true;
@@ -245,7 +245,7 @@ bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item) {
 }
 
 bool ItemHandler::itemNameAlreadyExists(const QString& name) {
-  for (int row = 0; row < m_itemmodel.rowCount(); ++row) {
+  for (qint32 row = 0; row < m_itemmodel.rowCount(); ++row) {
     const auto rowItemName =
         m_itemmodel.item(row)->data(Qt::DisplayRole).toString();
     if (rowItemName.compare(name) == 0) {
@@ -273,7 +273,7 @@ ItemHandler::ItemExtract ItemHandler::extractAbstractItem(
 }
 
 QString ItemHandler::prepareNewItemName(const QString& old_item_name) {
-  int trailing_num = 1;
+  qint32 trailing_num = 1;
   QString new_item_name = old_item_name + "_" + QString::number(trailing_num);
 
   while (itemNameAlreadyExists(new_item_name)) {

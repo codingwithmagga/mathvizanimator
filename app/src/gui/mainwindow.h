@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SRC_GUI_MAINWINDOW_H_
-#define SRC_GUI_MAINWINDOW_H_
+#ifndef APP_SRC_GUI_MAINWINDOW_H_
+#define APP_SRC_GUI_MAINWINDOW_H_
 
 #include <QObject>
 #include <QProcess>
@@ -60,15 +60,15 @@ class MainWindowHandler : public QObject {
 
   void addItem(QQuickItem *quick_item);
   void removeItem(QQuickItem *quick_item);
-  void removeRow(const int row);
+  void removeRow(const qint32 row);
 
-  int getRowByItemName(QVariant name);
+  qint32 getRowByItemName(QVariant name);
 
   void updateProjectSettings(QVariantList newProjectSettings);
 
   void clearAllItems();
 
-  void currentRowChanged(const int row);
+  void currentRowChanged(const qint32 row);
 
   void setPixelWidth(qint32 new_pixel_width);
   void setPixelHeight(qint32 new_pixel_height);
@@ -94,4 +94,4 @@ class MainWindowHandler : public QObject {
   ItemHandler m_itemhandler;
 };
 
-#endif  // SRC_GUI_MAINWINDOW_H_
+#endif  // APP_SRC_GUI_MAINWINDOW_H_

@@ -57,10 +57,10 @@ void Renderer::render(const QList<AbstractItem*>& item_list) {
 }
 
 void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
-  const int num_frames =
+  const qint32 num_frames =
       m_project_settings.fps * m_project_settings.video_length;
 
-  for (int frame = 0; frame < num_frames; ++frame) {
+  for (qint32 frame = 0; frame < num_frames; ++frame) {
     auto image = createImage(item_list);
     auto imageData = reinterpret_cast<char*>(image.bits());
 
@@ -71,7 +71,7 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
   m_render_process.closeWriteChannel();
 }
 
-void Renderer::renderingProcessFinished(int exitCode,
+void Renderer::renderingProcessFinished(qint32 exitCode,
                                         QProcess::ExitStatus exitStatus) {
   Q_UNUSED(exitCode)
 

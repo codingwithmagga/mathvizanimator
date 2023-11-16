@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SRC_WORKFLOW_LOGGING_H_
-#define SRC_WORKFLOW_LOGGING_H_
+#ifndef APP_SRC_WORKFLOW_LOGGING_H_
+#define APP_SRC_WORKFLOW_LOGGING_H_
 
 #include <QLoggingCategory>
 
@@ -24,4 +24,4 @@ Q_DECLARE_LOGGING_CATEGORY(rendering)
 Q_DECLARE_LOGGING_CATEGORY(ffmpeg)
 Q_DECLARE_LOGGING_CATEGORY(mainwindow_handler)
 
-#endif  // SRC_WORKFLOW_LOGGING_H_
+#endif  // APP_SRC_WORKFLOW_LOGGING_H_
