@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
   main_window.initEngine(&engine);
 
-  const QUrl url("qrc:/qt/qml/cwa/mva/app/qml/Main.qml");
+  const QUrl url("qrc:/qt/qml/cwa/mva/app/src/qml/Main.qml");
   QObject::connect(
       &engine, &QQmlApplicationEngine::objectCreationFailed, &app,
       []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);

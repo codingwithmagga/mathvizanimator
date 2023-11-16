@@ -10,7 +10,7 @@ include(presets)
 enable_testing(true)
 
 add_subdirectory(libs)
-add_subdirectory(src)
+add_subdirectory(app)
 
 get_all_cmake_tests(TEST_TARGETS ${CMAKE_CURRENT_LIST_DIR})
 

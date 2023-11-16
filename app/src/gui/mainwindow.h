@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SRC_GUI_MAINWINDOW_H_
-#define SRC_GUI_MAINWINDOW_H_
+#ifndef APP_SRC_GUI_MAINWINDOW_H_
+#define APP_SRC_GUI_MAINWINDOW_H_
 
 #include <QObject>
 #include <QProcess>
@@ -91,4 +91,4 @@ class MainWindowHandler : public QObject {
   ItemHandler m_itemhandler;
 };
 
-#endif  // SRC_GUI_MAINWINDOW_H_
+#endif  // APP_SRC_GUI_MAINWINDOW_H_

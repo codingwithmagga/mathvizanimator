@@ -8,18 +8,18 @@ qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
 qt_add_executable(mva-app
-    main.cpp
-    gui/mainwindow.cpp
-    gui/mainwindow.h
-    workflow/logging.cpp
-    workflow/logging.h
+    src/main.cpp
+    src/gui/mainwindow.cpp
+    src/gui/mainwindow.h
+    src/workflow/logging.cpp
+    src/workflow/logging.h
 )
 
 qt_add_qml_module(mva-app
     URI cwa.mva.app
     VERSION ${PROJECT_VERSION}
     QML_FILES
-        qml/Main.qml
+        src/qml/Main.qml
     DEPENDENCIES QtQuick
 )
 
@@ -40,9 +40,9 @@ target_link_libraries(mva-app
 
 target_include_directories(mva-app
     PRIVATE
-        items
-        gui
-        workflow
+        src/items
+        src/gui
+        src/workflow
 )
 
 install(TARGETS mva-app
