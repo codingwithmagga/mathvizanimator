@@ -111,7 +111,7 @@ QList<QPair<QString, QVariant>> AbstractItem::appendProperties(
     const QStringList& allowedProperties) const {
   QList<QPair<QString, QVariant>> prop_list;
 
-  for (int i = meta_object->propertyOffset(); i < meta_object->propertyCount();
+  for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount();
        ++i) {
     if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
       prop_list.emplace_back(meta_object->property(i).name(),

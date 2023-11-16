@@ -60,15 +60,15 @@ class MainWindowHandler : public QObject {
 
   void addItem(QQuickItem *quick_item);
   void removeItem(QQuickItem *quick_item);
-  void removeRow(const int row);
+  void removeRow(const qint32 row);
 
-  int getRowByItemName(QVariant name);
+  qint32 getRowByItemName(QVariant name);
 
   void updateProjectSettings(QVariantList newProjectSettings);
 
   void clearAllItems();
 
-  void currentRowChanged(const int row);
+  void currentRowChanged(const qint32 row);
 
   void setPixelWidth(qint32 new_pixel_width);
   void setPixelHeight(qint32 new_pixel_height);
