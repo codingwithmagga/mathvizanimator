@@ -96,8 +96,8 @@ void TestRenderer::createImage_data() {
   QTest::addColumn<qint32>("width");
   QTest::addColumn<QImage>("test_frame_image");
 
-  QImage default_frame("://test_images/test_frame_default.png");
-  QImage mod_frame("://test_images/test_frame_mod.png");
+  QImage default_frame("://test_images/test_img_default.png");
+  QImage mod_frame("://test_images/test_img_mod.png");
 
   Renderer::ProjectSettings defaultProjectSettings;
 
@@ -174,7 +174,8 @@ void TestRenderer::render() {
             media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
             QSize(width, height));
 
-        QFile extracted_frame_file("extracted_frame.png");
+        QFile extracted_frame_file("extracted_frame_" + QString::number(width) +
+                                   "x" + QString::number(height) + ".png");
         QProcess ffmpeg_extract_frame;
         ffmpeg_extract_frame.start(
             "ffmpeg", QStringList{} << "-y"

@@ -17,6 +17,8 @@
 
 #include "abstractitem.h"
 
+#include <QPainter>
+
 AbstractItem::AbstractItem(const QString& qml_file, QQuickItem* parent)
     : QQuickPaintedItem(parent), m_qml_file(qml_file) {}
 
@@ -84,6 +86,24 @@ QList<QPair<QString, QVariant>> AbstractItem::getParentItemProperties() const {
   } while ((parent_meta_object = parent_meta_object->superClass()));
 
   return prop_list;
+}
+
+void AbstractItem::paintItem(QPainter* painter) {
+  painter->save();
+
+  painter->translate(parentItem()->position());
+  painter->setOpacity(opacity());
+
+  if (rotation() != 0) {
+    QPointF item_middle_point(width() / 2.0, height() / 2.0);
+    painter->translate(item_middle_point);
+    painter->rotate(rotation());
+    painter->translate(-item_middle_point);
+  }
+
+  paint(painter);
+
+  painter->restore();
 }
 
 QList<QPair<QString, QVariant>> AbstractItem::appendProperties(

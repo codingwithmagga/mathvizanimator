@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>test_images/test_frame_default.png</file>
         <file>test_images/test_frame_mod.png</file>
+        <file>test_images/test_img_default.png</file>
+        <file>test_images/test_img_mod.png</file>
     </qresource>
 </RCC>

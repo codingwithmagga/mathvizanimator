@@ -81,23 +81,11 @@ void TestRectangleItem::paintTest() {
   QImage image(600, 400, QImage::Format::Format_ARGB32);
   QImage expected_image = image;
   image.fill("white");
-  QPainter painter(&image);
 
-  painter.save();
-  painter.translate(m_rect_item.parentItem()->position());
-  painter.setOpacity(m_rect_item.opacity());
-  if (m_rect_item.rotation() != 0) {
-    QPointF item_middle_point(m_rect_item.width() / 2.0,
-                              m_rect_item.height() / 2.0);
-    painter.translate(item_middle_point);
-    painter.rotate(m_rect_item.rotation());
-    painter.translate(-item_middle_point);
-  }
-  m_rect_item.paint(&painter);
-  painter.restore();
+  QPainter painter(&image);
+  m_rect_item.paintItem(&painter);
 
   expected_image.load("://test_images/test_rectangle_image.png");
-
   QCOMPARE(image, expected_image);
 }
 

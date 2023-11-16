@@ -289,6 +289,8 @@ ApplicationWindow {
             }
             Action {
                 text: qsTr("&Snapshot")
+
+                onTriggered: main_window.snapshot()
             }
             Action {
                 text: qsTr("Pro&ject Settings")

@@ -45,8 +45,14 @@ class MainWindowHandler : public QObject {
   void init();
   void initEngine(QQmlApplicationEngine *const engine);
 
+  qint32 pixelWidth() const;
+  qint32 pixelHeight() const;
+  qint32 fps() const;
+  qint32 videoLength() const;
+
  public slots:
 
+  void snapshot();
   void render();
 
   void save(const QVariant &file);
@@ -64,11 +70,6 @@ class MainWindowHandler : public QObject {
 
   void currentRowChanged(const int row);
 
-  qint32 pixelWidth() const;
-  qint32 pixelHeight() const;
-  qint32 fps() const;
-  qint32 videoLength() const;
-
   void setPixelWidth(qint32 new_pixel_width);
   void setPixelHeight(qint32 new_pixel_height);
   void setFPS(qint32 new_fps);
@@ -83,6 +84,8 @@ class MainWindowHandler : public QObject {
   void videoLengthChanged(const qint32 new_video_length);
 
  private:
+  QList<AbstractItem *> getAbstractItemList();
+
   QQmlApplicationEngine *m_qml_engine;
   QObject *m_qml_creation_area;
 

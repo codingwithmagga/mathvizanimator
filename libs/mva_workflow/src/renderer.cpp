@@ -86,17 +86,7 @@ QImage Renderer::createImage(const QList<AbstractItem*>& item_list) const {
   QPainter painter(&image);
 
   for (const auto& item : item_list) {
-    painter.save();
-    painter.translate(item->parentItem()->position());
-    painter.setOpacity(item->opacity());
-    if (item->rotation() != 0) {
-      QPointF item_middle_point(item->width() / 2.0, item->height() / 2.0);
-      painter.translate(item_middle_point);
-      painter.rotate(item->rotation());
-      painter.translate(-item_middle_point);
-    }
-    item->paint(&painter);
-    painter.restore();
+    item->paintItem(&painter);
   }
 
   return image;
