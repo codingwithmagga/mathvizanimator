@@ -34,7 +34,7 @@ void Renderer::render(const QList<AbstractItem*>& item_list) {
             << QString::number(m_project_settings.width) + "x" +
                    QString::number(m_project_settings.height)
             << "-pix_fmt"
-            << "bgra"
+            << "rgb32"
             << "-r" << QString::number(m_project_settings.fps) << "-i"
             << "-"
             << "-an"
@@ -61,26 +61,9 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
       m_project_settings.fps * m_project_settings.video_length;
 
   for (qint32 frame = 0; frame < num_frames; ++frame) {
-    QImage image(m_project_settings.width, m_project_settings.height,
-                 QImage::Format::Format_ARGB32);
-    image.fill("white");
-    QPainter painter(&image);
-
-    for (const auto& item : item_list) {
-      painter.save();
-      painter.translate(item->parentItem()->position());
-      painter.setOpacity(item->opacity());
-      if (item->rotation() != 0) {
-        QPointF item_middle_point(item->width() / 2.0, item->height() / 2.0);
-        painter.translate(item_middle_point);
-        painter.rotate(item->rotation());
-        painter.translate(-item_middle_point);
-      }
-      item->paint(&painter);
-      painter.restore();
-    }
-
+    auto image = createImage(item_list);
     auto imageData = reinterpret_cast<char*>(image.bits());
+
     m_render_process.write(
         imageData, m_project_settings.width * m_project_settings.height * 4);
   }
@@ -94,6 +77,19 @@ void Renderer::renderingProcessFinished(qint32 exitCode,
 
   qCDebug(renderer) << "Process finished with status: " << exitStatus;
   emit finishedRendering(QFileInfo("render_test.mp4"));
+}
+
+QImage Renderer::createImage(const QList<AbstractItem*>& item_list) const {
+  QImage image(m_project_settings.width, m_project_settings.height,
+               QImage::Format::Format_RGB32);
+  image.fill("white");
+  QPainter painter(&image);
+
+  for (const auto& item : item_list) {
+    item->paintItem(&painter);
+  }
+
+  return image;
 }
 
 Renderer::ProjectSettings Renderer::projectSettings() const {

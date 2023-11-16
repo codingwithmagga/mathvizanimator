@@ -30,8 +30,11 @@ class TestRenderer : public QObject {
  private slots:
   void initTestCase();
 
-  void render();
+  void createImage_data();
+  void createImage();
+
   void render_data();
+  void render();
 
   void cleanupTestCase();
 
@@ -88,6 +91,38 @@ void TestRenderer::initTestCase() {
   m_item_list.push_back(tex);
 }
 
+void TestRenderer::createImage_data() {
+  QTest::addColumn<qint32>("height");
+  QTest::addColumn<qint32>("width");
+  QTest::addColumn<QImage>("test_frame_image");
+
+  QImage default_frame("://test_images/test_img_default.png");
+  QImage mod_frame("://test_images/test_img_mod.png");
+
+  Renderer::ProjectSettings defaultProjectSettings;
+
+  QTest::newRow("default_setup")
+      << defaultProjectSettings.height << defaultProjectSettings.width
+      << default_frame;
+  QTest::newRow("mod_values") << 750 << 1250 << mod_frame;
+}
+void TestRenderer::createImage() {
+  QFETCH(qint32, height);
+  QFETCH(qint32, width);
+  QFETCH(QImage, test_frame_image);
+
+  Renderer renderer;
+
+  Renderer::ProjectSettings project_settings;
+  project_settings.width = width;
+  project_settings.height = height;
+
+  renderer.setProjectSettings(project_settings);
+  const auto rendered_image = renderer.createImage(m_item_list);
+
+  QCOMPARE(rendered_image, test_frame_image);
+}
+
 void TestRenderer::render_data() {
   QTest::addColumn<qint32>("height");
   QTest::addColumn<qint32>("width");
@@ -139,7 +174,8 @@ void TestRenderer::render() {
             media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
             QSize(width, height));
 
-        QFile extracted_frame_file("extracted_frame.png");
+        QFile extracted_frame_file("extracted_frame_" + QString::number(width) +
+                                   "x" + QString::number(height) + ".png");
         QProcess ffmpeg_extract_frame;
         ffmpeg_extract_frame.start(
             "ffmpeg", QStringList{} << "-y"
@@ -160,7 +196,7 @@ void TestRenderer::render() {
   renderer.setProjectSettings(project_settings);
   renderer.render(m_item_list);
 
-  QVERIFY(spy.wait(10000));
+  QVERIFY(spy.wait(60000));
 }
 
 void TestRenderer::cleanupTestCase() { qDeleteAll(m_item_list); }

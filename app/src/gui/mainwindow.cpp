@@ -67,7 +67,7 @@ void MainWindowHandler::init() {
   // clang-format on
 }
 
-void MainWindowHandler::render() {
+QList<AbstractItem *> MainWindowHandler::getAbstractItemList() {
   QList<AbstractItem *> abstractitem_list;
 
   const auto item_list = m_itemhandler.items();
@@ -75,7 +75,20 @@ void MainWindowHandler::render() {
     abstractitem_list.push_back(
         qvariant_cast<AbstractItem *>(item->property("item")));
   }
-  m_renderer.render(abstractitem_list);
+
+  return abstractitem_list;
+}
+
+void MainWindowHandler::snapshot() {
+  const auto item_list = getAbstractItemList();
+  const auto snapshot = m_renderer.createImage(item_list);
+
+  snapshot.save("snapshot.png");
+}
+
+void MainWindowHandler::render() {
+  const auto item_list = getAbstractItemList();
+  m_renderer.render(item_list);
 }
 
 void MainWindowHandler::save(const QVariant &file) {

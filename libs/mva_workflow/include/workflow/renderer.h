@@ -40,6 +40,8 @@ class Renderer : public QObject {
   ProjectSettings projectSettings() const;
   void setProjectSettings(const ProjectSettings& new_project_settings);
 
+  QImage createImage(const QList<AbstractItem*>& item_list) const;
+
  public slots:
   void render(const QList<AbstractItem*>& item_list);
 

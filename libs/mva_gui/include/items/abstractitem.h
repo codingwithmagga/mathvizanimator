@@ -53,6 +53,8 @@ class AbstractItem : public QQuickPaintedItem {
   QList<QPair<QString, QVariant>> getItemProperties() const;
   QList<QPair<QString, QVariant>> getParentItemProperties() const;
 
+  void paintItem(QPainter* painter);
+
  signals:
   void nameChanged(const QString& new_name);
   void colorChanged(const QColor& new_color);
