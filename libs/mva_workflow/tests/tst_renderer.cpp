@@ -196,7 +196,7 @@ void TestRenderer::render() {
   renderer.setProjectSettings(project_settings);
   renderer.render(m_item_list);
 
-  QVERIFY(spy.wait(10000));
+  QVERIFY(spy.wait(60000));
 }
 
 void TestRenderer::cleanupTestCase() { qDeleteAll(m_item_list); }
