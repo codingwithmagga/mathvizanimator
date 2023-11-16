@@ -48,7 +48,7 @@ class ItemHandler : public QObject {
   void addItem(QQuickItem* const quick_item);
   void removeItem(QQuickItem* const quick_item);
 
-  void setCurrentRow(const int row);
+  void setCurrentRow(const qint32 row);
 
   void scaleItemsX(const qreal ratio);
   void scaleItemsY(const qreal ratio);
@@ -59,7 +59,7 @@ class ItemHandler : public QObject {
  private slots:
   void propertyDataChanged(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
-                           const QList<int>& roles = QList<int>());
+                           const QList<qint32>& roles = QList<qint32>());
 
  private:
   struct ItemExtract {
@@ -79,7 +79,7 @@ class ItemHandler : public QObject {
   QStandardItemModel m_itemmodel;
   PropertyModel m_propertymodel;
 
-  int m_currentItemRow = -1;
+  qint32 m_currentItemRow = -1;
 };
 
 class ItemModelItem : public QStandardItem {
