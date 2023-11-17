@@ -42,18 +42,25 @@ void Renderer::render(const QList<AbstractItem*>& item_list) {
             << "libx264"
             << "render_test.mp4";
 
-  connect(&m_render_process, &QProcess::started, this,
-          [item_list, this] { renderingProcessStarted(item_list); });
-  connect(&m_render_process, &QProcess::finished, this,
-          &Renderer::renderingProcessFinished);
-  connect(&m_render_process, &QProcess::readyRead, this, [this] {
-    qCInfo(renderer) << m_render_process.readAllStandardOutput();
-  });
+  auto render_process =
+      QSharedPointer<QProcess>(new RenderProcess(m_next_process_id, this));
+  m_render_process_map.insert(m_next_process_id, render_process);
+  m_next_process_id++;
 
-  m_render_process.setProcessChannelMode(
+  connect(render_process.data(), &QProcess::started, this,
+          [item_list, this] { renderingProcessStarted(item_list); });
+  connect(render_process.data(), &QProcess::finished, this,
+          &Renderer::renderingProcessFinished);
+  connect(render_process.data(), &QProcess::readyRead, this,
+          [this] {
+            qCInfo(renderer)
+                << qobject_cast<QProcess*>(sender())->readAllStandardOutput();
+          });
+
+  render_process->setProcessChannelMode(
       QProcess::ProcessChannelMode::MergedChannels);
 
-  m_render_process.start(program, arguments);
+  render_process->start(program, arguments);
 }
 
 void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
@@ -64,11 +71,11 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
     auto image = createImage(item_list);
     auto imageData = reinterpret_cast<char*>(image.bits());
 
-    m_render_process.write(
+    qobject_cast<QProcess*>(sender())->write(
         imageData, m_project_settings.width * m_project_settings.height * 4);
   }
 
-  m_render_process.closeWriteChannel();
+  qobject_cast<QProcess*>(sender())->closeWriteChannel();
 }
 
 void Renderer::renderingProcessFinished(qint32 exitCode,
@@ -77,6 +84,8 @@ void Renderer::renderingProcessFinished(qint32 exitCode,
 
   qCDebug(renderer) << "Process finished with status: " << exitStatus;
   emit finishedRendering(QFileInfo("render_test.mp4"));
+
+  m_render_process_map.remove(qobject_cast<RenderProcess*>(sender())->id());
 }
 
 QImage Renderer::createImage(const QList<AbstractItem*>& item_list) const {

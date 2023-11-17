@@ -21,6 +21,7 @@
 #include <QFileInfo>
 #include <QObject>
 #include <QProcess>
+#include <QSharedPointer>
 
 #include "abstractitem.h"
 
@@ -54,8 +55,23 @@ class Renderer : public QObject {
                                 QProcess::ExitStatus exitStatus);
 
  private:
-  QProcess m_render_process;
   ProjectSettings m_project_settings;
+  QMap<qint32, QSharedPointer<QProcess>> m_render_process_map;
+
+  qint32 m_next_process_id = 0;
+};
+
+class RenderProcess : public QProcess {
+  Q_OBJECT
+
+ public:
+  explicit RenderProcess(const qint32 id, QObject* parent = Q_NULLPTR)
+      : QProcess{parent}, m_id(id) {}
+
+  qint32 id() const { return m_id; }
+
+ private:
+  const qint32 m_id;
 };
 
 #endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_RENDERER_H_
