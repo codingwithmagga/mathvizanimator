@@ -36,6 +36,8 @@ class TestRenderer : public QObject {
   void render_data();
   void render();
 
+  void multipleRendering();
+
   void cleanupTestCase();
 
  private:
@@ -196,6 +198,49 @@ void TestRenderer::render() {
   renderer.setProjectSettings(project_settings);
   renderer.render(m_item_list);
 
+  QVERIFY(spy.wait(60000));
+}
+
+void TestRenderer::multipleRendering() {
+  Renderer renderer;
+
+  QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+
+  renderer.render(m_item_list);
+  QVERIFY(spy.wait(60000));
+
+  auto parent_item = new QQuickItem();
+  parent_item->setX(312);
+  parent_item->setY(444);
+
+  auto circle = new CircleItem(parent_item);
+  circle->setWidth(121);
+  circle->setHeight(121);
+  circle->setColor("green");
+  circle->setOpacity(0.89);
+
+  m_item_list.append(circle);
+
+  connect(
+      &renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
+        QVERIFY(file.exists());
+
+        QFile extracted_frame_file("extracted_frame_multi.png");
+        QProcess ffmpeg_extract_frame;
+        ffmpeg_extract_frame.start(
+            "ffmpeg", QStringList{} << "-y"
+                                    << "-i" << file.absoluteFilePath()
+                                    << "-vframes"
+                                    << "1" << extracted_frame_file.fileName());
+
+        QImage test_frame_image_multi("://test_images/test_frame_multi.png");
+
+        QVERIFY(ffmpeg_extract_frame.waitForFinished());
+        QCOMPARE(QImage(extracted_frame_file.fileName()),
+                 test_frame_image_multi);
+      });
+
+  renderer.render(m_item_list);
   QVERIFY(spy.wait(60000));
 }
 
