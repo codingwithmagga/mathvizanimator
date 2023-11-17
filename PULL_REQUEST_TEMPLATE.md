@@ -23,13 +23,13 @@ Ex:
     * what was the bug/error (if you already made an issue, please link to it here)
     * how does your implementation fix the issue
 
-### Code style and formatting
+## Code style and formatting
 
 Check the [Contributors Style Guidelines section](CONTRIBUTING.md#Style-guidelines)
 for how to write your code and the [Contributors Code Formatting section](CONTRIBUTING.md#Code-formatting)
 for how to format your code.
 
-#### Closing Issues
+### Closing Issues
 
 Put `Fixes #XXXX` or similar in your comment to auto-close the issue that your PR fixes
 (if such).
@@ -40,13 +40,15 @@ Put `Fixes #XXXX` or similar in your comment to auto-close the issue that your P
 
 Fixes #XXXX
 
-## Proposed changes
+### Proposed changes
 
 *
 *
 *
 
-## Motivation behind changes
+### Motivation behind changes
+
+A short text about the motivation of the code changes.
 
 ### Test plan
 
