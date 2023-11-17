@@ -65,7 +65,7 @@ class RenderProcess : public QProcess {
   Q_OBJECT
 
  public:
-  RenderProcess(const qint32 id, QObject* parent = Q_NULLPTR)
+  explicit RenderProcess(const qint32 id, QObject* parent = Q_NULLPTR)
       : QProcess{parent}, m_id(id) {}
 
   qint32 id() const { return m_id; }
