@@ -86,7 +86,7 @@ To learn how to build the code and run tests, follow the instructions in the [RE
 ### Style guidelines
 
 The code in this project is checked on every pull request using [MegaLinter](https://megalinter.io/latest/). 
-If it fails show in the corresponding github action what MegaLinter has noted. It is a goot start to the patterns described in the
+If it fails show in the corresponding github action what MegaLinter has noted. It is a good start to the patterns described in the
 [C++ core guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).
 
 ### Code formatting
@@ -131,7 +131,7 @@ needs to be merged as separate commits.
 
 For this project, CI is provided by [GitHub Actions](https://github.com/features/actions),
 with workflows found in the [`.github/workflows` folder](.github/workflows). Workflows
-are run automatically on every pull reuest to the `main` or `develop` branches, unless told to skip
+are run automatically on every pull request to the `main` or `develop` branches, unless told to skip
 for that particular commit.
 
 To skip CI runs on a particular commit, include either `[skip ci]` or `[ci skip]`
