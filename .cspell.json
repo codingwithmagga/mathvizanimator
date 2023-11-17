@@ -84,6 +84,8 @@
     "textitem",
     "tlmgr",
     "unittests",
+    "upvote",
+    "upvoted",
     "vcodec",
     "venv",
     "vframes",
