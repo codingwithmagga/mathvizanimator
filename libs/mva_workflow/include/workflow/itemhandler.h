@@ -38,10 +38,10 @@ class ItemHandler : public QObject {
 
   explicit ItemHandler(QObject* parent = nullptr);
 
-  qsizetype numItems() const { return m_itemmodel.rowCount(); }
-  QStandardItemModel* model() { return &m_itemmodel; }
-  QItemSelectionModel* selectionmodel() { return &m_itemselectionmodel; }
-  QStandardItemModel* propertyModel() { return &m_propertymodel; }
+  qsizetype numItems() const { return m_item_model.rowCount(); }
+  QStandardItemModel* model() { return &m_item_model; }
+  QItemSelectionModel* selectionModel() { return &m_item_selection_model; }
+  QStandardItemModel* propertyModel() { return &m_property_model; }
   QList<QQuickItem*> items();
 
  public slots:
@@ -82,10 +82,10 @@ class ItemHandler : public QObject {
 
   void repopulatePropertyModel(const QModelIndex& currentIndex);
 
-  QStandardItemModel m_itemmodel;
-  QItemSelectionModel m_itemselectionmodel;
+  QStandardItemModel m_item_model;
+  QItemSelectionModel m_item_selection_model;
 
-  PropertyModel m_propertymodel;
+  PropertyModel m_property_model;
 };
 
 class ItemModelItem : public QStandardItem {

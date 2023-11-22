@@ -193,7 +193,7 @@ void TestItemHandler::checkItemProperties() {
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
   itemhandler.addItem(rect);
-  itemhandler.setCurrentRow(0);
+  itemhandler.setCurrentItem(circle_item->name());
 
   const auto propModel = itemhandler.propertyModel();
 
@@ -213,7 +213,7 @@ void TestItemHandler::changeItemProperty() {
 
   ItemHandler itemhandler;
   itemhandler.addItem(circle);
-  itemhandler.setCurrentRow(0);
+  itemhandler.setCurrentItem(circle_item->name());
 
   const auto prop_model = itemhandler.propertyModel();
   const QString new_name("newName");

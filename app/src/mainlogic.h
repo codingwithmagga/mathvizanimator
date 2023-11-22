@@ -1,5 +1,22 @@
-#ifndef MAINLOGIC_H
-#define MAINLOGIC_H
+/* mathvizanimator
+ * Copyright (C) 2023 codingwithmagga
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef APP_SRC_MAINLOGIC_H_
+#define APP_SRC_MAINLOGIC_H_
 
 #include <QLoggingCategory>
 #include <QObject>
@@ -25,8 +42,8 @@ class MainLogic : public QObject {
   void createSnapshot();
   void renderVideo();
 
-  void saveProject(const QFileInfo &savefileinfo);
-  void loadProject(const QFileInfo &loadfileinfo);
+  void saveProject(const QFileInfo &savefile_info);
+  void loadProject(const QFileInfo &loadfile_info);
 
   void addItem(QQuickItem *quick_item);
   void removeItem(QQuickItem *quick_item);
@@ -47,4 +64,4 @@ class MainLogic : public QObject {
   ItemHandler m_itemhandler;
 };
 
-#endif  // MAINLOGIC_H
+#endif  // APP_SRC_MAINLOGIC_H_

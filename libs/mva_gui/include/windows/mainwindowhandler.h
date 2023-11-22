@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef APP_SRC_GUI_MAINWINDOWHANDLER_H_
-#define APP_SRC_GUI_MAINWINDOWHANDLER_H_
+#ifndef LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_
+#define LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_
 
 #include <QFileInfo>
 #include <QObject>
@@ -34,7 +34,7 @@ class MainWindowHandler : public QObject {
                  videoLengthChanged)
 
  public:
-  MainWindowHandler(QObject *parent = Q_NULLPTR);
+  explicit MainWindowHandler(QObject *parent = Q_NULLPTR);
 
   qint32 pixelWidth() const;
   qint32 pixelHeight() const;
@@ -90,4 +90,4 @@ class MainWindowHandler : public QObject {
   qint32 m_video_length;
 };
 
-#endif  // APP_SRC_GUI_MAINWINDOWHANDLER_H_
+#endif  // LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_

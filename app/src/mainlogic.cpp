@@ -1,3 +1,20 @@
+/* mathvizanimator
+ * Copyright (C) 2023 codingwithmagga
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "mainlogic.h"
 
 #include <QQmlContext>
@@ -49,7 +66,7 @@ void MainLogic::initEngine(QQmlApplicationEngine *const engine) {
   m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"),
                                                   m_itemhandler.model());
   m_qml_engine->rootContext()->setContextProperty(
-      QStringLiteral("item_selection_model"), m_itemhandler.selectionmodel());
+      QStringLiteral("item_selection_model"), m_itemhandler.selectionModel());
   m_qml_engine->rootContext()->setContextProperty(
       QStringLiteral("property_model"), m_itemhandler.propertyModel());
 }
@@ -66,7 +83,7 @@ void MainLogic::renderVideo() {
   m_renderer.render(item_list);
 }
 
-void MainLogic::saveProject(const QFileInfo &savefileinfo) {
+void MainLogic::saveProject(const QFileInfo &savefile_info) {
   QJsonObject save_json;
   qint32 count = 0;
   QString element_prefix = "element_";
@@ -81,12 +98,12 @@ void MainLogic::saveProject(const QFileInfo &savefileinfo) {
     count++;
   }
 
-  m_savefilehandler.setSaveDir(savefileinfo.absoluteDir());
-  m_savefilehandler.saveJSON(savefileinfo.fileName(), save_json);
+  m_savefilehandler.setSaveDir(savefile_info.absoluteDir());
+  m_savefilehandler.saveJSON(savefile_info.fileName(), save_json);
 }
 
-void MainLogic::loadProject(const QFileInfo &loadfileinfo) {
-  QJsonDocument loadDoc = m_savefilehandler.loadJSON(loadfileinfo);
+void MainLogic::loadProject(const QFileInfo &loadfile_info) {
+  QJsonDocument loadDoc = m_savefilehandler.loadJSON(loadfile_info);
 
   QJsonObject json = loadDoc.object();
   for (const QString &elementKey : json.keys()) {
