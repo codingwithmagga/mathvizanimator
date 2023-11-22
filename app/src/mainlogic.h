@@ -42,8 +42,8 @@ class MainLogic : public QObject {
   void createSnapshot();
   void renderVideo();
 
-  void saveProject(const QFileInfo &savefile_info);
-  void loadProject(const QFileInfo &loadfile_info);
+  void saveProject(const QFileInfo &save_file_info);
+  void loadProject(const QFileInfo &load_file_info);
 
   void addItem(QQuickItem *quick_item);
   void removeItem(QQuickItem *quick_item);
