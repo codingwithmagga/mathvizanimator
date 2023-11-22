@@ -12,14 +12,17 @@ qt_standard_project_setup()
 qt_add_library(cwa.mva.gui
     STATIC
     include/private/logging.h
+    include/windows/mainwindowhandler.h
 
     src/logging.cpp
+    src/windows/mainwindowhandler.cpp
 )
 
 qt_add_qml_module(cwa.mva.gui
     URI cwa.mva.gui
     VERSION ${PROJECT_VERSION}
     QML_FILES
+        qml/MainWindow.qml
         qml/models/MVAItemModel.qml
         qml/models/MVAItemDelegate.qml
         qml/items/MVACircle.qml
@@ -53,6 +56,7 @@ target_link_libraries(cwa.mva.gui
 target_include_directories(cwa.mva.gui
     PUBLIC
         include/items
+        include/windows
     PRIVATE
         include/private
 )

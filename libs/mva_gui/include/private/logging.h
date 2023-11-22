@@ -20,6 +20,6 @@
 
 #include <QLoggingCategory>
 
-Q_DECLARE_LOGGING_CATEGORY(tbd)
+Q_DECLARE_LOGGING_CATEGORY(mainwindow_handler)
 
 #endif  // LIBS_MVA_GUI_INCLUDE_PRIVATE_LOGGING_H_

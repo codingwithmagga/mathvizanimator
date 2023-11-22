@@ -18,6 +18,7 @@
 #ifndef LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_
 #define LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_
 
+#include <QItemSelectionModel>
 #include <QObject>
 #include <QQuickItem>
 #include <QStandardItemModel>
@@ -39,6 +40,7 @@ class ItemHandler : public QObject {
 
   qsizetype numItems() const { return m_itemmodel.rowCount(); }
   QStandardItemModel* model() { return &m_itemmodel; }
+  QItemSelectionModel* selectionmodel() { return &m_itemselectionmodel; }
   QStandardItemModel* propertyModel() { return &m_propertymodel; }
   QList<QQuickItem*> items();
 
@@ -47,8 +49,8 @@ class ItemHandler : public QObject {
 
   void addItem(QQuickItem* const quick_item);
   void removeItem(QQuickItem* const quick_item);
-
-  void setCurrentRow(const qint32 row);
+  void setCurrentItem(const QString& itemName);
+  void removeCurrentItem();
 
   void scaleItemsX(const qreal ratio);
   void scaleItemsY(const qreal ratio);
@@ -60,6 +62,8 @@ class ItemHandler : public QObject {
   void propertyDataChanged(const QModelIndex& topLeft,
                            const QModelIndex& bottomRight,
                            const QList<qint32>& roles = QList<qint32>());
+  void currentItemChanged(const QModelIndex& current,
+                          const QModelIndex& previous);
 
  private:
   struct ItemExtract {
@@ -76,10 +80,12 @@ class ItemHandler : public QObject {
   void appendProperties(const auto obj, auto meta_object,
                         const QStringList& allowedProperties);
 
-  QStandardItemModel m_itemmodel;
-  PropertyModel m_propertymodel;
+  void repopulatePropertyModel(const QModelIndex& currentIndex);
 
-  qint32 m_currentItemRow = -1;
+  QStandardItemModel m_itemmodel;
+  QItemSelectionModel m_itemselectionmodel;
+
+  PropertyModel m_propertymodel;
 };
 
 class ItemModelItem : public QStandardItem {

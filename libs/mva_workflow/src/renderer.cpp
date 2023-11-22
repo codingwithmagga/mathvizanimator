@@ -109,3 +109,19 @@ void Renderer::setProjectSettings(
     const Renderer::ProjectSettings& new_project_settings) {
   m_project_settings = new_project_settings;
 }
+
+void Renderer::setWidth(const qint32 new_width) {
+  m_project_settings.width = new_width;
+}
+
+void Renderer::setHeight(const qint32 new_height) {
+  m_project_settings.height = new_height;
+}
+
+void Renderer::setFPS(const qint32 new_fps) {
+  m_project_settings.fps = new_fps;
+}
+
+void Renderer::setVideoLength(const qint32 new_video_length) {
+  m_project_settings.video_length = new_video_length;
+}

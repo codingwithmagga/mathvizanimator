@@ -36,10 +36,15 @@ class Renderer : public QObject {
     qint32 video_length = 5;
   };
 
-  explicit Renderer(QObject* parent = nullptr);
+  explicit Renderer(QObject* parent = Q_NULLPTR);
 
   ProjectSettings projectSettings() const;
   void setProjectSettings(const ProjectSettings& new_project_settings);
+
+  void setWidth(const qint32 new_width);
+  void setHeight(const qint32 new_height);
+  void setFPS(const qint32 new_fps);
+  void setVideoLength(const qint32 new_video_length);
 
   QImage createImage(const QList<AbstractItem*>& item_list) const;
 

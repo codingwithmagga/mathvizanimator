@@ -15,18 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef APP_SRC_GUI_MAINWINDOW_H_
-#define APP_SRC_GUI_MAINWINDOW_H_
+#ifndef APP_SRC_GUI_MAINWINDOWHANDLER_H_
+#define APP_SRC_GUI_MAINWINDOWHANDLER_H_
 
+#include <QFileInfo>
 #include <QObject>
-#include <QProcess>
-#include <QQmlApplicationEngine>
 #include <QQuickItem>
-#include <QStandardItemModel>
-
-#include "itemhandler.h"
-#include "renderer.h"
-#include "savefilehandler.h"
 
 class MainWindowHandler : public QObject {
   Q_OBJECT
@@ -40,10 +34,7 @@ class MainWindowHandler : public QObject {
                  videoLengthChanged)
 
  public:
-  MainWindowHandler();
-
-  void init();
-  void initEngine(QQmlApplicationEngine *const engine);
+  MainWindowHandler(QObject *parent = Q_NULLPTR);
 
   qint32 pixelWidth() const;
   qint32 pixelHeight() const;
@@ -55,25 +46,21 @@ class MainWindowHandler : public QObject {
   void snapshot();
   void render();
 
-  void save(const QVariant &file);
-  void load(const QVariant &file);
+  void newProject();
+  void saveProject(const QVariant &file);
+  void loadProject(const QVariant &file);
 
-  void addItem(QQuickItem *quick_item);
-  void removeItem(QQuickItem *quick_item);
-  void removeRow(const qint32 row);
+  void removeCurrentItem();
 
-  qint32 getRowByItemName(QVariant name);
+  void itemClickedByUser(const QVariant &itemName);
 
-  void updateProjectSettings(QVariantList newProjectSettings);
+  void updateProjectSettings(const QVariantList &new_project_settings);
+  void updateProjectSettings(const QList<qint32> &new_project_settings);
 
-  void clearAllItems();
-
-  void currentRowChanged(const qint32 row);
-
-  void setPixelWidth(qint32 new_pixel_width);
-  void setPixelHeight(qint32 new_pixel_height);
-  void setFPS(qint32 new_fps);
-  void setVideoLength(qint32 new_video_length);
+  void setPixelWidth(const qint32 new_pixel_width);
+  void setPixelHeight(const qint32 new_pixel_height);
+  void setFPS(const qint32 new_fps);
+  void setVideoLength(const qint32 new_video_length);
 
   void openSVGFolder() const;
 
@@ -83,15 +70,24 @@ class MainWindowHandler : public QObject {
   void fpsChanged(const qint32 new_fps);
   void videoLengthChanged(const qint32 new_video_length);
 
- private:
-  QList<AbstractItem *> getAbstractItemList();
+  void snapshotRequested();
+  void renderingRequested();
 
-  QQmlApplicationEngine *m_qml_engine;
+  void saveProjectRequested(const QFileInfo &savefileinfo);
+  void loadProjectRequested(const QFileInfo &savefileinfo);
+  void newProjectRequested();
+
+  void removeCurrentItemRequested();
+
+  void itemClicked(const QString &name);
+
+ private:
   QObject *m_qml_creation_area;
 
-  SaveFileHandler m_savefile_handler;
-  Renderer m_renderer;
-  ItemHandler m_itemhandler;
+  qint32 m_pixel_width;
+  qint32 m_pixel_height;
+  qint32 m_fps;
+  qint32 m_video_length;
 };
 
-#endif  // APP_SRC_GUI_MAINWINDOW_H_
+#endif  // APP_SRC_GUI_MAINWINDOWHANDLER_H_
