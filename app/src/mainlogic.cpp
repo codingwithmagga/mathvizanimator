@@ -83,7 +83,7 @@ void MainLogic::renderVideo() {
   m_renderer.render(item_list);
 }
 
-void MainLogic::saveProject(const QFileInfo &savefile_info) {
+void MainLogic::saveProject(const QFileInfo &save_file_info) {
   QJsonObject save_json;
   qint32 count = 0;
   QString element_prefix = "element_";
@@ -98,12 +98,12 @@ void MainLogic::saveProject(const QFileInfo &savefile_info) {
     count++;
   }
 
-  m_savefilehandler.setSaveDir(savefile_info.absoluteDir());
-  m_savefilehandler.saveJSON(savefile_info.fileName(), save_json);
+  m_savefilehandler.setSaveDir(save_file_info.absoluteDir());
+  m_savefilehandler.saveJSON(save_file_info.fileName(), save_json);
 }
 
-void MainLogic::loadProject(const QFileInfo &loadfile_info) {
-  QJsonDocument loadDoc = m_savefilehandler.loadJSON(loadfile_info);
+void MainLogic::loadProject(const QFileInfo &load_file_info) {
+  QJsonDocument loadDoc = m_savefilehandler.loadJSON(load_file_info);
 
   QJsonObject json = loadDoc.object();
   for (const QString &elementKey : json.keys()) {
