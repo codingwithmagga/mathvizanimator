@@ -35,8 +35,8 @@ ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
 
   connect(&m_property_model, &QStandardItemModel::dataChanged, this,
           &ItemHandler::propertyDataChanged);
-  connect(&m_item_selection_model, &QItemSelectionModel::currentRowChanged, this,
-          &ItemHandler::currentItemChanged);
+  connect(&m_item_selection_model, &QItemSelectionModel::currentRowChanged,
+          this, &ItemHandler::currentItemChanged);
 
   m_item_selection_model.setModel(&m_item_model);
 }
@@ -45,14 +45,16 @@ QList<QQuickItem*> ItemHandler::items() {
   QList<QQuickItem*> item_list;
 
   for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
-      const auto model_item = m_item_model.item(row)->data(ItemRoles::QUICKITEM);
+    const auto model_item = m_item_model.item(row)->data(ItemRoles::QUICKITEM);
     item_list.append(model_item.value<QQuickItem*>());
   }
 
   return item_list;
 }
 
-void ItemHandler::clear() { m_item_model.removeRows(0, m_item_model.rowCount()); }
+void ItemHandler::clear() {
+  m_item_model.removeRows(0, m_item_model.rowCount());
+}
 
 void ItemHandler::addItem(QQuickItem* const quick_item) {
   if (itemAlreadyExists(quick_item)) {
@@ -134,7 +136,8 @@ void ItemHandler::appendProperties(const auto obj, auto meta_object,
     auto stdItemName(new QStandardItem(property.first));
     auto stdItemValue(new QStandardItem(property.second.toString()));
 
-    m_property_model.appendRow(QList<QStandardItem*>{stdItemName, stdItemValue});
+    m_property_model.appendRow(
+        QList<QStandardItem*>{stdItemName, stdItemValue});
   }
 }
 
@@ -231,7 +234,8 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
           .toString() == "name") {
     QMap<qint32, QVariant> changedValue;
     changedValue.insert(roles[0], m_property_model.data(topLeft));
-    m_item_model.setItemData(m_item_selection_model.currentIndex(), changedValue);
+    m_item_model.setItemData(m_item_selection_model.currentIndex(),
+                             changedValue);
   }
 
   // Update item
@@ -245,7 +249,8 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   }
 
   auto property =
-      m_property_model.data(m_property_model.index(topLeft.row(), 0)).toString();
+      m_property_model.data(m_property_model.index(topLeft.row(), 0))
+          .toString();
   if (itemExtract.item->editableProperties().abstract_item_properties.contains(
           property)) {
     itemExtract.item->setProperty(property.toUtf8(),

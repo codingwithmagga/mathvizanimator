@@ -73,8 +73,8 @@ class MainWindowHandler : public QObject {
   void snapshotRequested();
   void renderingRequested();
 
-  void saveProjectRequested(const QFileInfo &savefileinfo);
-  void loadProjectRequested(const QFileInfo &savefileinfo);
+  void saveProjectRequested(const QFileInfo &save_file_info);
+  void loadProjectRequested(const QFileInfo &load_file_info);
   void newProjectRequested();
 
   void removeCurrentItemRequested();

@@ -29,21 +29,21 @@ void MainWindowHandler::snapshot() { emit snapshotRequested(); }
 void MainWindowHandler::render() { emit renderingRequested(); }
 
 void MainWindowHandler::saveProject(const QVariant &file) {
-  QFileInfo savefileinfo(file.toUrl().toLocalFile());
-  emit saveProjectRequested(savefileinfo);
+  QFileInfo save_file_info(file.toUrl().toLocalFile());
+  emit saveProjectRequested(save_file_info);
 }
 
 void MainWindowHandler::loadProject(const QVariant &file) {
-  QFileInfo loadfileinfo(file.toUrl().toLocalFile());
-  emit loadProjectRequested(loadfileinfo);
+  QFileInfo load_file_info(file.toUrl().toLocalFile());
+  emit loadProjectRequested(load_file_info);
 }
 
 void MainWindowHandler::removeCurrentItem() {
   emit removeCurrentItemRequested();
 }
 
-void MainWindowHandler::itemClickedByUser(const QVariant &itemName) {
-  emit itemClicked(itemName.toString());
+void MainWindowHandler::itemClickedByUser(const QVariant &item_name) {
+  emit itemClicked(item_name.toString());
 }
 
 void MainWindowHandler::updateProjectSettings(
