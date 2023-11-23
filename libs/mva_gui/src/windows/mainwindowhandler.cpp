@@ -120,7 +120,7 @@ void MainWindowHandler::setVideoLength(const qint32 new_video_length) {
   emit videoLengthChanged(new_video_length);
 }
 
-void MainWindowHandler::openSVGFolder() const {
-  QDesktopServices::openUrl(
+bool MainWindowHandler::openSVGFolder() const {
+  return QDesktopServices::openUrl(
       QUrl(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)));
 }
