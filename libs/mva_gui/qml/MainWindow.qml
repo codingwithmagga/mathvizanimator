@@ -47,7 +47,7 @@ ApplicationWindow {
     Shortcut {
         sequences: [StandardKey.Delete]
         onActivated: {
-            main_window.removeRow(mObjectsListView.currentRow)
+            main_window.removeCurrentItem()
         }
     }
 
@@ -59,7 +59,7 @@ ApplicationWindow {
 
         onAccepted: {
             newAction.trigger(loadFileDialog)
-            main_window.load(selectedFile)
+            main_window.loadProject(selectedFile)
         }
     }
 
@@ -70,7 +70,7 @@ ApplicationWindow {
         fileMode: FileDialog.SaveFile
         nameFilters: ["JSON (*.json)"]
 
-        onAccepted: main_window.save(selectedFile)
+        onAccepted: main_window.saveProject(selectedFile)
     }
 
     Popup {
@@ -253,7 +253,7 @@ ApplicationWindow {
 
                 text: qsTr("&New...")
                 onTriggered: {
-                    main_window.clearAllItems()
+                    main_window.newProject()
                 }
             }
             Action {
@@ -387,12 +387,7 @@ ApplicationWindow {
 
                     onDropped: drop => {
                                    function itemClicked(itemName) {
-                                       var row = main_window.getRowByItemName(
-                                                   itemName)
-                                       selectionModel.setCurrentIndex(
-                                                   selectionModel.model.index(
-                                                       row, 0),
-                                                   ItemSelectionModel.Current)
+                                       main_window.itemClickedByUser(itemName)
                                    }
 
                                    drop.accept(Qt.MoveAction)
@@ -425,11 +420,13 @@ ApplicationWindow {
                         color: "white"
                     }
 
+                    // Clear current item if user clicks in an empty area
                     TapHandler {
                         onTapped: {
-                            selectionModel.setCurrentIndex(
-                                        selectionModel.model.index(-1, 0),
-                                        ItemSelectionModel.Current)
+                            item_selection_model.setCurrentIndex(
+                                        item_selection_model.model.index(-1,
+                                                                         0),
+                                        ItemSelectionModel.Current | ItemSelectionModel.Rows)
                         }
                     }
                 }
@@ -492,14 +489,7 @@ ApplicationWindow {
                         }
 
                         model: item_model
-
-                        selectionModel: ItemSelectionModel {
-                            id: selectionModel
-
-                            // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
-                            // maybe happens when using the same model twice? Watched on linux, windows don't have this problem...
-                            model: item_model
-                        }
+                        selectionModel: item_selection_model
 
                         delegate: Label {
                             required property bool current
@@ -515,10 +505,6 @@ ApplicationWindow {
 
                                 color: row === mObjectsListView.currentRow ? palette.highlight : (mObjectsListView.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
                             }
-                        }
-
-                        onCurrentRowChanged: {
-                            main_window.currentRowChanged(currentRow)
                         }
                     }
                 }
@@ -565,8 +551,6 @@ ApplicationWindow {
                         selectionModel: ItemSelectionModel {
                             id: mPropertyTableSelectionModel
 
-                            // Seems to create a bug when closing the app  QObject::disconnect: No such signal ...
-                            // maybe happens when using the same model twice? Watched on linux, windows don't have this problem...
                             model: property_model
                         }
 

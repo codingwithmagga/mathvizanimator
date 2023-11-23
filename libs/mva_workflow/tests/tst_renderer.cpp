@@ -38,6 +38,8 @@ class TestRenderer : public QObject {
 
   void multipleRendering();
 
+  void setIndividualProjectSettings();
+
   void cleanupTestCase();
 
  private:
@@ -242,6 +244,25 @@ void TestRenderer::multipleRendering() {
 
   renderer.render(m_item_list);
   QVERIFY(spy.wait(60000));
+}
+
+void TestRenderer::setIndividualProjectSettings() {
+  Renderer renderer;
+  const qint32 width = 1200;
+  const qint32 height = 888;
+  const qint32 fps = 15;
+  const qint32 video_length = 12;
+
+  renderer.setWidth(width);
+  renderer.setHeight(height);
+  renderer.setFPS(fps);
+  renderer.setVideoLength(video_length);
+
+  const auto renderer_project_settings = renderer.projectSettings();
+  QCOMPARE(renderer_project_settings.width, width);
+  QCOMPARE(renderer_project_settings.height, height);
+  QCOMPARE(renderer_project_settings.fps, fps);
+  QCOMPARE(renderer_project_settings.video_length, video_length);
 }
 
 void TestRenderer::cleanupTestCase() { qDeleteAll(m_item_list); }

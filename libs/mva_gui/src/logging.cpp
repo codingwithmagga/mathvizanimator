@@ -17,4 +17,4 @@
 
 #include "logging.h"
 
-Q_LOGGING_CATEGORY(tbd, "cwa.mva.workflow.tbd")
+Q_LOGGING_CATEGORY(mainwindow_handler, "cwa.mva.gui.mainwindow_handler")

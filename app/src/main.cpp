@@ -22,7 +22,7 @@
 #include <QtQml/QQmlExtensionPlugin>
 #include <iostream>
 
-#include "mainwindow.h"
+#include "mainlogic.h"
 
 int main(int argc, char* argv[]) {
   qSetMessagePattern(
@@ -35,18 +35,18 @@ int main(int argc, char* argv[]) {
 
   QGuiApplication app(argc, argv);
 
-  MainWindowHandler main_window;
+  MainLogic mainlogic;
   QQmlApplicationEngine engine;
 
-  main_window.initEngine(&engine);
+  mainlogic.initEngine(&engine);
 
-  const QUrl url("qrc:/qt/qml/cwa/mva/app/src/qml/Main.qml");
+  const QUrl url("qrc:/qt/qml/cwa/mva/gui/qml/MainWindow.qml");
   QObject::connect(
       &engine, &QQmlApplicationEngine::objectCreationFailed, &app,
       []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
   engine.load(url);
 
-  main_window.init();
+  mainlogic.init();
 
   return app.exec();
 }

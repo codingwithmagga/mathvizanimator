@@ -24,31 +24,37 @@ ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
   QStandardItem* headerItemLeft = new QStandardItem(tr("Name"));
   QStandardItem* headerItemRight = new QStandardItem(tr("Type"));
 
-  m_itemmodel.setHorizontalHeaderItem(0, headerItemLeft);
-  m_itemmodel.setHorizontalHeaderItem(1, headerItemRight);
+  m_item_model.setHorizontalHeaderItem(0, headerItemLeft);
+  m_item_model.setHorizontalHeaderItem(1, headerItemRight);
 
   QStandardItem* propertyHeaderItemLeft = new QStandardItem(tr("Name"));
   QStandardItem* propertyHeaderItemRight = new QStandardItem(tr("Value"));
 
-  m_propertymodel.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
-  m_propertymodel.setHorizontalHeaderItem(1, propertyHeaderItemRight);
+  m_property_model.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
+  m_property_model.setHorizontalHeaderItem(1, propertyHeaderItemRight);
 
-  connect(&m_propertymodel, &QStandardItemModel::dataChanged, this,
+  connect(&m_property_model, &QStandardItemModel::dataChanged, this,
           &ItemHandler::propertyDataChanged);
+  connect(&m_item_selection_model, &QItemSelectionModel::currentRowChanged,
+          this, &ItemHandler::currentItemChanged);
+
+  m_item_selection_model.setModel(&m_item_model);
 }
 
 QList<QQuickItem*> ItemHandler::items() {
   QList<QQuickItem*> item_list;
 
-  for (qint32 row = 0; row < m_itemmodel.rowCount(); ++row) {
-    const auto model_item = m_itemmodel.item(row)->data(ItemRoles::QUICKITEM);
+  for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
+    const auto model_item = m_item_model.item(row)->data(ItemRoles::QUICKITEM);
     item_list.append(model_item.value<QQuickItem*>());
   }
 
   return item_list;
 }
 
-void ItemHandler::clear() { m_itemmodel.removeRows(0, m_itemmodel.rowCount()); }
+void ItemHandler::clear() {
+  m_item_model.removeRows(0, m_item_model.rowCount());
+}
 
 void ItemHandler::addItem(QQuickItem* const quick_item) {
   if (itemAlreadyExists(quick_item)) {
@@ -74,7 +80,7 @@ void ItemHandler::addItem(QQuickItem* const quick_item) {
 
   stdItemName->setData(QVariant::fromValue(quick_item), ItemRoles::QUICKITEM);
 
-  m_itemmodel.appendRow(QList<QStandardItem*>{stdItemName, stdItemType});
+  m_item_model.appendRow(QList<QStandardItem*>{stdItemName, stdItemType});
 }
 
 void ItemHandler::removeItem(QQuickItem* const quick_item) {
@@ -86,10 +92,31 @@ void ItemHandler::removeItem(QQuickItem* const quick_item) {
 
   const auto remove_item_name = item_extract.item->name();
 
-  auto item_name_list = m_itemmodel.findItems(remove_item_name);
+  auto item_name_list = m_item_model.findItems(remove_item_name);
   for (auto& item : item_name_list) {
-    m_itemmodel.removeRow(item->row());
+    m_item_model.removeRow(item->row());
   }
+}
+
+void ItemHandler::setCurrentItem(const QString& itemName) {
+  const auto itemList = m_item_model.findItems(itemName);
+
+  if (itemList.isEmpty()) {
+    qCWarning(itemhandler) << "Can't find item with name:" << itemName
+                           << "Current item does not change.";
+    return;
+  }
+
+  const auto currentItemIndex = m_item_model.indexFromItem(itemList[0]);
+  m_item_selection_model.setCurrentIndex(
+      currentItemIndex,
+      QItemSelectionModel::Current | QItemSelectionModel::Rows);
+}
+
+void ItemHandler::removeCurrentItem() {
+  const auto currentItemIndex =
+      m_item_model.itemFromIndex(m_item_selection_model.currentIndex());
+  m_item_model.removeRow(currentItemIndex->row());
 }
 
 // TODO(codingwithmagga): Refactor this function, give useful var names
@@ -109,21 +136,21 @@ void ItemHandler::appendProperties(const auto obj, auto meta_object,
     auto stdItemName(new QStandardItem(property.first));
     auto stdItemValue(new QStandardItem(property.second.toString()));
 
-    m_propertymodel.appendRow(QList<QStandardItem*>{stdItemName, stdItemValue});
+    m_property_model.appendRow(
+        QList<QStandardItem*>{stdItemName, stdItemValue});
   }
 }
 
 // TODO(codingwithmagga): Refactor this function, give useful var names and use
 // AbstractItem::getItemProperties()
-void ItemHandler::setCurrentRow(const qint32 row) {
-  m_propertymodel.removeRows(0, m_propertymodel.rowCount());
-  m_currentItemRow = row;
+void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex) {
+  m_property_model.removeRows(0, m_property_model.rowCount());
 
-  if (row == -1) {
+  if (!currentIndex.isValid()) {
     return;
   }
 
-  const auto quick_item = m_itemmodel.item(row)
+  const auto quick_item = m_item_model.itemFromIndex(currentIndex)
                               ->data(ItemHandler::ItemRoles::QUICKITEM)
                               .value<QQuickItem*>();
   const auto o = extractAbstractItem(quick_item);
@@ -203,16 +230,16 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   }
 
   // Set new name in item model
-  if (m_propertymodel.data(m_propertymodel.index(topLeft.row(), 0))
+  if (m_property_model.data(m_property_model.index(topLeft.row(), 0))
           .toString() == "name") {
     QMap<qint32, QVariant> changedValue;
-    changedValue.insert(roles[0], m_propertymodel.data(topLeft));
-    m_itemmodel.setItemData(m_itemmodel.index(m_currentItemRow, 0),
-                            changedValue);
+    changedValue.insert(roles[0], m_property_model.data(topLeft));
+    m_item_model.setItemData(m_item_selection_model.currentIndex(),
+                             changedValue);
   }
 
   // Update item
-  auto item = m_itemmodel.item(m_currentItemRow, 0);
+  auto item = m_item_model.itemFromIndex(m_item_selection_model.currentIndex());
   auto quick_item = item->data(ItemRoles::QUICKITEM).value<QQuickItem*>();
   auto itemExtract = extractAbstractItem(
       item->data(ItemRoles::QUICKITEM).value<QQuickItem*>());
@@ -222,21 +249,30 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   }
 
   auto property =
-      m_propertymodel.data(m_propertymodel.index(topLeft.row(), 0)).toString();
+      m_property_model.data(m_property_model.index(topLeft.row(), 0))
+          .toString();
   if (itemExtract.item->editableProperties().abstract_item_properties.contains(
           property)) {
     itemExtract.item->setProperty(property.toUtf8(),
-                                  m_propertymodel.data(topLeft));
+                                  m_property_model.data(topLeft));
     itemExtract.item->update();
     return;
   }
-  quick_item->setProperty(property.toUtf8(), m_propertymodel.data(topLeft));
+  quick_item->setProperty(property.toUtf8(), m_property_model.data(topLeft));
   quick_item->update();
 }
 
+void ItemHandler::currentItemChanged(const QModelIndex& current,
+                                     const QModelIndex& previous) {
+  Q_UNUSED(previous)
+
+  const auto index_first_item = m_item_model.index(current.row(), 0);
+  repopulatePropertyModel(index_first_item);
+}
+
 bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item) {
-  for (qint32 row = 0; row < m_itemmodel.rowCount(); ++row) {
-    const auto model_item = m_itemmodel.item(row)->data(ItemRoles::QUICKITEM);
+  for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
+    const auto model_item = m_item_model.item(row)->data(ItemRoles::QUICKITEM);
     if (model_item.value<QQuickItem*>() == quick_item) {
       return true;
     }
@@ -245,9 +281,9 @@ bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item) {
 }
 
 bool ItemHandler::itemNameAlreadyExists(const QString& name) {
-  for (qint32 row = 0; row < m_itemmodel.rowCount(); ++row) {
+  for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
     const auto rowItemName =
-        m_itemmodel.item(row)->data(Qt::DisplayRole).toString();
+        m_item_model.item(row)->data(Qt::DisplayRole).toString();
     if (rowItemName.compare(name) == 0) {
       return true;
     }
