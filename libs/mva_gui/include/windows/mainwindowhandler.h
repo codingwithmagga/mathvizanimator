@@ -62,7 +62,7 @@ class MainWindowHandler : public QObject {
   void setFPS(const qint32 new_fps);
   void setVideoLength(const qint32 new_video_length);
 
-  void openSVGFolder() const;
+  bool openSVGFolder() const;
 
  signals:
   void pixelWidthChanged(const qint32 new_pixel_width);
