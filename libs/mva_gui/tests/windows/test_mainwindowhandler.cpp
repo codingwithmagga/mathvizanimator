@@ -40,6 +40,9 @@ class TestMainWindowHandler : public QObject {
   void updateProjectSettingsAsVariant();
   void updateProjectSettingsAsInt();
 
+  void updateProjectSettingsAsVariantWrongSize();
+  void updateProjectSettingsAsIntWrongSize();
+
  private:
   void setMainWindowProperties(MainWindowHandler* main_window_handler);
   void checkProperties(const MainWindowHandler& main_window_handler);
@@ -192,6 +195,30 @@ void TestMainWindowHandler::updateProjectSettingsAsInt() {
   checkProperties(main_window_handler);
   for (const auto& spy : spyList) {
     QCOMPARE(spy->count(), 1);
+  }
+}
+
+void TestMainWindowHandler::updateProjectSettingsAsVariantWrongSize() {
+  MainWindowHandler main_window_handler;
+  const auto spyList = createPropertySignalSpies(main_window_handler);
+  QVariantList project_settings{m_width, m_height, m_fps};
+
+  main_window_handler.updateProjectSettings(project_settings);
+
+  for (const auto& spy : spyList) {
+    QCOMPARE(spy->count(), 0);
+  }
+}
+
+void TestMainWindowHandler::updateProjectSettingsAsIntWrongSize() {
+  MainWindowHandler main_window_handler;
+  const auto spyList = createPropertySignalSpies(main_window_handler);
+  QList<qint32> project_settings{m_width, m_fps, m_video_length};
+
+  main_window_handler.updateProjectSettings(project_settings);
+
+  for (const auto& spy : spyList) {
+    QCOMPARE(spy->count(), 0);
   }
 }
 

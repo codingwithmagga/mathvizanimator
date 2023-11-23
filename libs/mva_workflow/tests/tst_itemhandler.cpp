@@ -45,6 +45,7 @@ class TestItemHandler : public QObject {
   void getItems();
 
   void removeItem();
+  void removeCurrentItem();
   void removeMultipleItems();
   void removeNonExistingItem();
 
@@ -346,6 +347,22 @@ void TestItemHandler::removeItem() {
   itemhandler.removeItem(items[0]);
 
   QCOMPARE(itemhandler.numItems(), 0);
+}
+
+void TestItemHandler::removeCurrentItem() {
+  ItemHandler itemhandler;
+  auto items = prepareItemHandler(
+      &itemhandler,
+      QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
+  const auto circle_item =
+      qvariant_cast<AbstractItem *>(items[0]->property("item"));
+  itemhandler.setCurrentItem(circle_item->name());
+
+  itemhandler.removeCurrentItem();
+
+  const auto itemhandler_items = itemhandler.items();
+  QCOMPARE(itemhandler_items.count(), 1);
+  QCOMPARE(itemhandler_items[0], items[1]);
 }
 
 void TestItemHandler::removeMultipleItems() {

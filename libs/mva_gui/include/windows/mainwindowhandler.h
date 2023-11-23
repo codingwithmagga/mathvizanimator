@@ -41,6 +41,8 @@ class MainWindowHandler : public QObject {
   qint32 fps() const;
   qint32 videoLength() const;
 
+  bool openSVGFolder() const;
+
  public slots:
 
   void snapshot();
@@ -61,8 +63,6 @@ class MainWindowHandler : public QObject {
   void setPixelHeight(const qint32 new_pixel_height);
   void setFPS(const qint32 new_fps);
   void setVideoLength(const qint32 new_video_length);
-
-  bool openSVGFolder() const;
 
  signals:
   void pixelWidthChanged(const qint32 new_pixel_width);
