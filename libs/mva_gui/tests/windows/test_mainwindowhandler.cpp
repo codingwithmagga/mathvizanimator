@@ -110,7 +110,7 @@ void TestMainWindowHandler::newProjectRequested() {
 
 void TestMainWindowHandler::saveProjectRequested() {
   MainWindowHandler main_window_handler;
-  QUrl test_save_file_url("file://somepath/testfile.json");
+  QUrl test_save_file_url("file://some_path/test_file.json");
   QFileInfo test_save_file_info(test_save_file_url.toLocalFile());
   QSignalSpy saveProjectRequestedSpy(&main_window_handler,
                                      &MainWindowHandler::saveProjectRequested);
@@ -128,7 +128,7 @@ void TestMainWindowHandler::saveProjectRequested() {
 
 void TestMainWindowHandler::loadProjectRequested() {
   MainWindowHandler main_window_handler;
-  QUrl test_load_file_url("file://somepath/testfile.json");
+  QUrl test_load_file_url("file://some_path/test_file.json");
   QFileInfo test_load_file_info(test_load_file_url.toLocalFile());
   QSignalSpy loadProjectRequestedSpy(&main_window_handler,
                                      &MainWindowHandler::loadProjectRequested);
@@ -189,10 +189,10 @@ void TestMainWindowHandler::updateProjectSettingsAsInt() {
 
   main_window_handler.updateProjectSettings(project_settings);
 
+  checkProperties(main_window_handler);
   for (const auto& spy : spyList) {
     QCOMPARE(spy->count(), 1);
   }
-  checkProperties(main_window_handler);
 }
 
 void TestMainWindowHandler::setMainWindowProperties(
