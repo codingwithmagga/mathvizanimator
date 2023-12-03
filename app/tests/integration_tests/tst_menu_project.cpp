@@ -191,7 +191,9 @@ void MenuProjectIntegrationTest::openSVGFolder() {
 
   QSKIP(
       "Currently no option to test the open SVG Folder action. Check the "
-      "log.");
+      "log. On Windows log output is false, because the dir doesn't exists. It "
+      "relates to the name of the test. Can be fixed but is not important "
+      "currently.");
 }
 
 void MenuProjectIntegrationTest::cleanup() {

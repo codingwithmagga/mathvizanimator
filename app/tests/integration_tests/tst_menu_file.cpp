@@ -115,18 +115,25 @@ void MenuFileIntegrationTest::loadProject() {
       m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVALoadFileDialog");
   QVERIFY2(load_file_dialog != nullptr, "Load File Dialog not found");
-  QVERIFY2(load_file_dialog->property("visible").toBool(),
+  QVERIFY2(QTest::qWaitFor([&]() {
+             return load_file_dialog->property("visible").toBool();
+           }),
            "Load File Dialog not visible");
 
   load_file_dialog->setProperty(
-      "selectedFile", QVariant(QUrl("file://" + test_save_file_absolute_path)));
+      "selectedFile",
+      QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
   QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
-                            Qt::DirectConnection);
+                            Qt::QueuedConnection);
 
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numCreationAreaItems() == 4; }));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 3; }));
+  QVERIFY2(QTest::qWaitFor([&]() {
+             return !load_file_dialog->property("visible").toBool();
+           }),
+           "Load File Dialog visible");
+  QVERIFY(QTest::qWaitFor([&]() {
+    return m_helper_functions->numCreationAreaItems() == 4 &&
+           m_helper_functions->numProjectTableViewItems() == 3;
+  }));
 }
 
 void MenuFileIntegrationTest::saveAsProject() {
@@ -161,7 +168,8 @@ void MenuFileIntegrationTest::saveAsProject() {
            "Save File Dialog not visible");
 
   save_file_dialog->setProperty(
-      "selectedFile", QVariant(QUrl("file://" + test_save_file_absolute_path)));
+      "selectedFile",
+      QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
   QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
 

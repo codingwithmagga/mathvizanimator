@@ -10,16 +10,16 @@ qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
 # Add mainlogic via library, s.t. it can be easier integrated in tests
-qt_add_library(mva-applib
+qt_add_library(mva-applib STATIC
     src/mainlogic.h
     src/mainlogic.cpp
 )
 
 target_link_libraries(mva-applib
     PUBLIC
+        mva::workflow
         mva::gui
         mva::guiplugin
-        mva::workflow
 )
 
 target_include_directories(mva-applib

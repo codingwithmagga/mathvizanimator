@@ -59,6 +59,7 @@ ApplicationWindow {
 
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.OpenFile
         nameFilters: ["JSON (*.json)"]
 
         onAccepted: {
@@ -69,6 +70,7 @@ ApplicationWindow {
         // Necessary for integration testing
         function simulateAccepted() {
             accepted()
+            close()
         }
     }
 

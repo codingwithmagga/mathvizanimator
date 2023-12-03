@@ -53,7 +53,7 @@ void TestHelperFunctions::dragAndDropCurrentItem(const QPoint& end_pos) {
   auto current_item = qobject_cast<QQuickItem*>(
       m_draggable_item_list_view->property("currentItem").value<QObject*>());
 
-  const QPoint start_pos = current_item->mapToGlobal(0, 0).toPoint();
+  const QPoint start_pos = current_item->mapToScene(QPointF(0, 0)).toPoint();
   const QPoint end_global_pos =
       m_creation_area->mapToScene(QPointF(0.0, 0.0)).toPoint() + end_pos;
 
