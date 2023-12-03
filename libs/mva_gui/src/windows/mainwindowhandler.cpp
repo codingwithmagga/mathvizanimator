@@ -35,6 +35,10 @@ void MainWindowHandler::saveProject(const QVariant &file) {
 
 void MainWindowHandler::loadProject(const QVariant &file) {
   QFileInfo load_file_info(file.toUrl().toLocalFile());
+
+  qCInfo(mainwindow_handler)
+      << "Start loading project from file" << load_file_info.absoluteFilePath();
+
   emit loadProjectRequested(load_file_info);
 }
 
@@ -74,7 +78,10 @@ void MainWindowHandler::updateProjectSettings(
   setVideoLength(new_project_settings[3]);
 }
 
-void MainWindowHandler::newProject() { emit newProjectRequested(); }
+void MainWindowHandler::newProject() {
+  qCInfo(mainwindow_handler) << "A new Project is started.";
+  emit newProjectRequested();
+}
 
 qint32 MainWindowHandler::pixelWidth() const { return m_pixel_width; }
 
@@ -120,7 +127,9 @@ void MainWindowHandler::setVideoLength(const qint32 new_video_length) {
   emit videoLengthChanged(new_video_length);
 }
 
-bool MainWindowHandler::openSVGFolder() const {
-  return QDesktopServices::openUrl(
-      QUrl(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)));
+void MainWindowHandler::openSVGFolder() const {
+  qCInfo(mainwindow_handler)
+      << "Opening SVG Folder successful: "
+      << QDesktopServices::openUrl(QUrl(QStandardPaths::writableLocation(
+             QStandardPaths::AppDataLocation)));
 }

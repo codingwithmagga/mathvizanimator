@@ -35,8 +35,8 @@ class MainLogic : public QObject {
  public:
   explicit MainLogic(QObject *parent = Q_NULLPTR);
 
-  void init();
   void initEngine(QQmlApplicationEngine *const engine);
+  void connectEngine();
 
  private slots:
   void createSnapshot();
