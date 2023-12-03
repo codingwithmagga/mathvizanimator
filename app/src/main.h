@@ -47,7 +47,7 @@ class SetupMain {
     setup_objects.engine =
         QSharedPointer<QQmlApplicationEngine>(new QQmlApplicationEngine);
 
-    // TODO pointer to shared pointer
+    // TODO(codingwithmagga): pointer to shared pointer
     setup_objects.mainlogic->initEngine(setup_objects.engine.data());
 
     const QUrl url("qrc:/qt/qml/cwa/mva/gui/qml/MainWindow.qml");

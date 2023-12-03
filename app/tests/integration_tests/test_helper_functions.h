@@ -19,6 +19,7 @@
 #define APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
 
 #include <QSharedPointer>
+#include <QTest>
 
 class QQuickItem;
 class QQuickWindow;
@@ -41,8 +42,6 @@ class TestHelperFunctions {
 
   qint32 numCreationAreaItems() const;
   qint32 numProjectTableViewItems() const;
-
-  static void processEvents(const qint32 waiting_time = 1000);
 
  private:
   QSharedPointer<QQmlApplicationEngine> m_engine;

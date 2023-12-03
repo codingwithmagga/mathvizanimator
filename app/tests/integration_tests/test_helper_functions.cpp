@@ -21,7 +21,6 @@
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
 #include <QQuickWindow>
-#include <QTest>
 
 TestHelperFunctions::TestHelperFunctions(
     const QSharedPointer<QQmlApplicationEngine> engine)
@@ -85,11 +84,4 @@ qint32 TestHelperFunctions::numCreationAreaItems() const {
 
 qint32 TestHelperFunctions::numProjectTableViewItems() const {
   return m_project_items_table_view->property("rows").toInt();
-}
-
-void TestHelperFunctions::processEvents(const qint32 waiting_time) {
-  while (QThread::currentThread()->eventDispatcher()->processEvents(
-      QEventLoop::AllEvents)) {
-    QTest::qWait(waiting_time);
-  }
 }

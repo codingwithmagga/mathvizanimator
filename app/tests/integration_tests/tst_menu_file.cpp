@@ -73,20 +73,21 @@ void MenuFileIntegrationTest::clearProject() {
 
   // qml_creation_area already has one child item at the beginning, see
   // MainWindow.qml
-  QCOMPARE(m_helper_functions->numCreationAreaItems(), 2);
   QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 1; },
-      5000));
+      [&]() { return m_helper_functions->numCreationAreaItems() == 2; }));
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numProjectTableViewItems() == 1; }));
 
   QObject* new_action_item =
       m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVANewProjectAction");
   QVERIFY2(new_action_item != nullptr, "New Project action not found");
   QMetaObject::invokeMethod(new_action_item, "trigger");
-  TestHelperFunctions::processEvents();
 
-  QCOMPARE(m_helper_functions->numCreationAreaItems(), 1);
-  QCOMPARE(m_helper_functions->numProjectTableViewItems(), 0);
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numCreationAreaItems() == 1; }));
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numProjectTableViewItems() == 0; }));
 }
 
 void MenuFileIntegrationTest::loadProject() {
@@ -109,7 +110,6 @@ void MenuFileIntegrationTest::loadProject() {
           "MVALoadProjectAction");
   QVERIFY2(load_action_item != nullptr, "Load Project action not found");
   QMetaObject::invokeMethod(load_action_item, "trigger");
-  TestHelperFunctions::processEvents();
 
   QObject* load_file_dialog =
       m_helper_functions->rootWindow()->findChild<QObject*>(
@@ -122,15 +122,17 @@ void MenuFileIntegrationTest::loadProject() {
       "selectedFile", QVariant(QUrl("file://" + test_save_file_absolute_path)));
   QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
-  TestHelperFunctions::processEvents();
 
-  QCOMPARE(m_helper_functions->numCreationAreaItems(), 4);
-  QCOMPARE(m_helper_functions->numProjectTableViewItems(), 3);
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numCreationAreaItems() == 4; }));
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numProjectTableViewItems() == 3; }));
 }
 
 void MenuFileIntegrationTest::saveAsProject() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
-  TestHelperFunctions::processEvents();
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numProjectTableViewItems() == 1; }));
 
   QObject* save_as_action_item =
       m_helper_functions->rootWindow()->findChild<QObject*>(
@@ -138,7 +140,6 @@ void MenuFileIntegrationTest::saveAsProject() {
   QVERIFY2(save_as_action_item != nullptr, "Save As Project action not found");
 
   QMetaObject::invokeMethod(save_as_action_item, "trigger");
-  TestHelperFunctions::processEvents();
 
   const QString test_file_name = "test_save_as_file.json";
   const QString save_dir = "test_save_files";
@@ -163,7 +164,6 @@ void MenuFileIntegrationTest::saveAsProject() {
       "selectedFile", QVariant(QUrl("file://" + test_save_file_absolute_path)));
   QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
-  TestHelperFunctions::processEvents();
 
   QVERIFY2(QFile::exists(test_save_file_absolute_path),
            "Save file wasn't created!");
@@ -179,9 +179,8 @@ void MenuFileIntegrationTest::quitApp() {
   QSignalSpy closeEventSpy(closeFilter, &CloseEventFilter::closeEventReceived);
 
   QMetaObject::invokeMethod(quit_app_action_item, "trigger");
-  TestHelperFunctions::processEvents();
 
-  QCOMPARE(closeEventSpy.count(), 1);
+  QVERIFY(QTest::qWaitFor([&]() { return closeEventSpy.count() == 1; }));
 }
 
 void MenuFileIntegrationTest::cleanup() {
