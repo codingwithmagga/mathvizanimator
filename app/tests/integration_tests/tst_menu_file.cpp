@@ -21,9 +21,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-#include "inttesthelperfcts.h"
 #include "main.h"
 #include "qobjectdefs.h"
+#include "test_helper_functions.h"
 
 class MenuFileIntegrationTest : public QObject {
   Q_OBJECT
@@ -40,21 +40,21 @@ class MenuFileIntegrationTest : public QObject {
 
  private:
   SetupMain::SetupObjects m_app_objects;
-  QSharedPointer<IntTestHelperFcts> m_helper_fcts;
+  QSharedPointer<TestHelperFunctions> m_helper_fcts;
 };
 
 class CloseEventFilter : public QObject {
   Q_OBJECT
  public:
-  CloseEventFilter(QObject* parent) : QObject(parent) {}
+  explicit CloseEventFilter(QObject* parent) : QObject(parent) {}
 
  signals:
-  void closeEventRecevied();
+  void closeEventReceived();
 
  protected:
   bool eventFilter(QObject* obj, QEvent* event) {
     if (event->type() == QEvent::Close) {
-      emit closeEventRecevied();
+      emit closeEventReceived();
     }
 
     return QObject::eventFilter(obj, event);
@@ -64,13 +64,13 @@ class CloseEventFilter : public QObject {
 void MenuFileIntegrationTest::init() {
   m_app_objects = SetupMain::setupApp();
 
-  m_helper_fcts = QSharedPointer<IntTestHelperFcts>(
-      new IntTestHelperFcts(m_app_objects.engine));
+  m_helper_fcts = QSharedPointer<TestHelperFunctions>(
+      new TestHelperFunctions(m_app_objects.engine));
 }
 
 void MenuFileIntegrationTest::clearProject() {
   m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   // qml_creation_area already has one child item at the beginning, see
   // MainWindow.qml
@@ -81,7 +81,7 @@ void MenuFileIntegrationTest::clearProject() {
       m_helper_fcts->rootWindow()->findChild<QObject*>("MVANewProjectAction");
   QVERIFY2(new_action_item != nullptr, "New Project action not found");
   QMetaObject::invokeMethod(new_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QCOMPARE(m_helper_fcts->numCreationAreaItems(), 1);
   QCOMPARE(m_helper_fcts->numProjectTableViewItems(), 0);
@@ -96,17 +96,17 @@ void MenuFileIntegrationTest::loadProject() {
   QDir current_dir = QDir::current();
   current_dir.mkdir(save_dir);
   current_dir.cd(save_dir);
-  const QString test_save_file_absolut_path =
+  const QString test_save_file_absolute_path =
       current_dir.absoluteFilePath(test_file_name);
 
-  test_save_file.copy(test_save_file_absolut_path);
-  QVERIFY(QFile::exists(test_save_file_absolut_path));
+  test_save_file.copy(test_save_file_absolute_path);
+  QVERIFY(QFile::exists(test_save_file_absolute_path));
 
   QObject* load_action_item =
       m_helper_fcts->rootWindow()->findChild<QObject*>("MVALoadProjectAction");
   QVERIFY2(load_action_item != nullptr, "Load Project action not found");
   QMetaObject::invokeMethod(load_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QObject* load_file_dialog =
       m_helper_fcts->rootWindow()->findChild<QObject*>("MVALoadFileDialog");
@@ -115,10 +115,10 @@ void MenuFileIntegrationTest::loadProject() {
            "Load File Dialog not visible");
 
   load_file_dialog->setProperty(
-      "selectedFile", QVariant(QUrl("file://" + test_save_file_absolut_path)));
+      "selectedFile", QVariant(QUrl("file://" + test_save_file_absolute_path)));
   QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QCOMPARE(m_helper_fcts->numCreationAreaItems(), 4);
   QCOMPARE(m_helper_fcts->numProjectTableViewItems(), 3);
@@ -126,7 +126,7 @@ void MenuFileIntegrationTest::loadProject() {
 
 void MenuFileIntegrationTest::saveAsProject() {
   m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QObject* save_as_action_item =
       m_helper_fcts->rootWindow()->findChild<QObject*>(
@@ -134,18 +134,18 @@ void MenuFileIntegrationTest::saveAsProject() {
   QVERIFY2(save_as_action_item != nullptr, "Save As Project action not found");
 
   QMetaObject::invokeMethod(save_as_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   const QString test_file_name = "test_save_as_file.json";
   const QString save_dir = "test_save_files";
   QDir current_dir = QDir::current();
   current_dir.mkdir(save_dir);
   current_dir.cd(save_dir);
-  const QString test_save_file_absolut_path =
+  const QString test_save_file_absolute_path =
       current_dir.absoluteFilePath(test_file_name);
 
-  if (QFile::exists(test_save_file_absolut_path)) {
-    QFile::remove(test_save_file_absolut_path);
+  if (QFile::exists(test_save_file_absolute_path)) {
+    QFile::remove(test_save_file_absolute_path);
   }
 
   QObject* save_file_dialog =
@@ -155,12 +155,12 @@ void MenuFileIntegrationTest::saveAsProject() {
            "Save File Dialog not visible");
 
   save_file_dialog->setProperty(
-      "selectedFile", QVariant(QUrl("file://" + test_save_file_absolut_path)));
+      "selectedFile", QVariant(QUrl("file://" + test_save_file_absolute_path)));
   QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
-  QVERIFY2(QFile::exists(test_save_file_absolut_path),
+  QVERIFY2(QFile::exists(test_save_file_absolute_path),
            "Save file wasn't created!");
 }
 
@@ -171,12 +171,12 @@ void MenuFileIntegrationTest::quitApp() {
   CloseEventFilter* closeFilter =
       new CloseEventFilter(m_helper_fcts->rootWindow());
   m_helper_fcts->rootWindow()->installEventFilter(closeFilter);
-  QSignalSpy closeEventySpy(closeFilter, &CloseEventFilter::closeEventRecevied);
+  QSignalSpy closeEventSpy(closeFilter, &CloseEventFilter::closeEventReceived);
 
   QMetaObject::invokeMethod(quit_app_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
-  QCOMPARE(closeEventySpy.count(), 1);
+  QCOMPARE(closeEventSpy.count(), 1);
 }
 
 void MenuFileIntegrationTest::cleanup() {

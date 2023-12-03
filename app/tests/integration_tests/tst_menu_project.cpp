@@ -23,9 +23,9 @@
 #include <QSignalSpy>
 #include <QTest>
 
-#include "inttesthelperfcts.h"
 #include "main.h"
 #include "qobjectdefs.h"
+#include "test_helper_functions.h"
 
 class MenuProjectIntegrationTest : public QObject {
   Q_OBJECT
@@ -42,20 +42,20 @@ class MenuProjectIntegrationTest : public QObject {
 
  private:
   SetupMain::SetupObjects m_app_objects;
-  QSharedPointer<IntTestHelperFcts> m_helper_fcts;
+  QSharedPointer<TestHelperFunctions> m_helper_fcts;
 };
 
 void MenuProjectIntegrationTest::init() {
   m_app_objects = SetupMain::setupApp();
 
-  m_helper_fcts = QSharedPointer<IntTestHelperFcts>(
-      new IntTestHelperFcts(m_app_objects.engine));
+  m_helper_fcts = QSharedPointer<TestHelperFunctions>(
+      new TestHelperFunctions(m_app_objects.engine));
 }
 
 void MenuProjectIntegrationTest::renderProject() {
   m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
   m_helper_fcts->dragAndDropCurrentItem(QPoint(300, 180));
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QDir current_dir = QDir::current();
   const QString render_file = current_dir.absoluteFilePath("render_test.mp4");
@@ -80,7 +80,7 @@ void MenuProjectIntegrationTest::renderProject() {
 void MenuProjectIntegrationTest::createSnapshot() {
   m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
   m_helper_fcts->dragAndDropCurrentItem(QPoint(300, 180));
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QDir current_dir = QDir::current();
   const QString snapshot_file = current_dir.absoluteFilePath("snapshot.png");
@@ -94,7 +94,7 @@ void MenuProjectIntegrationTest::createSnapshot() {
   QVERIFY2(snapshot_action_item != nullptr,
            "Snapshot Project action not found");
   QMetaObject::invokeMethod(snapshot_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QVERIFY2(QFile::exists(snapshot_file), "Snapshot image wasn't created!");
 }
@@ -102,7 +102,7 @@ void MenuProjectIntegrationTest::createSnapshot() {
 void MenuProjectIntegrationTest::openProjectSettings() {
   m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
   m_helper_fcts->dragAndDropCurrentItem(QPoint(300, 180));
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QObject* open_project_settings_action_item =
       m_helper_fcts->rootWindow()->findChild<QObject*>(
@@ -110,14 +110,14 @@ void MenuProjectIntegrationTest::openProjectSettings() {
   QVERIFY2(open_project_settings_action_item != nullptr,
            "Open Project Settings action not found");
   QMetaObject::invokeMethod(open_project_settings_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QObject* project_settings_popup_object =
       m_helper_fcts->rootWindow()->findChild<QObject*>(
           "MVAProjectSettingsPopup");
   QVERIFY2(project_settings_popup_object->property("visible").toBool(),
            "Project Settings Popup not visible");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   const qint32 width = 800;
   const qint32 height = 600;
@@ -133,7 +133,7 @@ void MenuProjectIntegrationTest::openProjectSettings() {
   QVERIFY2(height_input_field != nullptr, "Height input field not found");
   height_input_field->setProperty("text", QVariant(height));
   QObject* fps_input_field =
-      project_settings_popup_object->findChild<QObject*>("MVAFPSInputField");
+      project_settings_popup_object->findChild<QObject*>("MVAFpsInputField");
   QVERIFY2(fps_input_field != nullptr, "FPS input field not found");
   fps_input_field->setProperty("text", QVariant(fps));
   QObject* video_length_input_field =
@@ -142,13 +142,13 @@ void MenuProjectIntegrationTest::openProjectSettings() {
   QVERIFY2(video_length_input_field != nullptr,
            "Video length input field not found");
   video_length_input_field->setProperty("text", QVariant(video_length));
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   auto save_button = project_settings_popup_object->findChild<QQuickItem*>(
       "MVASaveProjectSettingsButton");
   QVERIFY2(save_button != nullptr, "Save button not found");
   m_helper_fcts->clickItem(save_button);
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QSignalSpy finishedVideoRenderingSpy(m_helper_fcts->rootWindow(),
                                        SIGNAL(renderingVideoFinished()));
@@ -188,7 +188,7 @@ void MenuProjectIntegrationTest::openSVGFolder() {
   QVERIFY2(open_svg_folder_action_item != nullptr,
            "Open SVG Folder action not found");
   QMetaObject::invokeMethod(open_svg_folder_action_item, "trigger");
-  IntTestHelperFcts::processEvents();
+  TestHelperFunctions::processEvents();
 
   QSKIP(
       "Currently no option to test the open SVG Folder action. Check the log.");

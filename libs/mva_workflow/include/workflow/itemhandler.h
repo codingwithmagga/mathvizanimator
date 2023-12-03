@@ -105,10 +105,10 @@ class ItemModelItem : public QStandardItem {
    * This variable is necessary to determine if the (possibly) containing
    * QQuickItem should be deleted or not. If the user deletes the item it should
    * be set to true, to remove the item from the GUI. If the app gets closed,
-   * everthing gets automatically deleted from the GUI and this variable should
+   * everything gets automatically deleted from the GUI and this variable should
    * be set (or keeped) false. This is because in some cases both the GUI and
-   * the dctor of this class seems to try to delete the item simultaneously.
-   * This leads to a segmentation fault.
+   * the deconstructor of this class seems to try to delete the item
+   * simultaneously. This leads to a segmentation fault.
    *
    * I'm not really happy with this solution, because current extensions could
    * break this workflow. This should be done automatically.

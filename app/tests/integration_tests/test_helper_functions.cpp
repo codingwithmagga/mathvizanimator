@@ -1,4 +1,21 @@
-#include "inttesthelperfcts.h"
+/* mathvizanimator
+ * Copyright (C) 2023 codingwithmagga
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "test_helper_functions.h"
 
 #include <QAbstractEventDispatcher>
 #include <QQmlApplicationEngine>
@@ -6,7 +23,7 @@
 #include <QQuickWindow>
 #include <QTest>
 
-IntTestHelperFcts::IntTestHelperFcts(
+TestHelperFunctions::TestHelperFunctions(
     const QSharedPointer<QQmlApplicationEngine> engine)
     : m_engine(engine) {
   auto root_objects = m_engine->rootObjects();
@@ -21,21 +38,21 @@ IntTestHelperFcts::IntTestHelperFcts(
   m_quick_window = qobject_cast<QQuickWindow*>(root);
   QVERIFY2(m_quick_window, "Main QQuickWindow not found.");
 
-  m_dragable_item_list_view =
-      root_objects.first()->findChild<QObject*>("MVADragableItemListView");
+  m_draggable_item_list_view =
+      root_objects.first()->findChild<QObject*>("MVADraggableItemListView");
   m_project_items_table_view =
       root_objects.first()->findChild<QObject*>("MVAProjectItemsTableView");
   m_creation_area =
       root_objects.first()->findChild<QQuickItem*>("MVACreationArea");
 
-  QVERIFY2(m_dragable_item_list_view && m_project_items_table_view &&
+  QVERIFY2(m_draggable_item_list_view && m_project_items_table_view &&
                m_creation_area,
            "Important qml objects are missing!");
 }
 
-void IntTestHelperFcts::dragAndDropCurrentItem(const QPoint& end_pos) {
+void TestHelperFunctions::dragAndDropCurrentItem(const QPoint& end_pos) {
   auto current_item = qobject_cast<QQuickItem*>(
-      m_dragable_item_list_view->property("currentItem").value<QObject*>());
+      m_draggable_item_list_view->property("currentItem").value<QObject*>());
 
   const QPoint start_pos = current_item->mapToGlobal(0, 0).toPoint();
   const QPoint end_global_pos =
@@ -44,8 +61,8 @@ void IntTestHelperFcts::dragAndDropCurrentItem(const QPoint& end_pos) {
   dragAndDropItem(start_pos, end_global_pos);
 }
 
-void IntTestHelperFcts::dragAndDropItem(const QPoint& start_pos,
-                                        const QPoint& end_pos) {
+void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos,
+                                          const QPoint& end_pos) {
   const QPoint minimum_drag_distance(20, 20);
 
   QTest::mousePress(m_quick_window, Qt::LeftButton, Qt::NoModifier, start_pos);
@@ -53,7 +70,7 @@ void IntTestHelperFcts::dragAndDropItem(const QPoint& start_pos,
   QTest::mouseRelease(m_quick_window, Qt::LeftButton, Qt::NoModifier, end_pos);
 }
 
-void IntTestHelperFcts::clickItem(QQuickItem* quick_item) {
+void TestHelperFunctions::clickItem(QQuickItem* quick_item) {
   auto oPoint = quick_item->mapToScene(QPoint(0, 0)).toPoint();
 
   oPoint.rx() += quick_item->width() / 2;
@@ -62,15 +79,15 @@ void IntTestHelperFcts::clickItem(QQuickItem* quick_item) {
   QTest::mouseClick(m_quick_window, Qt::LeftButton, Qt::NoModifier, oPoint);
 }
 
-qint32 IntTestHelperFcts::numCreationAreaItems() const {
+qint32 TestHelperFunctions::numCreationAreaItems() const {
   return m_creation_area->childItems().size();
 }
 
-qint32 IntTestHelperFcts::numProjectTableViewItems() const {
+qint32 TestHelperFunctions::numProjectTableViewItems() const {
   return m_project_items_table_view->property("rows").toInt();
 }
 
-void IntTestHelperFcts::processEvents(const qint32 waiting_time) {
+void TestHelperFunctions::processEvents(const qint32 waiting_time) {
   while (QThread::currentThread()->eventDispatcher()->processEvents(
       QEventLoop::AllEvents)) {
     QTest::qWait(waiting_time);

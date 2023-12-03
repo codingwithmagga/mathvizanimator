@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef APP_SRC_MAIN_H
-#define APP_SRC_MAIN_H
+#ifndef APP_SRC_MAIN_H_
+#define APP_SRC_MAIN_H_
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
@@ -69,4 +69,4 @@ class SetupMain {
   }
 };
 
-#endif  // MAIN_H
+#endif  // APP_SRC_MAIN_H_

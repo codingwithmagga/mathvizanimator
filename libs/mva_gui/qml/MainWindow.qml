@@ -198,7 +198,7 @@ ApplicationWindow {
 
                 TextField {
                     id: fpsInputField
-                    objectName: "MVAFPSInputField"
+                    objectName: "MVAFpsInputField"
 
                     text: main_window.fps
 
@@ -364,7 +364,7 @@ ApplicationWindow {
         ListView {
 
             id: itemView
-            objectName: "MVADragableItemListView"
+            objectName: "MVADraggableItemListView"
 
             Layout.minimumWidth: 50
             Layout.preferredWidth: 100

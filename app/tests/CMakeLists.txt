@@ -9,14 +9,14 @@ qt_standard_project_setup()
 
 qt_add_executable(int_menu_file_test
     integration_tests/tst_menu_file.cpp
-    integration_tests/inttesthelperfcts.h
-    integration_tests/inttesthelperfcts.cpp
+    integration_tests/test_helper_functions.h
+    integration_tests/test_helper_functions.cpp
     integration_tests_data/integrations_tests_res.qrc
 )
 qt_add_executable(int_menu_project_test
     integration_tests/tst_menu_project.cpp
-    integration_tests/inttesthelperfcts.h
-    integration_tests/inttesthelperfcts.cpp
+    integration_tests/test_helper_functions.h
+    integration_tests/test_helper_functions.cpp
 )
 
 add_test(NAME int_menu_file_test COMMAND int_menu_file_test)

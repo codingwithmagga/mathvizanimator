@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 3.24)
 
 project(mathvizanimator-app VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Svg)
 
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
-# Add mainlogic via library, s.t. it can be easiert integrated in tests
+# Add mainlogic via library, s.t. it can be easier integrated in tests
 qt_add_library(mva-applib
     src/mainlogic.h
     src/mainlogic.cpp
