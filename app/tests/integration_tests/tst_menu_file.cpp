@@ -40,7 +40,7 @@ class MenuFileIntegrationTest : public QObject {
 
  private:
   SetupMain::SetupObjects m_app_objects;
-  QSharedPointer<TestHelperFunctions> m_helper_fcts;
+  QSharedPointer<TestHelperFunctions> m_helper_functions;
 };
 
 class CloseEventFilter : public QObject {
@@ -64,27 +64,29 @@ class CloseEventFilter : public QObject {
 void MenuFileIntegrationTest::init() {
   m_app_objects = SetupMain::setupApp();
 
-  m_helper_fcts = QSharedPointer<TestHelperFunctions>(
+  m_helper_functions = QSharedPointer<TestHelperFunctions>(
       new TestHelperFunctions(m_app_objects.engine));
 }
 
 void MenuFileIntegrationTest::clearProject() {
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
-  TestHelperFunctions::processEvents();
+  m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
 
   // qml_creation_area already has one child item at the beginning, see
   // MainWindow.qml
-  QCOMPARE(m_helper_fcts->numCreationAreaItems(), 2);
-  QCOMPARE(m_helper_fcts->numProjectTableViewItems(), 1);
+  QCOMPARE(m_helper_functions->numCreationAreaItems(), 2);
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->numProjectTableViewItems() == 1; },
+      5000));
 
   QObject* new_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>("MVANewProjectAction");
+      m_helper_functions->rootWindow()->findChild<QObject*>(
+          "MVANewProjectAction");
   QVERIFY2(new_action_item != nullptr, "New Project action not found");
   QMetaObject::invokeMethod(new_action_item, "trigger");
   TestHelperFunctions::processEvents();
 
-  QCOMPARE(m_helper_fcts->numCreationAreaItems(), 1);
-  QCOMPARE(m_helper_fcts->numProjectTableViewItems(), 0);
+  QCOMPARE(m_helper_functions->numCreationAreaItems(), 1);
+  QCOMPARE(m_helper_functions->numProjectTableViewItems(), 0);
 }
 
 void MenuFileIntegrationTest::loadProject() {
@@ -103,13 +105,15 @@ void MenuFileIntegrationTest::loadProject() {
   QVERIFY(QFile::exists(test_save_file_absolute_path));
 
   QObject* load_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>("MVALoadProjectAction");
+      m_helper_functions->rootWindow()->findChild<QObject*>(
+          "MVALoadProjectAction");
   QVERIFY2(load_action_item != nullptr, "Load Project action not found");
   QMetaObject::invokeMethod(load_action_item, "trigger");
   TestHelperFunctions::processEvents();
 
   QObject* load_file_dialog =
-      m_helper_fcts->rootWindow()->findChild<QObject*>("MVALoadFileDialog");
+      m_helper_functions->rootWindow()->findChild<QObject*>(
+          "MVALoadFileDialog");
   QVERIFY2(load_file_dialog != nullptr, "Load File Dialog not found");
   QVERIFY2(load_file_dialog->property("visible").toBool(),
            "Load File Dialog not visible");
@@ -120,16 +124,16 @@ void MenuFileIntegrationTest::loadProject() {
                             Qt::DirectConnection);
   TestHelperFunctions::processEvents();
 
-  QCOMPARE(m_helper_fcts->numCreationAreaItems(), 4);
-  QCOMPARE(m_helper_fcts->numProjectTableViewItems(), 3);
+  QCOMPARE(m_helper_functions->numCreationAreaItems(), 4);
+  QCOMPARE(m_helper_functions->numProjectTableViewItems(), 3);
 }
 
 void MenuFileIntegrationTest::saveAsProject() {
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
+  m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
   TestHelperFunctions::processEvents();
 
   QObject* save_as_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVASaveProjectAsAction");
   QVERIFY2(save_as_action_item != nullptr, "Save As Project action not found");
 
@@ -149,7 +153,8 @@ void MenuFileIntegrationTest::saveAsProject() {
   }
 
   QObject* save_file_dialog =
-      m_helper_fcts->rootWindow()->findChild<QObject*>("MVASaveFileDialog");
+      m_helper_functions->rootWindow()->findChild<QObject*>(
+          "MVASaveFileDialog");
   QVERIFY2(save_file_dialog != nullptr, "Save File Dialog not found");
   QVERIFY2(save_file_dialog->property("visible").toBool(),
            "Save File Dialog not visible");
@@ -166,11 +171,11 @@ void MenuFileIntegrationTest::saveAsProject() {
 
 void MenuFileIntegrationTest::quitApp() {
   QObject* quit_app_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>("MVAQuitAppAction");
+      m_helper_functions->rootWindow()->findChild<QObject*>("MVAQuitAppAction");
   QVERIFY2(quit_app_action_item != nullptr, "Quit App action not found");
   CloseEventFilter* closeFilter =
-      new CloseEventFilter(m_helper_fcts->rootWindow());
-  m_helper_fcts->rootWindow()->installEventFilter(closeFilter);
+      new CloseEventFilter(m_helper_functions->rootWindow());
+  m_helper_functions->rootWindow()->installEventFilter(closeFilter);
   QSignalSpy closeEventSpy(closeFilter, &CloseEventFilter::closeEventReceived);
 
   QMetaObject::invokeMethod(quit_app_action_item, "trigger");
@@ -180,7 +185,7 @@ void MenuFileIntegrationTest::quitApp() {
 }
 
 void MenuFileIntegrationTest::cleanup() {
-  m_helper_fcts.clear();
+  m_helper_functions.clear();
 
   m_app_objects.engine.clear();
   m_app_objects.mainlogic.clear();

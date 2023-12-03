@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEST_HELPER_FUNCTIONS_H
-#define TEST_HELPER_FUNCTIONS_H
+#ifndef APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
+#define APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
 
 #include <QSharedPointer>
 
@@ -53,4 +53,4 @@ class TestHelperFunctions {
   QQuickItem *m_creation_area = Q_NULLPTR;
 };
 
-#endif  // TEST_HELPER_FUNCTIONS_H
+#endif  // APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_

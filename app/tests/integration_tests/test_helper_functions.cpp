@@ -30,7 +30,7 @@ TestHelperFunctions::TestHelperFunctions(
   QVERIFY2(!root_objects.isEmpty(), "No QML root objects created!");
   /* TODO (codingwithmagga)
    * In general it is not a good idea to use QVERIFY (or other QTest macros) out
-   * of test fcts, because they return immediately when an error occurs.
+   * of test functions, because they return immediately when an error occurs.
    * This should be rewritten later on.
    */
 

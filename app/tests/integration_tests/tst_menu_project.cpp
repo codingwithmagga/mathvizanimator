@@ -42,19 +42,19 @@ class MenuProjectIntegrationTest : public QObject {
 
  private:
   SetupMain::SetupObjects m_app_objects;
-  QSharedPointer<TestHelperFunctions> m_helper_fcts;
+     QSharedPointer<TestHelperFunctions> m_helper_functions;
 };
 
 void MenuProjectIntegrationTest::init() {
   m_app_objects = SetupMain::setupApp();
 
-  m_helper_fcts = QSharedPointer<TestHelperFunctions>(
+     m_helper_functions = QSharedPointer<TestHelperFunctions>(
       new TestHelperFunctions(m_app_objects.engine));
 }
 
 void MenuProjectIntegrationTest::renderProject() {
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(300, 180));
+     m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+     m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
   TestHelperFunctions::processEvents();
 
   QDir current_dir = QDir::current();
@@ -63,11 +63,11 @@ void MenuProjectIntegrationTest::renderProject() {
     QFile::remove(render_file);
   }
 
-  QSignalSpy finishedVideoRenderingSpy(m_helper_fcts->rootWindow(),
+  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
                                        SIGNAL(renderingVideoFinished()));
 
   QObject* render_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVARenderProjectAction");
   QVERIFY2(render_action_item != nullptr, "Render Project action not found");
   QMetaObject::invokeMethod(render_action_item, "trigger");
@@ -78,8 +78,8 @@ void MenuProjectIntegrationTest::renderProject() {
 }
 
 void MenuProjectIntegrationTest::createSnapshot() {
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(300, 180));
+  m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+  m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
   TestHelperFunctions::processEvents();
 
   QDir current_dir = QDir::current();
@@ -89,7 +89,7 @@ void MenuProjectIntegrationTest::createSnapshot() {
   }
 
   QObject* snapshot_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVACreateSnapshotAction");
   QVERIFY2(snapshot_action_item != nullptr,
            "Snapshot Project action not found");
@@ -100,12 +100,12 @@ void MenuProjectIntegrationTest::createSnapshot() {
 }
 
 void MenuProjectIntegrationTest::openProjectSettings() {
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(100, 100));
-  m_helper_fcts->dragAndDropCurrentItem(QPoint(300, 180));
+  m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+  m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
   TestHelperFunctions::processEvents();
 
   QObject* open_project_settings_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVAOpenProjectSettingsAction");
   QVERIFY2(open_project_settings_action_item != nullptr,
            "Open Project Settings action not found");
@@ -113,7 +113,7 @@ void MenuProjectIntegrationTest::openProjectSettings() {
   TestHelperFunctions::processEvents();
 
   QObject* project_settings_popup_object =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVAProjectSettingsPopup");
   QVERIFY2(project_settings_popup_object->property("visible").toBool(),
            "Project Settings Popup not visible");
@@ -147,10 +147,10 @@ void MenuProjectIntegrationTest::openProjectSettings() {
   auto save_button = project_settings_popup_object->findChild<QQuickItem*>(
       "MVASaveProjectSettingsButton");
   QVERIFY2(save_button != nullptr, "Save button not found");
-  m_helper_fcts->clickItem(save_button);
+  m_helper_functions->clickItem(save_button);
   TestHelperFunctions::processEvents();
 
-  QSignalSpy finishedVideoRenderingSpy(m_helper_fcts->rootWindow(),
+  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
                                        SIGNAL(renderingVideoFinished()));
 
   QDir current_dir = QDir::current();
@@ -160,7 +160,7 @@ void MenuProjectIntegrationTest::openProjectSettings() {
   }
 
   QObject* render_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVARenderProjectAction");
   QVERIFY2(render_action_item != nullptr, "Render Project action not found");
   QMetaObject::invokeMethod(render_action_item, "trigger");
@@ -183,7 +183,7 @@ void MenuProjectIntegrationTest::openProjectSettings() {
 
 void MenuProjectIntegrationTest::openSVGFolder() {
   QObject* open_svg_folder_action_item =
-      m_helper_fcts->rootWindow()->findChild<QObject*>(
+      m_helper_functions->rootWindow()->findChild<QObject*>(
           "MVAOpenSVGFolderAction");
   QVERIFY2(open_svg_folder_action_item != nullptr,
            "Open SVG Folder action not found");
@@ -195,7 +195,7 @@ void MenuProjectIntegrationTest::openSVGFolder() {
 }
 
 void MenuProjectIntegrationTest::cleanup() {
-  m_helper_fcts.clear();
+  m_helper_functions.clear();
 
   m_app_objects.engine.clear();
   m_app_objects.mainlogic.clear();
