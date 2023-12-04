@@ -21,6 +21,7 @@
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QTest>  // should be removed, see comment in constructor
 
 TestHelperFunctions::TestHelperFunctions(
     const QSharedPointer<QQmlApplicationEngine> engine)
@@ -84,4 +85,22 @@ qint32 TestHelperFunctions::numCreationAreaItems() const {
 
 qint32 TestHelperFunctions::numProjectTableViewItems() const {
   return m_project_items_table_view->property("rows").toInt();
+}
+
+bool TestHelperFunctions::compareNumItems(const qint32 num_items) {
+  // In creation area there is already one item (background rectangle) at the
+  // start. So it has one item more
+  return QTest::qWaitFor([&]() {
+    return numCreationAreaItems() == num_items + 1 &&
+           numProjectTableViewItems() == num_items;
+  });
+}
+
+QString TestHelperFunctions::absoluteFilePath(const QString file_name) {
+  const QString save_dir = "test_files";
+  QDir current_dir = QDir::current();
+  current_dir.mkdir(save_dir);
+  current_dir.cd(save_dir);
+
+  return current_dir.absoluteFilePath(file_name);
 }

@@ -18,8 +18,8 @@
 #ifndef APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
 #define APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
 
+#include <QQuickWindow>
 #include <QSharedPointer>
-#include <QTest>
 
 class QQuickItem;
 class QQuickWindow;
@@ -42,6 +42,19 @@ class TestHelperFunctions {
 
   qint32 numCreationAreaItems() const;
   qint32 numProjectTableViewItems() const;
+
+  bool compareNumItems(const qint32 num_items);
+
+  template <typename T>
+  T getChild(const QString &name) {
+    auto child = m_quick_window->findChild<T>(name);
+    if (!child) {
+      qFatal() << "Couldn't find child with name" << name;
+    }
+    return child;
+  }
+
+  static QString absoluteFilePath(const QString file_name);
 
  private:
   QSharedPointer<QQmlApplicationEngine> m_engine;

@@ -70,55 +70,32 @@ void MenuFileIntegrationTest::init() {
 
 void MenuFileIntegrationTest::clearProject() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+  QVERIFY(m_helper_functions->compareNumItems(1));
 
-  // qml_creation_area already has one child item at the beginning, see
-  // MainWindow.qml
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numCreationAreaItems() == 2; }));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 1; }));
-
-  QObject* new_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVANewProjectAction");
-  QVERIFY2(new_action_item != nullptr, "New Project action not found");
+  auto new_action_item =
+      m_helper_functions->getChild<QObject*>("MVANewProjectAction");
   QMetaObject::invokeMethod(new_action_item, "trigger");
 
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numCreationAreaItems() == 1; }));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 0; }));
+  QVERIFY(m_helper_functions->compareNumItems(0));
 }
 
 void MenuFileIntegrationTest::loadProject() {
   QFile test_save_file(":/integrations_tests_data/test_save_file.json");
   QVERIFY(test_save_file.exists());
 
-  const QString test_file_name = "test_save_file.json";
-  const QString save_dir = "test_save_files";
-  QDir current_dir = QDir::current();
-  current_dir.mkdir(save_dir);
-  current_dir.cd(save_dir);
   const QString test_save_file_absolute_path =
-      current_dir.absoluteFilePath(test_file_name);
-
+      TestHelperFunctions::absoluteFilePath("test_save_file.json");
   test_save_file.copy(test_save_file_absolute_path);
   QVERIFY(QFile::exists(test_save_file_absolute_path));
 
-  QObject* load_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVALoadProjectAction");
-  QVERIFY2(load_action_item != nullptr, "Load Project action not found");
+  auto load_action_item =
+      m_helper_functions->getChild<QObject*>("MVALoadProjectAction");
   QMetaObject::invokeMethod(load_action_item, "trigger");
 
-  QObject* load_file_dialog =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVALoadFileDialog");
-  QVERIFY2(load_file_dialog != nullptr, "Load File Dialog not found");
-  QVERIFY2(QTest::qWaitFor([&]() {
-             return load_file_dialog->property("visible").toBool();
-           }),
-           "Load File Dialog not visible");
+  auto load_file_dialog =
+      m_helper_functions->getChild<QObject*>("MVALoadFileDialog");
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return load_file_dialog->property("visible").toBool(); }));
 
   load_file_dialog->setProperty(
       "selectedFile",
@@ -126,46 +103,28 @@ void MenuFileIntegrationTest::loadProject() {
   QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
                             Qt::QueuedConnection);
 
-  QVERIFY2(QTest::qWaitFor([&]() {
-             return !load_file_dialog->property("visible").toBool();
-           }),
-           "Load File Dialog visible");
-  QVERIFY(QTest::qWaitFor([&]() {
-    return m_helper_functions->numCreationAreaItems() == 4 &&
-           m_helper_functions->numProjectTableViewItems() == 3;
-  }));
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return !load_file_dialog->property("visible").toBool(); }));
+  QVERIFY(m_helper_functions->compareNumItems(3));
 }
 
 void MenuFileIntegrationTest::saveAsProject() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 1; }));
+  QVERIFY(m_helper_functions->compareNumItems(1));
 
-  QObject* save_as_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVASaveProjectAsAction");
-  QVERIFY2(save_as_action_item != nullptr, "Save As Project action not found");
-
+  auto save_as_action_item =
+      m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
   QMetaObject::invokeMethod(save_as_action_item, "trigger");
 
-  const QString test_file_name = "test_save_as_file.json";
-  const QString save_dir = "test_save_files";
-  QDir current_dir = QDir::current();
-  current_dir.mkdir(save_dir);
-  current_dir.cd(save_dir);
   const QString test_save_file_absolute_path =
-      current_dir.absoluteFilePath(test_file_name);
-
+      TestHelperFunctions::absoluteFilePath("test_save_file.json");
   if (QFile::exists(test_save_file_absolute_path)) {
     QFile::remove(test_save_file_absolute_path);
   }
 
-  QObject* save_file_dialog =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVASaveFileDialog");
-  QVERIFY2(save_file_dialog != nullptr, "Save File Dialog not found");
-  QVERIFY2(save_file_dialog->property("visible").toBool(),
-           "Save File Dialog not visible");
+  auto save_file_dialog =
+      m_helper_functions->getChild<QObject*>("MVASaveFileDialog");
+  QVERIFY(save_file_dialog->property("visible").toBool());
 
   save_file_dialog->setProperty(
       "selectedFile",
@@ -173,14 +132,12 @@ void MenuFileIntegrationTest::saveAsProject() {
   QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
 
-  QVERIFY2(QFile::exists(test_save_file_absolute_path),
-           "Save file wasn't created!");
+  QVERIFY(QFile::exists(test_save_file_absolute_path));
 }
 
 void MenuFileIntegrationTest::quitApp() {
-  QObject* quit_app_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>("MVAQuitAppAction");
-  QVERIFY2(quit_app_action_item != nullptr, "Quit App action not found");
+  auto quit_app_action_item =
+      m_helper_functions->getChild<QObject*>("MVAQuitAppAction");
   CloseEventFilter* closeFilter =
       new CloseEventFilter(m_helper_functions->rootWindow());
   m_helper_functions->rootWindow()->installEventFilter(closeFilter);

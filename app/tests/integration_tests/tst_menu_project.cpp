@@ -41,8 +41,16 @@ class MenuProjectIntegrationTest : public QObject {
   void cleanup();
 
  private:
+  void setProjectSettings();
+  void setTextProperty(const QString& name, const qint32 value);
+
   SetupMain::SetupObjects m_app_objects;
   QSharedPointer<TestHelperFunctions> m_helper_functions;
+
+  const qint32 m_width = 800;
+  const qint32 m_height = 600;
+  const qint32 m_fps = 32;
+  const qint32 m_video_length = 2;
 };
 
 void MenuProjectIntegrationTest::init() {
@@ -55,11 +63,10 @@ void MenuProjectIntegrationTest::init() {
 void MenuProjectIntegrationTest::renderProject() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
   m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 2; }));
+  QVERIFY(m_helper_functions->compareNumItems(2));
 
-  QDir current_dir = QDir::current();
-  const QString render_file = current_dir.absoluteFilePath("render_test.mp4");
+  const QString render_file =
+      QDir::current().absoluteFilePath("render_test.mp4");
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
@@ -67,133 +74,86 @@ void MenuProjectIntegrationTest::renderProject() {
   QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
                                        SIGNAL(renderingVideoFinished()));
 
-  QObject* render_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVARenderProjectAction");
-  QVERIFY2(render_action_item != nullptr, "Render Project action not found");
+  auto render_action_item =
+      m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
   QMetaObject::invokeMethod(render_action_item, "trigger");
 
-  QVERIFY2(finishedVideoRenderingSpy.wait(60000),
-           "Finished rendering signal wasn't emitted!");
-  QVERIFY2(QFile::exists(render_file), "Render file wasn't created!");
+  QVERIFY(finishedVideoRenderingSpy.wait(60000));
+  QVERIFY(QFile::exists(render_file));
 }
 
 void MenuProjectIntegrationTest::createSnapshot() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
   m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 2; }));
+  QVERIFY(m_helper_functions->compareNumItems(2));
 
-  QDir current_dir = QDir::current();
-  const QString snapshot_file = current_dir.absoluteFilePath("snapshot.png");
+  const QString snapshot_file =
+      QDir::current().absoluteFilePath("snapshot.png");
   if (QFile::exists(snapshot_file)) {
     QFile::remove(snapshot_file);
   }
 
-  QObject* snapshot_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVACreateSnapshotAction");
-  QVERIFY2(snapshot_action_item != nullptr,
-           "Snapshot Project action not found");
+  auto snapshot_action_item =
+      m_helper_functions->getChild<QObject*>("MVACreateSnapshotAction");
   QMetaObject::invokeMethod(snapshot_action_item, "trigger");
 
-  QVERIFY2(
-      QTest::qWaitFor([&]() { return QFile::exists(snapshot_file) == true; }),
-      "Snapshot image wasn't created!");
+  QVERIFY(
+      QTest::qWaitFor([&]() { return QFile::exists(snapshot_file) == true; }));
 }
 
 void MenuProjectIntegrationTest::openProjectSettings() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
   m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->numProjectTableViewItems() == 2; }));
+  QVERIFY(m_helper_functions->compareNumItems(2));
 
-  QObject* open_project_settings_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVAOpenProjectSettingsAction");
-  QVERIFY2(open_project_settings_action_item != nullptr,
-           "Open Project Settings action not found");
+  auto open_project_settings_action_item =
+      m_helper_functions->getChild<QObject*>("MVAOpenProjectSettingsAction");
   QMetaObject::invokeMethod(open_project_settings_action_item, "trigger");
 
-  QObject* project_settings_popup_object =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVAProjectSettingsPopup");
-  QVERIFY2(project_settings_popup_object->property("visible").toBool(),
-           "Project Settings Popup not visible");
+  auto project_settings_popup_object =
+      m_helper_functions->getChild<QObject*>("MVAProjectSettingsPopup");
+  QVERIFY(project_settings_popup_object->property("visible").toBool());
 
-  const qint32 width = 800;
-  const qint32 height = 600;
-  const qint32 fps = 32;
-  const qint32 video_length = 2;
-
-  QObject* width_input_field =
-      project_settings_popup_object->findChild<QObject*>("MVAWidthInputField");
-  QVERIFY2(width_input_field != nullptr, "Width input field not found");
-  width_input_field->setProperty("text", QVariant(width));
-  QObject* height_input_field =
-      project_settings_popup_object->findChild<QObject*>("MVAHeightInputField");
-  QVERIFY2(height_input_field != nullptr, "Height input field not found");
-  height_input_field->setProperty("text", QVariant(height));
-  QObject* fps_input_field =
-      project_settings_popup_object->findChild<QObject*>("MVAFpsInputField");
-  QVERIFY2(fps_input_field != nullptr, "FPS input field not found");
-  fps_input_field->setProperty("text", QVariant(fps));
-  QObject* video_length_input_field =
-      project_settings_popup_object->findChild<QObject*>(
-          "MVAVideoLengthInputField");
-  QVERIFY2(video_length_input_field != nullptr,
-           "Video length input field not found");
-  video_length_input_field->setProperty("text", QVariant(video_length));
-
-  auto save_button = project_settings_popup_object->findChild<QQuickItem*>(
-      "MVASaveProjectSettingsButton");
-  QVERIFY2(save_button != nullptr, "Save button not found");
-  m_helper_functions->clickItem(save_button);
+  setProjectSettings();
 
   QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
                                        SIGNAL(renderingVideoFinished()));
 
-  QDir current_dir = QDir::current();
-  const QString render_file = current_dir.absoluteFilePath("render_test.mp4");
+  const QString render_file =
+      QDir::current().absoluteFilePath("render_test.mp4");
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
 
-  QObject* render_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVARenderProjectAction");
-  QVERIFY2(render_action_item != nullptr, "Render Project action not found");
+  auto render_action_item =
+      m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
   QMetaObject::invokeMethod(render_action_item, "trigger");
 
-  QVERIFY2(finishedVideoRenderingSpy.wait(60000),
-           "Finished rendering signal wasn't emitted!");
-  QVERIFY2(QFile::exists(render_file), "Render file wasn't created!");
+  QVERIFY(finishedVideoRenderingSpy.wait(60000));
+  QVERIFY(QFile::exists(render_file));
 
   QMediaPlayer media_player;
   media_player.setSource(QUrl(render_file));
 
+  QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(),
+           m_video_length * 1000);
+  QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
+           QSize(m_width, m_height));
   QCOMPARE(
       media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(),
-      fps);
-  QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(),
-           video_length * 1000);
-  QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-           QSize(width, height));
+      m_fps);
 }
 
 void MenuProjectIntegrationTest::openSVGFolder() {
-  QObject* open_svg_folder_action_item =
-      m_helper_functions->rootWindow()->findChild<QObject*>(
-          "MVAOpenSVGFolderAction");
-  QVERIFY2(open_svg_folder_action_item != nullptr,
-           "Open SVG Folder action not found");
+  auto open_svg_folder_action_item =
+      m_helper_functions->getChild<QObject*>("MVAOpenSVGFolderAction");
   QMetaObject::invokeMethod(open_svg_folder_action_item, "trigger");
 
   QSKIP(
       "Currently no option to test the open SVG Folder action. Check the "
-      "log. On Windows log output is false, because the dir doesn't exists. It "
-      "relates to the name of the test. Can be fixed but is not important "
-      "currently.");
+      "log. On Windows and MacOS log output is false, because the dir doesn't "
+      "exists. It relates to the name of the test. Fix is not "
+      "important currently.");
 }
 
 void MenuProjectIntegrationTest::cleanup() {
@@ -201,6 +161,23 @@ void MenuProjectIntegrationTest::cleanup() {
 
   m_app_objects.engine.clear();
   m_app_objects.mainlogic.clear();
+}
+
+void MenuProjectIntegrationTest::setProjectSettings() {
+  setTextProperty("MVAWidthInputField", m_width);
+  setTextProperty("MVAHeightInputField", m_height);
+  setTextProperty("MVAFpsInputField", m_fps);
+  setTextProperty("MVAVideoLengthInputField", m_video_length);
+
+  auto save_button =
+      m_helper_functions->getChild<QQuickItem*>("MVASaveProjectSettingsButton");
+  m_helper_functions->clickItem(save_button);
+}
+
+void MenuProjectIntegrationTest::setTextProperty(const QString& name,
+                                                 const qint32 value) {
+  auto object = m_helper_functions->getChild<QObject*>(name);
+  object->setProperty("text", QVariant(value));
 }
 
 QTEST_MAIN(MenuProjectIntegrationTest)
