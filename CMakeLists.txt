@@ -4,7 +4,7 @@ set(PROJECT_VERSION 0.0.1)
 project(mathvizanimator VERSION ${PROJECT_VERSION} LANGUAGES CXX C)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-message("Code cover: ${RUN_CODE_COVERAGE}")
+message("Run Code Coverage: ${RUN_CODE_COVERAGE}")
 include(presets)
 
 enable_testing(true)
@@ -20,6 +20,6 @@ if(CMAKE_COMPILER_IS_GNUCC AND RUN_CODE_COVERAGE)
         NAME mva_test_coverage
         EXECUTABLE ctest --schedule-random -j 4 --output-on-failure
         DEPENDENCIES ${TEST_TARGETS}
-        EXCLUDE libs/mva_gui/tests/* libs/mva_workflow/tests/*
+        EXCLUDE libs/mva_gui/tests/* libs/mva_workflow/tests/* app/tests/*
     )
 endif()

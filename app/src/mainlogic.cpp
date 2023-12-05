@@ -51,6 +51,9 @@ MainLogic::MainLogic(QObject *parent) : QObject{parent} {
   connect(&m_mainwindowhandler, &MainWindowHandler::videoLengthChanged,
           &m_renderer, &Renderer::setVideoLength);
 
+  connect(&m_renderer, &Renderer::finishedRendering, &m_mainwindowhandler,
+          &MainWindowHandler::renderingVideoFinished);
+
   const auto default_project_settings = m_renderer.projectSettings();
   QList<qint32> conv_project_settings{
       default_project_settings.width, default_project_settings.height,
@@ -69,6 +72,28 @@ void MainLogic::initEngine(QQmlApplicationEngine *const engine) {
       QStringLiteral("item_selection_model"), m_itemhandler.selectionModel());
   m_qml_engine->rootContext()->setContextProperty(
       QStringLiteral("property_model"), m_itemhandler.propertyModel());
+}
+
+void MainLogic::connectEngine() {
+  const auto rootObjects = m_qml_engine->rootObjects();
+
+  if (rootObjects.isEmpty()) {
+    qCCritical(mainlogic)
+        << "No root objects found in current qml engine. Init aborted.";
+    return;
+  }
+
+  m_qml_creation_area =
+      rootObjects.first()->findChild<QObject *>("MVACreationArea");
+
+  if (!m_qml_creation_area) {
+    qCCritical(mainlogic)
+        << "Can't find creation area for videos. Init aborted.";
+    return;
+  }
+
+  QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem *)), this,
+                   SLOT(addItem(QQuickItem *)));
 }
 
 void MainLogic::createSnapshot() {
@@ -131,28 +156,6 @@ void MainLogic::loadProject(const QFileInfo &load_file_info) {
 
     addItem(item);
   }
-}
-
-void MainLogic::init() {
-  const auto rootObjects = m_qml_engine->rootObjects();
-
-  if (rootObjects.isEmpty()) {
-    qCCritical(mainlogic)
-        << "No root objects found in current qml engine. Init aborted.";
-    return;
-  }
-
-  m_qml_creation_area =
-      rootObjects.first()->findChild<QObject *>("creationArea");
-
-  if (!m_qml_creation_area) {
-    qCCritical(mainlogic)
-        << "Can't find creation area for videos. Init aborted.";
-    return;
-  }
-
-  QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem *)), this,
-                   SLOT(addItem(QQuickItem *)));
 }
 
 QList<AbstractItem *> MainLogic::getAbstractItemList() {

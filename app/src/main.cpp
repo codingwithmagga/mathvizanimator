@@ -15,38 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDirIterator>
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
-#include <QtQml/QQmlExtensionPlugin>
-#include <iostream>
-
-#include "mainlogic.h"
+#include "main.h"
 
 int main(int argc, char* argv[]) {
-  qSetMessagePattern(
-      "%{time dd.MM.yyyy hh:mm:ss.zzz} | "
-      "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{if-"
-      "critical}CRT%{endif}%{if-fatal}FTL%{endif} | %{category} | %{message}");
+  auto app = QSharedPointer<QGuiApplication>(new QGuiApplication(argc, argv));
+  const auto objects = SetupMain::setupApp(app);
 
-  QCoreApplication::setApplicationName("mathvizanimator");
-  QCoreApplication::setOrganizationName("codingwithmagga");
-
-  QGuiApplication app(argc, argv);
-
-  MainLogic mainlogic;
-  QQmlApplicationEngine engine;
-
-  mainlogic.initEngine(&engine);
-
-  const QUrl url("qrc:/qt/qml/cwa/mva/gui/qml/MainWindow.qml");
-  QObject::connect(
-      &engine, &QQmlApplicationEngine::objectCreationFailed, &app,
-      []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
-  engine.load(url);
-
-  mainlogic.init();
-
-  return app.exec();
+  return app->exec();
 }

@@ -28,6 +28,7 @@ void AbstractItem::setName(const QString& name) {
   if (m_name == name) {
     return;
   }
+
   m_name = name;
   emit nameChanged(m_name);
 }

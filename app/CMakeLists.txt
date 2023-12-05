@@ -2,15 +2,36 @@ cmake_minimum_required(VERSION 3.24)
 
 project(mathvizanimator-app VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Svg)
 
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
+# Add mainlogic via library, s.t. it can be easier integrated in tests
+qt_add_library(mva-applib STATIC
+    src/mainlogic.h
+    src/mainlogic.cpp
+)
+
+target_link_libraries(mva-applib
+    PUBLIC
+        mva::workflow
+        mva::gui
+        mva::guiplugin
+)
+
+target_include_directories(mva-applib
+    PUBLIC
+        src/
+)
+
+add_library(mva::applib ALIAS mva-applib)
+
 qt_add_executable(mva-app
     src/main.cpp
-    src/mainlogic.cpp
-    src/mainlogic.h
+    src/main.h
 )
 
 set_target_properties(mva-app PROPERTIES
@@ -23,9 +44,7 @@ set_target_properties(mva-app PROPERTIES
 
 target_link_libraries(mva-app
     PRIVATE
-        mva::gui
-        mva::guiplugin
-        mva::workflow
+        mva::applib
 )
 
 install(TARGETS mva-app
@@ -33,3 +52,6 @@ install(TARGETS mva-app
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+add_subdirectory(tests)
+

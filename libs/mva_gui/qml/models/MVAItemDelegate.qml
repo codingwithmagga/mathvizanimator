@@ -20,6 +20,8 @@ import QtQuick.Controls 2.15
 
 Item {
     id: delegate
+    objectName: "MVAItemDelegate"
+
     height: 40
     width: parent.width
 

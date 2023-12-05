@@ -82,6 +82,8 @@ class ItemHandler : public QObject {
 
   void repopulatePropertyModel(const QModelIndex& currentIndex);
 
+  void setDeleteEachQuickItem(QModelIndex parent = QModelIndex());
+
   QStandardItemModel m_item_model;
   QItemSelectionModel m_item_selection_model;
 
@@ -93,6 +95,31 @@ class ItemModelItem : public QStandardItem {
   explicit ItemModelItem(const QString& text);
 
   ~ItemModelItem();
+
+  void setDeleteQuickitem(const bool delete_quick_item) {
+    m_delete_quick_item = delete_quick_item;
+  }
+
+ private:
+  /*
+   * This variable is necessary to determine if the (possibly) containing
+   * QQuickItem should be deleted or not. If the user deletes the item it should
+   * be set to true, to remove the item from the GUI. If the app gets closed,
+   * everything gets automatically deleted from the GUI and this variable should
+   * be set (or keeped) false. This is because in some cases both the GUI and
+   * the deconstructor of this class seems to try to delete the item
+   * simultaneously. This leads to a segmentation fault.
+   *
+   * I'm not really happy with this solution, because current extensions could
+   * break this workflow. This should be done automatically.
+   *
+   * TODO(codingwithmagga): GUI deletes the QQuickItem. The QQuickItem or
+   * better the containing AbstractItem should emit a signal or sth. similar
+   * when they get destroyed. Then this ItemModelItem should removed. So it
+   * goes the other way around. Not sure if this solves the problem when
+   * shutting down the app.
+   */
+  bool m_delete_quick_item = false;
 };
 
 #endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_

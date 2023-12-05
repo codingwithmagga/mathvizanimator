@@ -44,6 +44,8 @@ ApplicationWindow {
     property var dragItem: null
     property bool objectDragActive: false
 
+    signal renderingVideoFinished
+
     Shortcut {
         sequences: [StandardKey.Delete]
         onActivated: {
@@ -53,24 +55,40 @@ ApplicationWindow {
 
     FileDialog {
         id: loadFileDialog
+        objectName: "MVALoadFileDialog"
+
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.OpenFile
         nameFilters: ["JSON (*.json)"]
 
         onAccepted: {
             newAction.trigger(loadFileDialog)
             main_window.loadProject(selectedFile)
         }
+
+        // Necessary for integration testing
+        function simulateAccepted() {
+            accepted()
+            close()
+        }
     }
 
     FileDialog {
         id: saveFileDialog
+        objectName: "MVASaveFileDialog"
+
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.HomeLocation)[0]
         fileMode: FileDialog.SaveFile
         nameFilters: ["JSON (*.json)"]
 
         onAccepted: main_window.saveProject(selectedFile)
+
+        // Necessary for integration testing
+        function simulateAccepted() {
+            accepted()
+        }
     }
 
     Popup {
@@ -104,6 +122,8 @@ ApplicationWindow {
 
     Popup {
         id: projectSettingsPopup
+        objectName: "MVAProjectSettingsPopup"
+
         anchors.centerIn: parent
         modal: true
         focus: true
@@ -137,6 +157,7 @@ ApplicationWindow {
 
                 TextField {
                     id: widthInputField
+                    objectName: "MVAWidthInputField"
 
                     text: main_window.pixel_width
 
@@ -157,6 +178,7 @@ ApplicationWindow {
 
                 TextField {
                     id: heightInputField
+                    objectName: "MVAHeightInputField"
 
                     text: main_window.pixel_height
 
@@ -178,6 +200,7 @@ ApplicationWindow {
 
                 TextField {
                     id: fpsInputField
+                    objectName: "MVAFpsInputField"
 
                     text: main_window.fps
 
@@ -199,6 +222,7 @@ ApplicationWindow {
 
                 TextField {
                     id: videoLengthInputField
+                    objectName: "MVAVideoLengthInputField"
 
                     text: main_window.video_length
 
@@ -217,6 +241,9 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignRight
 
                 Button {
+                    id: saveProjectSettingsButton
+                    objectName: "MVASaveProjectSettingsButton"
+
                     text: qsTr("Save")
                     Layout.alignment: Qt.AlignHCenter
 
@@ -228,7 +255,10 @@ ApplicationWindow {
                     }
                 }
                 Button {
-                    text: qsTr("Close")
+                    id: cancelProjectSettingsButton
+                    objectName: "MVACancelProjectSettingsButton"
+
+                    text: qsTr("Cancel")
                     Layout.alignment: Qt.AlignHCenter
 
                     onClicked: projectSettingsPopup.close()
@@ -238,6 +268,8 @@ ApplicationWindow {
     }
 
     menuBar: MenuBar {
+        id: main_menu_bar
+
         anchors.leftMargin: 0
         anchors.rightMargin: 0
 
@@ -246,36 +278,41 @@ ApplicationWindow {
         }
 
         Menu {
+            id: file_menu
+            objectName: "MVAFileMenu"
+
             title: qsTr("&File")
 
             Action {
                 id: newAction
+                objectName: "MVANewProjectAction"
 
-                text: qsTr("&New...")
+                text: qsTr("&New Project")
                 onTriggered: {
                     main_window.newProject()
                 }
             }
             Action {
                 id: loadAction
+                objectName: "MVALoadProjectAction"
 
                 text: qsTr("&Open...")
                 onTriggered: loadFileDialog.open()
             }
-            Action {
-                id: saveAction
 
-                text: qsTr("&Save")
-                onTriggered: saveFileDialog.open()
-            }
             Action {
                 id: saveAsAction
+                objectName: "MVASaveProjectAsAction"
 
                 text: qsTr("Save &As...")
                 onTriggered: saveFileDialog.open()
             }
+
             MenuSeparator {}
             Action {
+                id: quitAppAction
+                objectName: "MVAQuitAppAction"
+
                 text: qsTr("&Quit")
                 onTriggered: root.close()
             }
@@ -283,23 +320,31 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Project")
             Action {
-                text: qsTr("&Render")
+                id: renderProjectAction
+                objectName: "MVARenderProjectAction"
 
+                text: qsTr("&Render")
                 onTriggered: main_window.render()
             }
             Action {
-                text: qsTr("&Snapshot")
+                id: createSnapshotAction
+                objectName: "MVACreateSnapshotAction"
 
+                text: qsTr("&Snapshot")
                 onTriggered: main_window.snapshot()
             }
             Action {
-                text: qsTr("Pro&ject Settings")
+                id: openProjectSettingsAction
+                objectName: "MVAOpenProjectSettingsAction"
 
+                text: qsTr("Pro&ject Settings")
                 onTriggered: projectSettingsPopup.open()
             }
             Action {
-                text: qsTr("&Open SVG Folder")
+                id: openSVGFolderAction
+                objectName: "MVAOpenSVGFolderAction"
 
+                text: qsTr("&Open SVG Folder")
                 onTriggered: main_window.openSVGFolder()
             }
         }
@@ -321,6 +366,7 @@ ApplicationWindow {
         ListView {
 
             id: itemView
+            objectName: "MVADraggableItemListView"
 
             Layout.minimumWidth: 50
             Layout.preferredWidth: 100
@@ -364,7 +410,7 @@ ApplicationWindow {
 
                 DropArea {
                     id: creationArea
-                    objectName: "creationArea"
+                    objectName: "MVACreationArea"
 
                     property var abstractItem: null
                     property var abstractComponent: null
@@ -475,6 +521,7 @@ ApplicationWindow {
 
                     TableView {
                         id: mObjectsListView
+                        objectName: "MVAProjectItemsTableView"
 
                         width: mObjectsListViewRect.width
                         height: mObjectsListViewRect.height / 2
@@ -584,6 +631,13 @@ ApplicationWindow {
                     }
                 }
             }
+        }
+    }
+
+    Connections {
+        target: main_window
+        function onRenderingVideoFinished() {
+            root.renderingVideoFinished()
         }
     }
 }

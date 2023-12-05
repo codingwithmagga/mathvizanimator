@@ -41,8 +41,6 @@ class MainWindowHandler : public QObject {
   qint32 fps() const;
   qint32 videoLength() const;
 
-  bool openSVGFolder() const;
-
  public slots:
 
   void snapshot();
@@ -51,6 +49,8 @@ class MainWindowHandler : public QObject {
   void newProject();
   void saveProject(const QVariant &file);
   void loadProject(const QVariant &file);
+
+  void openSVGFolder() const;
 
   void removeCurrentItem();
 
@@ -80,6 +80,8 @@ class MainWindowHandler : public QObject {
   void removeCurrentItemRequested();
 
   void itemClicked(const QString &name);
+
+  void renderingVideoFinished(const QFileInfo &video_file);
 
  private:
   QObject *m_qml_creation_area;

@@ -52,7 +52,22 @@ QList<QQuickItem*> ItemHandler::items() {
   return item_list;
 }
 
+void ItemHandler::setDeleteEachQuickItem(QModelIndex parent) {
+  for (int r = 0; r < m_item_model.rowCount(parent); ++r) {
+    auto index = m_item_model.index(r, 0, parent);
+    auto item = m_item_model.itemFromIndex(index);
+    QVariant name = m_item_model.data(index);
+
+    dynamic_cast<ItemModelItem*>(item)->setDeleteQuickitem(true);
+
+    if (m_item_model.hasChildren(index)) {
+      setDeleteEachQuickItem(index);
+    }
+  }
+}
+
 void ItemHandler::clear() {
+  setDeleteEachQuickItem();
   m_item_model.removeRows(0, m_item_model.rowCount());
 }
 
@@ -67,20 +82,22 @@ void ItemHandler::addItem(QQuickItem* const quick_item) {
     return;
   }
 
-  auto itemName = item_extract.item->name();
+  auto item_name = item_extract.item->name();
 
-  if (itemNameAlreadyExists(itemName)) {
-    itemName = prepareNewItemName(itemName);
-    item_extract.item->setName(itemName);
+  if (itemNameAlreadyExists(item_name)) {
+    item_name = prepareNewItemName(item_name);
+    item_extract.item->setName(item_name);
   }
 
-  auto stdItemName(new ItemModelItem(itemName));
-  auto stdItemType(
-      new ItemModelItem(item_extract.item->metaObject()->className()));
+  const auto item_type = item_extract.item->metaObject()->className();
+  auto stdItemName(new ItemModelItem(item_name));
+  auto stdItemType(new ItemModelItem(item_type));
 
   stdItemName->setData(QVariant::fromValue(quick_item), ItemRoles::QUICKITEM);
 
   m_item_model.appendRow(QList<QStandardItem*>{stdItemName, stdItemType});
+  qCInfo(itemhandler) << "An item with name" << item_name << "of type"
+                      << item_type << "was added at:" << quick_item->position();
 }
 
 void ItemHandler::removeItem(QQuickItem* const quick_item) {
@@ -94,6 +111,7 @@ void ItemHandler::removeItem(QQuickItem* const quick_item) {
 
   auto item_name_list = m_item_model.findItems(remove_item_name);
   for (auto& item : item_name_list) {
+    dynamic_cast<ItemModelItem*>(item)->setDeleteQuickitem(true);
     m_item_model.removeRow(item->row());
   }
 }
@@ -114,9 +132,10 @@ void ItemHandler::setCurrentItem(const QString& itemName) {
 }
 
 void ItemHandler::removeCurrentItem() {
-  const auto currentItemIndex =
+  const auto current_item =
       m_item_model.itemFromIndex(m_item_selection_model.currentIndex());
-  m_item_model.removeRow(currentItemIndex->row());
+  dynamic_cast<ItemModelItem*>(current_item)->setDeleteQuickitem(true);
+  m_item_model.removeRow(current_item->row());
 }
 
 // TODO(codingwithmagga): Refactor this function, give useful var names
@@ -323,13 +342,15 @@ QString ItemHandler::prepareNewItemName(const QString& old_item_name) {
 ItemModelItem::ItemModelItem(const QString& text) : QStandardItem(text) {}
 
 ItemModelItem::~ItemModelItem() {
-  auto storedQuickItem = data(ItemHandler::ItemRoles::QUICKITEM);
+  if (m_delete_quick_item) {
+    auto storedQuickItem = data(ItemHandler::ItemRoles::QUICKITEM);
 
-  if (storedQuickItem.isValid()) {
-    auto quickItem = storedQuickItem.value<QQuickItem*>();
+    if (storedQuickItem.isValid()) {
+      auto quickItem = storedQuickItem.value<QQuickItem*>();
 
-    if (quickItem) {
-      quickItem->deleteLater();
+      if (quickItem) {
+        quickItem->deleteLater();
+      }
     }
   }
 }

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/integrations_tests_data">
+        <file>test_save_file.json</file>
+    </qresource>
+</RCC>
