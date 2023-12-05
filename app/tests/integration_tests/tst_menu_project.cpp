@@ -198,7 +198,8 @@ bool MenuProjectIntegrationTest::renderProjectToFile(
   QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
 
-  return m_finishedVideoRenderingSpy->wait(60000);
+  const bool check = m_finishedVideoRenderingSpy->wait(60000);
+  return check;
 }
 
 QTEST_MAIN(MenuProjectIntegrationTest)
