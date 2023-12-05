@@ -80,6 +80,10 @@ void MenuProjectIntegrationTest::renderProject() {
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
+
+  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
+                                       SIGNAL(renderingVideoFinished()));
+
   auto render_action_item =
       m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
   QMetaObject::invokeMethod(render_action_item, "trigger");
@@ -92,9 +96,9 @@ void MenuProjectIntegrationTest::renderProject() {
   render_file_dialog->setProperty("selectedFile",
                                   QVariant(QUrl::fromLocalFile(render_file)));
   QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
-                            Qt::DirectConnection);
+                            Qt::QueuedConnection);
 
-  QVERIFY(m_finishedVideoRenderingSpy->wait(60000));
+  QVERIFY(finishedVideoRenderingSpy.wait(60000));
 
   // QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
