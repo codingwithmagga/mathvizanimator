@@ -48,6 +48,8 @@ class MenuProjectIntegrationTest : public QObject {
   SetupMain::SetupObjects m_app_objects;
   QSharedPointer<TestHelperFunctions> m_helper_functions;
 
+  QSharedPointer<QSignalSpy> m_finishedVideoRenderingSpy;
+
   const qint32 m_width = 800;
   const qint32 m_height = 600;
   const qint32 m_fps = 32;
@@ -59,6 +61,12 @@ void MenuProjectIntegrationTest::init() {
 
   m_helper_functions = QSharedPointer<TestHelperFunctions>(
       new TestHelperFunctions(m_app_objects.engine));
+
+  // On macOS the tests crashes when the QSignalSpy object is created in the fct
+  // renderProjectToFile() Maybe there is an object which goes out of scope I
+  // don't know.
+  m_finishedVideoRenderingSpy = QSharedPointer<QSignalSpy>(new QSignalSpy(
+      m_helper_functions->rootWindow(), SIGNAL(renderingVideoFinished())));
 }
 
 void MenuProjectIntegrationTest::renderProject() {
@@ -171,9 +179,6 @@ void MenuProjectIntegrationTest::setTextProperty(const QString& name,
 
 bool MenuProjectIntegrationTest::renderProjectToFile(
     const QString& render_file) {
-  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
-                                       SIGNAL(renderingVideoFinished()));
-
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
@@ -193,7 +198,7 @@ bool MenuProjectIntegrationTest::renderProjectToFile(
   QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
 
-  return finishedVideoRenderingSpy.wait(60000);
+  return m_finishedVideoRenderingSpy->wait(60000);
 }
 
 QTEST_MAIN(MenuProjectIntegrationTest)
