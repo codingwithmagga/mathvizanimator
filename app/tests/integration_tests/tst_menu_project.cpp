@@ -77,7 +77,26 @@ void MenuProjectIntegrationTest::renderProject() {
   const QString render_file =
       QDir::current().absoluteFilePath("render_project_test_video.mp4");
 
-  QVERIFY(renderProjectToFile(render_file));
+  if (QFile::exists(render_file)) {
+    QFile::remove(render_file);
+  }
+  auto render_action_item =
+      m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
+  QMetaObject::invokeMethod(render_action_item, "trigger");
+
+  auto render_file_dialog =
+      m_helper_functions->getChild<QObject*>("MVARenderFileDialog");
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return render_file_dialog->property("visible").toBool(); }));
+
+  render_file_dialog->setProperty("selectedFile",
+                                  QVariant(QUrl::fromLocalFile(render_file)));
+  QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
+                            Qt::DirectConnection);
+
+  QVERIFY(m_finishedVideoRenderingSpy->wait(60000));
+
+  // QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
 }
 

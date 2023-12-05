@@ -110,6 +110,7 @@ void TestRenderer::createImage_data() {
       << default_frame;
   QTest::newRow("mod_values") << 750 << 1250 << mod_frame;
 }
+
 void TestRenderer::createImage() {
   QFETCH(qint32, height);
   QFETCH(qint32, width);
