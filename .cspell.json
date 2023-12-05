@@ -5,6 +5,7 @@
     "**/.git/**",
     "**/.pnpm-lock.json",
     ".vscode",
+    ".clang-format",
     "megalinter",
     "package-lock.json",
     "report"
