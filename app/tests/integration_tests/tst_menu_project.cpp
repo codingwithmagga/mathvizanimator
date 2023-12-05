@@ -75,7 +75,7 @@ void MenuProjectIntegrationTest::renderProject() {
   QVERIFY(m_helper_functions->compareNumItems(2));
 
   const QString render_file =
-      TestHelperFunctions::absoluteFilePath("render_project_test_video.mp4");
+      QDir::current().absoluteFilePath("render_project_test_video.mp4");
 
   QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
