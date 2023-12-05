@@ -130,6 +130,7 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
                                                     << latexFile.fileName());
   if (!latexmk_process.waitForFinished()) {
     qDebug() << "Make failed:" << latexmk_process.errorString();
+    removeUnusedLatexFiles(hash);
     return;
   }
 
@@ -140,8 +141,10 @@ void TextItem::setLatexSource(const QString& newLatexSource) {
                                                       << "-o" << hash + ".svg");
   if (!dvisvgm_process.waitForFinished()) {
     qDebug() << "Make failed:" << dvisvgm_process.errorString();
+    removeUnusedLatexFiles(hash);
     return;
   }
+  removeUnusedLatexFiles(hash);
 
   setSvgFile(svgFile);
 
@@ -170,4 +173,12 @@ AbstractItem::EditableProperties TextItem::editableProperties() const {
   abstractList.abstract_item_properties.append("scaleText");
 
   return abstractList;
+}
+
+void TextItem::removeUnusedLatexFiles(const QString& hash) {
+  QList<QString> file_appendices{".aux", ".dvi", ".log"};
+
+  for (const auto& appendix : file_appendices) {
+    QFile::remove(m_svg_location.absoluteFilePath(hash + appendix));
+  }
 }

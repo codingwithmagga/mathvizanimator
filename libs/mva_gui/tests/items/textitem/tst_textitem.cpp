@@ -75,8 +75,8 @@ void TestTextItem::latexRenderTest() {
   const QDir appPath =
       QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
 
-  auto svg_file =
-      QFile(appPath.absoluteFilePath("0f35255d1355d2c32390101bf57ff4d0.svg"));
+  const QString hash = "0f35255d1355d2c32390101bf57ff4d0";
+  auto svg_file = QFile(appPath.absoluteFilePath(hash + ".svg"));
   if (svg_file.exists()) {
     QVERIFY(svg_file.remove());
   }
@@ -88,6 +88,9 @@ void TestTextItem::latexRenderTest() {
   QCOMPARE(m_text_item.getLatexSource(), test_latex);
   QCOMPARE(m_text_item.getSvgFile(),
            appPath.absoluteFilePath(svg_file.fileName()));
+  QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".aux")));
+  QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".dvi")));
+  QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".log")));
 }
 
 void TestTextItem::paintTest() {

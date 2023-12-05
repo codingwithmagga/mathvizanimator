@@ -64,6 +64,8 @@ class TextItem : public AbstractItem {
   void scaleTextChanged(const qreal new_scale_text);
 
  private:
+  void removeUnusedLatexFiles(const QString& hash);
+
   QFileInfo m_svg_file = QFileInfo("://templates/placeholder.svg");
   QString m_latex_source;
   qreal m_scale_text = 1.0;
