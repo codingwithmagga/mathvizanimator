@@ -91,6 +91,40 @@ ApplicationWindow {
         }
     }
 
+    FileDialog {
+        id: renderFileDialog
+        objectName: "MVARenderFileDialog"
+
+        currentFolder: StandardPaths.standardLocations(
+                           StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["MP4 (*.mp4)"]
+
+        onAccepted: main_window.render(selectedFile)
+
+        // Necessary for integration testing
+        function simulateAccepted() {
+            accepted()
+        }
+    }
+
+    FileDialog {
+        id: snapshotFileDialog
+        objectName: "MVASnapshotFileDialog"
+
+        currentFolder: StandardPaths.standardLocations(
+                           StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["PNG (*.png)"]
+
+        onAccepted: main_window.snapshot(selectedFile)
+
+        // Necessary for integration testing
+        function simulateAccepted() {
+            accepted()
+        }
+    }
+
     Popup {
         id: aboutPopup
         anchors.centerIn: parent
@@ -324,14 +358,14 @@ ApplicationWindow {
                 objectName: "MVARenderProjectAction"
 
                 text: qsTr("&Render")
-                onTriggered: main_window.render()
+                onTriggered: renderFileDialog.open()
             }
             Action {
                 id: createSnapshotAction
                 objectName: "MVACreateSnapshotAction"
 
                 text: qsTr("&Snapshot")
-                onTriggered: main_window.snapshot()
+                onTriggered: snapshotFileDialog.open()
             }
             Action {
                 id: openProjectSettingsAction

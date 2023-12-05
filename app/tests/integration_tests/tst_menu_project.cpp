@@ -66,7 +66,7 @@ void MenuProjectIntegrationTest::renderProject() {
   QVERIFY(m_helper_functions->compareNumItems(2));
 
   const QString render_file =
-      QDir::current().absoluteFilePath("render_test.mp4");
+      TestHelperFunctions::absoluteFilePath("render_test_video.mp4");
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
@@ -78,6 +78,15 @@ void MenuProjectIntegrationTest::renderProject() {
       m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
   QMetaObject::invokeMethod(render_action_item, "trigger");
 
+  auto render_file_dialog =
+      m_helper_functions->getChild<QObject*>("MVARenderFileDialog");
+  QVERIFY(render_file_dialog->property("visible").toBool());
+
+  render_file_dialog->setProperty("selectedFile",
+                                  QVariant(QUrl::fromLocalFile(render_file)));
+  QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
+                            Qt::DirectConnection);
+
   QVERIFY(finishedVideoRenderingSpy.wait(60000));
   QVERIFY(QFile::exists(render_file));
 }
@@ -88,7 +97,7 @@ void MenuProjectIntegrationTest::createSnapshot() {
   QVERIFY(m_helper_functions->compareNumItems(2));
 
   const QString snapshot_file =
-      QDir::current().absoluteFilePath("snapshot.png");
+      TestHelperFunctions::absoluteFilePath("snapshot.png");
   if (QFile::exists(snapshot_file)) {
     QFile::remove(snapshot_file);
   }
@@ -96,6 +105,15 @@ void MenuProjectIntegrationTest::createSnapshot() {
   auto snapshot_action_item =
       m_helper_functions->getChild<QObject*>("MVACreateSnapshotAction");
   QMetaObject::invokeMethod(snapshot_action_item, "trigger");
+
+  auto snapshot_file_dialog =
+      m_helper_functions->getChild<QObject*>("MVASnapshotFileDialog");
+  QVERIFY(snapshot_file_dialog->property("visible").toBool());
+
+  snapshot_file_dialog->setProperty(
+      "selectedFile", QVariant(QUrl::fromLocalFile(snapshot_file)));
+  QMetaObject::invokeMethod(snapshot_file_dialog, "simulateAccepted",
+                            Qt::DirectConnection);
 
   QVERIFY(
       QTest::qWaitFor([&]() { return QFile::exists(snapshot_file) == true; }));
@@ -120,14 +138,22 @@ void MenuProjectIntegrationTest::openProjectSettings() {
                                        SIGNAL(renderingVideoFinished()));
 
   const QString render_file =
-      QDir::current().absoluteFilePath("render_test.mp4");
+      TestHelperFunctions::absoluteFilePath("render_test_video.mp4");
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
-
   auto render_action_item =
       m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
   QMetaObject::invokeMethod(render_action_item, "trigger");
+
+  auto render_file_dialog =
+      m_helper_functions->getChild<QObject*>("MVARenderFileDialog");
+  QVERIFY(render_file_dialog->property("visible").toBool());
+
+  render_file_dialog->setProperty("selectedFile",
+                                  QVariant(QUrl::fromLocalFile(render_file)));
+  QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
+                            Qt::DirectConnection);
 
   QVERIFY(finishedVideoRenderingSpy.wait(60000));
   QVERIFY(QFile::exists(render_file));

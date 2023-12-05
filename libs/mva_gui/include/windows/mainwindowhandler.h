@@ -43,8 +43,8 @@ class MainWindowHandler : public QObject {
 
  public slots:
 
-  void snapshot();
-  void render();
+  void snapshot(const QVariant &file);
+  void render(const QVariant &file);
 
   void newProject();
   void saveProject(const QVariant &file);
@@ -70,8 +70,8 @@ class MainWindowHandler : public QObject {
   void fpsChanged(const qint32 new_fps);
   void videoLengthChanged(const qint32 new_video_length);
 
-  void snapshotRequested();
-  void renderingRequested();
+  void snapshotRequested(const QFileInfo &snapshot_file_info);
+  void renderingRequested(const QFileInfo &video_file_info);
 
   void newProjectRequested();
   void saveProjectRequested(const QFileInfo &save_file_info);

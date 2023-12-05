@@ -92,20 +92,22 @@ void MainLogic::connectEngine() {
     return;
   }
 
-  QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem *)), this,
-                   SLOT(addItem(QQuickItem *)));
+  // clang-format off
+  QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem*)), this,
+                   SLOT(addItem(QQuickItem*)));
+  // clang-format on
 }
 
-void MainLogic::createSnapshot() {
+void MainLogic::createSnapshot(const QFileInfo &snapshot_file_info) {
   const auto item_list = getAbstractItemList();
   const auto snapshot = m_renderer.createImage(item_list);
 
-  snapshot.save("snapshot.png");
+  snapshot.save(snapshot_file_info.absoluteFilePath());
 }
 
-void MainLogic::renderVideo() {
+void MainLogic::renderVideo(const QFileInfo &video_file_info) {
   const auto item_list = getAbstractItemList();
-  m_renderer.render(item_list);
+  m_renderer.render(item_list, video_file_info);
 }
 
 void MainLogic::saveProject(const QFileInfo &save_file_info) {
