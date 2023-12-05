@@ -43,7 +43,7 @@ class MenuProjectIntegrationTest : public QObject {
  private:
   void setProjectSettings();
   void setTextProperty(const QString& name, const qint32 value);
-  void renderProjectToFile(const QString& render_file);
+  bool renderProjectToFile(const QString& render_file);
 
   SetupMain::SetupObjects m_app_objects;
   QSharedPointer<TestHelperFunctions> m_helper_functions;
@@ -66,14 +66,10 @@ void MenuProjectIntegrationTest::renderProject() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
   QVERIFY(m_helper_functions->compareNumItems(2));
 
-  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
-                                       SIGNAL(renderingVideoFinished()));
-
   const QString render_file =
-      TestHelperFunctions::absoluteFilePath("render_test_video.mp4");
-  renderProjectToFile(render_file);
+      TestHelperFunctions::absoluteFilePath("render_project_test_video.mp4");
 
-  QVERIFY(finishedVideoRenderingSpy.wait(60000));
+  QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
 }
 
@@ -118,16 +114,11 @@ void MenuProjectIntegrationTest::openProjectSettings() {
       m_helper_functions->getChild<QObject*>("MVAProjectSettingsPopup");
   QVERIFY(project_settings_popup_object->property("visible").toBool());
 
+  const QString render_file = TestHelperFunctions::absoluteFilePath(
+      "render_project_settings_test_video.mp4");
+
   setProjectSettings();
-
-  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
-                                       SIGNAL(renderingVideoFinished()));
-
-  const QString render_file =
-      TestHelperFunctions::absoluteFilePath("render_test_video.mp4");
-  renderProjectToFile(render_file);
-
-  QVERIFY(finishedVideoRenderingSpy.wait(60000));
+  QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
 
   QMediaPlayer media_player;
@@ -178,8 +169,11 @@ void MenuProjectIntegrationTest::setTextProperty(const QString& name,
   object->setProperty("text", QVariant(value));
 }
 
-void MenuProjectIntegrationTest::renderProjectToFile(
+bool MenuProjectIntegrationTest::renderProjectToFile(
     const QString& render_file) {
+  QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
+                                       SIGNAL(renderingVideoFinished()));
+
   if (QFile::exists(render_file)) {
     QFile::remove(render_file);
   }
@@ -189,12 +183,17 @@ void MenuProjectIntegrationTest::renderProjectToFile(
 
   auto render_file_dialog =
       m_helper_functions->getChild<QObject*>("MVARenderFileDialog");
-  QVERIFY(render_file_dialog->property("visible").toBool());
+  if (!QTest::qWaitFor(
+          [&]() { return render_file_dialog->property("visible").toBool(); })) {
+    return false;
+  }
 
   render_file_dialog->setProperty("selectedFile",
                                   QVariant(QUrl::fromLocalFile(render_file)));
   QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
                             Qt::DirectConnection);
+
+  return finishedVideoRenderingSpy.wait(60000);
 }
 
 QTEST_MAIN(MenuProjectIntegrationTest)
