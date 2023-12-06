@@ -1,6 +1,6 @@
 ---
 name: Build
-run-name: 'Deploy package by @${{ github.actor }}'
+run-name: 'Pull request by @${{ github.actor }}'
 "on":
   workflow_dispatch:
   pull_request:

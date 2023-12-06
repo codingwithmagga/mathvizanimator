@@ -26,6 +26,9 @@ Renderer::Renderer(QObject* parent) : QObject{parent} {}
 
 void Renderer::render(const QList<AbstractItem*>& item_list,
                       const QFileInfo& video_file) {
+  qCInfo(renderer) << "Rendering process requested to file "
+                   << video_file.absoluteFilePath();
+
   QString program = "ffmpeg";
   QStringList arguments;
   arguments << "-y"
@@ -66,6 +69,8 @@ void Renderer::render(const QList<AbstractItem*>& item_list,
 }
 
 void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
+  qCInfo(renderer) << "Rendering process started";
+
   const qint32 num_frames =
       m_project_settings.fps * m_project_settings.video_length;
 
