@@ -59,7 +59,7 @@ target_link_libraries(
 )
 
 # Copy qml test files to build folder. Using configure_file(...) because it creates a dependency
-# on the source file, so CMake will be re-run if it changes. This is a nice behaviour, since a change
+# on the source file, so CMake will be re-run if it changes. This is a nice behavior, since a change
 # in the qml test file is not detected by the compiler.
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
