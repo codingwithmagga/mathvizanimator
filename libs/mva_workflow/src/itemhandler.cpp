@@ -258,7 +258,7 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   }
 
   // Update item
-  auto item = m_item_model.itemFromIndex(m_item_selection_model.currentIndex());
+  auto item = m_item_model.item(m_item_selection_model.currentIndex().row());
   auto quick_item = item->data(ItemRoles::QUICKITEM).value<QQuickItem*>();
   auto itemExtract = extractAbstractItem(
       item->data(ItemRoles::QUICKITEM).value<QQuickItem*>());

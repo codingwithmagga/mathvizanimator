@@ -41,7 +41,7 @@ class MenuProjectIntegrationTest : public QObject {
   void cleanup();
 
  private:
-  void setProjectSettings();
+  bool setProjectSettings();
   void setTextProperty(const QString& name, const qint32 value);
   bool renderProjectToFile(const QString& render_file);
 
@@ -135,14 +135,11 @@ void MenuProjectIntegrationTest::openProjectSettings() {
       m_helper_functions->getChild<QObject*>("MVAOpenProjectSettingsAction");
   QMetaObject::invokeMethod(open_project_settings_action_item, "trigger");
 
-  auto project_settings_popup_object =
-      m_helper_functions->getChild<QObject*>("MVAProjectSettingsPopup");
-  QVERIFY(project_settings_popup_object->property("visible").toBool());
+  QVERIFY(setProjectSettings());
 
   const QString render_file = TestHelperFunctions::absoluteFilePath(
       "render_project_settings_test_video.mp4");
 
-  setProjectSettings();
   QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
 
@@ -177,15 +174,28 @@ void MenuProjectIntegrationTest::cleanup() {
   m_app_objects.mainlogic.clear();
 }
 
-void MenuProjectIntegrationTest::setProjectSettings() {
+bool MenuProjectIntegrationTest::setProjectSettings() {
+  auto project_settings_popup_object =
+      m_helper_functions->getChild<QObject*>("MVAProjectSettingsDialog");
+  if (!QTest::qWaitFor([&]() {
+        return project_settings_popup_object->property("visible").toBool();
+      })) {
+    return false;
+  }
+
   setTextProperty("MVAWidthInputField", m_width);
   setTextProperty("MVAHeightInputField", m_height);
   setTextProperty("MVAFpsInputField", m_fps);
   setTextProperty("MVAVideoLengthInputField", m_video_length);
 
-  auto save_button =
-      m_helper_functions->getChild<QQuickItem*>("MVASaveProjectSettingsButton");
-  m_helper_functions->clickItem(save_button);
+  if (!QMetaObject::invokeMethod(project_settings_popup_object,
+                                 "simulateAccepted", Qt::DirectConnection)) {
+    return false;
+  }
+
+  return QTest::qWaitFor([&]() {
+    return !project_settings_popup_object->property("visible").toBool();
+  });
 }
 
 void MenuProjectIntegrationTest::setTextProperty(const QString& name,
