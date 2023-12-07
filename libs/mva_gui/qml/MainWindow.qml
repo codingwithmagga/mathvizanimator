@@ -100,22 +100,75 @@ ApplicationWindow {
 
         width: 500
 
+        background: Rectangle {
+            radius: 10
+            color: palette.window
+
+            border.color: palette.shadow
+            border.width: 2
+        }
+
         ColumnLayout {
             anchors.fill: parent
-            spacing: 20
+            spacing: 0
 
-            Label {
-                text: qsTr("MathVizAnimator developed by CodingWithMagga. \ngithub: todo \nWebsite (german): todo \nYouTube (german): todo")
-                Layout.alignment: Qt.AlignHCenter
+            Rectangle {
+                radius: 10
+                height: 60
+                width: parent.width
 
-                wrapMode: Text.WordWrap
+                border.color: palette.shadow
+                border.width: 2
+
+                color: palette.dark
+
+                Label {
+                    anchors.centerIn: parent
+                    text: "MathVizAnimator 0.0.1"
+
+                    font.pointSize: 22
+                }
             }
 
-            Button {
-                text: qsTr("Close")
+            Item {
+                height: 25
+            }
+
+            ColumnLayout {
+                spacing: 25
+                width: parent.width
                 Layout.alignment: Qt.AlignHCenter
 
-                onClicked: aboutPopup.close()
+                Label {
+                    text: qsTr("MathVizAnimator developed by CodingWithMagga. \nThe links below may be interesting for you.")
+                    Layout.alignment: Qt.AlignHCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    width: parent.width
+
+                    wrapMode: Text.WordWrap
+                }
+
+                Label {
+                    text: qsTr('<a href="https://github.com/codingwithmagga/mathvizanimator">github</a> (english) <br>\
+<a href="https://codingwithmagga.com">Website</a> (german) <br>\
+<a href="https://www.youtube.com/channel/UCjlzef-PolOD__Q1VMWznqw">YouTube</a> (german) ')
+
+                    Layout.alignment: Qt.AlignHCenter
+
+                    linkColor: palette.windowText
+
+                    onLinkActivated: function (link) {
+                        Qt.openUrlExternally(link)
+                    }
+                }
+
+                Button {
+                    text: qsTr("Close")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    onClicked: aboutPopup.close()
+                }
             }
         }
     }
