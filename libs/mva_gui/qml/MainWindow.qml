@@ -18,6 +18,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
@@ -34,6 +35,8 @@ ApplicationWindow {
     title: qsTr("mathvizanimator")
 
     font.pointSize: 14
+
+    Material.theme: Material.System
 
     minimumHeight: 500
     minimumWidth: 1200
@@ -91,97 +94,53 @@ ApplicationWindow {
         }
     }
 
-    Popup {
-        id: aboutPopup
+    Dialog {
+        id: aboutDialog
         anchors.centerIn: parent
-        modal: true
-        focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
-        width: 500
+        standardButtons: Dialog.Ok
 
-        background: Rectangle {
-            radius: 10
-            color: palette.window
-
-            border.color: palette.shadow
-            border.width: 2
-        }
+        title: qsTr("MathVizAnimator 0.0.1")
 
         ColumnLayout {
-            anchors.fill: parent
-            spacing: 0
+            spacing: 25
+            width: parent.width
+            Layout.alignment: Qt.AlignHCenter
 
-            Rectangle {
-                radius: 10
-                height: 60
-                width: parent.width
-
-                border.color: palette.shadow
-                border.width: 2
-
-                color: palette.dark
-
-                Label {
-                    anchors.centerIn: parent
-                    text: "MathVizAnimator 0.0.1"
-
-                    font.pointSize: 22
-                }
-            }
-
-            Item {
-                height: 25
-            }
-
-            ColumnLayout {
-                spacing: 25
-                width: parent.width
+            Label {
+                text: qsTr("MathVizAnimator developed by CodingWithMagga. \nThe links below may be interesting for you.")
                 Layout.alignment: Qt.AlignHCenter
+                horizontalAlignment: Text.AlignHCenter
 
-                Label {
-                    text: qsTr("MathVizAnimator developed by CodingWithMagga. \nThe links below may be interesting for you.")
-                    Layout.alignment: Qt.AlignHCenter
-                    horizontalAlignment: Text.AlignHCenter
+                width: parent.width
 
-                    width: parent.width
+                wrapMode: Text.WordWrap
+            }
 
-                    wrapMode: Text.WordWrap
-                }
-
-                Label {
-                    text: qsTr('<a href="https://github.com/codingwithmagga/mathvizanimator">github</a> (english) <br>\
+            Label {
+                text: qsTr('<a href="https://github.com/codingwithmagga/mathvizanimator">github</a> (english) <br>\
 <a href="https://codingwithmagga.com">Website</a> (german) <br>\
 <a href="https://www.youtube.com/channel/UCjlzef-PolOD__Q1VMWznqw">YouTube</a> (german) ')
 
-                    Layout.alignment: Qt.AlignHCenter
+                Layout.alignment: Qt.AlignHCenter
 
-                    linkColor: palette.windowText
-
-                    onLinkActivated: function (link) {
-                        Qt.openUrlExternally(link)
-                    }
-                }
-
-                Button {
-                    text: qsTr("Close")
-                    Layout.alignment: Qt.AlignHCenter
-
-                    onClicked: aboutPopup.close()
+                onLinkActivated: function (link) {
+                    Qt.openUrlExternally(link)
                 }
             }
         }
     }
 
-    Popup {
-        id: projectSettingsPopup
+    Dialog {
+        id: projectSettingsDialog
         objectName: "MVAProjectSettingsPopup"
 
         anchors.centerIn: parent
-        modal: true
-        focus: true
-        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         padding: 12
+
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        title: qsTr("Project Settings")
 
         property list<int> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text, videoLengthInputField.text]
 
@@ -244,7 +203,7 @@ ApplicationWindow {
                 }
 
                 Label {
-                    text: qsTr("fps:")
+                    text: qsTr("Frames per Second (fps):")
 
                     Layout.alignment: Qt.AlignRight
 
@@ -287,36 +246,11 @@ ApplicationWindow {
                     }
                 }
             }
-
-            Row {
-                spacing: 10
-
-                Layout.alignment: Qt.AlignRight
-
-                Button {
-                    id: saveProjectSettingsButton
-                    objectName: "MVASaveProjectSettingsButton"
-
-                    text: qsTr("Save")
-                    Layout.alignment: Qt.AlignHCenter
-
-                    // TODO(codingwithmagga): Validate data before sending, validators themselves are not enough
-                    onClicked: {
-                        main_window.updateProjectSettings(
-                                    projectSettingsPopup.projectData)
-                        projectSettingsPopup.close()
-                    }
-                }
-                Button {
-                    id: cancelProjectSettingsButton
-                    objectName: "MVACancelProjectSettingsButton"
-
-                    text: qsTr("Cancel")
-                    Layout.alignment: Qt.AlignHCenter
-
-                    onClicked: projectSettingsPopup.close()
-                }
-            }
+        }
+        // TODO(codingwithmagga): Validate data before sending, validators themselves are not enough
+        onAccepted: {
+            main_window.updateProjectSettings(projectSettingsDialog.projectData)
+            projectSettingsDialog.close()
         }
     }
 
@@ -325,10 +259,6 @@ ApplicationWindow {
 
         anchors.leftMargin: 0
         anchors.rightMargin: 0
-
-        background: Rectangle {
-            color: palette.dark
-        }
 
         Menu {
             id: file_menu
@@ -391,7 +321,7 @@ ApplicationWindow {
                 objectName: "MVAOpenProjectSettingsAction"
 
                 text: qsTr("Pro&ject Settings")
-                onTriggered: projectSettingsPopup.open()
+                onTriggered: projectSettingsDialog.open()
             }
             Action {
                 id: openSVGFolderAction
@@ -406,7 +336,7 @@ ApplicationWindow {
             Action {
                 text: qsTr("&About")
 
-                onTriggered: aboutPopup.open()
+                onTriggered: aboutDialog.open()
             }
         }
     }
@@ -447,7 +377,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.margins: 20
 
-            color: palette.dark
+            color: Material.color(Material.Grey)
 
             // TODO(codingwithmagga): Put this in a reusable component
             Item {
@@ -535,7 +465,7 @@ ApplicationWindow {
         Rectangle {
             id: mObjectsListViewRect
 
-            color: palette.dark
+            color: Material.color(Material.Grey)
             Layout.minimumWidth: 150
             Layout.preferredWidth: 300
             Layout.maximumWidth: 400
