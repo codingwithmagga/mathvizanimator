@@ -133,7 +133,7 @@ ApplicationWindow {
 
     Dialog {
         id: projectSettingsDialog
-        objectName: "MVAProjectSettingsPopup"
+        objectName: "MVAProjectSettingsDialog"
 
         anchors.centerIn: parent
         padding: 12
@@ -143,6 +143,12 @@ ApplicationWindow {
         title: qsTr("Project Settings")
 
         property list<int> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text, videoLengthInputField.text]
+
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
+        function simulateAccepted() {
+            accepted()
+            close()
+        }
 
         ColumnLayout {
             id: mainLayout
@@ -584,26 +590,31 @@ ApplicationWindow {
                             model: property_model
                         }
 
-                        delegate: Label {
-                            required property bool current
-
+                        delegate: Rectangle {
                             id: mPropertyTableDelegate
 
-                            text: display
-                            padding: 10
+                            required property bool editing
 
-                            color: row === mPropertyTable.currentRow ? palette.highlightedText : palette.text
-                            background: Rectangle {
+                            implicitWidth: 100
+                            implicitHeight: 50
+
+                            color: row === mPropertyTable.currentRow ? palette.highlight : (mPropertyTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+
+                            Label {
                                 anchors.fill: parent
+                                anchors.margins: 5
+                                verticalAlignment: TextInput.AlignVCenter
 
-                                color: row === mPropertyTable.currentRow ? palette.highlight : (mPropertyTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+                                text: display
+                                visible: !editing
+
+                                color: row === mPropertyTable.currentRow ? palette.highlightedText : palette.text
                             }
 
                             TableView.editDelegate: TextField {
                                 anchors.fill: parent
+
                                 text: display
-                                horizontalAlignment: TextInput.AlignHCenter
-                                verticalAlignment: TextInput.AlignVCenter
                                 Component.onCompleted: selectAll()
 
                                 TableView.onCommit: {
