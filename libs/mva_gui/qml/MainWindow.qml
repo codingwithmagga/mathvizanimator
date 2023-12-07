@@ -67,7 +67,7 @@ ApplicationWindow {
             main_window.loadProject(selectedFile)
         }
 
-        // Necessary for integration testing
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
             accepted()
             close()
@@ -85,7 +85,7 @@ ApplicationWindow {
 
         onAccepted: main_window.saveProject(selectedFile)
 
-        // Necessary for integration testing
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
             accepted()
             close()
@@ -103,7 +103,7 @@ ApplicationWindow {
 
         onAccepted: main_window.render(selectedFile)
 
-        // Necessary for integration testing
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
             accepted()
             close()
@@ -121,10 +121,10 @@ ApplicationWindow {
 
         onAccepted: main_window.snapshot(selectedFile)
 
-        // Necessary for integration testing
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
             accepted()
-            close() //TODO add comment
+            close()
         }
     }
 
