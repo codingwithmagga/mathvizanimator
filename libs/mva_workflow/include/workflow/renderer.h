@@ -49,14 +49,15 @@ class Renderer : public QObject {
   QImage createImage(const QList<AbstractItem*>& item_list) const;
 
  public slots:
-  void render(const QList<AbstractItem*>& item_list);
+  void render(const QList<AbstractItem*>& item_list,
+              const QFileInfo& video_file);
 
  signals:
   void finishedRendering(const QFileInfo& video_file);
 
  private slots:
   void renderingProcessStarted(const QList<AbstractItem*>& item_list);
-  void renderingProcessFinished(qint32 exitCode,
+  void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode,
                                 QProcess::ExitStatus exitStatus);
 
  private:

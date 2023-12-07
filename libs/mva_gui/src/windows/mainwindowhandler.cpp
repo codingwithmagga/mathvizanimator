@@ -24,9 +24,15 @@
 
 MainWindowHandler::MainWindowHandler(QObject *parent) : QObject(parent) {}
 
-void MainWindowHandler::snapshot() { emit snapshotRequested(); }
+void MainWindowHandler::snapshot(const QVariant &file) {
+  QFileInfo snapshot_file_info(file.toUrl().toLocalFile());
+  emit snapshotRequested(snapshot_file_info);
+}
 
-void MainWindowHandler::render() { emit renderingRequested(); }
+void MainWindowHandler::render(const QVariant &file) {
+  QFileInfo video_file_info(file.toUrl().toLocalFile());
+  emit renderingRequested(video_file_info);
+}
 
 void MainWindowHandler::saveProject(const QVariant &file) {
   QFileInfo save_file_info(file.toUrl().toLocalFile());

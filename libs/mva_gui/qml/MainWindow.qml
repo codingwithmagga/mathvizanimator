@@ -67,7 +67,7 @@ ApplicationWindow {
             main_window.loadProject(selectedFile)
         }
 
-        // Necessary for integration testing
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
             accepted()
             close()
@@ -85,9 +85,46 @@ ApplicationWindow {
 
         onAccepted: main_window.saveProject(selectedFile)
 
-        // Necessary for integration testing
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
             accepted()
+            close()
+        }
+    }
+
+    FileDialog {
+        id: renderFileDialog
+        objectName: "MVARenderFileDialog"
+
+        currentFolder: StandardPaths.standardLocations(
+                           StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["MP4 (*.mp4)"]
+
+        onAccepted: main_window.render(selectedFile)
+
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
+        function simulateAccepted() {
+            accepted()
+            close()
+        }
+    }
+
+    FileDialog {
+        id: snapshotFileDialog
+        objectName: "MVASnapshotFileDialog"
+
+        currentFolder: StandardPaths.standardLocations(
+                           StandardPaths.HomeLocation)[0]
+        fileMode: FileDialog.SaveFile
+        nameFilters: ["PNG (*.png)"]
+
+        onAccepted: main_window.snapshot(selectedFile)
+
+        // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
+        function simulateAccepted() {
+            accepted()
+            close()
         }
     }
 
@@ -377,14 +414,14 @@ ApplicationWindow {
                 objectName: "MVARenderProjectAction"
 
                 text: qsTr("&Render")
-                onTriggered: main_window.render()
+                onTriggered: renderFileDialog.open()
             }
             Action {
                 id: createSnapshotAction
                 objectName: "MVACreateSnapshotAction"
 
                 text: qsTr("&Snapshot")
-                onTriggered: main_window.snapshot()
+                onTriggered: snapshotFileDialog.open()
             }
             Action {
                 id: openProjectSettingsAction

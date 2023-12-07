@@ -86,7 +86,15 @@ void TestMainWindowHandler::snapshotRequested() {
   QSignalSpy snapshotRequestedSpy(&main_window_handler,
                                   &MainWindowHandler::snapshotRequested);
 
-  main_window_handler.snapshot();
+  QUrl test_snapshot_file_url("file://some_path/video_file.mp4");
+  QFileInfo test_snapshot_file_info(test_snapshot_file_url.toLocalFile());
+  connect(&main_window_handler, &MainWindowHandler::renderingRequested, this,
+          [&test_snapshot_file_info](const QFileInfo& new_snapshot_file_info) {
+            QCOMPARE(test_snapshot_file_info.absoluteFilePath(),
+                     new_snapshot_file_info.absoluteFilePath());
+          });
+
+  main_window_handler.snapshot(QVariant(test_snapshot_file_url));
 
   QCOMPARE(snapshotRequestedSpy.count(), 1);
 }
@@ -96,7 +104,15 @@ void TestMainWindowHandler::renderingRequested() {
   QSignalSpy renderRequestedSpy(&main_window_handler,
                                 &MainWindowHandler::renderingRequested);
 
-  main_window_handler.render();
+  QUrl test_video_file_url("file://some_path/video_file.mp4");
+  QFileInfo test_video_file_info(test_video_file_url.toLocalFile());
+  connect(&main_window_handler, &MainWindowHandler::renderingRequested, this,
+          [&test_video_file_info](const QFileInfo& new_video_file_info) {
+            QCOMPARE(test_video_file_info.absoluteFilePath(),
+                     new_video_file_info.absoluteFilePath());
+          });
+
+  main_window_handler.render(QVariant(test_video_file_url));
 
   QCOMPARE(renderRequestedSpy.count(), 1);
 }
