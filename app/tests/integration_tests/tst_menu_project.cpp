@@ -74,8 +74,6 @@ void MenuProjectIntegrationTest::renderProject() {
   m_helper_functions->dragAndDropCurrentItem(QPoint(300, 180));
   QVERIFY(m_helper_functions->compareNumItems(2));
 
-  QSKIP("Skip this one for testing,");
-
   const QString render_file =
       QDir::current().absoluteFilePath("render_project_test_video.mp4");
 

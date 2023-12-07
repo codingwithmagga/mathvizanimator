@@ -88,6 +88,7 @@ ApplicationWindow {
         // Necessary for integration testing
         function simulateAccepted() {
             accepted()
+            close()
         }
     }
 
@@ -105,6 +106,7 @@ ApplicationWindow {
         // Necessary for integration testing
         function simulateAccepted() {
             accepted()
+            close()
         }
     }
 
@@ -122,6 +124,7 @@ ApplicationWindow {
         // Necessary for integration testing
         function simulateAccepted() {
             accepted()
+            close() //TODO add comment
         }
     }
 

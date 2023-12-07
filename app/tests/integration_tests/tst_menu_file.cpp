@@ -83,10 +83,10 @@ void MenuFileIntegrationTest::loadProject() {
   QFile test_save_file(":/integrations_tests_data/test_save_file.json");
   QVERIFY(test_save_file.exists());
 
-  const QString test_save_file_absolute_path =
-      TestHelperFunctions::absoluteFilePath("test_save_file.json");
-  test_save_file.copy(test_save_file_absolute_path);
-  QVERIFY(QFile::exists(test_save_file_absolute_path));
+  const QString test_load_file_absolute_path =
+      TestHelperFunctions::absoluteFilePath("test_load_file.json");
+  QVERIFY(test_save_file.copy(test_load_file_absolute_path));
+  QVERIFY(QFile::exists(test_load_file_absolute_path));
 
   auto load_action_item =
       m_helper_functions->getChild<QObject*>("MVALoadProjectAction");
@@ -99,13 +99,14 @@ void MenuFileIntegrationTest::loadProject() {
 
   load_file_dialog->setProperty(
       "selectedFile",
-      QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
+      QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
   QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
                             Qt::QueuedConnection);
 
   QVERIFY(QTest::qWaitFor(
       [&]() { return !load_file_dialog->property("visible").toBool(); }));
-  QVERIFY(m_helper_functions->compareNumItems(3));
+  QVERIFY(QTest::qWaitFor(
+      [&]() { return m_helper_functions->compareNumItems(3); }));
 }
 
 void MenuFileIntegrationTest::saveAsProject() {
