@@ -58,11 +58,9 @@ target_link_libraries(
     PRIVATE mva::guiplugin
 )
 
-# Copy qml testfiles for qml_item_tests target to binary dir
-file(COPY
-        qml/tst_circleitem.qml
-        qml/tst_rectangleitem.qml
-        qml/tst_textitem.qml
-    DESTINATION
-        ${CMAKE_CURRENT_BINARY_DIR}
-)
+# Copy qml test files to build folder. Using configure_file(...) because it creates a dependency
+# on the source file, so CMake will be re-run if it changes. This is a nice behaviour, since a change
+# in the qml test file is not detected by the compiler.
+configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
+configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
+configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
