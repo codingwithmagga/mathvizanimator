@@ -58,8 +58,11 @@ target_link_libraries(
     PRIVATE mva::guiplugin
 )
 
-# Copy qml test files to build folder. I'm not sure if this is the right way to do it.
-# TODO(codingwithmagga): Maybe use file(COPY ...) for this task or save it in a resource file
-configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
-configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
-configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
+# Copy qml testfiles for qml_item_tests target to binary dir
+file(COPY
+        qml/tst_circleitem.qml
+        qml/tst_rectangleitem.qml
+        qml/tst_textitem.qml
+    DESTINATION
+        ${CMAKE_CURRENT_BINARY_DIR}
+)
