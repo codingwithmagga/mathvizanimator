@@ -58,8 +58,9 @@ target_link_libraries(
     PRIVATE mva::guiplugin
 )
 
-# Copy qml test files to build folder. I'm not sure if this is the right way to do it.
-# TODO(codingwithmagga): Maybe use file(COPY ...) for this task or save it in a resource file
+# Copy qml test files to build folder. Using configure_file(...) because it creates a dependency
+# on the source file, so CMake will be re-run if it changes. This is a nice behavior, since a change
+# in the qml test file is not detected by the compiler.
 configure_file(qml/tst_circleitem.qml tst_circleitem.qml COPYONLY)
 configure_file(qml/tst_rectangleitem.qml tst_rectangleitem.qml COPYONLY)
 configure_file(qml/tst_textitem.qml tst_textitem.qml COPYONLY)
