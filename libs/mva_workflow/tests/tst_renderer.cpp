@@ -110,6 +110,7 @@ void TestRenderer::createImage_data() {
       << default_frame;
   QTest::newRow("mod_values") << 750 << 1250 << mod_frame;
 }
+
 void TestRenderer::createImage() {
   QFETCH(qint32, height);
   QFETCH(qint32, width);
@@ -132,7 +133,11 @@ void TestRenderer::render_data() {
   QTest::addColumn<qint32>("width");
   QTest::addColumn<qint32>("fps");
   QTest::addColumn<qint32>("video_length");
+  QTest::addColumn<QFileInfo>("video_file");
   QTest::addColumn<QImage>("test_frame_image");
+
+  QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
+  QFileInfo temp_dir_video(QDir::temp(), "test_video_temp.mp4");
 
   QImage default_frame("://test_images/test_frame_default.png");
   QImage mod_frame("://test_images/test_frame_mod.png");
@@ -142,8 +147,9 @@ void TestRenderer::render_data() {
   QTest::newRow("default_setup")
       << defaultProjectSettings.height << defaultProjectSettings.width
       << defaultProjectSettings.fps << defaultProjectSettings.video_length
-      << default_frame;
-  QTest::newRow("mod_values") << 750 << 1250 << 32 << 10 << mod_frame;
+      << home_dir_video << default_frame;
+  QTest::newRow("mod_values")
+      << 750 << 1250 << 32 << 10 << temp_dir_video << mod_frame;
 }
 
 void TestRenderer::render() {
@@ -151,6 +157,7 @@ void TestRenderer::render() {
   QFETCH(qint32, width);
   QFETCH(qint32, fps);
   QFETCH(qint32, video_length);
+  QFETCH(QFileInfo, video_file);
   QFETCH(QImage, test_frame_image);
 
   Renderer renderer;
@@ -197,8 +204,12 @@ void TestRenderer::render() {
   project_settings.fps = fps;
   project_settings.video_length = video_length;
 
+  if (QFile::exists(video_file.absoluteFilePath())) {
+    QFile(video_file.absoluteFilePath()).remove();
+  }
+
   renderer.setProjectSettings(project_settings);
-  renderer.render(m_item_list);
+  renderer.render(m_item_list, video_file);
 
   QVERIFY(spy.wait(60000));
 }
@@ -207,8 +218,9 @@ void TestRenderer::multipleRendering() {
   Renderer renderer;
 
   QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+  QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
 
-  renderer.render(m_item_list);
+  renderer.render(m_item_list, home_dir_video);
   QVERIFY(spy.wait(60000));
 
   auto parent_item = new QQuickItem();
@@ -242,7 +254,7 @@ void TestRenderer::multipleRendering() {
                  test_frame_image_multi);
       });
 
-  renderer.render(m_item_list);
+  renderer.render(m_item_list, home_dir_video);
   QVERIFY(spy.wait(60000));
 }
 

@@ -24,7 +24,11 @@
 
 Renderer::Renderer(QObject* parent) : QObject{parent} {}
 
-void Renderer::render(const QList<AbstractItem*>& item_list) {
+void Renderer::render(const QList<AbstractItem*>& item_list,
+                      const QFileInfo& video_file) {
+  qCInfo(renderer) << "Rendering process requested to file "
+                   << video_file.absoluteFilePath();
+
   QString program = "ffmpeg";
   QStringList arguments;
   arguments << "-y"
@@ -39,8 +43,7 @@ void Renderer::render(const QList<AbstractItem*>& item_list) {
             << "-"
             << "-an"
             << "-vcodec"
-            << "libx264"
-            << "render_test.mp4";
+            << "libx264" << video_file.absoluteFilePath();
 
   auto render_process =
       QSharedPointer<QProcess>(new RenderProcess(m_next_process_id, this));
@@ -50,7 +53,9 @@ void Renderer::render(const QList<AbstractItem*>& item_list) {
   connect(render_process.data(), &QProcess::started, this,
           [item_list, this] { renderingProcessStarted(item_list); });
   connect(render_process.data(), &QProcess::finished, this,
-          &Renderer::renderingProcessFinished);
+          [video_file, this](qint32 exitCode, QProcess::ExitStatus exitStatus) {
+            renderingProcessFinished(video_file, exitCode, exitStatus);
+          });
   connect(render_process.data(), &QProcess::readyRead, this,
           [this] {
             qCInfo(renderer)
@@ -64,6 +69,8 @@ void Renderer::render(const QList<AbstractItem*>& item_list) {
 }
 
 void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
+  qCInfo(renderer) << "Rendering process started";
+
   const qint32 num_frames =
       m_project_settings.fps * m_project_settings.video_length;
 
@@ -78,12 +85,18 @@ void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
   qobject_cast<QProcess*>(sender())->closeWriteChannel();
 }
 
-void Renderer::renderingProcessFinished(qint32 exitCode,
+void Renderer::renderingProcessFinished(const QFileInfo& video_file,
+                                        qint32 exitCode,
                                         QProcess::ExitStatus exitStatus) {
   Q_UNUSED(exitCode)
 
-  qCDebug(renderer) << "Process finished with status: " << exitStatus;
-  emit finishedRendering(QFileInfo("render_test.mp4"));
+  qCInfo(renderer) << "Process finished with status: " << exitStatus;
+  if (exitStatus == QProcess::NormalExit) {
+    qCInfo(renderer) << "Video file rendered to "
+                     << video_file.absoluteFilePath();
+  }
+
+  emit finishedRendering(video_file);
 
   m_render_process_map.remove(qobject_cast<RenderProcess*>(sender())->id());
 }
