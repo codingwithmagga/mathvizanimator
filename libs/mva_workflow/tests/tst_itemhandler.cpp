@@ -55,6 +55,8 @@ class TestItemHandler : public QObject {
   QList<QQuickItem *> prepareItemHandler(ItemHandler *itemhandler,
                                          QList<QQmlComponent *> qml_components);
 
+  QQuickItem *extractQuickItemFromStandardItem(ItemModelItem *item) const;
+
   QQmlEngine m_engine;
   QQmlComponent m_circle_component = QQmlComponent(
       &m_engine,
@@ -159,28 +161,19 @@ void TestItemHandler::checkItemData() {
   itemhandler.addItem(rect);
 
   const auto model = itemhandler.model();
-  const auto circle_item_1 = model->item(0);
+  const auto circle_item_1 = dynamic_cast<ItemModelItem *>(model->item(0));
   const auto circle_item_2 = model->item(0, 1);
-  const auto rect_item_1 = model->item(1);
+  const auto rect_item_1 = dynamic_cast<ItemModelItem *>(model->item(1));
   const auto rect_item_2 = model->item(1, 1);
 
   QCOMPARE(circle_item_1->data(Qt::DisplayRole), circle_item->name());
-  QCOMPARE(circle_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem *>(),
-           circle);
-  QCOMPARE(circle_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem *>()
-               ->height(),
+  QCOMPARE(extractQuickItemFromStandardItem(circle_item_1), circle);
+  QCOMPARE(extractQuickItemFromStandardItem(circle_item_1)->height(),
            circleHeight);
   QCOMPARE(circle_item_2->data(Qt::DisplayRole), "CircleItem");
   QCOMPARE(rect_item_1->data(Qt::DisplayRole), rect_item->name());
-  QCOMPARE(rect_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem *>(),
-           rect);
-  QCOMPARE(rect_item_1->data(ItemHandler::ItemRoles::QUICKITEM)
-               .value<QQuickItem *>()
-               ->height(),
-           rectHeight);
+  QCOMPARE(extractQuickItemFromStandardItem(rect_item_1), rect);
+  QCOMPARE(extractQuickItemFromStandardItem(rect_item_1)->height(), rectHeight);
   QCOMPARE(rect_item_2->data(Qt::DisplayRole), "RectangleItem");
 }
 
@@ -333,7 +326,7 @@ void TestItemHandler::getItems() {
       &itemhandler,
       QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
 
-  const auto item_list = itemhandler.items();
+  const auto item_list = itemhandler.quickItems();
 
   QVERIFY(item_list.contains(items[0]));
   QVERIFY(item_list.contains(items[1]));
@@ -360,7 +353,7 @@ void TestItemHandler::removeCurrentItem() {
 
   itemhandler.removeCurrentItem();
 
-  const auto itemhandler_items = itemhandler.items();
+  const auto itemhandler_items = itemhandler.quickItems();
   QCOMPARE(itemhandler_items.count(), 1);
   QCOMPARE(itemhandler_items[0], items[1]);
 }
@@ -410,6 +403,11 @@ QList<QQuickItem *> TestItemHandler::prepareItemHandler(
   }
 
   return items;
+}
+
+QQuickItem *TestItemHandler::extractQuickItemFromStandardItem(
+    ItemModelItem *item) const {
+  return item->itemObserver()->item();
 }
 
 QTEST_MAIN(TestItemHandler)

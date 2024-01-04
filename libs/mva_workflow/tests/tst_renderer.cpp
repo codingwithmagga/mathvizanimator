@@ -21,6 +21,8 @@
 #include <QTest>
 
 #include "circleitem.h"
+#include "fadein.h"
+#include "fadeout.h"
 #include "rectangle.h"
 #include "renderer.h"
 #include "textitem.h"
@@ -38,12 +40,15 @@ class TestRenderer : public QObject {
 
   void multipleRendering();
 
+  void renderWithAnimation();
+
   void setIndividualProjectSettings();
 
   void cleanupTestCase();
 
  private:
-  QList<AbstractItem*> m_item_list;
+  QList<QQuickItem*> m_quickitem_list;
+  QList<QSharedPointer<ItemObserver>> m_item_list;
 };
 
 void TestRenderer::initTestCase() {
@@ -71,28 +76,40 @@ void TestRenderer::initTestCase() {
   auto circle = new CircleItem();
   circle->setWidth(width_1);
   circle->setHeight(height_1);
-  circle->setParentItem(parent_item_1);
   circle->setColor("red");
   circle->setOpacity(0.7);
+  circle->setParentItem(parent_item_1);
+  parent_item_1->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
   auto rect = new RectangleItem();
   rect->setWidth(width_2);
   rect->setHeight(height_2);
-  rect->setParentItem(parent_item_2);
   rect->setColor("blue");
   rect->setOpacity(0.7);
   rect->setRotation(43);
+  rect->setParentItem(parent_item_2);
+  parent_item_2->setProperty("item", QVariant::fromValue<RectangleItem*>(rect));
 
   auto tex = new TextItem;
   tex->setLatexSource("Hello $\\delta=\\epsilon$");
   tex->setScaleText(3);
-  tex->setParentItem(parent_item_3);
   tex->setOpacity(0.43);
   tex->setRotation(-23);
+  tex->setParentItem(parent_item_3);
+  parent_item_3->setProperty("item", QVariant::fromValue<TextItem*>(tex));
 
-  m_item_list.push_back(circle);
-  m_item_list.push_back(rect);
-  m_item_list.push_back(tex);
+  m_item_list.push_back(
+      QSharedPointer<ItemObserver>(new ItemObserver(parent_item_1)));
+  m_item_list.push_back(
+      QSharedPointer<ItemObserver>(new ItemObserver(parent_item_2)));
+  m_item_list.push_back(
+      QSharedPointer<ItemObserver>(new ItemObserver(parent_item_3)));
+
+  // TODO(codingwithmagga): Check memory management, maybe this is not necessary
+  // then.
+  m_quickitem_list.push_back(parent_item_1);
+  m_quickitem_list.push_back(parent_item_2);
+  m_quickitem_list.push_back(parent_item_3);
 }
 
 void TestRenderer::createImage_data() {
@@ -123,7 +140,7 @@ void TestRenderer::createImage() {
   project_settings.height = height;
 
   renderer.setProjectSettings(project_settings);
-  const auto rendered_image = renderer.createImage(m_item_list);
+  const auto rendered_image = renderer.createImage(m_item_list, 0.0);
 
   QCOMPARE(rendered_image, test_frame_image);
 }
@@ -191,7 +208,7 @@ void TestRenderer::render() {
         ffmpeg_extract_frame.start(
             "ffmpeg", QStringList{} << "-y"
                                     << "-i" << file.absoluteFilePath()
-                                    << "-vframes"
+                                    << "-frames:v"
                                     << "1" << extracted_frame_file.fileName());
 
         QVERIFY(ffmpeg_extract_frame.waitForFinished());
@@ -232,8 +249,10 @@ void TestRenderer::multipleRendering() {
   circle->setHeight(121);
   circle->setColor("green");
   circle->setOpacity(0.89);
+  parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
-  m_item_list.append(circle);
+  m_item_list.push_back(
+      QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
 
   connect(
       &renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
@@ -244,7 +263,7 @@ void TestRenderer::multipleRendering() {
         ffmpeg_extract_frame.start(
             "ffmpeg", QStringList{} << "-y"
                                     << "-i" << file.absoluteFilePath()
-                                    << "-vframes"
+                                    << "-frames:v"
                                     << "1" << extracted_frame_file.fileName());
 
         QImage test_frame_image_multi("://test_images/test_frame_multi.png");
@@ -252,6 +271,98 @@ void TestRenderer::multipleRendering() {
         QVERIFY(ffmpeg_extract_frame.waitForFinished());
         QCOMPARE(QImage(extracted_frame_file.fileName()),
                  test_frame_image_multi);
+      });
+
+  renderer.render(m_item_list, home_dir_video);
+  QVERIFY(spy.wait(60000));
+
+  parent_item->deleteLater();
+  m_item_list.removeLast();
+}
+
+void TestRenderer::renderWithAnimation() {
+  Renderer renderer;
+
+  auto parent_item = new QQuickItem();
+  parent_item->setX(312);
+  parent_item->setY(444);
+
+  auto circle = new CircleItem(parent_item);
+  circle->setWidth(121);
+  circle->setHeight(121);
+  circle->setColor("green");
+  parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+
+  auto fadeInAnimation = QSharedPointer<FadeIn>(new FadeIn());
+  auto fadeOutAnimation = QSharedPointer<FadeOut>(new FadeOut());
+  fadeOutAnimation->setStartTime(2.2);
+  fadeOutAnimation->setDuration(1.5);
+
+  m_item_list.push_back(
+      QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
+
+  m_item_list.last()->addAnimation(fadeInAnimation);
+  m_item_list.last()->addAnimation(fadeOutAnimation);
+
+  QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+  QFileInfo home_dir_video(QDir::home(), "test_video_animation.mp4");
+
+  connect(
+      &renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
+        QVERIFY(file.exists());
+
+        QFile extracted_frame_file_05s(
+            "extracted_test_frame_animation_05s.png");
+        QProcess ffmpeg_extract_frame_05s;
+        ffmpeg_extract_frame_05s.start(
+            "ffmpeg", QStringList{}
+                          << "-y"
+                          << "-i" << file.absoluteFilePath() << "-frames:v"
+                          << "1"
+                          << "-ss"
+                          << "0.5" << extracted_frame_file_05s.fileName());
+
+        QImage test_frame_image_animation(
+            "://test_images/test_frame_half_animation.png");
+
+        QVERIFY(ffmpeg_extract_frame_05s.waitForFinished());
+        QCOMPARE(QImage(extracted_frame_file_05s.fileName()),
+                 test_frame_image_animation);
+
+        QFile extracted_frame_file_1s("extracted_test_frame_animation_1s.png");
+        QProcess ffmpeg_extract_frame_1s;
+        ffmpeg_extract_frame_1s.start(
+            "ffmpeg", QStringList{}
+                          << "-y"
+                          << "-i" << file.absoluteFilePath() << "-frames:v"
+                          << "1"
+                          << "-ss"
+                          << "1.0" << extracted_frame_file_1s.fileName());
+
+        QImage test_frame_image_animation_finished(
+            "://test_images/test_frame_full_animation.png");
+
+        QVERIFY(ffmpeg_extract_frame_1s.waitForFinished());
+        QCOMPARE(QImage(extracted_frame_file_1s.fileName()),
+                 test_frame_image_animation_finished);
+
+        QFile extracted_frame_file_45s(
+            "extracted_test_frame_animation_45s.png");
+        QProcess ffmpeg_extract_frame_45s;
+        ffmpeg_extract_frame_45s.start(
+            "ffmpeg", QStringList{}
+                          << "-y"
+                          << "-i" << file.absoluteFilePath() << "-frames:v"
+                          << "1"
+                          << "-ss"
+                          << "4.5" << extracted_frame_file_45s.fileName());
+
+        QImage test_frame_image_fadeout_animation_finished(
+            "://test_images/test_frame_fadeout_animation.png");
+
+        QVERIFY(ffmpeg_extract_frame_45s.waitForFinished());
+        QCOMPARE(QImage(extracted_frame_file_45s.fileName()),
+                 test_frame_image_fadeout_animation_finished);
       });
 
   renderer.render(m_item_list, home_dir_video);
@@ -277,7 +388,7 @@ void TestRenderer::setIndividualProjectSettings() {
   QCOMPARE(renderer_project_settings.video_length, video_length);
 }
 
-void TestRenderer::cleanupTestCase() { qDeleteAll(m_item_list); }
+void TestRenderer::cleanupTestCase() { qDeleteAll(m_quickitem_list); }
 
 QTEST_MAIN(TestRenderer)
 #include "tst_renderer.moc"

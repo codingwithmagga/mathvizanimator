@@ -64,6 +64,9 @@ class MainWindowHandler : public QObject {
   void setFPS(const qint32 new_fps);
   void setVideoLength(const qint32 new_video_length);
 
+  void addAnimation(const QString &item_name, const QString &animation_type,
+                    const qreal start_time, const qreal duration);
+
  signals:
   void pixelWidthChanged(const qint32 new_pixel_width);
   void pixelHeightChanged(const qint32 new_pixel_height);
@@ -82,6 +85,10 @@ class MainWindowHandler : public QObject {
   void itemClicked(const QString &name);
 
   void renderingVideoFinished(const QFileInfo &video_file);
+
+  void addAnimationSignal(const QString &item_name,
+                          const QString &animation_type, const qreal start_time,
+                          const qreal duration);
 
  private:
   QObject *m_qml_creation_area;

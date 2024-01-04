@@ -30,8 +30,8 @@ ApplicationWindow {
     id: root
 
     visible: true
-    width: 1400
-    height: 600
+    width: 1600
+    height: 1200
     title: qsTr("mathvizanimator")
 
     font.pointSize: 14
@@ -462,6 +462,13 @@ ApplicationWindow {
                                        main_window.itemClickedByUser(itemName)
                                    }
 
+                                   function animationAdded(item_name, animation_type, start_time, duration) {
+                                       main_window.addAnimation(item_name,
+                                                                animation_type,
+                                                                start_time,
+                                                                duration)
+                                   }
+
                                    drop.accept(Qt.MoveAction)
 
                                    const component = Qt.createComponent(
@@ -477,6 +484,8 @@ ApplicationWindow {
                                            })
 
                                        abstractItem.clicked.connect(itemClicked)
+                                       abstractItem.animationAdded.connect(
+                                           animationAdded)
 
                                        itemAdded(abstractItem)
                                    } else {
@@ -582,80 +591,184 @@ ApplicationWindow {
                     }
                 }
 
-                HorizontalHeaderView {
-                    id: hHeaderPropTable
-                    syncView: mPropertyTable
-                    Layout.alignment: Qt.AlignTop
-                    clip: true
+                TabBar {
+                    id: itemBar
+                    width: mObjectsListViewRect.width
+                    TabButton {
+                        text: qsTr("Properties")
+                    }
+                    TabButton {
+                        text: qsTr("Animations")
+                    }
                 }
 
-                ScrollView {
-                    id: mPropertyTableScrollView
+                StackLayout {
+                    id: stackLayout
 
-                    Layout.preferredHeight: (mObjectsListViewRect.height
-                                             - horizontalHeader.implicitHeight
-                                             - hHeaderPropTable.implicitHeight) / 2
                     Layout.preferredWidth: mObjectsListViewRect.width
-                    Layout.maximumWidth: mObjectsListViewRect.width
-                    Layout.minimumHeight: 100
-                    Layout.alignment: Qt.AlignTop
+                    Layout.preferredHeight: mObjectsListViewRect.height / 2 - itemBar.height
+                                            - horizontalHeader.implicitHeight
                     Layout.fillHeight: true
 
-                    contentWidth: mPropertyTable.width
-                    contentHeight: mPropertyTable.height
+                    currentIndex: itemBar.currentIndex
 
-                    ScrollBar.horizontal.policy: mPropertyTable.contentWidth > mPropertyTable.width ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
-                    ScrollBar.vertical.policy: mPropertyTable.contentHeight > mPropertyTable.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
 
-                    TableView {
-                        id: mPropertyTable
+                    Item {
+                        id: propertiesTab
 
-                        alternatingRows: true
-                        clip: true
+                        ColumnLayout {
 
-                        columnWidthProvider: function (column) {
-                            return mPropertyTable.model ? mPropertyTable.width
-                                                          / mPropertyTable.model.columnCount(
-                                                              ) : 0
-                        }
+                            spacing: 0
 
-                        model: property_model
-
-                        selectionModel: ItemSelectionModel {
-                            id: mPropertyTableSelectionModel
-
-                            model: property_model
-                        }
-
-                        delegate: Rectangle {
-                            id: mPropertyTableDelegate
-
-                            required property bool editing
-
-                            implicitWidth: 100
-                            implicitHeight: 50
-
-                            color: row === mPropertyTable.currentRow ? palette.highlight : (mPropertyTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
-
-                            Label {
-                                anchors.fill: parent
-                                anchors.margins: 5
-                                verticalAlignment: TextInput.AlignVCenter
-
-                                text: display
-                                visible: !editing
-
-                                color: row === mPropertyTable.currentRow ? palette.highlightedText : palette.text
+                            HorizontalHeaderView {
+                                id: hHeaderPropTable
+                                syncView: mPropertyTable
+                                Layout.alignment: Qt.AlignTop
+                                clip: true
                             }
 
-                            TableView.editDelegate: TextField {
-                                anchors.fill: parent
+                            ScrollView {
+                                id: mPropertyTableScrollView
 
-                                text: display
-                                Component.onCompleted: selectAll()
+                                Layout.maximumWidth: mObjectsListViewRect.width
+                                Layout.minimumHeight: 100
+                                Layout.alignment: Qt.AlignBottom
+                                Layout.fillHeight: true
 
-                                TableView.onCommit: {
-                                    display = text
+                                Layout.preferredWidth: propertiesTab.width
+                                Layout.preferredHeight: propertiesTab.height
+
+                                contentWidth: mPropertyTable.width
+                                contentHeight: mPropertyTable.height
+
+                                ScrollBar.horizontal.policy: mPropertyTable.contentWidth > mPropertyTable.width ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                                ScrollBar.vertical.policy: mPropertyTable.contentHeight > mPropertyTable.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
+                                TableView {
+                                    id: mPropertyTable
+
+                                    alternatingRows: true
+                                    clip: true
+
+                                    columnWidthProvider: function (column) {
+                                        return mPropertyTable.model ? mPropertyTable.width / mPropertyTable.model.columnCount(
+                                                                          ) : 0
+                                    }
+
+                                    model: property_model
+
+                                    selectionModel: ItemSelectionModel {
+                                        id: mPropertyTableSelectionModel
+
+                                        model: property_model
+                                    }
+
+                                    delegate: Rectangle {
+                                        id: mPropertyTableDelegate
+
+                                        required property bool editing
+
+                                        implicitWidth: 100
+                                        implicitHeight: 50
+
+                                        color: row === mPropertyTable.currentRow ? palette.highlight : (mPropertyTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+
+                                        Label {
+                                            anchors.fill: parent
+                                            anchors.margins: 5
+                                            verticalAlignment: TextInput.AlignVCenter
+
+                                            text: display
+                                            visible: !editing
+
+                                            color: row === mPropertyTable.currentRow ? palette.highlightedText : palette.text
+                                        }
+
+                                        TableView.editDelegate: TextField {
+                                            anchors.fill: parent
+
+                                            text: display
+                                            Component.onCompleted: selectAll()
+
+                                            TableView.onCommit: {
+                                                display = text
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Item {
+                        id: animationsTab
+
+                        ColumnLayout {
+
+                            spacing: 0
+
+                            HorizontalHeaderView {
+                                id: headerAnimationTable
+                                syncView: mAnimationTable
+                                Layout.alignment: Qt.AlignTop
+                                clip: true
+                            }
+
+                            ScrollView {
+                                id: mAnimationTableScrollView
+
+                                Layout.maximumWidth: mObjectsListViewRect.width
+                                Layout.minimumHeight: 100
+                                Layout.alignment: Qt.AlignBottom
+                                Layout.fillHeight: true
+
+                                Layout.preferredWidth: animationsTab.width
+                                Layout.preferredHeight: animationsTab.height
+
+                                contentWidth: mAnimationTable.width
+                                contentHeight: mAnimationTable.height
+
+                                ScrollBar.horizontal.policy: mAnimationTable.contentWidth > mAnimationTable.width ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+                                ScrollBar.vertical.policy: mAnimationTable.contentHeight > mAnimationTable.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
+                                TableView {
+                                    id: mAnimationTable
+
+                                    alternatingRows: true
+                                    clip: true
+
+                                    columnWidthProvider: function (column) {
+                                        return mAnimationTable.model ? mAnimationTable.width / mAnimationTable.model.columnCount(
+                                                                           ) : 0
+                                    }
+
+                                    model: animation_model
+
+                                    selectionModel: ItemSelectionModel {
+                                        id: mAnimationTableSelectionModel
+
+                                        model: animation_model
+                                    }
+
+                                    delegate: Rectangle {
+                                        id: mAnimationTableDelegate
+
+                                        implicitWidth: 100
+                                        implicitHeight: 50
+
+                                        color: row === mAnimationTable.currentRow ? palette.highlight : (mAnimationTable.alternatingRows && row % 2 !== 0 ? palette.alternateBase : palette.base)
+
+                                        Label {
+                                            anchors.fill: parent
+                                            anchors.margins: 5
+                                            verticalAlignment: TextInput.AlignVCenter
+
+                                            text: display
+
+                                            color: row === mAnimationTable.currentRow ? palette.highlightedText : palette.text
+                                        }
+                                    }
                                 }
                             }
                         }

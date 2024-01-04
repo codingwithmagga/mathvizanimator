@@ -23,7 +23,7 @@
 #include <QProcess>
 #include <QSharedPointer>
 
-#include "abstractitem.h"
+#include "itemobserver.h"
 
 class Renderer : public QObject {
   Q_OBJECT
@@ -46,17 +46,18 @@ class Renderer : public QObject {
   void setFPS(const qint32 new_fps);
   void setVideoLength(const qint32 new_video_length);
 
-  QImage createImage(const QList<AbstractItem*>& item_list) const;
+  QImage createImage(const QList<QSharedPointer<ItemObserver>>& item_list,
+                     const qreal current_time) const;
 
  public slots:
-  void render(const QList<AbstractItem*>& item_list,
+  void render(const QList<QSharedPointer<ItemObserver> > &item_list,
               const QFileInfo& video_file);
 
  signals:
   void finishedRendering(const QFileInfo& video_file);
 
  private slots:
-  void renderingProcessStarted(const QList<AbstractItem*>& item_list);
+  void renderingProcessStarted(const QList<QSharedPointer<ItemObserver> > &item_list);
   void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode,
                                 QProcess::ExitStatus exitStatus);
 

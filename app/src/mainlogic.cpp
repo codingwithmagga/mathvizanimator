@@ -41,6 +41,8 @@ MainLogic::MainLogic(QObject *parent) : QObject{parent} {
           &ItemHandler::setCurrentItem);
   connect(&m_mainwindowhandler, &MainWindowHandler::newProjectRequested,
           &m_itemhandler, &ItemHandler::clear);
+  connect(&m_mainwindowhandler, &MainWindowHandler::addAnimationSignal,
+          &m_itemhandler, &ItemHandler::addAnimation);
 
   connect(&m_mainwindowhandler, &MainWindowHandler::pixelWidthChanged, this,
           &MainLogic::projectWidthChanged);
@@ -72,6 +74,8 @@ void MainLogic::initEngine(QQmlApplicationEngine *const engine) {
       QStringLiteral("item_selection_model"), m_itemhandler.selectionModel());
   m_qml_engine->rootContext()->setContextProperty(
       QStringLiteral("property_model"), m_itemhandler.propertyModel());
+  m_qml_engine->rootContext()->setContextProperty(
+      QStringLiteral("animation_model"), m_itemhandler.animationModel());
 }
 
 void MainLogic::connectEngine() {
@@ -99,14 +103,15 @@ void MainLogic::connectEngine() {
 }
 
 void MainLogic::createSnapshot(const QFileInfo &snapshot_file_info) {
-  const auto item_list = getAbstractItemList();
-  const auto snapshot = m_renderer.createImage(item_list);
+  auto item_list = m_itemhandler.items();
+  // TODO(codingwithmagga): Set correct time
+  const auto snapshot = m_renderer.createImage(item_list, 0.0);
 
   snapshot.save(snapshot_file_info.absoluteFilePath());
 }
 
 void MainLogic::renderVideo(const QFileInfo &video_file_info) {
-  const auto item_list = getAbstractItemList();
+  auto item_list = m_itemhandler.items();
   m_renderer.render(item_list, video_file_info);
 }
 
@@ -114,7 +119,7 @@ void MainLogic::saveProject(const QFileInfo &save_file_info) {
   QJsonObject save_json;
   qint32 count = 0;
   QString element_prefix = "element_";
-  const auto item_list = m_itemhandler.items();
+  const auto item_list = m_itemhandler.quickItems();
 
   for (const auto &item : item_list) {
     const auto abstract_item =
@@ -163,7 +168,7 @@ void MainLogic::loadProject(const QFileInfo &load_file_info) {
 QList<AbstractItem *> MainLogic::getAbstractItemList() {
   QList<AbstractItem *> abstractitem_list;
 
-  const auto item_list = m_itemhandler.items();
+  const auto item_list = m_itemhandler.quickItems();
   for (const auto &item : item_list) {
     abstractitem_list.push_back(
         qvariant_cast<AbstractItem *>(item->property("item")));

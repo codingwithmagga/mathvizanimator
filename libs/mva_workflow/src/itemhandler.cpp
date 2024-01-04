@@ -18,6 +18,8 @@
 #include "itemhandler.h"
 
 #include "abstractitem.h"
+#include "fadein.h"
+#include "fadeout.h"
 #include "logging.h"
 
 ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
@@ -33,6 +35,12 @@ ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
   m_property_model.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
   m_property_model.setHorizontalHeaderItem(1, propertyHeaderItemRight);
 
+  QStandardItem* animationHeaderItemLeft = new QStandardItem(tr("Animation"));
+  QStandardItem* animationHeaderItemRight = new QStandardItem(tr("Timespan"));
+
+  m_animation_model.setHorizontalHeaderItem(0, animationHeaderItemLeft);
+  m_animation_model.setHorizontalHeaderItem(1, animationHeaderItemRight);
+
   connect(&m_property_model, &QStandardItemModel::dataChanged, this,
           &ItemHandler::propertyDataChanged);
   connect(&m_item_selection_model, &QItemSelectionModel::currentRowChanged,
@@ -41,22 +49,34 @@ ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
   m_item_selection_model.setModel(&m_item_model);
 }
 
-QList<QQuickItem*> ItemHandler::items() {
+QList<QQuickItem*> ItemHandler::quickItems() {
   QList<QQuickItem*> item_list;
 
   for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
-    const auto model_item = m_item_model.item(row)->data(ItemRoles::QUICKITEM);
-    item_list.append(model_item.value<QQuickItem*>());
+    const auto model_item =
+        dynamic_cast<ItemModelItem*>(m_item_model.item(row));
+    item_list.append(model_item->itemObserver()->item());
   }
 
   return item_list;
+}
+
+QList<QSharedPointer<ItemObserver>> ItemHandler::items() {
+  QList<QSharedPointer<ItemObserver>> list;
+
+  for (int r = 0; r < m_item_model.rowCount(); ++r) {
+    auto index = m_item_model.index(r, 0);
+    auto item = m_item_model.itemFromIndex(index);
+
+    list.append(dynamic_cast<ItemModelItem*>(item)->itemObserver());
+  }
+  return list;
 }
 
 void ItemHandler::setDeleteEachQuickItem(QModelIndex parent) {
   for (int r = 0; r < m_item_model.rowCount(parent); ++r) {
     auto index = m_item_model.index(r, 0, parent);
     auto item = m_item_model.itemFromIndex(index);
-    QVariant name = m_item_model.data(index);
 
     dynamic_cast<ItemModelItem*>(item)->setDeleteQuickitem(true);
 
@@ -93,7 +113,15 @@ void ItemHandler::addItem(QQuickItem* const quick_item) {
   auto stdItemName(new ItemModelItem(item_name));
   auto stdItemType(new ItemModelItem(item_type));
 
-  stdItemName->setData(QVariant::fromValue(quick_item), ItemRoles::QUICKITEM);
+  const auto item_observer =
+      QSharedPointer<ItemObserver>(new ItemObserver(quick_item));
+  //  m_item_observer_list.append(item_observer);
+  // TODO: delete
+  // fromValue makes a copy, so pointer seems to be needed here
+  // or store in class as Qlist/QMAP, but I'm not sure if this is a good idea
+  //  stdItemName->setData(QVariant::fromValue(item_observer),
+  //                       ItemRoles::ITEM_OBSERVER);
+  stdItemName->setItemObserver(item_observer);
 
   m_item_model.appendRow(QList<QStandardItem*>{stdItemName, stdItemType});
   qCInfo(itemhandler) << "An item with name" << item_name << "of type"
@@ -138,6 +166,64 @@ void ItemHandler::removeCurrentItem() {
   m_item_model.removeRow(current_item->row());
 }
 
+void ItemHandler::addAnimation(const QString& item_name,
+                               const QString& animation_type,
+                               const qreal start_time, const qreal duration) {
+  const auto item_list = m_item_model.findItems(item_name);
+
+  if (item_list.isEmpty()) {
+    qCWarning(itemhandler) << "Can't find item with name:" << item_name
+                           << "Animation can't be added.";
+    return;
+  }
+
+  auto item_observer =
+      dynamic_cast<ItemModelItem*>(item_list.first())->itemObserver();
+
+  QString animation_name;
+  QString animation_timespan;
+
+  if (animation_type == "FadeIn") {
+    auto fadein_animation = QSharedPointer<FadeIn>(new FadeIn);
+    fadein_animation->setStartTime(start_time);
+    fadein_animation->setDuration(duration);
+    item_observer->addAnimation(fadein_animation);
+
+    animation_name = "FadeIn";
+
+  } else if (animation_type == "FadeOut") {
+    auto fadeout_animation = QSharedPointer<FadeOut>(new FadeOut);
+    fadeout_animation->setStartTime(start_time);
+    fadeout_animation->setDuration(duration);
+    item_observer->addAnimation(fadeout_animation);
+
+    animation_name = "FadeOut";
+  } else {
+    qCWarning(itemhandler) << "Can't find item with name:" << item_name
+                           << "Animation can't be added.";
+    return;
+  }
+
+  animation_timespan = QString::number(start_time) + "-" +
+                       QString::number(start_time + duration);
+  auto stdAnimationName(new ItemModelItem(animation_name));
+  auto stdAnimationTimeSpan(new ItemModelItem(animation_timespan));
+
+  //  m_item_observer_list.append(item_observer);
+  // TODO: delete
+  // fromValue makes a copy, so pointer seems to be needed here
+  // or store in class as Qlist/QMAP, but I'm not sure if this is a good idea
+  //  stdItemName->setData(QVariant::fromValue(item_observer),
+  //                       ItemRoles::ITEM_OBSERVER);
+  stdAnimationName->setItemObserver(item_observer);
+
+  m_animation_model.appendRow(
+      QList<QStandardItem*>{stdAnimationName, stdAnimationTimeSpan});
+  qCInfo(itemhandler) << "An animation of type" << animation_name
+                      << "with timespan" << animation_timespan
+                      << "was added to item:" << item_name;
+}
+
 // TODO(codingwithmagga): Refactor this function, give useful var names
 void ItemHandler::appendProperties(const auto obj, auto meta_object,
                                    const QStringList& allowedProperties) {
@@ -168,10 +254,9 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex) {
   if (!currentIndex.isValid()) {
     return;
   }
-
-  const auto quick_item = m_item_model.itemFromIndex(currentIndex)
-                              ->data(ItemHandler::ItemRoles::QUICKITEM)
-                              .value<QQuickItem*>();
+  const auto model_item =
+      dynamic_cast<ItemModelItem*>(m_item_model.itemFromIndex(currentIndex));
+  const auto quick_item = model_item->itemObserver()->item();
   const auto o = extractAbstractItem(quick_item);
 
   if (o.error) {
@@ -194,7 +279,7 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex) {
 }
 
 void ItemHandler::scaleItemsX(const qreal ratio) {
-  const auto itemList = items();
+  const auto itemList = quickItems();
 
   for (auto& item : itemList) {
     item->setX(qRound(item->x() * ratio));
@@ -202,7 +287,7 @@ void ItemHandler::scaleItemsX(const qreal ratio) {
 }
 
 void ItemHandler::scaleItemsY(const qreal ratio) {
-  const auto itemList = items();
+  const auto itemList = quickItems();
 
   for (auto& item : itemList) {
     item->setY(qRound(item->y() * ratio));
@@ -210,7 +295,7 @@ void ItemHandler::scaleItemsY(const qreal ratio) {
 }
 
 void ItemHandler::scaleItemsWidth(const qreal ratio) {
-  const auto itemList = items();
+  const auto itemList = quickItems();
 
   for (auto& item : itemList) {
     item->setWidth(qRound(item->width() * ratio));
@@ -218,7 +303,7 @@ void ItemHandler::scaleItemsWidth(const qreal ratio) {
 }
 
 void ItemHandler::scaleItemsHeight(const qreal ratio) {
-  const auto itemList = items();
+  const auto itemList = quickItems();
 
   for (auto& item : itemList) {
     item->setHeight(qRound(item->height() * ratio));
@@ -258,10 +343,10 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   }
 
   // Update item
-  auto item = m_item_model.item(m_item_selection_model.currentIndex().row());
-  auto quick_item = item->data(ItemRoles::QUICKITEM).value<QQuickItem*>();
-  auto itemExtract = extractAbstractItem(
-      item->data(ItemRoles::QUICKITEM).value<QQuickItem*>());
+  auto item = dynamic_cast<ItemModelItem*>(
+      m_item_model.item(m_item_selection_model.currentIndex().row()));
+  auto quick_item = item->itemObserver()->item();
+  auto itemExtract = extractAbstractItem(quick_item);
 
   if (itemExtract.error) {
     return;
@@ -291,8 +376,9 @@ void ItemHandler::currentItemChanged(const QModelIndex& current,
 
 bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item) {
   for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
-    const auto model_item = m_item_model.item(row)->data(ItemRoles::QUICKITEM);
-    if (model_item.value<QQuickItem*>() == quick_item) {
+    const auto model_item =
+        dynamic_cast<ItemModelItem*>(m_item_model.item(row));
+    if (model_item->itemObserver()->item() == quick_item) {
       return true;
     }
   }
@@ -343,16 +429,19 @@ ItemModelItem::ItemModelItem(const QString& text) : QStandardItem(text) {}
 
 ItemModelItem::~ItemModelItem() {
   if (m_delete_quick_item) {
-    auto storedQuickItem = data(ItemHandler::ItemRoles::QUICKITEM);
-
-    if (storedQuickItem.isValid()) {
-      auto quickItem = storedQuickItem.value<QQuickItem*>();
-
-      if (quickItem) {
-        quickItem->deleteLater();
-      }
+    if (m_item_observer && m_item_observer->item()) {
+      m_item_observer->item()->deleteLater();
     }
   }
+}
+
+QSharedPointer<ItemObserver> ItemModelItem::itemObserver() const {
+  return m_item_observer;
+}
+
+void ItemModelItem::setItemObserver(
+    const QSharedPointer<ItemObserver>& new_item_observer) {
+  m_item_observer = new_item_observer;
 }
 
 Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const {

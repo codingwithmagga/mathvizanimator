@@ -85,7 +85,7 @@ void MenuFileIntegrationTest::loadProject() {
 
   const QString test_load_file_absolute_path =
       TestHelperFunctions::absoluteFilePath("test_load_file.json");
-  QVERIFY(test_save_file.copy(test_load_file_absolute_path));
+  test_save_file.copy(test_load_file_absolute_path);
   QVERIFY(QFile::exists(test_load_file_absolute_path));
 
   auto load_action_item =

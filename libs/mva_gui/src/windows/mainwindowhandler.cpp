@@ -133,6 +133,13 @@ void MainWindowHandler::setVideoLength(const qint32 new_video_length) {
   emit videoLengthChanged(new_video_length);
 }
 
+void MainWindowHandler::addAnimation(const QString &item_name,
+                                     const QString &animation_type,
+                                     const qreal start_time,
+                                     const qreal duration) {
+  emit addAnimationSignal(item_name, animation_type, start_time, duration);
+}
+
 void MainWindowHandler::openSVGFolder() const {
   qCInfo(mainwindow_handler)
       << "Opening SVG Folder successful: "

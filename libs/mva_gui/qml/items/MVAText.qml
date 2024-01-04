@@ -37,9 +37,16 @@ MVABasicItem {
             anchors.fill: parent
             basicItem: rootMVAText
 
-            onClicked: {
+            onLeftClicked: {
                 rootMVAText.clicked(textItem.name)
             }
+
+            // TODO Use basicItem of MVAMouseArea for this an move this to MVAMouseArea.qml?
+            onAnimationAdded: (type, start_time, duration) => {
+                                  rootMVAText.animationAdded(textItem.name,
+                                                             type, start_time,
+                                                             duration)
+                              }
         }
     }
 

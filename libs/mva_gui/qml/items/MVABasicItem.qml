@@ -25,6 +25,7 @@ Item {
     property bool init: false
 
     signal clicked(string name)
+    signal animationAdded(string name, string type, double start_time, double duration)
 
     width: 100
     height: 100
