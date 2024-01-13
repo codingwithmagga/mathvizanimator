@@ -52,8 +52,16 @@ void MainWindowHandler::removeCurrentItem() {
   emit removeCurrentItemRequested();
 }
 
+void MainWindowHandler::removeAnimation(const qint32 animation_number) {
+  emit removeAnimationRequested(animation_number);
+}
+
 void MainWindowHandler::itemClickedByUser(const QVariant &item_name) {
   emit itemClicked(item_name.toString());
+}
+
+void MainWindowHandler::setTimeByUser(const QVariant &time) {
+  emit timeChanged(time.toDouble());
 }
 
 void MainWindowHandler::updateProjectSettings(

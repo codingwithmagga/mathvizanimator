@@ -53,8 +53,10 @@ class MainWindowHandler : public QObject {
   void openSVGFolder() const;
 
   void removeCurrentItem();
+  void removeAnimation(const qint32 animation_number);
 
   void itemClickedByUser(const QVariant &itemName);
+  void setTimeByUser(const QVariant &time);
 
   void updateProjectSettings(const QVariantList &new_project_settings);
   void updateProjectSettings(const QList<qint32> &new_project_settings);
@@ -81,8 +83,10 @@ class MainWindowHandler : public QObject {
   void loadProjectRequested(const QFileInfo &load_file_info);
 
   void removeCurrentItemRequested();
+  void removeAnimationRequested(const qint32 animation_number);
 
   void itemClicked(const QString &name);
+  void timeChanged(const qreal time);
 
   void renderingVideoFinished(const QFileInfo &video_file);
 

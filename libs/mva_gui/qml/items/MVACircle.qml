@@ -41,7 +41,8 @@ MVABasicItem {
             }
 
             onAnimationAdded: (type, start_time, duration) => {
-                                  rootMVACircle.animationAdded(circleItem.name, type,
+                                  rootMVACircle.animationAdded(circleItem.name,
+                                                               type,
                                                                start_time,
                                                                duration)
                               }

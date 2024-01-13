@@ -116,7 +116,7 @@ QImage Renderer::createImage(
   QPainter painter(&image);
 
   for (const auto& item_observer : item_list) {
-    item_observer->setTime(current_time);
+    item_observer->setTimeProgressiv(current_time);
     item_observer->abstractitem()->paintItem(&painter);
   }
 

@@ -105,8 +105,10 @@ void MenuFileIntegrationTest::loadProject() {
 
   QVERIFY(QTest::qWaitFor(
       [&]() { return !load_file_dialog->property("visible").toBool(); }));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->compareNumItems(3); }));
+  QVERIFY(m_helper_functions->compareNumItems(3));
+  QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
+  QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
+  QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
 }
 
 void MenuFileIntegrationTest::saveAsProject() {

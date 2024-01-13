@@ -91,7 +91,9 @@ void ItemHandler::clear() {
   m_item_model.removeRows(0, m_item_model.rowCount());
 }
 
-void ItemHandler::addItem(QQuickItem* const quick_item) {
+void ItemHandler::addItem(
+    QQuickItem* const quick_item,
+    const QList<QSharedPointer<AbstractAnimation>>& animations) {
   if (itemAlreadyExists(quick_item)) {
     return;
   }
@@ -115,6 +117,7 @@ void ItemHandler::addItem(QQuickItem* const quick_item) {
 
   const auto item_observer =
       QSharedPointer<ItemObserver>(new ItemObserver(quick_item));
+  item_observer->addAnimations(animations);
   //  m_item_observer_list.append(item_observer);
   // TODO: delete
   // fromValue makes a copy, so pointer seems to be needed here
@@ -177,11 +180,10 @@ void ItemHandler::addAnimation(const QString& item_name,
     return;
   }
 
-  auto item_observer =
-      dynamic_cast<ItemModelItem*>(item_list.first())->itemObserver();
+  auto item = dynamic_cast<ItemModelItem*>(item_list.first());
+  auto item_observer = item->itemObserver();
 
   QString animation_name;
-  QString animation_timespan;
 
   if (animation_type == "FadeIn") {
     auto fadein_animation = QSharedPointer<FadeIn>(new FadeIn);
@@ -204,24 +206,32 @@ void ItemHandler::addAnimation(const QString& item_name,
     return;
   }
 
-  animation_timespan = QString::number(start_time) + "-" +
-                       QString::number(start_time + duration);
-  auto stdAnimationName(new ItemModelItem(animation_name));
-  auto stdAnimationTimeSpan(new ItemModelItem(animation_timespan));
+  const auto index_current_item =
+      m_item_model.index(m_item_selection_model.currentIndex().row(), 0);
+  if (item == m_item_model.itemFromIndex(index_current_item)) {
+    repopulateAnimationModel(item);
+  }
 
-  //  m_item_observer_list.append(item_observer);
-  // TODO: delete
-  // fromValue makes a copy, so pointer seems to be needed here
-  // or store in class as Qlist/QMAP, but I'm not sure if this is a good idea
-  //  stdItemName->setData(QVariant::fromValue(item_observer),
-  //                       ItemRoles::ITEM_OBSERVER);
-  stdAnimationName->setItemObserver(item_observer);
+  QString animation_timespan = QString::number(start_time) + "-" +
+                               QString::number(start_time + duration);
 
-  m_animation_model.appendRow(
-      QList<QStandardItem*>{stdAnimationName, stdAnimationTimeSpan});
   qCInfo(itemhandler) << "An animation of type" << animation_name
                       << "with timespan" << animation_timespan
                       << "was added to item:" << item_name;
+}
+
+void ItemHandler::removeAnimation(const qint32 animation_number) {
+  const auto index_first_item =
+      m_item_model.index(m_item_selection_model.currentIndex().row(), 0);
+  auto currentItem = dynamic_cast<ItemModelItem*>(
+      m_item_model.itemFromIndex(index_first_item));
+
+  currentItem->itemObserver()->removeAnimation(animation_number);
+  repopulateAnimationModel(currentItem);
+
+  qCInfo(itemhandler) << "Remove animation number" << animation_number
+                      << "from item"
+                      << currentItem->itemObserver()->abstractitem()->name();
 }
 
 // TODO(codingwithmagga): Refactor this function, give useful var names
@@ -248,12 +258,10 @@ void ItemHandler::appendProperties(const auto obj, auto meta_object,
 
 // TODO(codingwithmagga): Refactor this function, give useful var names and use
 // AbstractItem::getItemProperties()
+// Also change param to ItemModelItem*
 void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex) {
   m_property_model.removeRows(0, m_property_model.rowCount());
 
-  if (!currentIndex.isValid()) {
-    return;
-  }
   const auto model_item =
       dynamic_cast<ItemModelItem*>(m_item_model.itemFromIndex(currentIndex));
   const auto quick_item = model_item->itemObserver()->item();
@@ -276,6 +284,24 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex) {
   do {
     appendProperties(quick_item, mo, allowedProperties.quick_item_properties);
   } while ((mo = mo->superClass()));  // TODO(codingwithmagga): sort elements?
+}
+
+void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item) {
+  m_animation_model.removeRows(0, m_animation_model.rowCount());
+
+  const auto animations = item->itemObserver()->animations();
+
+  for (const auto& animation : animations) {
+    QString animation_timespan =
+        QString::number(animation->startTime()) + "-" +
+        QString::number(animation->startTime() + animation->duration());
+
+    auto stdItemName(new QStandardItem(animation->metaObject()->className()));
+    auto stdItemTimespan(new QStandardItem(animation_timespan));
+
+    m_animation_model.appendRow(
+        QList<QStandardItem*>{stdItemName, stdItemTimespan});
+  }
 }
 
 void ItemHandler::scaleItemsX(const qreal ratio) {
@@ -307,6 +333,14 @@ void ItemHandler::scaleItemsHeight(const qreal ratio) {
 
   for (auto& item : itemList) {
     item->setHeight(qRound(item->height() * ratio));
+  }
+}
+
+void ItemHandler::setTime(const qreal time) {
+  const auto item_observer_list = items();
+
+  for (auto& item_observer : item_observer_list) {
+    item_observer->setTime(time);
   }
 }
 
@@ -370,8 +404,19 @@ void ItemHandler::currentItemChanged(const QModelIndex& current,
                                      const QModelIndex& previous) {
   Q_UNUSED(previous)
 
+  m_property_model.removeRows(0, m_property_model.rowCount());
+  m_animation_model.removeRows(0, m_animation_model.rowCount());
+
+  if (!current.isValid()) {
+    return;
+  }
+
   const auto index_first_item = m_item_model.index(current.row(), 0);
+  const auto first_item = dynamic_cast<ItemModelItem*>(
+      m_item_model.itemFromIndex(index_first_item));
+
   repopulatePropertyModel(index_first_item);
+  repopulateAnimationModel(first_item);
 }
 
 bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item) {

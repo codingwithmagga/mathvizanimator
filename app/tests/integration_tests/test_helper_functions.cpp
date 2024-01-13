@@ -21,7 +21,10 @@
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QStandardItemModel>
 #include <QTest>  // should be removed, see comment in constructor
+
+#include "itemhandler.h"
 
 TestHelperFunctions::TestHelperFunctions(
     const QSharedPointer<QQmlApplicationEngine> engine)
@@ -45,8 +48,11 @@ TestHelperFunctions::TestHelperFunctions(
   m_creation_area =
       root_objects.first()->findChild<QQuickItem*>("MVACreationArea");
 
+  auto model = m_project_items_table_view->property("model");
+  m_project_items_model = qvariant_cast<QStandardItemModel*>(model);
+
   QVERIFY2(m_draggable_item_list_view && m_project_items_table_view &&
-               m_creation_area,
+               m_creation_area && m_project_items_model,
            "Important qml objects are missing!");
 }
 
@@ -90,10 +96,27 @@ qint32 TestHelperFunctions::numProjectTableViewItems() const {
 bool TestHelperFunctions::compareNumItems(const qint32 num_items) {
   // In creation area there is already one item (background rectangle) at the
   // start. So it has one item more
+
   return QTest::qWaitFor([&]() {
     return numCreationAreaItems() == num_items + 1 &&
            numProjectTableViewItems() == num_items;
   });
+}
+
+bool TestHelperFunctions::compareNumAnimations(const QString item_name,
+                                               const qint32 num_animations) {
+  const auto item_list = m_project_items_model->findItems(item_name);
+
+  if (item_list.size() != 1) {
+    qCritical() << "Item can't be found or name is not unique.";
+    return false;
+  }
+
+  const auto item = dynamic_cast<ItemModelItem*>(item_list.first());
+  const auto item_observer = item->itemObserver();
+
+  return QTest::qWaitFor(
+      [&]() { return item_observer->animations().size() == num_animations; });
 }
 
 QString TestHelperFunctions::absoluteFilePath(const QString file_name) {

@@ -23,6 +23,7 @@
 
 class QQuickItem;
 class QQuickWindow;
+class QStandardItemModel;
 class QQmlApplicationEngine;
 
 class TestHelperFunctions {
@@ -44,6 +45,8 @@ class TestHelperFunctions {
   qint32 numProjectTableViewItems() const;
 
   bool compareNumItems(const qint32 num_items);
+  bool compareNumAnimations(const QString item_name,
+                            const qint32 num_animations);
 
   template <typename T>
   T getChild(const QString &name) {
@@ -62,6 +65,7 @@ class TestHelperFunctions {
   QQuickWindow *m_quick_window = Q_NULLPTR;
   QObject *m_draggable_item_list_view = Q_NULLPTR;
   QObject *m_project_items_table_view = Q_NULLPTR;
+  QStandardItemModel *m_project_items_model = Q_NULLPTR;
   QQuickItem *m_creation_area = Q_NULLPTR;
 };
 

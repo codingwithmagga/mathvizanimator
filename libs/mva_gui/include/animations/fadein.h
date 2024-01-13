@@ -4,6 +4,8 @@
 #include "realpropertyanimation.h"
 
 class FadeIn : public RealPropertyAnimation {
+  Q_OBJECT
+
  public:
   explicit FadeIn(QObject *parent = nullptr);
 

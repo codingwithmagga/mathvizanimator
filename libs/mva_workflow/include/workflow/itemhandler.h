@@ -25,6 +25,8 @@
 
 #include "itemobserver.h"
 
+class ItemModelItem;
+
 class PropertyModel : public QStandardItemModel {
  public:
   Qt::ItemFlags flags(const QModelIndex& index) const;
@@ -49,19 +51,24 @@ class ItemHandler : public QObject {
  public slots:
   void clear();
 
-  void addItem(QQuickItem* const quick_item);
+  void addItem(QQuickItem* const quick_item,
+               const QList<QSharedPointer<AbstractAnimation>>& animations =
+                   QList<QSharedPointer<AbstractAnimation>>{});
   void removeItem(QQuickItem* const quick_item);
   void setCurrentItem(const QString& itemName);
   void removeCurrentItem();
 
   void addAnimation(const QString& item_name, const QString& animation_type,
                     const qreal start_time, const qreal duration);
+  void removeAnimation(const qint32 animation_number);
 
   void scaleItemsX(const qreal ratio);
   void scaleItemsY(const qreal ratio);
 
   void scaleItemsWidth(const qreal ratio);
   void scaleItemsHeight(const qreal ratio);
+
+  void setTime(const qreal time);
 
  private slots:
   void propertyDataChanged(const QModelIndex& topLeft,
@@ -86,6 +93,7 @@ class ItemHandler : public QObject {
                         const QStringList& allowedProperties);
 
   void repopulatePropertyModel(const QModelIndex& currentIndex);
+  void repopulateAnimationModel(const ItemModelItem* const item);
 
   void setDeleteEachQuickItem(QModelIndex parent = QModelIndex());
 

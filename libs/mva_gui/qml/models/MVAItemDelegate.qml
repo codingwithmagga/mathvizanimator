@@ -47,7 +47,8 @@ Item {
                                                     })
                 return object
             } else {
-                console.log("Error creat com")
+                console.log("Error occured during component creation: " + component.errorString(
+                                ))
             }
 
             return null

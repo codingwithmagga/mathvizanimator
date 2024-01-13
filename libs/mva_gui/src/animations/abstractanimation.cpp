@@ -1,6 +1,6 @@
 #include "abstractanimation.h"
 
-AbstractAnimation::AbstractAnimation(QObject *parent) : QObject(parent) {}
+AbstractAnimation::AbstractAnimation(QObject* parent) : QObject(parent) {}
 
 bool AbstractAnimation::isRunning(const qreal time) const {
   return (isStarted(time) && !isDone(time));
@@ -20,6 +20,23 @@ void AbstractAnimation::setFrameTime(const qreal frame_time) {
   }
 
   m_frame_time = frame_time;
+}
+
+void AbstractAnimation::setProperties(const QVariantMap& properties) {
+  QVariantMap::const_iterator iter;
+  for (iter = properties.constBegin(); iter != properties.constEnd(); ++iter) {
+    setProperty(iter.key().toUtf8(), iter.value());
+  }
+}
+
+QJsonObject AbstractAnimation::toJson() const {
+  QJsonObject json;
+
+  json["type"] = metaObject()->className();
+  json["start_time"] = m_start_time;
+  json["duration"] = m_duration;
+
+  return json;
 }
 
 void AbstractAnimation::setStartTime(const qreal start_time) {

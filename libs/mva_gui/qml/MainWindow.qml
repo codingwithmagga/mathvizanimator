@@ -411,103 +411,153 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
-            id: dropRectangle
+        ColumnLayout {
 
-            Layout.minimumWidth: 600
-            Layout.minimumHeight: 400
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.margins: 20
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-            color: Material.color(Material.Grey)
+            spacing: 10
 
-            // TODO(codingwithmagga): Put this in a reusable component
-            Item {
-                id: dropAreaContainer
+            RowLayout {
 
-                property real aimedRatio: main_window.pixel_height / main_window.pixel_width
+                spacing: 10
 
-                property bool parentIsLarge: parentRatio > aimedRatio
-                property real parentRatio: parent.height / parent.width
-                property real availableWidth: parentIsLarge ? parent.width : height / aimedRatio
+                Layout.topMargin: 20
+                Layout.leftMargin: 100
+                Layout.rightMargin: 100
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
 
-                anchors.fill: parent
+                Label {
+                    Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                    text: "Current time:"
+                }
 
-                DropArea {
-                    id: creationArea
-                    objectName: "MVACreationArea"
+                Slider {
+                    id: timeSlider
 
-                    property var abstractItem: null
-                    property var abstractComponent: null
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
-                    property double baseWidth: main_window.pixel_width
-                    property double baseHeight: baseWidth * dropAreaContainer.aimedRatio
-                    property double scaleFactor: dropAreaContainer.availableWidth / baseWidth
+                    Layout.fillWidth: true
 
-                    signal itemAdded(Item item)
+                    from: 0
+                    to: main_window.video_length
+                    stepSize: 0.1
+                    value: 0
 
-                    anchors.centerIn: parent
-
-                    width: baseWidth
-                    height: baseHeight
-                    scale: scaleFactor
-
-                    clip: true
-
-                    Drag.keys: [root.thekey]
-
-                    onDropped: drop => {
-                                   function itemClicked(itemName) {
-                                       main_window.itemClickedByUser(itemName)
-                                   }
-
-                                   function animationAdded(item_name, animation_type, start_time, duration) {
-                                       main_window.addAnimation(item_name,
-                                                                animation_type,
-                                                                start_time,
-                                                                duration)
-                                   }
-
-                                   drop.accept(Qt.MoveAction)
-
-                                   const component = Qt.createComponent(
-                                       drag.source.item.file)
-
-                                   if (component.status === Component.Ready) {
-
-                                       abstractItem = component.createObject(
-                                           creationArea, {
-                                               "x": drag.x,
-                                               "y": drag.y,
-                                               "init": true
-                                           })
-
-                                       abstractItem.clicked.connect(itemClicked)
-                                       abstractItem.animationAdded.connect(
-                                           animationAdded)
-
-                                       itemAdded(abstractItem)
-                                   } else {
-                                       console.log("Error creating object")
-                                   }
-                               }
-
-                    Rectangle {
-
-                        id: dropZone
-
-                        anchors.fill: parent
-                        color: "white"
+                    onValueChanged: {
+                        main_window.setTimeByUser(value)
                     }
+                }
 
-                    // Clear current item if user clicks in an empty area
-                    TapHandler {
-                        onTapped: {
-                            item_selection_model.setCurrentIndex(
-                                        item_selection_model.model.index(-1,
-                                                                         0),
-                                        ItemSelectionModel.Current | ItemSelectionModel.Rows)
+                Label {
+                    Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                    text: {
+                        return timeSlider.value.toFixed(1)
+                    }
+                }
+            }
+
+            Rectangle {
+                id: dropRectangle
+
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
+                Layout.minimumWidth: 600
+                Layout.minimumHeight: 400
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                Layout.topMargin: 10
+                Layout.margins: 20
+
+                color: Material.color(Material.Grey)
+
+                // TODO(codingwithmagga): Put this in a reusable component
+                Item {
+                    id: dropAreaContainer
+
+                    property real aimedRatio: main_window.pixel_height / main_window.pixel_width
+
+                    property bool parentIsLarge: parentRatio > aimedRatio
+                    property real parentRatio: parent.height / parent.width
+                    property real availableWidth: parentIsLarge ? parent.width : height / aimedRatio
+
+                    anchors.fill: parent
+
+                    DropArea {
+                        id: creationArea
+                        objectName: "MVACreationArea"
+
+                        property var abstractItem: null
+                        property var abstractComponent: null
+
+                        property double baseWidth: main_window.pixel_width
+                        property double baseHeight: baseWidth * dropAreaContainer.aimedRatio
+                        property double scaleFactor: dropAreaContainer.availableWidth / baseWidth
+
+                        signal itemAdded(Item item)
+
+                        anchors.centerIn: parent
+
+                        width: baseWidth
+                        height: baseHeight
+                        scale: scaleFactor
+
+                        clip: true
+
+                        Drag.keys: [root.thekey]
+
+                        onDropped: drop => {
+                                       function itemClicked(itemName) {
+                                           main_window.itemClickedByUser(
+                                                       itemName)
+                                       }
+
+                                       function animationAdded(item_name, animation_type, start_time, duration) {
+                                           main_window.addAnimation(
+                                                       item_name,
+                                                       animation_type,
+                                                       start_time, duration)
+                                       }
+
+                                       drop.accept(Qt.MoveAction)
+
+                                       const component = Qt.createComponent(
+                                           drag.source.item.file)
+
+                                       if (component.status === Component.Ready) {
+
+                                           abstractItem = component.createObject(
+                                               creationArea, {
+                                                   "x": drag.x,
+                                                   "y": drag.y,
+                                                   "init": true
+                                               })
+
+                                           abstractItem.clicked.connect(
+                                               itemClicked)
+                                           abstractItem.animationAdded.connect(
+                                               animationAdded)
+
+                                           itemAdded(abstractItem)
+                                       } else {
+                                           console.log("Error creating object")
+                                       }
+                                   }
+
+                        Rectangle {
+
+                            id: dropZone
+
+                            anchors.fill: parent
+                            color: "white"
+                        }
+
+                        // Clear current item if user clicks in an empty area
+                        TapHandler {
+                            onTapped: {
+                                item_selection_model.setCurrentIndex(
+                                            item_selection_model.model.index(
+                                                -1, 0),
+                                            ItemSelectionModel.Current | ItemSelectionModel.Rows)
+                            }
                         }
                     }
                 }
@@ -767,6 +817,36 @@ ApplicationWindow {
                                             text: display
 
                                             color: row === mAnimationTable.currentRow ? palette.highlightedText : palette.text
+
+                                            MouseArea {
+                                                id: mouseArea
+                                                anchors.fill: parent
+
+                                                acceptedButtons: Qt.RightButton
+
+                                                onReleased: mouse => {
+                                                                mAnimationTableSelectionModel.select(
+                                                                    animation_model.index(
+                                                                        index,
+                                                                        0),
+                                                                    ItemSelectionModel.Select
+                                                                    | ItemSelectionModel.Current)
+                                                                animationMenu.popup()
+                                                            }
+                                            }
+
+                                            Menu {
+                                                id: animationMenu
+                                                MenuItem {
+                                                    text: "Delete animation"
+                                                    onTriggered: {
+                                                        if (row >= 0) {
+                                                            main_window.removeAnimation(
+                                                                        row)
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }

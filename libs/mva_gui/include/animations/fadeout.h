@@ -4,6 +4,8 @@
 #include "realpropertyanimation.h"
 
 class FadeOut : public RealPropertyAnimation {
+  Q_OBJECT
+
  public:
   explicit FadeOut(QObject *parent = nullptr);
 

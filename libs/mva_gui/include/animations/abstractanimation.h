@@ -27,14 +27,17 @@ class AbstractAnimation : public QObject {
   bool isStarted(const qreal time) const;
   bool isDone(const qreal time) const;
 
-  virtual void applyAnimation(AbstractItem* item, const qreal time) const = 0;
-
   friend bool operator<(const AbstractAnimation& l,
                         const AbstractAnimation& r) {
     return l.startTime() < r.startTime();
   }
 
   void setFrameTime(const qreal frame_time);
+
+  void setProperties(const QVariantMap& properties);
+
+  virtual QJsonObject toJson() const;
+  virtual void applyAnimation(AbstractItem* item, const qreal time) const = 0;
 
  signals:
   void startTimeChanged(const qreal new_start_time);
