@@ -186,18 +186,18 @@ void ItemHandler::addAnimation(const QString& item_name,
   QString animation_name;
 
   if (animation_type == "FadeIn") {
-    auto fadein_animation = QSharedPointer<FadeIn>(new FadeIn);
-    fadein_animation->setStartTime(start_time);
-    fadein_animation->setDuration(duration);
-    item_observer->addAnimation(fadein_animation);
+    auto fade_in_animation = QSharedPointer<FadeIn>(new FadeIn);
+    fade_in_animation->setStartTime(start_time);
+    fade_in_animation->setDuration(duration);
+    item_observer->addAnimation(fade_in_animation);
 
     animation_name = "FadeIn";
 
   } else if (animation_type == "FadeOut") {
-    auto fadeout_animation = QSharedPointer<FadeOut>(new FadeOut);
-    fadeout_animation->setStartTime(start_time);
-    fadeout_animation->setDuration(duration);
-    item_observer->addAnimation(fadeout_animation);
+    auto fade_out_animation = QSharedPointer<FadeOut>(new FadeOut);
+    fade_out_animation->setStartTime(start_time);
+    fade_out_animation->setDuration(duration);
+    item_observer->addAnimation(fade_out_animation);
 
     animation_name = "FadeOut";
   } else {
@@ -225,6 +225,12 @@ void ItemHandler::removeAnimation(const qint32 animation_number) {
       m_item_model.index(m_item_selection_model.currentIndex().row(), 0);
   auto currentItem = dynamic_cast<ItemModelItem*>(
       m_item_model.itemFromIndex(index_first_item));
+
+  if (animation_number > currentItem->itemObserver()->animations().size()) {
+    qCCritical(itemhandler)
+        << "Animation can't be removed. Animation number" << animation_number
+        << "is bigger than number of animations stored";
+  }
 
   currentItem->itemObserver()->removeAnimation(animation_number);
   repopulateAnimationModel(currentItem);

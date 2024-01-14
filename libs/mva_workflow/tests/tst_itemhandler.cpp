@@ -31,6 +31,9 @@ class TestItemHandler : public QObject {
   void addItemWithSameName2();
   void addIncompatibleItem();
 
+  void addAnimation_data();
+  void addAnimation();
+
   void checkItemData();
   void checkItemProperties();
 
@@ -44,10 +47,14 @@ class TestItemHandler : public QObject {
 
   void getItems();
 
+  void setTime();
+
   void removeItem();
   void removeCurrentItem();
   void removeMultipleItems();
   void removeNonExistingItem();
+
+  void removeAnimation();
 
   void clearHandler();
 
@@ -141,6 +148,46 @@ void TestItemHandler::addIncompatibleItem() {
   itemhandler.addItem(quick_item.data());
 
   QCOMPARE(itemhandler.numItems(), 0);
+}
+
+void TestItemHandler::addAnimation_data() {
+  QTest::addColumn<QString>("animation_type");
+  QTest::addColumn<qreal>("start_time");
+  QTest::addColumn<qreal>("duration");
+
+  QTest::newRow("FadeIn_default") << "FadeIn" << 0.0 << 1.0;
+  QTest::newRow("FadeIn_long") << "FadeIn" << 0.0 << 3.2;
+  QTest::newRow("FadeIn_late") << "FadeIn" << 3.0 << 1.2;
+  QTest::newRow("FadeOut_default") << "FadeOut" << 0.0 << 1.0;
+  QTest::newRow("FadeOut_long") << "FadeOut" << 0.0 << 3.2;
+  QTest::newRow("FadeOut_late") << "FadeOut" << 3.0 << 1.2;
+}
+
+void TestItemHandler::addAnimation() {
+  QFETCH(QString, animation_type);
+  QFETCH(qreal, start_time);
+  QFETCH(qreal, duration);
+
+  ItemHandler itemhandler;
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  itemhandler.addItem(circle);
+  const auto circle_item =
+      qvariant_cast<AbstractItem *>(circle->property("item"));
+
+  itemhandler.addAnimation(circle_item->name(), animation_type, start_time,
+                           duration);
+
+  const auto item_observer_list = itemhandler.items();
+  QCOMPARE(item_observer_list.size(), 1);
+
+  const auto circle_item_observer = item_observer_list.first();
+  const auto animation_list = circle_item_observer->animations();
+  QCOMPARE(animation_list.size(), 1);
+
+  const auto animation = animation_list.first();
+  QCOMPARE(animation->metaObject()->className(), animation_type);
+  QCOMPARE(animation->duration(), duration);
+  QCOMPARE(animation->startTime(), start_time);
 }
 
 void TestItemHandler::checkItemData() {
@@ -332,6 +379,24 @@ void TestItemHandler::getItems() {
   QVERIFY(item_list.contains(items[1]));
 }
 
+void TestItemHandler::setTime() {
+  ItemHandler itemhandler;
+  const auto items = prepareItemHandler(
+      &itemhandler,
+      QList<QQmlComponent *>{&m_circle_component, &m_rect_component});
+  const auto circle_item =
+      qvariant_cast<AbstractItem *>(items[0]->property("item"));
+  const auto rect_item =
+      qvariant_cast<AbstractItem *>(items[1]->property("item"));
+
+  itemhandler.addAnimation(circle_item->name(), "FadeIn", 0.0, 1.0);
+  itemhandler.addAnimation(rect_item->name(), "FadeOut", 0.0, 1.0);
+
+  itemhandler.setTime(0.5);
+  QCOMPARE(circle_item->opacity(), 0.5);
+  QCOMPARE(rect_item->opacity(), 0.5);
+}
+
 void TestItemHandler::removeItem() {
   ItemHandler itemhandler;
   auto items = prepareItemHandler(&itemhandler,
@@ -379,6 +444,31 @@ void TestItemHandler::removeNonExistingItem() {
 
   itemhandler.removeItem(items[1]);
   QCOMPARE(itemhandler.numItems(), 1);
+}
+
+void TestItemHandler::removeAnimation() {
+  ItemHandler itemhandler;
+  auto circle = dynamic_cast<QQuickItem *>(m_circle_component.create());
+  itemhandler.addItem(circle);
+  const auto circle_item =
+      qvariant_cast<AbstractItem *>(circle->property("item"));
+  itemhandler.setCurrentItem(circle_item->name());
+
+  itemhandler.addAnimation(circle_item->name(), "FadeIn", 0.0, 1.0);
+  itemhandler.addAnimation(circle_item->name(), "FadeOut", 1.1, 1.0);
+  itemhandler.addAnimation(circle_item->name(), "FadeIn", 2.2, 1.0);
+  itemhandler.addAnimation(circle_item->name(), "FadeOut", 3.3, 1.0);
+
+  const auto item_observer_list = itemhandler.items();
+  const auto item_observer = item_observer_list.at(0);
+  QCOMPARE(item_observer->animations().size(), 4);
+
+  int num_animations = 4;
+  for (int i = 0; i < 4; ++i) {
+    itemhandler.removeAnimation(0);
+    num_animations--;
+    QCOMPARE(item_observer->animations().size(), num_animations);
+  }
 }
 
 void TestItemHandler::clearHandler() {

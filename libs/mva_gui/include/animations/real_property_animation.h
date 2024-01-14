@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef REAL_PROPERTY_ANIMATION_H
-#define REAL_PROPERTY_ANIMATION_H
+#ifndef LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
+#define LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
 
 #include "property_animation.h"
 
@@ -51,4 +51,4 @@ class RealPropertyAnimation : public PropertyAnimation {
   qreal m_end_property_value = 1.0;
 };
 
-#endif  // REAL_PROPERTY_ANIMATION_H
+#endif  // LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_

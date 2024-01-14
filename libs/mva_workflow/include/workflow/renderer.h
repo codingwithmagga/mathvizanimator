@@ -50,14 +50,15 @@ class Renderer : public QObject {
                      const qreal current_time) const;
 
  public slots:
-  void render(const QList<QSharedPointer<ItemObserver> > &item_list,
+  void render(const QList<QSharedPointer<ItemObserver>>& item_list,
               const QFileInfo& video_file);
 
  signals:
   void finishedRendering(const QFileInfo& video_file);
 
  private slots:
-  void renderingProcessStarted(const QList<QSharedPointer<ItemObserver> > &item_list);
+  void renderingProcessStarted(
+      const QList<QSharedPointer<ItemObserver>>& item_list);
   void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode,
                                 QProcess::ExitStatus exitStatus);
 

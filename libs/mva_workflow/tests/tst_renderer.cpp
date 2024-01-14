@@ -281,11 +281,14 @@ void TestRenderer::multipleRendering() {
 }
 
 void TestRenderer::renderWithAnimation() {
-  Renderer renderer;
-
   auto parent_item = new QQuickItem();
   parent_item->setX(312);
   parent_item->setY(444);
+
+  auto fadeInAnimation = QSharedPointer<FadeIn>(new FadeIn());
+  auto fadeOutAnimation = QSharedPointer<FadeOut>(new FadeOut());
+  fadeOutAnimation->setStartTime(2.2);
+  fadeOutAnimation->setDuration(1.5);
 
   auto circle = new CircleItem(parent_item);
   circle->setWidth(121);
@@ -293,17 +296,13 @@ void TestRenderer::renderWithAnimation() {
   circle->setColor("green");
   parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
-  auto fadeInAnimation = QSharedPointer<FadeIn>(new FadeIn());
-  auto fadeOutAnimation = QSharedPointer<FadeOut>(new FadeOut());
-  fadeOutAnimation->setStartTime(2.2);
-  fadeOutAnimation->setDuration(1.5);
-
   m_item_list.push_back(
       QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
 
   m_item_list.last()->addAnimation(fadeInAnimation);
   m_item_list.last()->addAnimation(fadeOutAnimation);
 
+  Renderer renderer;
   QSignalSpy spy(&renderer, &Renderer::finishedRendering);
   QFileInfo home_dir_video(QDir::home(), "test_video_animation.mp4");
 
