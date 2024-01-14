@@ -53,11 +53,15 @@ class MainLogic : public QObject {
   void projectWidthChanged(const qint32 new_project_width);
   void projectHeightChanged(const qint32 new_project_height);
 
+  void uiTimeChanged(const qreal time);
+
  private:
   QList<AbstractItem *> getAbstractItemList();
 
   QQmlApplicationEngine *m_qml_engine;
   QObject *m_qml_creation_area;
+
+  qreal m_current_time = 0.0;
 
   MainWindowHandler m_mainwindowhandler;
 

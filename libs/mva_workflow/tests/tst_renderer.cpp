@@ -105,8 +105,6 @@ void TestRenderer::initTestCase() {
   m_item_list.push_back(
       QSharedPointer<ItemObserver>(new ItemObserver(parent_item_3)));
 
-  // TODO(codingwithmagga): Check memory management, maybe this is not necessary
-  // then.
   m_quickitem_list.push_back(parent_item_1);
   m_quickitem_list.push_back(parent_item_2);
   m_quickitem_list.push_back(parent_item_3);

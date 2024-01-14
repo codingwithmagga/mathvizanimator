@@ -48,8 +48,6 @@ MainLogic::MainLogic(QObject *parent) : QObject{parent} {
           &m_itemhandler, &ItemHandler::clear);
   connect(&m_mainwindowhandler, &MainWindowHandler::addAnimationSignal,
           &m_itemhandler, &ItemHandler::addAnimation);
-  connect(&m_mainwindowhandler, &MainWindowHandler::timeChanged, &m_itemhandler,
-          &ItemHandler::setTime);
 
   connect(&m_mainwindowhandler, &MainWindowHandler::pixelWidthChanged, this,
           &MainLogic::projectWidthChanged);
@@ -59,6 +57,9 @@ MainLogic::MainLogic(QObject *parent) : QObject{parent} {
           &Renderer::setFPS);
   connect(&m_mainwindowhandler, &MainWindowHandler::videoLengthChanged,
           &m_renderer, &Renderer::setVideoLength);
+
+  connect(&m_mainwindowhandler, &MainWindowHandler::timeChanged, this,
+          &MainLogic::uiTimeChanged);
 
   connect(&m_renderer, &Renderer::finishedRendering, &m_mainwindowhandler,
           &MainWindowHandler::renderingVideoFinished);
@@ -111,8 +112,7 @@ void MainLogic::connectEngine() {
 
 void MainLogic::createSnapshot(const QFileInfo &snapshot_file_info) {
   auto item_list = m_itemhandler.items();
-  // TODO(codingwithmagga): Set correct time
-  const auto snapshot = m_renderer.createImage(item_list, 0.0);
+  const auto snapshot = m_renderer.createImage(item_list, m_current_time);
 
   snapshot.save(snapshot_file_info.absoluteFilePath());
 }
@@ -238,4 +238,9 @@ void MainLogic::projectHeightChanged(const qint32 new_project_height) {
   m_itemhandler.scaleItemsHeight(ratio);
 
   m_renderer.setHeight(new_project_height);
+}
+
+void MainLogic::uiTimeChanged(const qreal time) {
+  m_itemhandler.setTime(time);
+  m_current_time = time;
 }
