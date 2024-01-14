@@ -18,8 +18,8 @@
 #include "itemhandler.h"
 
 #include "abstractitem.h"
-#include "fadein.h"
-#include "fadeout.h"
+#include "fade_in.h"
+#include "fade_out.h"
 #include "logging.h"
 
 ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
@@ -36,7 +36,7 @@ ItemHandler::ItemHandler(QObject* parent) : QObject{parent} {
   m_property_model.setHorizontalHeaderItem(1, propertyHeaderItemRight);
 
   QStandardItem* animationHeaderItemLeft = new QStandardItem(tr("Animation"));
-  QStandardItem* animationHeaderItemRight = new QStandardItem(tr("Timespan"));
+  QStandardItem* animationHeaderItemRight = new QStandardItem(tr("time span"));
 
   m_animation_model.setHorizontalHeaderItem(0, animationHeaderItemLeft);
   m_animation_model.setHorizontalHeaderItem(1, animationHeaderItemRight);
@@ -121,7 +121,7 @@ void ItemHandler::addItem(
   //  m_item_observer_list.append(item_observer);
   // TODO: delete
   // fromValue makes a copy, so pointer seems to be needed here
-  // or store in class as Qlist/QMAP, but I'm not sure if this is a good idea
+  // or store in class as QList/QMap, but I'm not sure if this is a good idea
   //  stdItemName->setData(QVariant::fromValue(item_observer),
   //                       ItemRoles::ITEM_OBSERVER);
   stdItemName->setItemObserver(item_observer);
@@ -212,11 +212,11 @@ void ItemHandler::addAnimation(const QString& item_name,
     repopulateAnimationModel(item);
   }
 
-  QString animation_timespan = QString::number(start_time) + "-" +
-                               QString::number(start_time + duration);
+  QString animation_time_span = QString::number(start_time) + "-" +
+                                QString::number(start_time + duration);
 
   qCInfo(itemhandler) << "An animation of type" << animation_name
-                      << "with timespan" << animation_timespan
+                      << "with time span" << animation_time_span
                       << "was added to item:" << item_name;
 }
 
@@ -292,15 +292,15 @@ void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item) {
   const auto animations = item->itemObserver()->animations();
 
   for (const auto& animation : animations) {
-    QString animation_timespan =
+    QString animation_time_span =
         QString::number(animation->startTime()) + "-" +
         QString::number(animation->startTime() + animation->duration());
 
-    auto stdItemName(new QStandardItem(animation->metaObject()->className()));
-    auto stdItemTimespan(new QStandardItem(animation_timespan));
+    auto std_item_name(new QStandardItem(animation->metaObject()->className()));
+    auto std_item_time_span(new QStandardItem(animation_time_span));
 
     m_animation_model.appendRow(
-        QList<QStandardItem*>{stdItemName, stdItemTimespan});
+        QList<QStandardItem*>{std_item_name, std_item_time_span});
   }
 }
 

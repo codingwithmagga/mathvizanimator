@@ -51,9 +51,9 @@ void Renderer::render(const QList<QSharedPointer<ItemObserver>>& item_list,
   m_next_process_id++;
 
   /* item_list needs to be captured by value(=). Capturing by reference somehow
-   * breaks the animation vector in ItemObserver. This error occured only in the
-   * application, not in the unit/integration tests. I don't know why, but like
-   * this it works also in the application.
+   * breaks the animation vector in ItemObserver. This error occurred only in
+   * the application, not in the unit/integration tests. I don't know why, but
+   * like this it works also in the application.
    */
   connect(render_process.data(), &QProcess::started, this,
           [=, this] { renderingProcessStarted(item_list); });
@@ -116,7 +116,7 @@ QImage Renderer::createImage(
   QPainter painter(&image);
 
   for (const auto& item_observer : item_list) {
-    item_observer->setTimeProgressiv(current_time);
+    item_observer->setTimeProgressive(current_time);
     item_observer->abstractitem()->paintItem(&painter);
   }
 

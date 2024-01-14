@@ -15,33 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QTest>
+#include "property_animation.h"
 
-#include "fadein.h"
-
-class TestFadeIn : public QObject {
-  Q_OBJECT
- private slots:
-  void toJsonTest();
-};
-
-void TestFadeIn::toJsonTest() {
-  const qreal duration = 1.4;
-  const qreal start_time = 2.1;
-
-  QJsonObject expected_json;
-  expected_json["animation.type"] = "FadeIn";
-  expected_json["animation.duration"] = duration;
-  expected_json["animation.start_time"] = start_time;
-
-  FadeIn fade_in;
-  fade_in.setDuration(duration);
-  fade_in.setStartTime(start_time);
-
-  const auto fade_in_json = fade_in.toJson();
-
-  QCOMPARE(fade_in_json, expected_json);
-}
-
-QTEST_MAIN(TestFadeIn)
-#include "tst_fadein.moc"
+PropertyAnimation::PropertyAnimation(const QString &property, QObject *parent)
+    : AbstractAnimation{parent}, m_property(property) {}

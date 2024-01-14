@@ -23,7 +23,7 @@
 #include <QProcess>
 #include <QSharedPointer>
 
-#include "itemobserver.h"
+#include "item_observer.h"
 
 class Renderer : public QObject {
   Q_OBJECT

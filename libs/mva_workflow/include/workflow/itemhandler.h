@@ -23,7 +23,7 @@
 #include <QQuickItem>
 #include <QStandardItemModel>
 
-#include "itemobserver.h"
+#include "item_observer.h"
 
 class ItemModelItem;
 

@@ -21,8 +21,8 @@
 #include <QTest>
 
 #include "circleitem.h"
-#include "fadein.h"
-#include "fadeout.h"
+#include "fade_in.h"
+#include "fade_out.h"
 #include "rectangle.h"
 #include "renderer.h"
 #include "textitem.h"

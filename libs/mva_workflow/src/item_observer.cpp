@@ -1,8 +1,9 @@
-#include "itemobserver.h"
+#include "item_observer.h"
 
-ItemObserver::ItemObserver(QQuickItem *item) : m_item(item) {}
+ItemObserver::ItemObserver(QQuickItem *const item, QObject *parent)
+    : QObject(parent), m_item(item) {}
 
-void ItemObserver::setTimeProgressiv(const qreal time) {
+void ItemObserver::setTimeProgressive(const qreal time) {
   for (const auto &animation : m_animations) {
     animation->applyAnimation(abstractitem(), time);
   }
@@ -10,24 +11,17 @@ void ItemObserver::setTimeProgressiv(const qreal time) {
 
 void ItemObserver::setTime(const qreal time) {
   for (const auto &animation : m_animations) {
-    if (!animation->isStarted(time)) {
+    if (animation->state(time) == AbstractAnimation::State::NOT_STARTED) {
       continue;
     }
 
-    if (animation->isDone(time)) {
+    if (animation->state(time) == AbstractAnimation::State::DONE) {
       animation->applyAnimation(abstractitem(),
                                 animation->startTime() + animation->duration());
       continue;
     }
     animation->applyAnimation(abstractitem(), time);
   }
-}
-
-// TODO(codingwithmagga): Implement
-bool ItemObserver::itemVisible(const qreal time) const {
-  Q_UNUSED(time)
-  Q_UNIMPLEMENTED();
-  return true;
 }
 
 void ItemObserver::addAnimation(

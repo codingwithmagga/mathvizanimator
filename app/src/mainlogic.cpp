@@ -20,8 +20,8 @@
 #include <QQmlContext>
 #include <QStandardPaths>
 
-#include "fadein.h"
-#include "fadeout.h"
+#include "fade_in.h"
+#include "fade_out.h"
 
 Q_LOGGING_CATEGORY(mainlogic, "cwa.mva.mainlogic")
 
@@ -125,10 +125,10 @@ void MainLogic::renderVideo(const QFileInfo &video_file_info) {
 void MainLogic::saveProject(const QFileInfo &save_file_info) {
   QJsonObject save_json;
   qint32 count = 0;
-  const auto itemobserver_list = m_itemhandler.items();
+  const auto item_observer_list = m_itemhandler.items();
 
-  for (const auto &itemobserver : itemobserver_list) {
-    const auto json = itemobserver->toJson();
+  for (const auto &item_observer : item_observer_list) {
+    const auto json = item_observer->toJson();
     save_json["item_" + QString::number(count)] = json;
     count++;
   }
