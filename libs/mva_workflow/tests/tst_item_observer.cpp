@@ -39,6 +39,9 @@ class TestItemObserver : public QObject {
   void animationsSortedTest();
 
  private:
+  void applyAndCheckTime(const qreal time, const qreal opacity,
+                         const QList<qreal> &initial_time_list);
+
   QSharedPointer<ItemObserver> m_item_observer;
   QSharedPointer<ItemObserver> m_item_observer_no_animations;
   QSharedPointer<FadeIn> m_fade_in_animation;
@@ -62,7 +65,7 @@ void TestItemObserver::initTestCase() {
   circle->setColor("blue");
   circle->setOpacity(0.0);
   circle->setParentItem(m_parent_item.data());
-  m_parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+  m_parent_item->setProperty("item", QVariant::fromValue<CircleItem *>(circle));
 
   m_item_observer =
       QSharedPointer<ItemObserver>(new ItemObserver(m_parent_item.data()));
@@ -84,6 +87,7 @@ void TestItemObserver::setTimeTest_data() {
   QTest::addColumn<qreal>("time");
   QTest::addColumn<qreal>("opacity");
 
+  /* jscpd:ignore-start */
   QTest::newRow("fade_in_start") << 0.0 << 0.0;
   QTest::newRow("fade_in_40_percent") << 0.4 << 0.4;
   QTest::newRow("fade_in_end") << 1.0 << 1.0;
@@ -94,6 +98,7 @@ void TestItemObserver::setTimeTest_data() {
   QTest::newRow("fade_out_75_percent") << 3.4 << 0.25;
   QTest::newRow("fade_out_end") << 3.8 << 0.0;
   QTest::newRow("end_project") << 5.0 << 0.0;
+  /* jscpd:ignore-end */
 }
 
 void TestItemObserver::setTimeTest() {
@@ -104,25 +109,21 @@ void TestItemObserver::setTimeTest() {
 
   const QList<qreal> initial_time_list = {0.0, 0.5, 1.2, 1.7,
                                           2.4, 2.9, 3.5, 4.0};
-
-  for (const auto initial_time : initial_time_list) {
-    m_item_observer->setTime(initial_time);
-    m_item_observer->setTime(time);
-
-    QCOMPARE(m_item_observer->abstractitem()->opacity(), opacity);
-  }
+  applyAndCheckTime(time, opacity, initial_time_list);
 }
 
 void TestItemObserver::timeTestFadeOut_data() {
   QTest::addColumn<qreal>("time");
   QTest::addColumn<qreal>("opacity");
 
+  /* jscpd:ignore-start */
   QTest::newRow("start_project") << 0.0 << 1.0;
   QTest::newRow("fade_out_start") << 2.2 << 1.0;
   QTest::newRow("fade_out_25_percent") << 2.6 << 0.75;
   QTest::newRow("fade_out_75_percent") << 3.4 << 0.25;
   QTest::newRow("fade_out_end") << 3.8 << 0.0;
   QTest::newRow("end_project") << 5.0 << 0.0;
+  /* jscpd:ignore-end */
 }
 
 void TestItemObserver::timeTestFadeOut() {
@@ -134,13 +135,7 @@ void TestItemObserver::timeTestFadeOut() {
 
   const QList<qreal> initial_time_list = {0.0, 0.5, 1.2, 1.7,
                                           2.4, 2.9, 3.5, 4.0};
-
-  for (const auto initial_time : initial_time_list) {
-    m_item_observer->setTime(initial_time);
-    m_item_observer->setTime(time);
-
-    QCOMPARE(m_item_observer->abstractitem()->opacity(), opacity);
-  }
+  applyAndCheckTime(time, opacity, initial_time_list);
 
   m_item_observer->addAnimation(m_fade_in_animation);
 }
@@ -192,6 +187,17 @@ void TestItemObserver::animationsSortedTest() {
       fade_out_3, fade_in_1, fade_in_4, fade_in_2,
       fade_out_1, fade_in_3, fade_out_2};
   QCOMPARE(m_item_observer_no_animations->animations(), expected_order);
+}
+
+void TestItemObserver::applyAndCheckTime(
+    const qreal time, const qreal opacity,
+    const QList<qreal> &initial_time_list) {
+  for (const auto initial_time : initial_time_list) {
+    m_item_observer->setTime(initial_time);
+    m_item_observer->setTime(time);
+
+    QCOMPARE(m_item_observer->abstractitem()->opacity(), opacity);
+  }
 }
 
 QTEST_MAIN(TestItemObserver)

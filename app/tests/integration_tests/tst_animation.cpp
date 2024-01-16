@@ -79,7 +79,7 @@ void AnimationIntegrationTest::removeAnimation() {
   const auto animations = item_observer->animations();
 
   QCOMPARE(animations.size(), 0);
-};
+}
 
 void AnimationIntegrationTest::setUserTime_data() {
   QTest::addColumn<qreal>("time");
