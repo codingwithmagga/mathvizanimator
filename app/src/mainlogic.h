@@ -48,16 +48,14 @@ class MainLogic : public QObject {
   void addItem(QQuickItem *quick_item,
                const QList<QSharedPointer<AbstractAnimation>> &animations =
                    QList<QSharedPointer<AbstractAnimation>>{});
-  void removeItem(QQuickItem *quick_item);
 
   void projectWidthChanged(const qint32 new_project_width);
   void projectHeightChanged(const qint32 new_project_height);
 
   void uiTimeChanged(const qreal time);
+  void renderingVideoFinished();
 
  private:
-  QList<AbstractItem *> getAbstractItemList();
-
   QQmlApplicationEngine *m_qml_engine;
   QObject *m_qml_creation_area;
 

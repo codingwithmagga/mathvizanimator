@@ -118,12 +118,6 @@ void ItemHandler::addItem(
   const auto item_observer =
       QSharedPointer<ItemObserver>(new ItemObserver(quick_item));
   item_observer->addAnimations(animations);
-  //  m_item_observer_list.append(item_observer);
-  // TODO: delete
-  // fromValue makes a copy, so pointer seems to be needed here
-  // or store in class as QList/QMap, but I'm not sure if this is a good idea
-  //  stdItemName->setData(QVariant::fromValue(item_observer),
-  //                       ItemRoles::ITEM_OBSERVER);
   stdItemName->setItemObserver(item_observer);
 
   m_item_model.appendRow(QList<QStandardItem*>{stdItemName, stdItemType});
@@ -385,25 +379,12 @@ void ItemHandler::propertyDataChanged(const QModelIndex& topLeft,
   // Update item
   auto item = dynamic_cast<ItemModelItem*>(
       m_item_model.item(m_item_selection_model.currentIndex().row()));
-  auto quick_item = item->itemObserver()->item();
-  auto itemExtract = extractAbstractItem(quick_item);
-
-  if (itemExtract.error) {
-    return;
-  }
+  const auto item_observer = item->itemObserver();
 
   auto property =
       m_property_model.data(m_property_model.index(topLeft.row(), 0))
           .toString();
-  if (itemExtract.item->editableProperties().abstract_item_properties.contains(
-          property)) {
-    itemExtract.item->setProperty(property.toUtf8(),
-                                  m_property_model.data(topLeft));
-    itemExtract.item->update();
-    return;
-  }
-  quick_item->setProperty(property.toUtf8(), m_property_model.data(topLeft));
-  quick_item->update();
+  item_observer->updateItemProperty(property, m_property_model.data(topLeft));
 }
 
 void ItemHandler::currentItemChanged(const QModelIndex& current,

@@ -433,6 +433,7 @@ ApplicationWindow {
 
                 Slider {
                     id: timeSlider
+                    objectName: "MVATimeSlider"
 
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
@@ -643,6 +644,8 @@ ApplicationWindow {
 
                 TabBar {
                     id: itemBar
+                    objectName: "MVAItemBar"
+
                     width: mObjectsListViewRect.width
                     TabButton {
                         text: qsTr("Properties")
@@ -784,6 +787,7 @@ ApplicationWindow {
 
                                 TableView {
                                     id: mAnimationTable
+                                    objectName: "MVAAnimationTable"
 
                                     alternatingRows: true
                                     clip: true
@@ -803,6 +807,8 @@ ApplicationWindow {
 
                                     delegate: Rectangle {
                                         id: mAnimationTableDelegate
+
+                                        property alias menu: animationMenu
 
                                         implicitWidth: 100
                                         implicitHeight: 50
@@ -834,17 +840,25 @@ ApplicationWindow {
                                                                 animationMenu.popup()
                                                             }
                                             }
+                                        }
 
-                                            Menu {
-                                                id: animationMenu
-                                                MenuItem {
-                                                    text: "Delete animation"
-                                                    onTriggered: {
-                                                        if (row >= 0) {
-                                                            main_window.removeAnimation(
-                                                                        row)
-                                                        }
+                                        Menu {
+                                            id: animationMenu
+
+                                            MenuItem {
+                                                id: animationMenuDelete
+                                                objectName: "MVAAnimationMenuDelete"
+
+                                                text: "Delete animation"
+                                                onTriggered: {
+                                                    if (row >= 0) {
+                                                        main_window.removeAnimation(
+                                                                    row)
                                                     }
+                                                }
+
+                                                function simulateClicked() {
+                                                    triggered()
                                                 }
                                             }
                                         }

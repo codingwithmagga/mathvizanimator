@@ -29,6 +29,10 @@ class TestItemObserver : public QObject {
 
   void setTimeTest_data();
   void setTimeTest();
+
+  void timeTestFadeOut_data();
+  void timeTestFadeOut();
+
   void setTimeProgressiveTest();
 
   void jsonConversionTest();
@@ -56,6 +60,7 @@ void TestItemObserver::initTestCase() {
   circle->setWidth(width);
   circle->setHeight(height);
   circle->setColor("blue");
+  circle->setOpacity(0.0);
   circle->setParentItem(m_parent_item.data());
   m_parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
@@ -95,6 +100,8 @@ void TestItemObserver::setTimeTest() {
   QFETCH(qreal, time);
   QFETCH(qreal, opacity);
 
+  m_item_observer->updateItemProperty("opacity", 0.0);
+
   const QList<qreal> initial_time_list = {0.0, 0.5, 1.2, 1.7,
                                           2.4, 2.9, 3.5, 4.0};
 
@@ -104,6 +111,38 @@ void TestItemObserver::setTimeTest() {
 
     QCOMPARE(m_item_observer->abstractitem()->opacity(), opacity);
   }
+}
+
+void TestItemObserver::timeTestFadeOut_data() {
+  QTest::addColumn<qreal>("time");
+  QTest::addColumn<qreal>("opacity");
+
+  QTest::newRow("start_project") << 0.0 << 1.0;
+  QTest::newRow("fade_out_start") << 2.2 << 1.0;
+  QTest::newRow("fade_out_25_percent") << 2.6 << 0.75;
+  QTest::newRow("fade_out_75_percent") << 3.4 << 0.25;
+  QTest::newRow("fade_out_end") << 3.8 << 0.0;
+  QTest::newRow("end_project") << 5.0 << 0.0;
+}
+
+void TestItemObserver::timeTestFadeOut() {
+  QFETCH(qreal, time);
+  QFETCH(qreal, opacity);
+
+  m_item_observer->removeAnimation(m_fade_in_animation);
+  m_item_observer->updateItemProperty("opacity", 1.0);
+
+  const QList<qreal> initial_time_list = {0.0, 0.5, 1.2, 1.7,
+                                          2.4, 2.9, 3.5, 4.0};
+
+  for (const auto initial_time : initial_time_list) {
+    m_item_observer->setTime(initial_time);
+    m_item_observer->setTime(time);
+
+    QCOMPARE(m_item_observer->abstractitem()->opacity(), opacity);
+  }
+
+  m_item_observer->addAnimation(m_fade_in_animation);
 }
 
 void TestItemObserver::setTimeProgressiveTest() {

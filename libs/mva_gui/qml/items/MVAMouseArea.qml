@@ -61,11 +61,19 @@ MouseArea {
 
     Menu {
         id: contextMenu
+        objectName: "MVAItemContextMenu"
+
         MenuItem {
+            objectName: "MVAItemContextMenuAddAnimation"
+
             text: "Add animation"
+
             onTriggered: {
-                console.log("Option 1 selected")
                 animationDialog.open()
+            }
+
+            function simulateClicked() {
+                triggered()
             }
         }
     }
@@ -74,7 +82,7 @@ MouseArea {
         id: animationDialog
         objectName: "MVAAnimationDialog"
 
-        anchors.centerIn: parent // TODO: change to root
+        anchors.centerIn: parent // TODO: change to root?
         padding: 12
 
         standardButtons: Dialog.Ok | Dialog.Cancel
@@ -84,7 +92,10 @@ MouseArea {
         property list<double> animationData: [startTimeInputField.text, durationInputField.text]
 
         // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
-        function simulateAccepted() {
+        function simulateAccepted(start_time = "0.0", duration = "1.0") {
+            startTimeInputField.text = start_time
+            durationInputField.text = duration
+
             accepted()
             close()
         }

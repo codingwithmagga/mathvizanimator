@@ -28,6 +28,8 @@ class TestCircleItem : public QObject {
   void toJsonTest();
   void paintTest();
 
+  void editablePropertiesTest();
+
  private:
   const qreal m_circle_x = 123;
   const qreal m_circle_y = 212;
@@ -87,6 +89,18 @@ void TestCircleItem::paintTest() {
 
   expected_image.load("://test_images/test_circle_image.png");
   QCOMPARE(image, expected_image);
+}
+
+void TestCircleItem::editablePropertiesTest() {
+  const auto editable_properties = m_circle_item.editableProperties();
+  const auto item_properties = editable_properties.abstract_item_properties;
+  const auto quick_item_properties = editable_properties.quick_item_properties;
+
+  QStringList expected_item_properties{"name", "color", "opacity", "rotation"};
+  QStringList expected_quick_item_properties{"width", "height", "x", "y"};
+
+  QCOMPARE(item_properties, expected_item_properties);
+  QCOMPARE(quick_item_properties, expected_quick_item_properties);
 }
 
 QTEST_MAIN(TestCircleItem)

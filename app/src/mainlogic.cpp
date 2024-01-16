@@ -63,6 +63,8 @@ MainLogic::MainLogic(QObject *parent) : QObject{parent} {
 
   connect(&m_renderer, &Renderer::finishedRendering, &m_mainwindowhandler,
           &MainWindowHandler::renderingVideoFinished);
+  connect(&m_renderer, &Renderer::finishedRendering, this,
+          &MainLogic::renderingVideoFinished);
 
   const auto default_project_settings = m_renderer.projectSettings();
   QList<qint32> conv_project_settings{
@@ -192,26 +194,10 @@ void MainLogic::loadProject(const QFileInfo &load_file_info) {
   }
 }
 
-QList<AbstractItem *> MainLogic::getAbstractItemList() {
-  QList<AbstractItem *> abstractitem_list;
-
-  const auto item_list = m_itemhandler.quickItems();
-  for (const auto &item : item_list) {
-    abstractitem_list.push_back(
-        qvariant_cast<AbstractItem *>(item->property("item")));
-  }
-
-  return abstractitem_list;
-}
-
 void MainLogic::addItem(
     QQuickItem *quick_item,
     const QList<QSharedPointer<AbstractAnimation>> &animations) {
   m_itemhandler.addItem(quick_item, animations);
-}
-
-void MainLogic::removeItem(QQuickItem *quick_item) {
-  m_itemhandler.removeItem(quick_item);
 }
 
 void MainLogic::projectWidthChanged(const qint32 new_project_width) {
@@ -244,3 +230,5 @@ void MainLogic::uiTimeChanged(const qreal time) {
   m_itemhandler.setTime(time);
   m_current_time = time;
 }
+
+void MainLogic::renderingVideoFinished() { uiTimeChanged(m_current_time); }

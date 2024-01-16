@@ -18,7 +18,18 @@
 #include "item_observer.h"
 
 ItemObserver::ItemObserver(QQuickItem *const item, QObject *parent)
-    : QObject(parent), m_item(item) {}
+    : QObject(parent), m_item(item) {
+  const auto item_properties = abstractitem()->getItemProperties();
+  const auto quick_item_properties = abstractitem()->getParentItemProperties();
+
+  for (const auto &property : item_properties) {
+    m_item_start_property_values.insert(property.first, property.second);
+  }
+
+  for (const auto &property : quick_item_properties) {
+    m_quick_item_start_property_values.insert(property.first, property.second);
+  }
+}
 
 void ItemObserver::setTimeProgressive(const qreal time) {
   for (const auto &animation : m_animations) {
@@ -26,7 +37,23 @@ void ItemObserver::setTimeProgressive(const qreal time) {
   }
 }
 
+void ItemObserver::applyStartProperties() {
+  const auto item_properties = m_item_start_property_values.keys();
+  for (const auto &property : item_properties) {
+    abstractitem()->setProperty(property.toUtf8(),
+                                m_item_start_property_values.value(property));
+  }
+
+  const auto quick_item_properties = m_quick_item_start_property_values.keys();
+  for (const auto &property : quick_item_properties) {
+    m_item->setProperty(property.toUtf8(),
+                        m_quick_item_start_property_values.value(property));
+  }
+}
+
 void ItemObserver::setTime(const qreal time) {
+  applyStartProperties();
+
   for (const auto &animation : m_animations) {
     if (animation->state(time) == AbstractAnimation::State::NOT_STARTED) {
       continue;
@@ -53,8 +80,28 @@ void ItemObserver::addAnimations(
   sortAnimations();
 }
 
+void ItemObserver::removeAnimation(
+    const QSharedPointer<AbstractAnimation> &animation) {
+  m_animations.removeOne(animation);
+}
+
 void ItemObserver::removeAnimation(const qint32 animation_number) {
   m_animations.remove(animation_number);
+}
+
+void ItemObserver::updateItemProperty(const QString &property,
+                                      const QVariant &value) {
+  if (abstractitem()->editableProperties().abstract_item_properties.contains(
+          property)) {
+    abstractitem()->setProperty(property.toUtf8(), value);
+    m_item_start_property_values.insert(property.toUtf8(), value);
+
+    abstractitem()->update();
+    return;
+  }
+  m_item->setProperty(property.toUtf8(), value);
+  m_quick_item_start_property_values.insert(property.toUtf8(), value);
+  m_item->update();
 }
 
 QJsonObject ItemObserver::toJson() const {
