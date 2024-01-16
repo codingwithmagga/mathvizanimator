@@ -25,6 +25,12 @@
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
+/**
+ * @brief An abstract class representing a visible item like a circle or a
+ * rectangle.
+ *
+ * Longer description...
+ */
 class AbstractItem : public QQuickPaintedItem {
   Q_OBJECT
 
