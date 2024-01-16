@@ -1,4 +1,3 @@
-
 /* mathvizanimator
  * Copyright (C) 2023 codingwithmagga
  *
@@ -15,21 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick
 
-Item {
-    id: rootItem
+#include "fade_out.h"
 
-    property bool dragActive: false
-    property string dragKey: ""
-    property bool init: false
-
-    signal clicked(string name)
-    signal animationAdded(string name, string type, double start_time, double duration)
-
-    width: 100
-    height: 100
-
-    Drag.active: dragActive
-    Drag.keys: dragKey
+FadeOut::FadeOut(QObject *parent) : RealPropertyAnimation{"opacity", parent} {
+  setStartPropertyValue(1.0);
+  setEndPropertyValue(0.0);
 }

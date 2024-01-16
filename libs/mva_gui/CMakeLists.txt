@@ -13,9 +13,19 @@ qt_add_library(cwa.mva.gui
     STATIC
     include/private/logging.h
     include/windows/mainwindowhandler.h
+    include/animations/abstract_animation.h
+    include/animations/property_animation.h
+    include/animations/real_property_animation.h
+    include/animations/fade_in.h
+    include/animations/fade_out.h
 
     src/logging.cpp
     src/windows/mainwindowhandler.cpp
+    src/animations/abstract_animation.cpp
+    src/animations/property_animation.cpp
+    src/animations/real_property_animation.cpp
+    src/animations/fade_in.cpp
+    src/animations/fade_out.cpp
 )
 
 qt_add_qml_module(cwa.mva.gui
@@ -57,6 +67,7 @@ target_include_directories(cwa.mva.gui
     PUBLIC
         include/items
         include/windows
+        include/animations
     PRIVATE
         include/private
 )

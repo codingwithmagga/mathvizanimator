@@ -5,5 +5,8 @@
         <file>test_images/test_img_default.png</file>
         <file>test_images/test_img_mod.png</file>
         <file>test_images/test_frame_multi.png</file>
+        <file>test_images/test_frame_half_animation.png</file>
+        <file>test_images/test_frame_full_animation.png</file>
+        <file>test_images/test_frame_fadeout_animation.png</file>
     </qresource>
 </RCC>

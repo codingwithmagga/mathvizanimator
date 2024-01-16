@@ -37,3 +37,11 @@ target_link_libraries(renderer_test_exe
         Qt6::Multimedia
 )
 qt_add_resources(renderer_test_exe renderer_test_resources.qrc)
+
+qt_add_executable(item_observer_test_exe tst_item_observer.cpp)
+add_test(NAME item_observer_test_exe COMMAND item_observer_test_exe)
+target_link_libraries(item_observer_test_exe
+    PRIVATE
+        Qt::Test
+        mva::workflow
+)

@@ -85,7 +85,7 @@ void MenuFileIntegrationTest::loadProject() {
 
   const QString test_load_file_absolute_path =
       TestHelperFunctions::absoluteFilePath("test_load_file.json");
-  QVERIFY(test_save_file.copy(test_load_file_absolute_path));
+  test_save_file.copy(test_load_file_absolute_path);
   QVERIFY(QFile::exists(test_load_file_absolute_path));
 
   auto load_action_item =
@@ -105,8 +105,10 @@ void MenuFileIntegrationTest::loadProject() {
 
   QVERIFY(QTest::qWaitFor(
       [&]() { return !load_file_dialog->property("visible").toBool(); }));
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return m_helper_functions->compareNumItems(3); }));
+  QVERIFY(m_helper_functions->compareNumItems(3));
+  QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
+  QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
+  QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
 }
 
 void MenuFileIntegrationTest::saveAsProject() {

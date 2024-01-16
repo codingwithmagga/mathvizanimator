@@ -24,7 +24,7 @@
 
 Renderer::Renderer(QObject* parent) : QObject{parent} {}
 
-void Renderer::render(const QList<AbstractItem*>& item_list,
+void Renderer::render(const QList<QSharedPointer<ItemObserver>>& item_list,
                       const QFileInfo& video_file) {
   qCInfo(renderer) << "Rendering process requested to file "
                    << video_file.absoluteFilePath();
@@ -50,10 +50,15 @@ void Renderer::render(const QList<AbstractItem*>& item_list,
   m_render_process_map.insert(m_next_process_id, render_process);
   m_next_process_id++;
 
+  /* item_list needs to be captured by value(=). Capturing by reference somehow
+   * breaks the animation vector in ItemObserver. This error occurred only in
+   * the application, not in the unit/integration tests. I don't know why, but
+   * like this it works also in the application.
+   */
   connect(render_process.data(), &QProcess::started, this,
-          [item_list, this] { renderingProcessStarted(item_list); });
+          [=, this] { renderingProcessStarted(item_list); });
   connect(render_process.data(), &QProcess::finished, this,
-          [video_file, this](qint32 exitCode, QProcess::ExitStatus exitStatus) {
+          [=, this](qint32 exitCode, QProcess::ExitStatus exitStatus) {
             renderingProcessFinished(video_file, exitCode, exitStatus);
           });
   connect(render_process.data(), &QProcess::readyRead, this,
@@ -68,14 +73,15 @@ void Renderer::render(const QList<AbstractItem*>& item_list,
   render_process->start(program, arguments);
 }
 
-void Renderer::renderingProcessStarted(const QList<AbstractItem*>& item_list) {
+void Renderer::renderingProcessStarted(
+    const QList<QSharedPointer<ItemObserver>>& item_list) {
   qCInfo(renderer) << "Rendering process started";
 
   const qint32 num_frames =
       m_project_settings.fps * m_project_settings.video_length;
 
   for (qint32 frame = 0; frame < num_frames; ++frame) {
-    auto image = createImage(item_list);
+    auto image = createImage(item_list, frame / qreal(m_project_settings.fps));
     auto imageData = reinterpret_cast<char*>(image.bits());
 
     qobject_cast<QProcess*>(sender())->write(
@@ -101,14 +107,17 @@ void Renderer::renderingProcessFinished(const QFileInfo& video_file,
   m_render_process_map.remove(qobject_cast<RenderProcess*>(sender())->id());
 }
 
-QImage Renderer::createImage(const QList<AbstractItem*>& item_list) const {
+QImage Renderer::createImage(
+    const QList<QSharedPointer<ItemObserver>>& item_list,
+    const qreal current_time) const {
   QImage image(m_project_settings.width, m_project_settings.height,
                QImage::Format::Format_RGB32);
   image.fill("white");
   QPainter painter(&image);
 
-  for (const auto& item : item_list) {
-    item->paintItem(&painter);
+  for (const auto& item_observer : item_list) {
+    item_observer->setTimeProgressive(current_time);
+    item_observer->abstractitem()->paintItem(&painter);
   }
 
   return image;

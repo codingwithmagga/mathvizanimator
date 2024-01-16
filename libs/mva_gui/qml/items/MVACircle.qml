@@ -36,9 +36,16 @@ MVABasicItem {
             anchors.fill: parent
             basicItem: rootMVACircle
 
-            onClicked: {
+            onLeftClicked: {
                 rootMVACircle.clicked(circleItem.name)
             }
+
+            onAnimationAdded: (type, start_time, duration) => {
+                                  rootMVACircle.animationAdded(circleItem.name,
+                                                               type,
+                                                               start_time,
+                                                               duration)
+                              }
         }
     }
 }

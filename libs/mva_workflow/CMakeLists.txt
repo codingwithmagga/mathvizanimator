@@ -16,11 +16,13 @@ qt_add_library(workflow
     src/logging.cpp
     src/renderer.cpp
     src/itemhandler.cpp
+    src/item_observer.cpp
 
     include/private/logging.h
     include/workflow/savefilehandler.h
     include/workflow/renderer.h
     include/workflow/itemhandler.h
+    include/workflow/item_observer.h
 )
 add_library(mva::workflow ALIAS workflow)
 

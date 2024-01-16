@@ -23,7 +23,9 @@
 #include <QQuickItem>
 #include <QStandardItemModel>
 
-#include "abstractitem.h"
+#include "item_observer.h"
+
+class ItemModelItem;
 
 class PropertyModel : public QStandardItemModel {
  public:
@@ -34,7 +36,7 @@ class ItemHandler : public QObject {
   Q_OBJECT
 
  public:
-  enum ItemRoles { QUICKITEM = Qt::UserRole + 1 };
+  enum ItemRoles { ITEM_OBSERVER = Qt::UserRole + 1 };
 
   explicit ItemHandler(QObject* parent = nullptr);
 
@@ -42,21 +44,31 @@ class ItemHandler : public QObject {
   QStandardItemModel* model() { return &m_item_model; }
   QItemSelectionModel* selectionModel() { return &m_item_selection_model; }
   QStandardItemModel* propertyModel() { return &m_property_model; }
-  QList<QQuickItem*> items();
+  QStandardItemModel* animationModel() { return &m_animation_model; }
+  QList<QQuickItem*> quickItems();
+  QList<QSharedPointer<ItemObserver>> items();
 
  public slots:
   void clear();
 
-  void addItem(QQuickItem* const quick_item);
+  void addItem(QQuickItem* const quick_item,
+               const QList<QSharedPointer<AbstractAnimation>>& animations =
+                   QList<QSharedPointer<AbstractAnimation>>{});
   void removeItem(QQuickItem* const quick_item);
   void setCurrentItem(const QString& itemName);
   void removeCurrentItem();
+
+  void addAnimation(const QString& item_name, const QString& animation_type,
+                    const qreal start_time, const qreal duration);
+  void removeAnimation(const qint32 animation_number);
 
   void scaleItemsX(const qreal ratio);
   void scaleItemsY(const qreal ratio);
 
   void scaleItemsWidth(const qreal ratio);
   void scaleItemsHeight(const qreal ratio);
+
+  void setTime(const qreal time);
 
  private slots:
   void propertyDataChanged(const QModelIndex& topLeft,
@@ -81,10 +93,12 @@ class ItemHandler : public QObject {
                         const QStringList& allowedProperties);
 
   void repopulatePropertyModel(const QModelIndex& currentIndex);
+  void repopulateAnimationModel(const ItemModelItem* const item);
 
   void setDeleteEachQuickItem(QModelIndex parent = QModelIndex());
 
   QStandardItemModel m_item_model;
+  QStandardItemModel m_animation_model;
   QItemSelectionModel m_item_selection_model;
 
   PropertyModel m_property_model;
@@ -99,6 +113,9 @@ class ItemModelItem : public QStandardItem {
   void setDeleteQuickitem(const bool delete_quick_item) {
     m_delete_quick_item = delete_quick_item;
   }
+
+  QSharedPointer<ItemObserver> itemObserver() const;
+  void setItemObserver(const QSharedPointer<ItemObserver>& new_item_observer);
 
  private:
   /*
@@ -120,6 +137,8 @@ class ItemModelItem : public QStandardItem {
    * shutting down the app.
    */
   bool m_delete_quick_item = false;
+
+  QSharedPointer<ItemObserver> m_item_observer;
 };
 
 #endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEMHANDLER_H_

@@ -1,5 +1,15 @@
 {
-    "element_0": {
+    "item_0": {
+        "animation_0": {
+            "duration": 1,
+            "start_time": 0,
+            "type": "FadeIn"
+        },
+        "animation_1": {
+            "duration": 3,
+            "start_time": 3,
+            "type": "FadeOut"
+        },
         "height": "100",
         "item.color": "#008000",
         "item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml",
@@ -10,7 +20,12 @@
         "x": "293",
         "y": "162"
     },
-    "element_1": {
+    "item_1": {
+        "animation_0": {
+            "duration": 1,
+            "start_time": 0,
+            "type": "FadeIn"
+        },
         "height": "100",
         "item.color": "#ffff00",
         "item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml",
@@ -21,7 +36,7 @@
         "x": "670",
         "y": "230"
     },
-    "element_2": {
+    "item_2": {
         "item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml",
         "item.latexSource": "Hello World!",
         "item.name": "text",

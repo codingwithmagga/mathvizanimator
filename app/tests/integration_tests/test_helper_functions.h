@@ -21,8 +21,11 @@
 #include <QQuickWindow>
 #include <QSharedPointer>
 
+#include "item_observer.h"
+
 class QQuickItem;
 class QQuickWindow;
+class QStandardItemModel;
 class QQmlApplicationEngine;
 
 class TestHelperFunctions {
@@ -33,17 +36,25 @@ class TestHelperFunctions {
   void dragAndDropCurrentItem(const QPoint &end_pos);
   void dragAndDropItem(const QPoint &start_pos, const QPoint &end_pos);
 
-  void clickItem(QQuickItem *quick_item);
+  void clickItem(QQuickItem *quick_item,
+                 Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
 
   QQuickWindow *rootWindow() const { return m_quick_window; }
   QObject *draggableItemListView() const { return m_draggable_item_list_view; }
   QObject *projectItemsTableView() const { return m_project_items_table_view; }
   QQuickItem *creationArea() const { return m_creation_area; }
 
+  QSharedPointer<ItemObserver> getItemObserver(const qint32 item_number) const;
+  QQuickItem *getQuickItem(const qint32 item_number) const;
+
+  QQuickItem *getAnimationItem(const qint32 animation_number) const;
+
   qint32 numCreationAreaItems() const;
   qint32 numProjectTableViewItems() const;
 
   bool compareNumItems(const qint32 num_items);
+  bool compareNumAnimations(const QString item_name,
+                            const qint32 num_animations);
 
   template <typename T>
   T getChild(const QString &name) {
@@ -62,6 +73,9 @@ class TestHelperFunctions {
   QQuickWindow *m_quick_window = Q_NULLPTR;
   QObject *m_draggable_item_list_view = Q_NULLPTR;
   QObject *m_project_items_table_view = Q_NULLPTR;
+  QObject *m_animations_table_view = Q_NULLPTR;
+  QStandardItemModel *m_project_items_model = Q_NULLPTR;
+  QStandardItemModel *m_animations_model = Q_NULLPTR;
   QQuickItem *m_creation_area = Q_NULLPTR;
 };
 

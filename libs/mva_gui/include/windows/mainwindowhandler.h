@@ -53,8 +53,10 @@ class MainWindowHandler : public QObject {
   void openSVGFolder() const;
 
   void removeCurrentItem();
+  void removeAnimation(const qint32 animation_number);
 
   void itemClickedByUser(const QVariant &itemName);
+  void setTimeByUser(const QVariant &time);
 
   void updateProjectSettings(const QVariantList &new_project_settings);
   void updateProjectSettings(const QList<qint32> &new_project_settings);
@@ -63,6 +65,9 @@ class MainWindowHandler : public QObject {
   void setPixelHeight(const qint32 new_pixel_height);
   void setFPS(const qint32 new_fps);
   void setVideoLength(const qint32 new_video_length);
+
+  void addAnimation(const QString &item_name, const QString &animation_type,
+                    const qreal start_time, const qreal duration);
 
  signals:
   void pixelWidthChanged(const qint32 new_pixel_width);
@@ -78,10 +83,16 @@ class MainWindowHandler : public QObject {
   void loadProjectRequested(const QFileInfo &load_file_info);
 
   void removeCurrentItemRequested();
+  void removeAnimationRequested(const qint32 animation_number);
 
   void itemClicked(const QString &name);
+  void timeChanged(const qreal time);
 
   void renderingVideoFinished(const QFileInfo &video_file);
+
+  void addAnimationSignal(const QString &item_name,
+                          const QString &animation_type, const qreal start_time,
+                          const qreal duration);
 
  private:
   QObject *m_qml_creation_area;

@@ -7,6 +7,9 @@ run-name: 'Pull request by @${{ github.actor }}'
     branches:
       - main
       - develop_*
+
+permissions: read-all
+
 env:
   SOURCE_DIR: ${{ github.workspace }}
   QT_VERSION: 6.5.1

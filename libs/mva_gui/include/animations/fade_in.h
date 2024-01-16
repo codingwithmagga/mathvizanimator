@@ -1,4 +1,3 @@
-
 /* mathvizanimator
  * Copyright (C) 2023 codingwithmagga
  *
@@ -15,21 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick
 
-Item {
-    id: rootItem
+#ifndef LIBS_MVA_GUI_INCLUDE_ANIMATIONS_FADE_IN_H_
+#define LIBS_MVA_GUI_INCLUDE_ANIMATIONS_FADE_IN_H_
 
-    property bool dragActive: false
-    property string dragKey: ""
-    property bool init: false
+#include "real_property_animation.h"
 
-    signal clicked(string name)
-    signal animationAdded(string name, string type, double start_time, double duration)
+class FadeIn : public RealPropertyAnimation {
+  Q_OBJECT
 
-    width: 100
-    height: 100
+ public:
+  explicit FadeIn(QObject *parent = nullptr);
 
-    Drag.active: dragActive
-    Drag.keys: dragKey
-}
+ private:
+  void setStartPropertyValue(qreal new_start_property_value) {
+    RealPropertyAnimation::setStartPropertyValue(new_start_property_value);
+  }
+  void setEndPropertyValue(qreal new_end_property_value) {
+    RealPropertyAnimation::setEndPropertyValue(new_end_property_value);
+  }
+};
+
+#endif  // LIBS_MVA_GUI_INCLUDE_ANIMATIONS_FADE_IN_H_

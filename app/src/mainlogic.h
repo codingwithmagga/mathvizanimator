@@ -45,17 +45,21 @@ class MainLogic : public QObject {
   void saveProject(const QFileInfo &save_file_info);
   void loadProject(const QFileInfo &load_file_info);
 
-  void addItem(QQuickItem *quick_item);
-  void removeItem(QQuickItem *quick_item);
+  void addItem(QQuickItem *quick_item,
+               const QList<QSharedPointer<AbstractAnimation>> &animations =
+                   QList<QSharedPointer<AbstractAnimation>>{});
 
   void projectWidthChanged(const qint32 new_project_width);
   void projectHeightChanged(const qint32 new_project_height);
 
- private:
-  QList<AbstractItem *> getAbstractItemList();
+  void uiTimeChanged(const qreal time);
+  void renderingVideoFinished();
 
+ private:
   QQmlApplicationEngine *m_qml_engine;
   QObject *m_qml_creation_area;
+
+  qreal m_current_time = 0.0;
 
   MainWindowHandler m_mainwindowhandler;
 

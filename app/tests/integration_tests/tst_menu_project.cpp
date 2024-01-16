@@ -94,7 +94,6 @@ void MenuProjectIntegrationTest::renderProject() {
 
   QVERIFY(finishedVideoRenderingSpy.wait(60000));
 
-  // QVERIFY(renderProjectToFile(render_file));
   QVERIFY(QFile::exists(render_file));
 }
 

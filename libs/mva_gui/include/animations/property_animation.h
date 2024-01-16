@@ -1,4 +1,3 @@
-
 /* mathvizanimator
  * Copyright (C) 2023 codingwithmagga
  *
@@ -15,21 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick
 
-Item {
-    id: rootItem
+#ifndef LIBS_MVA_GUI_INCLUDE_ANIMATIONS_PROPERTY_ANIMATION_H_
+#define LIBS_MVA_GUI_INCLUDE_ANIMATIONS_PROPERTY_ANIMATION_H_
 
-    property bool dragActive: false
-    property string dragKey: ""
-    property bool init: false
+#include <abstract_animation.h>
 
-    signal clicked(string name)
-    signal animationAdded(string name, string type, double start_time, double duration)
+class PropertyAnimation : public AbstractAnimation {
+ public:
+  explicit PropertyAnimation(const QString& property,
+                             QObject* parent = nullptr);
 
-    width: 100
-    height: 100
+  QString property() const { return m_property; }
 
-    Drag.active: dragActive
-    Drag.keys: dragKey
-}
+ private:
+  const QString m_property;
+};
+
+#endif  // LIBS_MVA_GUI_INCLUDE_ANIMATIONS_PROPERTY_ANIMATION_H_

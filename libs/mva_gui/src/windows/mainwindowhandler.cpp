@@ -52,8 +52,16 @@ void MainWindowHandler::removeCurrentItem() {
   emit removeCurrentItemRequested();
 }
 
+void MainWindowHandler::removeAnimation(const qint32 animation_number) {
+  emit removeAnimationRequested(animation_number);
+}
+
 void MainWindowHandler::itemClickedByUser(const QVariant &item_name) {
   emit itemClicked(item_name.toString());
+}
+
+void MainWindowHandler::setTimeByUser(const QVariant &time) {
+  emit timeChanged(time.toDouble());
 }
 
 void MainWindowHandler::updateProjectSettings(
@@ -131,6 +139,13 @@ void MainWindowHandler::setVideoLength(const qint32 new_video_length) {
 
   m_video_length = new_video_length;
   emit videoLengthChanged(new_video_length);
+}
+
+void MainWindowHandler::addAnimation(const QString &item_name,
+                                     const QString &animation_type,
+                                     const qreal start_time,
+                                     const qreal duration) {
+  emit addAnimationSignal(item_name, animation_type, start_time, duration);
 }
 
 void MainWindowHandler::openSVGFolder() const {

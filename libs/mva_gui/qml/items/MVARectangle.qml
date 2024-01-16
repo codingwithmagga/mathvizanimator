@@ -36,9 +36,15 @@ MVABasicItem {
             anchors.fill: parent
             basicItem: rootMVARectangle
 
-            onClicked: {
+            onLeftClicked: {
                 rootMVARectangle.clicked(rectangleItem.name)
             }
+
+            onAnimationAdded: (type, start_time, duration) => {
+                                  rootMVARectangle.animationAdded(
+                                      rectangleItem.name, type,
+                                      start_time, duration)
+                              }
         }
     }
 }

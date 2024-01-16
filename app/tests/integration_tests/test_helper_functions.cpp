@@ -21,7 +21,10 @@
 #include <QQmlApplicationEngine>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QStandardItemModel>
 #include <QTest>  // should be removed, see comment in constructor
+
+#include "itemhandler.h"
 
 TestHelperFunctions::TestHelperFunctions(
     const QSharedPointer<QQmlApplicationEngine> engine)
@@ -42,11 +45,18 @@ TestHelperFunctions::TestHelperFunctions(
       root_objects.first()->findChild<QObject*>("MVADraggableItemListView");
   m_project_items_table_view =
       root_objects.first()->findChild<QObject*>("MVAProjectItemsTableView");
+  m_animations_table_view =
+      root_objects.first()->findChild<QObject*>("MVAAnimationTable");
   m_creation_area =
       root_objects.first()->findChild<QQuickItem*>("MVACreationArea");
 
+  auto items_model = m_project_items_table_view->property("model");
+  m_project_items_model = qvariant_cast<QStandardItemModel*>(items_model);
+  auto animation_model = m_animations_table_view->property("model");
+  m_animations_model = qvariant_cast<QStandardItemModel*>(animation_model);
+
   QVERIFY2(m_draggable_item_list_view && m_project_items_table_view &&
-               m_creation_area,
+               m_creation_area && m_project_items_model,
            "Important qml objects are missing!");
 }
 
@@ -70,13 +80,49 @@ void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos,
   QTest::mouseRelease(m_quick_window, Qt::LeftButton, Qt::NoModifier, end_pos);
 }
 
-void TestHelperFunctions::clickItem(QQuickItem* quick_item) {
+void TestHelperFunctions::clickItem(QQuickItem* quick_item,
+                                    Qt::MouseButton mouse_button) {
   auto oPoint = quick_item->mapToScene(QPoint(0, 0)).toPoint();
 
   oPoint.rx() += quick_item->width() / 2;
   oPoint.ry() += quick_item->height() / 2;
 
-  QTest::mouseClick(m_quick_window, Qt::LeftButton, Qt::NoModifier, oPoint);
+  QTest::mouseClick(m_quick_window, mouse_button, Qt::NoModifier, oPoint);
+}
+
+QSharedPointer<ItemObserver> TestHelperFunctions::getItemObserver(
+    const qint32 item_number) const {
+  const auto item =
+      dynamic_cast<ItemModelItem*>(m_project_items_model->item(item_number));
+
+  return item->itemObserver();
+}
+
+QQuickItem* TestHelperFunctions::getQuickItem(const qint32 item_number) const {
+  return getItemObserver(item_number)->item();
+}
+
+QQuickItem* TestHelperFunctions::getAnimationItem(
+    const qint32 animation_number) const {
+  const auto rowLoaded = QTest::qWaitFor([&]() {
+    bool rowLoaded = false;
+    QMetaObject::invokeMethod(m_animations_table_view, "isRowLoaded",
+                              Q_RETURN_ARG(bool, rowLoaded),
+                              Q_ARG(int, animation_number));
+
+    return rowLoaded;
+  });
+
+  if (!rowLoaded) {
+    return nullptr;
+  }
+
+  QQuickItem* item = nullptr;
+  QMetaObject::invokeMethod(m_animations_table_view, "itemAtCell",
+                            Q_RETURN_ARG(QQuickItem*, item),
+                            Q_ARG(QPoint, QPoint(animation_number, 0)));
+
+  return item;
 }
 
 qint32 TestHelperFunctions::numCreationAreaItems() const {
@@ -90,10 +136,27 @@ qint32 TestHelperFunctions::numProjectTableViewItems() const {
 bool TestHelperFunctions::compareNumItems(const qint32 num_items) {
   // In creation area there is already one item (background rectangle) at the
   // start. So it has one item more
+
   return QTest::qWaitFor([&]() {
     return numCreationAreaItems() == num_items + 1 &&
            numProjectTableViewItems() == num_items;
   });
+}
+
+bool TestHelperFunctions::compareNumAnimations(const QString item_name,
+                                               const qint32 num_animations) {
+  const auto item_list = m_project_items_model->findItems(item_name);
+
+  if (item_list.size() != 1) {
+    qCritical() << "Item can't be found or name is not unique.";
+    return false;
+  }
+
+  const auto item = dynamic_cast<ItemModelItem*>(item_list.first());
+  const auto item_observer = item->itemObserver();
+
+  return QTest::qWaitFor(
+      [&]() { return item_observer->animations().size() == num_animations; });
 }
 
 QString TestHelperFunctions::absoluteFilePath(const QString file_name) {
