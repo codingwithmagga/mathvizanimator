@@ -15,6 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import subprocess, os
+from pathlib import Path
 
 def configureDoxyfile(input_dir, output_dir):
 
@@ -32,7 +33,7 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
 if read_the_docs_build:
-	input_dir = '..'
+	input_dir = Path('.').parent
 	output_dir = 'build'
 	configureDoxyfile(input_dir, output_dir)
 	subprocess.call('doxygen', shell=True)
