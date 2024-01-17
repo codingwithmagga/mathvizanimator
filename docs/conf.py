@@ -32,7 +32,7 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
 if read_the_docs_build:
-	input_dir = '../libs'
+	input_dir = '../'
 	output_dir = 'build'
 	configureDoxyfile(input_dir, output_dir)
 	subprocess.call('doxygen', shell=True)
@@ -53,7 +53,7 @@ author = 'CodingWithMagga'
 # ones.
 #...
 
-extensions = [ "breathe" ]
+extensions = [ "breathe", "sphinx.ext.graphviz" ]
 
 #...
 

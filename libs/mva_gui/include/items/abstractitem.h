@@ -44,6 +44,11 @@ class AbstractItem : public QQuickPaintedItem {
     QStringList quick_item_properties;
   };
 
+  /**
+   * @brief Constructor for MyClass. TODO
+   *
+   * Initializes the class with default values.
+   */
   explicit AbstractItem(const QString& qml_file, QQuickItem* parent = nullptr);
 
   QString name() const;
