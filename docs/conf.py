@@ -42,8 +42,8 @@ if read_the_docs_build:
 # -- Project information -----------------------------------------------------
 
 project = 'MathVizAnimator'
-copyright = '2023, Marco Schoos'
-author = 'Marco Schoos'
+copyright = '2023, CodingWithMagga'
+author = 'CodingWithMagga'
 
 
 # -- General configuration ---------------------------------------------------
