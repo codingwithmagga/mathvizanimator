@@ -20,6 +20,11 @@
 
 #include "abstractitem.h"
 
+/**
+ * @brief UI class which represents a circle
+ *
+ * Longer description...
+ */
 class CircleItem : public AbstractItem {
   Q_OBJECT
   QML_ELEMENT

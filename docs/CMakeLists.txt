@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 project(mathvizanimator-documentation VERSION ${PROJECT_VERSION} LANGUAGES CXX)
 
 find_package(Doxygen REQUIRED)
+find_package(Sphinx REQUIRED)
 
 # Find all the public headers
 get_target_property(MVA_GUI_PUBLIC_HEADER_DIRS mva::gui INTERFACE_INCLUDE_DIRECTORIES)
@@ -39,3 +40,14 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
                    COMMENT "Generating docs")
 
 add_custom_target(doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+
+set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
+set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/docs/sphinx)
+
+add_custom_target(Sphinx ALL
+                  COMMAND
+                  ${SPHINX_EXECUTABLE} -b html
+                  -Dbreathe_projects.MathVizAnimator=${DOXYGEN_OUTPUT_DIR}/xml
+                  ${SPHINX_SOURCE} ${SPHINX_BUILD}
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                  COMMENT "Generating documentation with Sphinx")

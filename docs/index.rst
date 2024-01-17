@@ -6,8 +6,10 @@ Welcome to the documentation of MathVizAnimator!
 .. doxygenclass:: AbstractItem
    :project: MathVizAnimator
    :members:
-   :allow-dot-graphs:
 
+.. doxygenclass:: CircleItem
+   :project: MathVizAnimator
+   :members:
 
 .. toctree::
     :maxdepth: 2
