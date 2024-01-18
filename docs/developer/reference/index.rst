@@ -3,5 +3,6 @@ Reference Manual
 
 Reference Manual generated from doxygen
 
-.. doxygenindex::
+.. doxygenclass:: AbstractItem
     :project: MathVizAnimator
+    :members:
