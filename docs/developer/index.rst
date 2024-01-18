@@ -6,4 +6,4 @@ Aufbau, verschiedene Bibliotheken etc.
 .. toctree::
     :maxdepth: 2
     
-    reference
+    reference/index

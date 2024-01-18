@@ -7,4 +7,4 @@ Welcome to the documentation of MathVizAnimator!
     :maxdepth: 2
     
     Home <self>
-    developer
+    developer/index
