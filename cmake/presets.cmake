@@ -31,6 +31,8 @@ set(CMAKE_AUTOMOC TRUE)
 set(CMAKE_AUTORCC TRUE)
 set(CMAKE_AUTOUIC TRUE)
 
+set(BUILD_DOCUMENTATION CACHE BOOL OFF)
+
 # For QtCreator to recognize the qml gui lib
 set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/libs/mva_gui CACHE STRING "" FORCE)
 

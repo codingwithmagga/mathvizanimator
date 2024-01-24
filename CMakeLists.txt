@@ -12,6 +12,10 @@ enable_testing(true)
 add_subdirectory(libs)
 add_subdirectory(app)
 
+if(${BUILD_DOCUMENTATION})
+    add_subdirectory(docs)
+endif()
+
 get_all_cmake_tests(TEST_TARGETS ${CMAKE_CURRENT_LIST_DIR})
 
 if(CMAKE_COMPILER_IS_GNUCC AND RUN_CODE_COVERAGE)
