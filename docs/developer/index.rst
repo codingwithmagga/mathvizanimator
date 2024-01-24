@@ -5,7 +5,7 @@ TODO
 Structure, different libs etc.
 Save/load json
 Interface items/animation
-Renderprocess (+Snapshot)
+Render process (+Snapshot)
 Process adding/deleting items/animations
 Short notice about reference manual
 Pull Request Template
