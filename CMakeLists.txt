@@ -11,7 +11,10 @@ enable_testing(true)
 
 add_subdirectory(libs)
 add_subdirectory(app)
-add_subdirectory(docs)
+
+if(${BUILD_DOCUMENTATION})
+    add_subdirectory(docs)
+endif()
 
 get_all_cmake_tests(TEST_TARGETS ${CMAKE_CURRENT_LIST_DIR})
 
