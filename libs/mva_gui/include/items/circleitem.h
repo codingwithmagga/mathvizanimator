@@ -29,7 +29,7 @@ class CircleItem : public AbstractItem {
     Q_OBJECT
     QML_ELEMENT
 
-public:
+  public:
     explicit CircleItem(QQuickItem* parent = nullptr);
 
     void paint(QPainter* painter) override;

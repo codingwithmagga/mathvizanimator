@@ -23,7 +23,7 @@
 class TestMainWindowHandler : public QObject {
     Q_OBJECT
 
-private slots:
+  private slots:
     void changedPropertyTests();
     void unchangedPropertyTests();
 
@@ -43,12 +43,11 @@ private slots:
     void updateProjectSettingsAsVariantWrongSize();
     void updateProjectSettingsAsIntWrongSize();
 
-private:
+  private:
     void setMainWindowProperties(MainWindowHandler* main_window_handler);
     void checkProperties(const MainWindowHandler& main_window_handler);
 
-    QList<QSharedPointer<QSignalSpy>> createPropertySignalSpies(
-        const MainWindowHandler& main_window_handler);
+    QList<QSharedPointer<QSignalSpy>> createPropertySignalSpies(const MainWindowHandler& main_window_handler);
 
     const qint32 m_width = 1000;
     const qint32 m_height = 800;
@@ -86,15 +85,13 @@ void TestMainWindowHandler::unchangedPropertyTests()
 void TestMainWindowHandler::snapshotRequested()
 {
     MainWindowHandler main_window_handler;
-    QSignalSpy snapshotRequestedSpy(&main_window_handler,
-        &MainWindowHandler::snapshotRequested);
+    QSignalSpy snapshotRequestedSpy(&main_window_handler, &MainWindowHandler::snapshotRequested);
 
     QUrl test_snapshot_file_url("file://some_path/video_file.mp4");
     QFileInfo test_snapshot_file_info(test_snapshot_file_url.toLocalFile());
     connect(&main_window_handler, &MainWindowHandler::renderingRequested, this,
         [&test_snapshot_file_info](const QFileInfo& new_snapshot_file_info) {
-            QCOMPARE(test_snapshot_file_info.absoluteFilePath(),
-                new_snapshot_file_info.absoluteFilePath());
+            QCOMPARE(test_snapshot_file_info.absoluteFilePath(), new_snapshot_file_info.absoluteFilePath());
         });
 
     main_window_handler.snapshot(QVariant(test_snapshot_file_url));
@@ -105,15 +102,13 @@ void TestMainWindowHandler::snapshotRequested()
 void TestMainWindowHandler::renderingRequested()
 {
     MainWindowHandler main_window_handler;
-    QSignalSpy renderRequestedSpy(&main_window_handler,
-        &MainWindowHandler::renderingRequested);
+    QSignalSpy renderRequestedSpy(&main_window_handler, &MainWindowHandler::renderingRequested);
 
     QUrl test_video_file_url("file://some_path/video_file.mp4");
     QFileInfo test_video_file_info(test_video_file_url.toLocalFile());
     connect(&main_window_handler, &MainWindowHandler::renderingRequested, this,
         [&test_video_file_info](const QFileInfo& new_video_file_info) {
-            QCOMPARE(test_video_file_info.absoluteFilePath(),
-                new_video_file_info.absoluteFilePath());
+            QCOMPARE(test_video_file_info.absoluteFilePath(), new_video_file_info.absoluteFilePath());
         });
 
     main_window_handler.render(QVariant(test_video_file_url));
@@ -124,8 +119,7 @@ void TestMainWindowHandler::renderingRequested()
 void TestMainWindowHandler::newProjectRequested()
 {
     MainWindowHandler main_window_handler;
-    QSignalSpy newProjectRequestedSpy(&main_window_handler,
-        &MainWindowHandler::newProjectRequested);
+    QSignalSpy newProjectRequestedSpy(&main_window_handler, &MainWindowHandler::newProjectRequested);
 
     main_window_handler.newProject();
 
@@ -137,13 +131,11 @@ void TestMainWindowHandler::saveProjectRequested()
     MainWindowHandler main_window_handler;
     QUrl test_save_file_url("file://some_path/test_file.json");
     QFileInfo test_save_file_info(test_save_file_url.toLocalFile());
-    QSignalSpy saveProjectRequestedSpy(&main_window_handler,
-        &MainWindowHandler::saveProjectRequested);
+    QSignalSpy saveProjectRequestedSpy(&main_window_handler, &MainWindowHandler::saveProjectRequested);
 
     connect(&main_window_handler, &MainWindowHandler::saveProjectRequested, this,
         [&test_save_file_info](const QFileInfo& signal_save_file_info) {
-            QCOMPARE(test_save_file_info.absoluteFilePath(),
-                signal_save_file_info.absoluteFilePath());
+            QCOMPARE(test_save_file_info.absoluteFilePath(), signal_save_file_info.absoluteFilePath());
         });
 
     main_window_handler.saveProject(QVariant(test_save_file_url));
@@ -156,13 +148,11 @@ void TestMainWindowHandler::loadProjectRequested()
     MainWindowHandler main_window_handler;
     QUrl test_load_file_url("file://some_path/test_file.json");
     QFileInfo test_load_file_info(test_load_file_url.toLocalFile());
-    QSignalSpy loadProjectRequestedSpy(&main_window_handler,
-        &MainWindowHandler::loadProjectRequested);
+    QSignalSpy loadProjectRequestedSpy(&main_window_handler, &MainWindowHandler::loadProjectRequested);
 
     connect(&main_window_handler, &MainWindowHandler::loadProjectRequested, this,
         [&test_load_file_info](const QFileInfo& signal_load_file_info) {
-            QCOMPARE(test_load_file_info.absoluteFilePath(),
-                signal_load_file_info.absoluteFilePath());
+            QCOMPARE(test_load_file_info.absoluteFilePath(), signal_load_file_info.absoluteFilePath());
         });
 
     main_window_handler.loadProject(QVariant(test_load_file_url));
@@ -173,8 +163,7 @@ void TestMainWindowHandler::loadProjectRequested()
 void TestMainWindowHandler::removeCurrentItemRequested()
 {
     MainWindowHandler main_window_handler;
-    QSignalSpy removeCurrentItemRequestedSpy(
-        &main_window_handler, &MainWindowHandler::removeCurrentItemRequested);
+    QSignalSpy removeCurrentItemRequestedSpy(&main_window_handler, &MainWindowHandler::removeCurrentItemRequested);
 
     main_window_handler.removeCurrentItem();
 
@@ -185,12 +174,9 @@ void TestMainWindowHandler::itemClickedByUser()
 {
     MainWindowHandler main_window_handler;
     const QString item_name = "Name of item";
-    QSignalSpy itemClickedSpy(&main_window_handler,
-        &MainWindowHandler::itemClicked);
+    QSignalSpy itemClickedSpy(&main_window_handler, &MainWindowHandler::itemClicked);
     connect(&main_window_handler, &MainWindowHandler::itemClicked, this,
-        [&item_name](const QString& item_name_signal) {
-            QCOMPARE(item_name, item_name_signal);
-        });
+        [&item_name](const QString& item_name_signal) { QCOMPARE(item_name, item_name_signal); });
 
     main_window_handler.itemClickedByUser(QVariant(item_name));
 
@@ -251,8 +237,7 @@ void TestMainWindowHandler::updateProjectSettingsAsIntWrongSize()
     }
 }
 
-void TestMainWindowHandler::setMainWindowProperties(
-    MainWindowHandler* main_window_handler)
+void TestMainWindowHandler::setMainWindowProperties(MainWindowHandler* main_window_handler)
 {
     main_window_handler->setPixelWidth(m_width);
     main_window_handler->setPixelHeight(m_height);
@@ -260,8 +245,7 @@ void TestMainWindowHandler::setMainWindowProperties(
     main_window_handler->setVideoLength(m_video_length);
 }
 
-void TestMainWindowHandler::checkProperties(
-    const MainWindowHandler& main_window_handler)
+void TestMainWindowHandler::checkProperties(const MainWindowHandler& main_window_handler)
 {
     QCOMPARE(main_window_handler.pixelWidth(), m_width);
     QCOMPARE(main_window_handler.pixelHeight(), m_height);
@@ -269,20 +253,18 @@ void TestMainWindowHandler::checkProperties(
     QCOMPARE(main_window_handler.videoLength(), m_video_length);
 }
 
-QList<QSharedPointer<QSignalSpy>>
-TestMainWindowHandler::createPropertySignalSpies(
+QList<QSharedPointer<QSignalSpy>> TestMainWindowHandler::createPropertySignalSpies(
     const MainWindowHandler& main_window_handler)
 {
     QList<QSharedPointer<QSignalSpy>> spy_list;
 
-    spy_list.append(QSharedPointer<QSignalSpy>(new QSignalSpy(
-        &main_window_handler, &MainWindowHandler::pixelWidthChanged)));
-    spy_list.append(QSharedPointer<QSignalSpy>(new QSignalSpy(
-        &main_window_handler, &MainWindowHandler::pixelHeightChanged)));
-    spy_list.append(QSharedPointer<QSignalSpy>(
-        new QSignalSpy(&main_window_handler, &MainWindowHandler::fpsChanged)));
-    spy_list.append(QSharedPointer<QSignalSpy>(new QSignalSpy(
-        &main_window_handler, &MainWindowHandler::videoLengthChanged)));
+    spy_list.append(
+        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::pixelWidthChanged)));
+    spy_list.append(
+        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::pixelHeightChanged)));
+    spy_list.append(QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::fpsChanged)));
+    spy_list.append(
+        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::videoLengthChanged)));
 
     return spy_list;
 }

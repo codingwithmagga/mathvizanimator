@@ -33,12 +33,8 @@ void CircleItem::paint(QPainter* painter)
     QPen pen(color(), pen_width);
     painter->setPen(pen);
     painter->setRenderHints(QPainter::Antialiasing, true);
-    painter->drawEllipse(x() + pen_width / 2.0, y() + pen_width / 2.0,
-        width() - pen_width, height() - pen_width);
+    painter->drawEllipse(x() + pen_width / 2.0, y() + pen_width / 2.0, width() - pen_width, height() - pen_width);
     painter->restore();
 }
 
-AbstractItem::EditableProperties CircleItem::editableProperties() const
-{
-    return AbstractItem::editableProperties();
-}
+AbstractItem::EditableProperties CircleItem::editableProperties() const { return AbstractItem::editableProperties(); }

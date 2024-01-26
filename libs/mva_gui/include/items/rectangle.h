@@ -24,7 +24,7 @@ class RectangleItem : public AbstractItem {
     Q_OBJECT
     QML_ELEMENT
 
-public:
+  public:
     explicit RectangleItem(QQuickItem* parent = nullptr);
 
     void paint(QPainter* painter) override;

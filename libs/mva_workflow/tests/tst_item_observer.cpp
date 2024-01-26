@@ -24,7 +24,7 @@
 
 class TestItemObserver : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
     void initTestCase();
 
     void setTimeTest_data();
@@ -38,9 +38,8 @@ private slots:
     void jsonConversionTest();
     void animationsSortedTest();
 
-private:
-    void applyAndCheckTime(const qreal time, const qreal opacity,
-        const QList<qreal>& initial_time_list);
+  private:
+    void applyAndCheckTime(const qreal time, const qreal opacity, const QList<qreal>& initial_time_list);
 
     QSharedPointer<ItemObserver> m_item_observer;
     QSharedPointer<ItemObserver> m_item_observer_no_animations;
@@ -108,8 +107,7 @@ void TestItemObserver::setTimeTest()
 
     m_item_observer->updateItemProperty("opacity", 0.0);
 
-    const QList<qreal> initial_time_list = { 0.0, 0.5, 1.2, 1.7,
-        2.4, 2.9, 3.5, 4.0 };
+    const QList<qreal> initial_time_list = { 0.0, 0.5, 1.2, 1.7, 2.4, 2.9, 3.5, 4.0 };
     applyAndCheckTime(time, opacity, initial_time_list);
 }
 
@@ -136,8 +134,7 @@ void TestItemObserver::timeTestFadeOut()
     m_item_observer->removeAnimation(m_fade_in_animation);
     m_item_observer->updateItemProperty("opacity", 1.0);
 
-    const QList<qreal> initial_time_list = { 0.0, 0.5, 1.2, 1.7,
-        2.4, 2.9, 3.5, 4.0 };
+    const QList<qreal> initial_time_list = { 0.0, 0.5, 1.2, 1.7, 2.4, 2.9, 3.5, 4.0 };
     applyAndCheckTime(time, opacity, initial_time_list);
 
     m_item_observer->addAnimation(m_fade_in_animation);
@@ -146,8 +143,7 @@ void TestItemObserver::timeTestFadeOut()
 void TestItemObserver::setTimeProgressiveTest()
 {
     const QList<qreal> time { 0.0, 0.4, 1.0, 1.3, 1.8, 2.2, 2.6, 3.4, 3.8, 5.0 };
-    const QList<qreal> opacity { 0.0, 0.4, 1.0, 1.0, 1.0,
-        1.0, 0.75, 0.25, 0.0, 0.0 };
+    const QList<qreal> opacity { 0.0, 0.4, 1.0, 1.0, 1.0, 1.0, 0.75, 0.25, 0.0, 0.0 };
 
     for (int i = 0; i < time.size(); ++i) {
         m_item_observer->setTime(time[i]);
@@ -185,20 +181,15 @@ void TestItemObserver::animationsSortedTest()
     fade_out_2->setStartTime(3.2);
     fade_out_3->setStartTime(0.2);
 
-    m_item_observer_no_animations->addAnimations({ fade_in_1, fade_in_2, fade_in_3,
-        fade_in_4, fade_out_1,
-        fade_out_2, fade_out_3 });
+    m_item_observer_no_animations->addAnimations(
+        { fade_in_1, fade_in_2, fade_in_3, fade_in_4, fade_out_1, fade_out_2, fade_out_3 });
 
-    QList<QSharedPointer<AbstractAnimation>> expected_order {
-        fade_out_3, fade_in_1, fade_in_4, fade_in_2,
-        fade_out_1, fade_in_3, fade_out_2
-    };
+    QList<QSharedPointer<AbstractAnimation>> expected_order { fade_out_3, fade_in_1, fade_in_4, fade_in_2, fade_out_1,
+        fade_in_3, fade_out_2 };
     QCOMPARE(m_item_observer_no_animations->animations(), expected_order);
 }
 
-void TestItemObserver::applyAndCheckTime(
-    const qreal time, const qreal opacity,
-    const QList<qreal>& initial_time_list)
+void TestItemObserver::applyAndCheckTime(const qreal time, const qreal opacity, const QList<qreal>& initial_time_list)
 {
     for (const auto initial_time : initial_time_list) {
         m_item_observer->setTime(initial_time);

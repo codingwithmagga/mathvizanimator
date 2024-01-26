@@ -28,14 +28,14 @@
 class ItemModelItem;
 
 class PropertyModel : public QStandardItemModel {
-public:
+  public:
     Qt::ItemFlags flags(const QModelIndex& index) const;
 };
 
 class ItemHandler : public QObject {
     Q_OBJECT
 
-public:
+  public:
     enum ItemRoles { ITEM_OBSERVER = Qt::UserRole + 1 };
 
     explicit ItemHandler(QObject* parent = nullptr);
@@ -48,7 +48,7 @@ public:
     QList<QQuickItem*> quickItems();
     QList<QSharedPointer<ItemObserver>> items();
 
-public slots:
+  public slots:
     void clear();
 
     void addItem(QQuickItem* const quick_item,
@@ -57,8 +57,8 @@ public slots:
     void setCurrentItem(const QString& itemName);
     void removeCurrentItem();
 
-    void addAnimation(const QString& item_name, const QString& animation_type,
-        const qreal start_time, const qreal duration);
+    void addAnimation(
+        const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
     void removeAnimation(const qint32 animation_number);
 
     void scaleItemsX(const qreal ratio);
@@ -69,14 +69,12 @@ public slots:
 
     void setTime(const qreal time);
 
-private slots:
-    void propertyDataChanged(const QModelIndex& topLeft,
-        const QModelIndex& bottomRight,
-        const QList<qint32>& roles = QList<qint32>());
-    void currentItemChanged(const QModelIndex& current,
-        const QModelIndex& previous);
+  private slots:
+    void propertyDataChanged(
+        const QModelIndex& topLeft, const QModelIndex& bottomRight, const QList<qint32>& roles = QList<qint32>());
+    void currentItemChanged(const QModelIndex& current, const QModelIndex& previous);
 
-private:
+  private:
     struct ItemExtract {
         AbstractItem* item;
         bool error;
@@ -88,8 +86,7 @@ private:
 
     QString prepareNewItemName(const QString& old_item_name);
 
-    void appendProperties(const auto obj, auto meta_object,
-        const QStringList& allowedProperties);
+    void appendProperties(const auto obj, auto meta_object, const QStringList& allowedProperties);
 
     void repopulatePropertyModel(const QModelIndex& currentIndex);
     void repopulateAnimationModel(const ItemModelItem* const item);
@@ -104,20 +101,17 @@ private:
 };
 
 class ItemModelItem : public QStandardItem {
-public:
+  public:
     explicit ItemModelItem(const QString& text);
 
     ~ItemModelItem();
 
-    void setDeleteQuickitem(const bool delete_quick_item)
-    {
-        m_delete_quick_item = delete_quick_item;
-    }
+    void setDeleteQuickitem(const bool delete_quick_item) { m_delete_quick_item = delete_quick_item; }
 
     QSharedPointer<ItemObserver> itemObserver() const;
     void setItemObserver(const QSharedPointer<ItemObserver>& new_item_observer);
 
-private:
+  private:
     /*
      * This variable is necessary to determine if the (possibly) containing
      * QQuickItem should be deleted or not. If the user deletes the item it should

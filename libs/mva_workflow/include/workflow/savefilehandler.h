@@ -24,7 +24,7 @@
 #include <QSaveFile>
 
 class SaveFileHandler {
-public:
+  public:
     SaveFileHandler() = default;
 
     QDir saveDir() const;
@@ -33,12 +33,10 @@ public:
     bool saveJSON(const QString& file_name, const QJsonObject json_data) const;
     QJsonDocument loadJSON(const QFileInfo& fileinfo) const;
 
-private:
-    QSaveFile prepareSaveFile(const QString& name,
-        const QString& extension) const;
+  private:
+    QSaveFile prepareSaveFile(const QString& name, const QString& extension) const;
 
-    QString prepareFileName(const QString& extension,
-        const QFileInfo& file_info) const;
+    QString prepareFileName(const QString& extension, const QFileInfo& file_info) const;
 
     QDir m_save_dir = QDir::home();
 };

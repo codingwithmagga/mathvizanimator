@@ -24,7 +24,7 @@
 #include "mainlogic.h"
 
 class SetupMain {
-public:
+  public:
     struct SetupObjects {
         QSharedPointer<MainLogic> mainlogic;
         QSharedPointer<QQmlApplicationEngine> engine;
@@ -32,17 +32,15 @@ public:
 
     SetupMain() = delete;
 
-    static SetupObjects setupApp(
-        const QSharedPointer<QGuiApplication> gui_app = Q_NULLPTR)
+    static SetupObjects setupApp(const QSharedPointer<QGuiApplication> gui_app = Q_NULLPTR)
     {
         SetupObjects setup_objects;
 
-        qSetMessagePattern(
-            "%{time dd.MM.yyyy hh:mm:ss.zzz} | "
-            "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{"
-            "if-"
-            "critical}CRT%{endif}%{if-fatal}FTL%{endif} | %{category} | "
-            "%{message}");
+        qSetMessagePattern("%{time dd.MM.yyyy hh:mm:ss.zzz} | "
+                           "%{if-debug}DBG%{endif}%{if-info}INF%{endif}%{if-warning}WRN%{endif}%{"
+                           "if-"
+                           "critical}CRT%{endif}%{if-fatal}FTL%{endif} | %{category} | "
+                           "%{message}");
 
         setup_objects.mainlogic = QSharedPointer<MainLogic>(new MainLogic);
         setup_objects.engine = QSharedPointer<QQmlApplicationEngine>(new QQmlApplicationEngine);
@@ -52,15 +50,11 @@ public:
 
         const QUrl url("qrc:/qt/qml/cwa/mva/gui/qml/MainWindow.qml");
 
-        if (gui_app)
-
-        {
-
-                     QCoreApplication::setApplicationName("mathvizanimator");
+        if (gui_app) {
+            QCoreApplication::setApplicationName("mathvizanimator");
             QCoreApplication::setOrganizationName("codingwithmagga");
             QObject::connect(
-                setup_objects.engine.data(),
-                &QQmlApplicationEngine::objectCreationFailed, gui_app.data(),
+                setup_objects.engine.data(), &QQmlApplicationEngine::objectCreationFailed, gui_app.data(),
                 []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
         }
 

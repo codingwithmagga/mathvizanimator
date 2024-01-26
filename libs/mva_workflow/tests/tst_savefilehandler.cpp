@@ -21,7 +21,7 @@
 
 class TestSaveFileHandler : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
     void initTestCase();
     void init();
 
@@ -34,7 +34,7 @@ private slots:
     void cantOpenSaveFile();
     void cantOpenLoadFile();
 
-private:
+  private:
     SaveFileHandler m_savefile_handler;
     QJsonObject m_test_json_data;
 };
@@ -82,8 +82,7 @@ void TestSaveFileHandler::cleanup()
 void TestSaveFileHandler::saveFileExists()
 {
     QVERIFY(m_savefile_handler.saveJSON("saveTest", m_test_json_data));
-    QVERIFY(QFileInfo::exists(
-        m_savefile_handler.saveDir().absoluteFilePath("saveTest.json")));
+    QVERIFY(QFileInfo::exists(m_savefile_handler.saveDir().absoluteFilePath("saveTest.json")));
 }
 
 void TestSaveFileHandler::loadFile()
@@ -111,8 +110,7 @@ void TestSaveFileHandler::cantOpenSaveFile()
 
 void TestSaveFileHandler::cantOpenLoadFile()
 {
-    QCOMPARE(m_savefile_handler.loadJSON(QFileInfo("test.json")),
-        QJsonDocument {});
+    QCOMPARE(m_savefile_handler.loadJSON(QFileInfo("test.json")), QJsonDocument {});
 }
 
 QTEST_MAIN(TestSaveFileHandler)

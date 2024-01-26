@@ -26,15 +26,11 @@
 class AbstractAnimation : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(qreal start_time READ startTime WRITE setStartTime NOTIFY
-            startTimeChanged FINAL)
-    Q_PROPERTY(qreal duration READ duration WRITE setDuration NOTIFY
-            durationChanged FINAL)
+    Q_PROPERTY(qreal start_time READ startTime WRITE setStartTime NOTIFY startTimeChanged FINAL)
+    Q_PROPERTY(qreal duration READ duration WRITE setDuration NOTIFY durationChanged FINAL)
 
-public:
-    enum class State { NOT_STARTED,
-        RUNNING,
-        DONE };
+  public:
+    enum class State { NOT_STARTED, RUNNING, DONE };
 
     explicit AbstractAnimation(QObject* parent = Q_NULLPTR);
 
@@ -53,16 +49,13 @@ public:
     virtual QJsonObject toJson() const;
     virtual void applyAnimation(AbstractItem* item, const qreal time) const = 0;
 
-    inline bool operator<(const AbstractAnimation& rhs)
-    {
-        return startTime() < rhs.startTime();
-    }
+    inline bool operator<(const AbstractAnimation& rhs) { return startTime() < rhs.startTime(); }
 
-signals:
+  signals:
     void startTimeChanged(const qreal new_start_time);
     void durationChanged(const qreal new_duration);
 
-private:
+  private:
     bool isStarted(const qreal time) const;
     bool isDone(const qreal time) const;
 

@@ -31,15 +31,12 @@ class TextItem : public AbstractItem {
 
     // TODO(codingwithmagga): Relocate to a SvgHandler class or LatexHandler or
     // similar
-    Q_PROPERTY(QString latexSource READ getLatexSource WRITE setLatexSource NOTIFY
-            latexSourceChanged)
+    Q_PROPERTY(QString latexSource READ getLatexSource WRITE setLatexSource NOTIFY latexSourceChanged)
 
-    Q_PROPERTY(
-        QString svgFile READ getSvgFile WRITE setSvgFile NOTIFY svgFileChanged)
-    Q_PROPERTY(qreal scaleText READ getScaleText WRITE setScaleText NOTIFY
-            scaleTextChanged)
+    Q_PROPERTY(QString svgFile READ getSvgFile WRITE setSvgFile NOTIFY svgFileChanged)
+    Q_PROPERTY(qreal scaleText READ getScaleText WRITE setScaleText NOTIFY scaleTextChanged)
 
-public:
+  public:
     explicit TextItem(QQuickItem* parent = nullptr);
 
     QString getSvgFile() const { return m_svg_file.absoluteFilePath(); }
@@ -58,12 +55,12 @@ public:
 
     EditableProperties editableProperties() const override;
 
-signals:
+  signals:
     void latexSourceChanged(const QString& new_latex_source);
     void svgFileChanged(const QFileInfo& new_svg_file);
     void scaleTextChanged(const qreal new_scale_text);
 
-private:
+  private:
     void removeUnusedLatexFiles(const QString& hash);
 
     QFileInfo m_svg_file = QFileInfo("://templates/placeholder.svg");

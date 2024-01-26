@@ -22,14 +22,14 @@
 
 class TestTextItem : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
     void initTestCase();
 
     void toJsonTest();
     void latexRenderTest();
     void paintTest();
 
-private:
+  private:
     const qreal m_text_x = 46;
     const qreal m_text_y = 98;
 
@@ -88,8 +88,7 @@ void TestTextItem::latexRenderTest()
 
     QVERIFY(svg_file.exists());
     QCOMPARE(m_text_item.getLatexSource(), test_latex);
-    QCOMPARE(m_text_item.getSvgFile(),
-        appPath.absoluteFilePath(svg_file.fileName()));
+    QCOMPARE(m_text_item.getSvgFile(), appPath.absoluteFilePath(svg_file.fileName()));
     QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".aux")));
     QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".dvi")));
     QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".log")));

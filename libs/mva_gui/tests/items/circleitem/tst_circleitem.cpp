@@ -22,7 +22,7 @@
 
 class TestCircleItem : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
     void initTestCase();
 
     void toJsonTest();
@@ -30,7 +30,7 @@ private slots:
 
     void editablePropertiesTest();
 
-private:
+  private:
     const qreal m_circle_x = 123;
     const qreal m_circle_y = 212;
     const qreal m_circle_width = 150;

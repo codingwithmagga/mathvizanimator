@@ -83,12 +83,6 @@ void AbstractAnimation::setDuration(const qreal duration)
     emit startTimeChanged(m_duration);
 }
 
-bool AbstractAnimation::isStarted(const qreal time) const
-{
-    return time >= m_start_time;
-}
+bool AbstractAnimation::isStarted(const qreal time) const { return time >= m_start_time; }
 
-bool AbstractAnimation::isDone(const qreal time) const
-{
-    return time >= m_start_time + m_duration + m_frame_time;
-}
+bool AbstractAnimation::isDone(const qreal time) const { return time >= m_start_time + m_duration + m_frame_time; }

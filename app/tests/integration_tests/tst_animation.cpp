@@ -24,7 +24,7 @@
 class AnimationIntegrationTest : public QObject {
     Q_OBJECT
 
-private slots:
+  private slots:
     void init();
 
     void addAnimation();
@@ -35,9 +35,8 @@ private slots:
 
     void cleanup();
 
-private:
-    void addAnimationToItem(const qint32 item_number, const qreal start_time,
-        const qreal duration);
+  private:
+    void addAnimationToItem(const qint32 item_number, const qreal start_time, const qreal duration);
     void removeAnimationFromCurrentItem(const qint32 animation_number);
 
     SetupMain::SetupObjects m_app_objects;
@@ -50,8 +49,7 @@ void AnimationIntegrationTest::init()
 {
     m_app_objects = SetupMain::setupApp();
 
-    m_helper_functions = QSharedPointer<TestHelperFunctions>(
-        new TestHelperFunctions(m_app_objects.engine));
+    m_helper_functions = QSharedPointer<TestHelperFunctions>(new TestHelperFunctions(m_app_objects.engine));
 }
 
 void AnimationIntegrationTest::addAnimation()
@@ -113,8 +111,7 @@ void AnimationIntegrationTest::setUserTime()
     const auto item = item_observer->abstractitem();
     item_observer->updateItemProperty("opacity", 0.0);
 
-    const QList<qreal> initial_time_list = { 0.0, 0.5, 1.2, 1.7,
-        2.4, 2.9, 3.5, 4.0 };
+    const QList<qreal> initial_time_list = { 0.0, 0.5, 1.2, 1.7, 2.4, 2.9, 3.5, 4.0 };
 
     auto time_slider = m_helper_functions->getChild<QObject*>("MVATimeSlider");
     for (const auto initial_time : initial_time_list) {
@@ -132,46 +129,36 @@ void AnimationIntegrationTest::cleanup()
     m_app_objects.mainlogic.clear();
 }
 
-void AnimationIntegrationTest::addAnimationToItem(const qint32 item_number,
-    const qreal start_time,
-    const qreal duration)
+void AnimationIntegrationTest::addAnimationToItem(
+    const qint32 item_number, const qreal start_time, const qreal duration)
 {
-    m_helper_functions->clickItem(m_helper_functions->getQuickItem(item_number),
-        Qt::MouseButton::RightButton);
+    m_helper_functions->clickItem(m_helper_functions->getQuickItem(item_number), Qt::MouseButton::RightButton);
     auto item_context_menu = m_helper_functions->getChild<QObject*>("MVAItemContextMenu");
     auto item_context_menu_add_animation = m_helper_functions->getChild<QObject*>("MVAItemContextMenuAddAnimation");
 
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return item_context_menu->property("visible").toBool(); }));
-    QVERIFY(QTest::qWaitFor([&]() {
-        return item_context_menu_add_animation->property("visible").toBool();
-    }));
+    QVERIFY(QTest::qWaitFor([&]() { return item_context_menu->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return item_context_menu_add_animation->property("visible").toBool(); }));
 
     QMetaObject::invokeMethod(item_context_menu_add_animation, "simulateClicked");
 
     auto add_animation_dialog = m_helper_functions->getChild<QObject*>("MVAAnimationDialog");
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return add_animation_dialog->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return add_animation_dialog->property("visible").toBool(); }));
 
-    QMetaObject::invokeMethod(add_animation_dialog, "simulateAccepted",
-        Q_ARG(QVariant, QVariant(start_time)),
+    QMetaObject::invokeMethod(add_animation_dialog, "simulateAccepted", Q_ARG(QVariant, QVariant(start_time)),
         Q_ARG(QVariant, QVariant(duration)));
 }
 
-void AnimationIntegrationTest::removeAnimationFromCurrentItem(
-    const qint32 animation_number)
+void AnimationIntegrationTest::removeAnimationFromCurrentItem(const qint32 animation_number)
 {
     auto item_bar = m_helper_functions->getChild<QObject*>("MVAItemBar");
     item_bar->setProperty("currentIndex", 1);
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return item_bar->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return item_bar->property("visible").toBool(); }));
 
     auto animation_item = m_helper_functions->getAnimationItem(animation_number);
     m_helper_functions->clickItem(animation_item, Qt::MouseButton::RightButton);
 
     auto animation_menu_delete = animation_item->findChild<QObject*>("MVAAnimationMenuDelete");
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return animation_menu_delete->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return animation_menu_delete->property("visible").toBool(); }));
     QMetaObject::invokeMethod(animation_menu_delete, "simulateClicked");
 }
 

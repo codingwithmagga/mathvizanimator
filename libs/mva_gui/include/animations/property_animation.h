@@ -21,13 +21,12 @@
 #include <abstract_animation.h>
 
 class PropertyAnimation : public AbstractAnimation {
-public:
-    explicit PropertyAnimation(const QString& property,
-        QObject* parent = nullptr);
+  public:
+    explicit PropertyAnimation(const QString& property, QObject* parent = nullptr);
 
     QString property() const { return m_property; }
 
-private:
+  private:
     const QString m_property;
 };
 

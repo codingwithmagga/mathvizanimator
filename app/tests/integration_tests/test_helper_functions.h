@@ -29,15 +29,13 @@ class QStandardItemModel;
 class QQmlApplicationEngine;
 
 class TestHelperFunctions {
-public:
-    explicit TestHelperFunctions(
-        const QSharedPointer<QQmlApplicationEngine> engine);
+  public:
+    explicit TestHelperFunctions(const QSharedPointer<QQmlApplicationEngine> engine);
 
     void dragAndDropCurrentItem(const QPoint& end_pos);
     void dragAndDropItem(const QPoint& start_pos, const QPoint& end_pos);
 
-    void clickItem(QQuickItem* quick_item,
-        Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
+    void clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
 
     QQuickWindow* rootWindow() const { return m_quick_window; }
     QObject* draggableItemListView() const { return m_draggable_item_list_view; }
@@ -53,11 +51,9 @@ public:
     qint32 numProjectTableViewItems() const;
 
     bool compareNumItems(const qint32 num_items);
-    bool compareNumAnimations(const QString item_name,
-        const qint32 num_animations);
+    bool compareNumAnimations(const QString item_name, const qint32 num_animations);
 
-    template <typename T>
-    T getChild(const QString& name)
+    template <typename T> T getChild(const QString& name)
     {
         auto child = m_quick_window->findChild<T>(name);
         if (!child) {
@@ -68,7 +64,7 @@ public:
 
     static QString absoluteFilePath(const QString file_name);
 
-private:
+  private:
     QSharedPointer<QQmlApplicationEngine> m_engine;
 
     QQuickWindow* m_quick_window = Q_NULLPTR;

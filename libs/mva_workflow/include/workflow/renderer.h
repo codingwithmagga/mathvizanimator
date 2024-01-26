@@ -28,7 +28,7 @@
 class Renderer : public QObject {
     Q_OBJECT
 
-public:
+  public:
     struct ProjectSettings {
         qint32 width = 1024;
         qint32 height = 768;
@@ -46,23 +46,19 @@ public:
     void setFPS(const qint32 new_fps);
     void setVideoLength(const qint32 new_video_length);
 
-    QImage createImage(const QList<QSharedPointer<ItemObserver>>& item_list,
-        const qreal current_time) const;
+    QImage createImage(const QList<QSharedPointer<ItemObserver>>& item_list, const qreal current_time) const;
 
-public slots:
-    void render(const QList<QSharedPointer<ItemObserver>>& item_list,
-        const QFileInfo& video_file);
+  public slots:
+    void render(const QList<QSharedPointer<ItemObserver>>& item_list, const QFileInfo& video_file);
 
-signals:
+  signals:
     void finishedRendering(const QFileInfo& video_file);
 
-private slots:
-    void renderingProcessStarted(
-        const QList<QSharedPointer<ItemObserver>>& item_list);
-    void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode,
-        QProcess::ExitStatus exitStatus);
+  private slots:
+    void renderingProcessStarted(const QList<QSharedPointer<ItemObserver>>& item_list);
+    void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode, QProcess::ExitStatus exitStatus);
 
-private:
+  private:
     ProjectSettings m_project_settings;
     QMap<qint32, QSharedPointer<QProcess>> m_render_process_map;
 
@@ -72,7 +68,7 @@ private:
 class RenderProcess : public QProcess {
     Q_OBJECT
 
-public:
+  public:
     explicit RenderProcess(const qint32 id, QObject* parent = Q_NULLPTR)
         : QProcess { parent }
         , m_id(id)
@@ -81,7 +77,7 @@ public:
 
     qint32 id() const { return m_id; }
 
-private:
+  private:
     const qint32 m_id;
 };
 

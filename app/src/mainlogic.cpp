@@ -28,51 +28,35 @@ Q_LOGGING_CATEGORY(mainlogic, "cwa.mva.mainlogic")
 MainLogic::MainLogic(QObject* parent)
     : QObject { parent }
 {
-    m_savefilehandler.setSaveDir(
-        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    m_savefilehandler.setSaveDir(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
 
-    connect(&m_mainwindowhandler, &MainWindowHandler::snapshotRequested, this,
-        &MainLogic::createSnapshot);
-    connect(&m_mainwindowhandler, &MainWindowHandler::renderingRequested, this,
-        &MainLogic::renderVideo);
-    connect(&m_mainwindowhandler, &MainWindowHandler::saveProjectRequested, this,
-        &MainLogic::saveProject);
-    connect(&m_mainwindowhandler, &MainWindowHandler::loadProjectRequested, this,
-        &MainLogic::loadProject);
+    connect(&m_mainwindowhandler, &MainWindowHandler::snapshotRequested, this, &MainLogic::createSnapshot);
+    connect(&m_mainwindowhandler, &MainWindowHandler::renderingRequested, this, &MainLogic::renderVideo);
+    connect(&m_mainwindowhandler, &MainWindowHandler::saveProjectRequested, this, &MainLogic::saveProject);
+    connect(&m_mainwindowhandler, &MainWindowHandler::loadProjectRequested, this, &MainLogic::loadProject);
 
-    connect(&m_mainwindowhandler, &MainWindowHandler::removeCurrentItemRequested,
-        &m_itemhandler, &ItemHandler::removeCurrentItem);
-    connect(&m_mainwindowhandler, &MainWindowHandler::removeAnimationRequested,
-        &m_itemhandler, &ItemHandler::removeAnimation);
-    connect(&m_mainwindowhandler, &MainWindowHandler::itemClicked, &m_itemhandler,
-        &ItemHandler::setCurrentItem);
-    connect(&m_mainwindowhandler, &MainWindowHandler::newProjectRequested,
-        &m_itemhandler, &ItemHandler::clear);
-    connect(&m_mainwindowhandler, &MainWindowHandler::addAnimationSignal,
-        &m_itemhandler, &ItemHandler::addAnimation);
+    connect(&m_mainwindowhandler, &MainWindowHandler::removeCurrentItemRequested, &m_itemhandler,
+        &ItemHandler::removeCurrentItem);
+    connect(&m_mainwindowhandler, &MainWindowHandler::removeAnimationRequested, &m_itemhandler,
+        &ItemHandler::removeAnimation);
+    connect(&m_mainwindowhandler, &MainWindowHandler::itemClicked, &m_itemhandler, &ItemHandler::setCurrentItem);
+    connect(&m_mainwindowhandler, &MainWindowHandler::newProjectRequested, &m_itemhandler, &ItemHandler::clear);
+    connect(&m_mainwindowhandler, &MainWindowHandler::addAnimationSignal, &m_itemhandler, &ItemHandler::addAnimation);
 
-    connect(&m_mainwindowhandler, &MainWindowHandler::pixelWidthChanged, this,
-        &MainLogic::projectWidthChanged);
-    connect(&m_mainwindowhandler, &MainWindowHandler::pixelHeightChanged, this,
-        &MainLogic::projectHeightChanged);
-    connect(&m_mainwindowhandler, &MainWindowHandler::fpsChanged, &m_renderer,
-        &Renderer::setFPS);
-    connect(&m_mainwindowhandler, &MainWindowHandler::videoLengthChanged,
-        &m_renderer, &Renderer::setVideoLength);
+    connect(&m_mainwindowhandler, &MainWindowHandler::pixelWidthChanged, this, &MainLogic::projectWidthChanged);
+    connect(&m_mainwindowhandler, &MainWindowHandler::pixelHeightChanged, this, &MainLogic::projectHeightChanged);
+    connect(&m_mainwindowhandler, &MainWindowHandler::fpsChanged, &m_renderer, &Renderer::setFPS);
+    connect(&m_mainwindowhandler, &MainWindowHandler::videoLengthChanged, &m_renderer, &Renderer::setVideoLength);
 
-    connect(&m_mainwindowhandler, &MainWindowHandler::timeChanged, this,
-        &MainLogic::uiTimeChanged);
+    connect(&m_mainwindowhandler, &MainWindowHandler::timeChanged, this, &MainLogic::uiTimeChanged);
 
-    connect(&m_renderer, &Renderer::finishedRendering, &m_mainwindowhandler,
-        &MainWindowHandler::renderingVideoFinished);
-    connect(&m_renderer, &Renderer::finishedRendering, this,
-        &MainLogic::renderingVideoFinished);
+    connect(
+        &m_renderer, &Renderer::finishedRendering, &m_mainwindowhandler, &MainWindowHandler::renderingVideoFinished);
+    connect(&m_renderer, &Renderer::finishedRendering, this, &MainLogic::renderingVideoFinished);
 
     const auto default_project_settings = m_renderer.projectSettings();
-    QList<qint32> conv_project_settings {
-        default_project_settings.width, default_project_settings.height,
-        default_project_settings.fps, default_project_settings.video_length
-    };
+    QList<qint32> conv_project_settings { default_project_settings.width, default_project_settings.height,
+        default_project_settings.fps, default_project_settings.video_length };
     m_mainwindowhandler.updateProjectSettings(conv_project_settings);
 }
 
@@ -80,16 +64,12 @@ void MainLogic::initEngine(QQmlApplicationEngine* const engine)
 {
     m_qml_engine = engine;
 
-    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("main_window"),
-        &m_mainwindowhandler);
-    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"),
-        m_itemhandler.model());
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("main_window"), &m_mainwindowhandler);
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("item_model"), m_itemhandler.model());
     m_qml_engine->rootContext()->setContextProperty(
         QStringLiteral("item_selection_model"), m_itemhandler.selectionModel());
-    m_qml_engine->rootContext()->setContextProperty(
-        QStringLiteral("property_model"), m_itemhandler.propertyModel());
-    m_qml_engine->rootContext()->setContextProperty(
-        QStringLiteral("animation_model"), m_itemhandler.animationModel());
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("property_model"), m_itemhandler.propertyModel());
+    m_qml_engine->rootContext()->setContextProperty(QStringLiteral("animation_model"), m_itemhandler.animationModel());
 }
 
 void MainLogic::connectEngine()
@@ -97,16 +77,14 @@ void MainLogic::connectEngine()
     const auto rootObjects = m_qml_engine->rootObjects();
 
     if (rootObjects.isEmpty()) {
-        qCCritical(mainlogic)
-            << "No root objects found in current qml engine. Init aborted.";
+        qCCritical(mainlogic) << "No root objects found in current qml engine. Init aborted.";
         return;
     }
 
     m_qml_creation_area = rootObjects.first()->findChild<QObject*>("MVACreationArea");
 
     if (!m_qml_creation_area) {
-        qCCritical(mainlogic)
-            << "Can't find creation area for videos. Init aborted.";
+        qCCritical(mainlogic) << "Can't find creation area for videos. Init aborted.";
         return;
     }
 
@@ -154,8 +132,7 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
     for (const QString& itemKey : json.keys()) {
         auto item_json = json[itemKey].toObject();
 
-        QQmlComponent component(m_qml_engine,
-            QUrl(item_json["item.file"].toString()));
+        QQmlComponent component(m_qml_engine, QUrl(item_json["item.file"].toString()));
 
         QList<QSharedPointer<AbstractAnimation>> animations;
         const auto keys = item_json.keys();
@@ -202,9 +179,7 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
     }
 }
 
-void MainLogic::addItem(
-    QQuickItem* quick_item,
-    const QList<QSharedPointer<AbstractAnimation>>& animations)
+void MainLogic::addItem(QQuickItem* quick_item, const QList<QSharedPointer<AbstractAnimation>>& animations)
 {
     m_itemhandler.addItem(quick_item, animations);
 }

@@ -32,13 +32,13 @@ Q_DECLARE_LOGGING_CATEGORY(mainlogic)
 class MainLogic : public QObject {
     Q_OBJECT
 
-public:
+  public:
     explicit MainLogic(QObject* parent = Q_NULLPTR);
 
     void initEngine(QQmlApplicationEngine* const engine);
     void connectEngine();
 
-private slots:
+  private slots:
     void createSnapshot(const QFileInfo& snapshot_file_info);
     void renderVideo(const QFileInfo& video_file_info);
 
@@ -54,7 +54,7 @@ private slots:
     void uiTimeChanged(const qreal time);
     void renderingVideoFinished();
 
-private:
+  private:
     QQmlApplicationEngine* m_qml_engine;
     QObject* m_qml_creation_area;
 

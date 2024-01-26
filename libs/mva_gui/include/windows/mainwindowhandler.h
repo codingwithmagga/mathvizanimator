@@ -25,15 +25,12 @@
 class MainWindowHandler : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY
-            pixelWidthChanged)
-    Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY
-            pixelHeightChanged)
+    Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY pixelWidthChanged)
+    Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY pixelHeightChanged)
     Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
-    Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY
-            videoLengthChanged)
+    Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY videoLengthChanged)
 
-public:
+  public:
     explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
 
     qint32 pixelWidth() const;
@@ -41,7 +38,7 @@ public:
     qint32 fps() const;
     qint32 videoLength() const;
 
-public slots:
+  public slots:
 
     void snapshot(const QVariant& file);
     void render(const QVariant& file);
@@ -66,10 +63,10 @@ public slots:
     void setFPS(const qint32 new_fps);
     void setVideoLength(const qint32 new_video_length);
 
-    void addAnimation(const QString& item_name, const QString& animation_type,
-        const qreal start_time, const qreal duration);
+    void addAnimation(
+        const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
 
-signals:
+  signals:
     void pixelWidthChanged(const qint32 new_pixel_width);
     void pixelHeightChanged(const qint32 new_pixel_height);
     void fpsChanged(const qint32 new_fps);
@@ -90,11 +87,10 @@ signals:
 
     void renderingVideoFinished(const QFileInfo& video_file);
 
-    void addAnimationSignal(const QString& item_name,
-        const QString& animation_type, const qreal start_time,
-        const qreal duration);
+    void addAnimationSignal(
+        const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
 
-private:
+  private:
     QObject* m_qml_creation_area;
 
     qint32 m_pixel_width;

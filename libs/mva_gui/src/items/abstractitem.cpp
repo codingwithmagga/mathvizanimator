@@ -25,11 +25,7 @@ AbstractItem::AbstractItem(const QString& qml_file, QQuickItem* parent)
 {
 }
 
-QString
-AbstractItem::name() const
-{
-    return m_name;
-}
+QString AbstractItem::name() const { return m_name; }
 
 void AbstractItem::setName(const QString& name)
 {
@@ -41,11 +37,7 @@ void AbstractItem::setName(const QString& name)
     emit nameChanged(m_name);
 }
 
-QColor
-AbstractItem::color() const
-{
-    return m_color;
-}
+QColor AbstractItem::color() const { return m_color; }
 
 void AbstractItem::setColor(const QColor& color)
 {
@@ -56,8 +48,7 @@ void AbstractItem::setColor(const QColor& color)
     emit colorChanged(m_color);
 }
 
-QJsonObject
-AbstractItem::toJson() const
+QJsonObject AbstractItem::toJson() const
 {
     QJsonObject json;
     auto properties = getItemProperties();
@@ -76,8 +67,7 @@ AbstractItem::toJson() const
     return json;
 }
 
-QList<QPair<QString, QVariant>>
-AbstractItem::getItemProperties() const
+QList<QPair<QString, QVariant>> AbstractItem::getItemProperties() const
 {
     auto meta_object = metaObject();
     const auto properties = editableProperties();
@@ -85,15 +75,13 @@ AbstractItem::getItemProperties() const
     QList<QPair<QString, QVariant>> prop_list;
 
     do {
-        prop_list.append(
-            appendProperties(this, meta_object, properties.abstract_item_properties));
+        prop_list.append(appendProperties(this, meta_object, properties.abstract_item_properties));
     } while ((meta_object = meta_object->superClass()));
 
     return prop_list;
 }
 
-QList<QPair<QString, QVariant>>
-AbstractItem::getParentItemProperties() const
+QList<QPair<QString, QVariant>> AbstractItem::getParentItemProperties() const
 {
     auto parent_meta_object = parentItem()->metaObject();
     const auto properties = editableProperties();
@@ -101,8 +89,7 @@ AbstractItem::getParentItemProperties() const
     QList<QPair<QString, QVariant>> prop_list;
 
     do {
-        prop_list.append(appendProperties(
-            parentItem(), parent_meta_object, properties.quick_item_properties));
+        prop_list.append(appendProperties(parentItem(), parent_meta_object, properties.quick_item_properties));
     } while ((parent_meta_object = parent_meta_object->superClass()));
 
     return prop_list;
@@ -127,26 +114,21 @@ void AbstractItem::paintItem(QPainter* painter)
     painter->restore();
 }
 
-QList<QPair<QString, QVariant>>
-AbstractItem::appendProperties(const auto obj,
-    auto meta_object,
-    const QStringList& allowedProperties) const
+QList<QPair<QString, QVariant>> AbstractItem::appendProperties(
+    const auto obj, auto meta_object, const QStringList& allowedProperties) const
 {
     QList<QPair<QString, QVariant>> prop_list;
 
-    for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount();
-         ++i) {
+    for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
         if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
-            prop_list.emplace_back(meta_object->property(i).name(),
-                meta_object->property(i).read(obj));
+            prop_list.emplace_back(meta_object->property(i).name(), meta_object->property(i).read(obj));
         }
     }
 
     return prop_list;
 }
 
-AbstractItem::EditableProperties
-AbstractItem::editableProperties() const
+AbstractItem::EditableProperties AbstractItem::editableProperties() const
 {
     EditableProperties editable_properties;
 

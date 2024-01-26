@@ -22,13 +22,13 @@
 
 class TestRectangleItem : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
     void initTestCase();
 
     void toJsonTest();
     void paintTest();
 
-private:
+  private:
     const qreal m_rect_x = 46;
     const qreal m_rect_y = 98;
     const qreal m_rect_width = 276;

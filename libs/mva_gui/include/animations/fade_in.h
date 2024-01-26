@@ -23,10 +23,10 @@
 class FadeIn : public RealPropertyAnimation {
     Q_OBJECT
 
-public:
+  public:
     explicit FadeIn(QObject* parent = nullptr);
 
-private:
+  private:
     void setStartPropertyValue(qreal new_start_property_value)
     {
         RealPropertyAnimation::setStartPropertyValue(new_start_property_value);

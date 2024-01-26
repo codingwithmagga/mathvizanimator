@@ -26,8 +26,7 @@
 
 #include "itemhandler.h"
 
-TestHelperFunctions::TestHelperFunctions(
-    const QSharedPointer<QQmlApplicationEngine> engine)
+TestHelperFunctions::TestHelperFunctions(const QSharedPointer<QQmlApplicationEngine> engine)
     : m_engine(engine)
 {
     auto root_objects = m_engine->rootObjects();
@@ -58,8 +57,8 @@ TestHelperFunctions::TestHelperFunctions(
 
 void TestHelperFunctions::dragAndDropCurrentItem(const QPoint& end_pos)
 {
-    auto current_item = qobject_cast<QQuickItem*>(
-        m_draggable_item_list_view->property("currentItem").value<QObject*>());
+    auto current_item
+        = qobject_cast<QQuickItem*>(m_draggable_item_list_view->property("currentItem").value<QObject*>());
 
     const QPoint start_pos = current_item->mapToScene(QPointF(0, 0)).toPoint();
     const QPoint end_global_pos = m_creation_area->mapToScene(QPointF(0.0, 0.0)).toPoint() + end_pos;
@@ -67,8 +66,7 @@ void TestHelperFunctions::dragAndDropCurrentItem(const QPoint& end_pos)
     dragAndDropItem(start_pos, end_global_pos);
 }
 
-void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos,
-    const QPoint& end_pos)
+void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos, const QPoint& end_pos)
 {
     const QPoint minimum_drag_distance(20, 20);
 
@@ -77,8 +75,7 @@ void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos,
     QTest::mouseRelease(m_quick_window, Qt::LeftButton, Qt::NoModifier, end_pos);
 }
 
-void TestHelperFunctions::clickItem(QQuickItem* quick_item,
-    Qt::MouseButton mouse_button)
+void TestHelperFunctions::clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button)
 {
     auto oPoint = quick_item->mapToScene(QPoint(0, 0)).toPoint();
 
@@ -88,8 +85,7 @@ void TestHelperFunctions::clickItem(QQuickItem* quick_item,
     QTest::mouseClick(m_quick_window, mouse_button, Qt::NoModifier, oPoint);
 }
 
-QSharedPointer<ItemObserver> TestHelperFunctions::getItemObserver(
-    const qint32 item_number) const
+QSharedPointer<ItemObserver> TestHelperFunctions::getItemObserver(const qint32 item_number) const
 {
     const auto item = dynamic_cast<ItemModelItem*>(m_project_items_model->item(item_number));
 
@@ -101,14 +97,12 @@ QQuickItem* TestHelperFunctions::getQuickItem(const qint32 item_number) const
     return getItemObserver(item_number)->item();
 }
 
-QQuickItem* TestHelperFunctions::getAnimationItem(
-    const qint32 animation_number) const
+QQuickItem* TestHelperFunctions::getAnimationItem(const qint32 animation_number) const
 {
     const auto rowLoaded = QTest::qWaitFor([&]() {
         bool rowLoaded = false;
-        QMetaObject::invokeMethod(m_animations_table_view, "isRowLoaded",
-            Q_RETURN_ARG(bool, rowLoaded),
-            Q_ARG(int, animation_number));
+        QMetaObject::invokeMethod(
+            m_animations_table_view, "isRowLoaded", Q_RETURN_ARG(bool, rowLoaded), Q_ARG(int, animation_number));
 
         return rowLoaded;
     });
@@ -118,17 +112,13 @@ QQuickItem* TestHelperFunctions::getAnimationItem(
     }
 
     QQuickItem* item = nullptr;
-    QMetaObject::invokeMethod(m_animations_table_view, "itemAtCell",
-        Q_RETURN_ARG(QQuickItem*, item),
+    QMetaObject::invokeMethod(m_animations_table_view, "itemAtCell", Q_RETURN_ARG(QQuickItem*, item),
         Q_ARG(QPoint, QPoint(animation_number, 0)));
 
     return item;
 }
 
-qint32 TestHelperFunctions::numCreationAreaItems() const
-{
-    return m_creation_area->childItems().size();
-}
+qint32 TestHelperFunctions::numCreationAreaItems() const { return m_creation_area->childItems().size(); }
 
 qint32 TestHelperFunctions::numProjectTableViewItems() const
 {
@@ -140,13 +130,11 @@ bool TestHelperFunctions::compareNumItems(const qint32 num_items)
     // In creation area there is already one item (background rectangle) at the
     // start. So it has one item more
 
-    return QTest::qWaitFor([&]() {
-        return numCreationAreaItems() == num_items + 1 && numProjectTableViewItems() == num_items;
-    });
+    return QTest::qWaitFor(
+        [&]() { return numCreationAreaItems() == num_items + 1 && numProjectTableViewItems() == num_items; });
 }
 
-bool TestHelperFunctions::compareNumAnimations(const QString item_name,
-    const qint32 num_animations)
+bool TestHelperFunctions::compareNumAnimations(const QString item_name, const qint32 num_animations)
 {
     const auto item_list = m_project_items_model->findItems(item_name);
 
@@ -158,8 +146,7 @@ bool TestHelperFunctions::compareNumAnimations(const QString item_name,
     const auto item = dynamic_cast<ItemModelItem*>(item_list.first());
     const auto item_observer = item->itemObserver();
 
-    return QTest::qWaitFor(
-        [&]() { return item_observer->animations().size() == num_animations; });
+    return QTest::qWaitFor([&]() { return item_observer->animations().size() == num_animations; });
 }
 
 QString TestHelperFunctions::absoluteFilePath(const QString file_name)

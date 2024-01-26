@@ -30,7 +30,7 @@
 class MenuProjectIntegrationTest : public QObject {
     Q_OBJECT
 
-private slots:
+  private slots:
     void init();
 
     void renderProject();
@@ -40,7 +40,7 @@ private slots:
 
     void cleanup();
 
-private:
+  private:
     bool setProjectSettings();
     void setTextProperty(const QString& name, const qint32 value);
     bool renderProjectToFile(const QString& render_file);
@@ -60,8 +60,7 @@ void MenuProjectIntegrationTest::init()
 {
     m_app_objects = SetupMain::setupApp();
 
-    m_helper_functions = QSharedPointer<TestHelperFunctions>(
-        new TestHelperFunctions(m_app_objects.engine));
+    m_helper_functions = QSharedPointer<TestHelperFunctions>(new TestHelperFunctions(m_app_objects.engine));
 }
 
 void MenuProjectIntegrationTest::renderProject()
@@ -76,20 +75,16 @@ void MenuProjectIntegrationTest::renderProject()
         QFile::remove(render_file);
     }
 
-    QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
-        SIGNAL(renderingVideoFinished()));
+    QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(), SIGNAL(renderingVideoFinished()));
 
     auto render_action_item = m_helper_functions->getChild<QObject*>("MVARenderProjectAction");
     QMetaObject::invokeMethod(render_action_item, "trigger");
 
     auto render_file_dialog = m_helper_functions->getChild<QObject*>("MVARenderFileDialog");
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return render_file_dialog->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return render_file_dialog->property("visible").toBool(); }));
 
-    render_file_dialog->setProperty("selectedFile",
-        QVariant(QUrl::fromLocalFile(render_file)));
-    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
-        Qt::QueuedConnection);
+    render_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(render_file)));
+    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted", Qt::QueuedConnection);
 
     QVERIFY(finishedVideoRenderingSpy.wait(60000));
 
@@ -113,13 +108,10 @@ void MenuProjectIntegrationTest::createSnapshot()
     auto snapshot_file_dialog = m_helper_functions->getChild<QObject*>("MVASnapshotFileDialog");
     QVERIFY(snapshot_file_dialog->property("visible").toBool());
 
-    snapshot_file_dialog->setProperty(
-        "selectedFile", QVariant(QUrl::fromLocalFile(snapshot_file)));
-    QMetaObject::invokeMethod(snapshot_file_dialog, "simulateAccepted",
-        Qt::DirectConnection);
+    snapshot_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(snapshot_file)));
+    QMetaObject::invokeMethod(snapshot_file_dialog, "simulateAccepted", Qt::DirectConnection);
 
-    QVERIFY(
-        QTest::qWaitFor([&]() { return QFile::exists(snapshot_file) == true; }));
+    QVERIFY(QTest::qWaitFor([&]() { return QFile::exists(snapshot_file) == true; }));
 }
 
 void MenuProjectIntegrationTest::openProjectSettings()
@@ -133,8 +125,7 @@ void MenuProjectIntegrationTest::openProjectSettings()
 
     QVERIFY(setProjectSettings());
 
-    const QString render_file = TestHelperFunctions::absoluteFilePath(
-        "render_project_settings_test_video.mp4");
+    const QString render_file = TestHelperFunctions::absoluteFilePath("render_project_settings_test_video.mp4");
 
     QVERIFY(renderProjectToFile(render_file));
     QVERIFY(QFile::exists(render_file));
@@ -142,13 +133,9 @@ void MenuProjectIntegrationTest::openProjectSettings()
     QMediaPlayer media_player;
     media_player.setSource(QUrl(render_file));
 
-    QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(),
-        m_video_length * 1000);
-    QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-        QSize(m_width, m_height));
-    QCOMPARE(
-        media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(),
-        m_fps);
+    QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), m_video_length * 1000);
+    QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(), QSize(m_width, m_height));
+    QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), m_fps);
 }
 
 void MenuProjectIntegrationTest::openSVGFolder()
@@ -156,11 +143,10 @@ void MenuProjectIntegrationTest::openSVGFolder()
     auto open_svg_folder_action_item = m_helper_functions->getChild<QObject*>("MVAOpenSVGFolderAction");
     QMetaObject::invokeMethod(open_svg_folder_action_item, "trigger");
 
-    QSKIP(
-        "Currently no option to test the open SVG Folder action. Check the "
-        "log. On Windows and MacOS log output is false, because the dir doesn't "
-        "exists. It relates to the name of the test. Fix is not "
-        "important currently.");
+    QSKIP("Currently no option to test the open SVG Folder action. Check the "
+          "log. On Windows and MacOS log output is false, because the dir doesn't "
+          "exists. It relates to the name of the test. Fix is not "
+          "important currently.");
 }
 
 void MenuProjectIntegrationTest::cleanup()
@@ -174,9 +160,7 @@ void MenuProjectIntegrationTest::cleanup()
 bool MenuProjectIntegrationTest::setProjectSettings()
 {
     auto project_settings_popup_object = m_helper_functions->getChild<QObject*>("MVAProjectSettingsDialog");
-    if (!QTest::qWaitFor([&]() {
-            return project_settings_popup_object->property("visible").toBool();
-        })) {
+    if (!QTest::qWaitFor([&]() { return project_settings_popup_object->property("visible").toBool(); })) {
         return false;
     }
 
@@ -185,28 +169,22 @@ bool MenuProjectIntegrationTest::setProjectSettings()
     setTextProperty("MVAFpsInputField", m_fps);
     setTextProperty("MVAVideoLengthInputField", m_video_length);
 
-    if (!QMetaObject::invokeMethod(project_settings_popup_object,
-            "simulateAccepted", Qt::DirectConnection)) {
+    if (!QMetaObject::invokeMethod(project_settings_popup_object, "simulateAccepted", Qt::DirectConnection)) {
         return false;
     }
 
-    return QTest::qWaitFor([&]() {
-        return !project_settings_popup_object->property("visible").toBool();
-    });
+    return QTest::qWaitFor([&]() { return !project_settings_popup_object->property("visible").toBool(); });
 }
 
-void MenuProjectIntegrationTest::setTextProperty(const QString& name,
-    const qint32 value)
+void MenuProjectIntegrationTest::setTextProperty(const QString& name, const qint32 value)
 {
     auto object = m_helper_functions->getChild<QObject*>(name);
     object->setProperty("text", QVariant(value));
 }
 
-bool MenuProjectIntegrationTest::renderProjectToFile(
-    const QString& render_file)
+bool MenuProjectIntegrationTest::renderProjectToFile(const QString& render_file)
 {
-    QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(),
-        SIGNAL(renderingVideoFinished()));
+    QSignalSpy finishedVideoRenderingSpy(m_helper_functions->rootWindow(), SIGNAL(renderingVideoFinished()));
 
     if (QFile::exists(render_file)) {
         QFile::remove(render_file);
@@ -215,15 +193,12 @@ bool MenuProjectIntegrationTest::renderProjectToFile(
     QMetaObject::invokeMethod(render_action_item, "trigger");
 
     auto render_file_dialog = m_helper_functions->getChild<QObject*>("MVARenderFileDialog");
-    if (!QTest::qWaitFor(
-            [&]() { return render_file_dialog->property("visible").toBool(); })) {
+    if (!QTest::qWaitFor([&]() { return render_file_dialog->property("visible").toBool(); })) {
         return false;
     }
 
-    render_file_dialog->setProperty("selectedFile",
-        QVariant(QUrl::fromLocalFile(render_file)));
-    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted",
-        Qt::DirectConnection);
+    render_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(render_file)));
+    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted", Qt::DirectConnection);
 
     return finishedVideoRenderingSpy.wait(60000);
 }

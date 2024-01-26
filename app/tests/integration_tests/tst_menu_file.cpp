@@ -28,7 +28,7 @@
 class MenuFileIntegrationTest : public QObject {
     Q_OBJECT
 
-private slots:
+  private slots:
     void init();
 
     void clearProject();
@@ -38,23 +38,23 @@ private slots:
 
     void cleanup();
 
-private:
+  private:
     SetupMain::SetupObjects m_app_objects;
     QSharedPointer<TestHelperFunctions> m_helper_functions;
 };
 
 class CloseEventFilter : public QObject {
     Q_OBJECT
-public:
+  public:
     explicit CloseEventFilter(QObject* parent)
         : QObject(parent)
     {
     }
 
-signals:
+  signals:
     void closeEventReceived();
 
-protected:
+  protected:
     bool eventFilter(QObject* obj, QEvent* event)
     {
         if (event->type() == QEvent::Close) {
@@ -69,8 +69,7 @@ void MenuFileIntegrationTest::init()
 {
     m_app_objects = SetupMain::setupApp();
 
-    m_helper_functions = QSharedPointer<TestHelperFunctions>(
-        new TestHelperFunctions(m_app_objects.engine));
+    m_helper_functions = QSharedPointer<TestHelperFunctions>(new TestHelperFunctions(m_app_objects.engine));
 }
 
 void MenuFileIntegrationTest::clearProject()
@@ -97,17 +96,12 @@ void MenuFileIntegrationTest::loadProject()
     QMetaObject::invokeMethod(load_action_item, "trigger");
 
     auto load_file_dialog = m_helper_functions->getChild<QObject*>("MVALoadFileDialog");
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return load_file_dialog->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return load_file_dialog->property("visible").toBool(); }));
 
-    load_file_dialog->setProperty(
-        "selectedFile",
-        QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
-    QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
-        Qt::QueuedConnection);
+    load_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
+    QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted", Qt::QueuedConnection);
 
-    QVERIFY(QTest::qWaitFor(
-        [&]() { return !load_file_dialog->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return !load_file_dialog->property("visible").toBool(); }));
     QVERIFY(m_helper_functions->compareNumItems(3));
     QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
     QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
@@ -130,11 +124,8 @@ void MenuFileIntegrationTest::saveAsProject()
     auto save_file_dialog = m_helper_functions->getChild<QObject*>("MVASaveFileDialog");
     QVERIFY(save_file_dialog->property("visible").toBool());
 
-    save_file_dialog->setProperty(
-        "selectedFile",
-        QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
-    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
-        Qt::DirectConnection);
+    save_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
+    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted", Qt::DirectConnection);
 
     QVERIFY(QFile::exists(test_save_file_absolute_path));
 }

@@ -49,54 +49,38 @@ void MainWindowHandler::loadProject(const QVariant& file)
 {
     QFileInfo load_file_info(file.toUrl().toLocalFile());
 
-    qCInfo(mainwindow_handler)
-        << "Start loading project from file" << load_file_info.absoluteFilePath();
+    qCInfo(mainwindow_handler) << "Start loading project from file" << load_file_info.absoluteFilePath();
 
     emit loadProjectRequested(load_file_info);
 }
 
-void MainWindowHandler::removeCurrentItem()
-{
-    emit removeCurrentItemRequested();
-}
+void MainWindowHandler::removeCurrentItem() { emit removeCurrentItemRequested(); }
 
 void MainWindowHandler::removeAnimation(const qint32 animation_number)
 {
     emit removeAnimationRequested(animation_number);
 }
 
-void MainWindowHandler::itemClickedByUser(const QVariant& item_name)
-{
-    emit itemClicked(item_name.toString());
-}
+void MainWindowHandler::itemClickedByUser(const QVariant& item_name) { emit itemClicked(item_name.toString()); }
 
-void MainWindowHandler::setTimeByUser(const QVariant& time)
-{
-    emit timeChanged(time.toDouble());
-}
+void MainWindowHandler::setTimeByUser(const QVariant& time) { emit timeChanged(time.toDouble()); }
 
-void MainWindowHandler::updateProjectSettings(
-    const QVariantList& new_project_settings)
+void MainWindowHandler::updateProjectSettings(const QVariantList& new_project_settings)
 {
     if (new_project_settings.size() != 4) {
-        qCCritical(mainwindow_handler)
-            << "Internal error. Wrong number of project settings delivered.";
+        qCCritical(mainwindow_handler) << "Internal error. Wrong number of project settings delivered.";
         return;
     }
 
-    QList<qint32> conv_project_settings {
-        new_project_settings[0].toInt(), new_project_settings[1].toInt(),
-        new_project_settings[2].toInt(), new_project_settings[3].toInt()
-    };
+    QList<qint32> conv_project_settings { new_project_settings[0].toInt(), new_project_settings[1].toInt(),
+        new_project_settings[2].toInt(), new_project_settings[3].toInt() };
     updateProjectSettings(conv_project_settings);
 }
 
-void MainWindowHandler::updateProjectSettings(
-    const QList<qint32>& new_project_settings)
+void MainWindowHandler::updateProjectSettings(const QList<qint32>& new_project_settings)
 {
     if (new_project_settings.size() != 4) {
-        qCCritical(mainwindow_handler)
-            << "Internal error. Wrong number of project settings delivered.";
+        qCCritical(mainwindow_handler) << "Internal error. Wrong number of project settings delivered.";
         return;
     }
 
@@ -160,18 +144,15 @@ void MainWindowHandler::setVideoLength(const qint32 new_video_length)
     emit videoLengthChanged(new_video_length);
 }
 
-void MainWindowHandler::addAnimation(const QString& item_name,
-    const QString& animation_type,
-    const qreal start_time,
-    const qreal duration)
+void MainWindowHandler::addAnimation(
+    const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration)
 {
     emit addAnimationSignal(item_name, animation_type, start_time, duration);
 }
 
 void MainWindowHandler::openSVGFolder() const
 {
-    qCInfo(mainwindow_handler)
-        << "Opening SVG Folder successful: "
-        << QDesktopServices::openUrl(QUrl(QStandardPaths::writableLocation(
-               QStandardPaths::AppDataLocation)));
+    qCInfo(mainwindow_handler) << "Opening SVG Folder successful: "
+                               << QDesktopServices::openUrl(
+                                      QUrl(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)));
 }

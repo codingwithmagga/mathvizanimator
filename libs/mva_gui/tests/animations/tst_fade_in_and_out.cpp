@@ -23,7 +23,7 @@
 
 class TestFadeInAndOut : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
     void initTestCase();
 
     void stateTest_data();
@@ -38,7 +38,7 @@ private slots:
     void applyAnimationTest_data();
     void applyAnimationTest();
 
-private:
+  private:
     FadeIn m_fade_in;
     FadeOut m_fade_out;
     CircleItem m_circle_item_fade_in;
@@ -70,15 +70,11 @@ void TestFadeInAndOut::stateTest_data()
     QTest::addColumn<qreal>("time");
     QTest::addColumn<AbstractAnimation::State>("state");
 
-    QTest::newRow("start_project")
-        << 0.0 << AbstractAnimation::State::NOT_STARTED;
-    QTest::newRow("before_animation_start")
-        << 1.5 << AbstractAnimation::State::NOT_STARTED;
-    QTest::newRow("very_close_before_animation_start")
-        << 2.099 << AbstractAnimation::State::NOT_STARTED;
+    QTest::newRow("start_project") << 0.0 << AbstractAnimation::State::NOT_STARTED;
+    QTest::newRow("before_animation_start") << 1.5 << AbstractAnimation::State::NOT_STARTED;
+    QTest::newRow("very_close_before_animation_start") << 2.099 << AbstractAnimation::State::NOT_STARTED;
     QTest::newRow("animation_start") << 2.1 << AbstractAnimation::State::RUNNING;
-    QTest::newRow("middle_of_animation")
-        << 3.0 << AbstractAnimation::State::RUNNING;
+    QTest::newRow("middle_of_animation") << 3.0 << AbstractAnimation::State::RUNNING;
     QTest::newRow("end_of_animation") << 3.5 << AbstractAnimation::State::RUNNING;
     QTest::newRow("end_of_animation_plus_safety_value")
         << 3.5 + m_frame_time - 0.01 << AbstractAnimation::State::RUNNING;
@@ -124,15 +120,12 @@ void TestFadeInAndOut::propertyValueTest_data()
 {
     QTest::addColumn<QVariantMap>("properties");
 
-    QTest::newRow("default_values")
-        << QVariantMap { std::pair<QString, QVariant>("start_time", QVariant(0)),
-               std::pair<QString, QVariant>("duration", QVariant(1)) };
-    QTest::newRow("simple_values_1")
-        << QVariantMap { std::pair<QString, QVariant>("start_time", QVariant(0.6)),
-               std::pair<QString, QVariant>("duration", QVariant(1.6)) };
-    QTest::newRow("simple_values_2")
-        << QVariantMap { std::pair<QString, QVariant>("start_time", QVariant(3.2)),
-               std::pair<QString, QVariant>("duration", QVariant(0.5)) };
+    QTest::newRow("default_values") << QVariantMap { std::pair<QString, QVariant>("start_time", QVariant(0)),
+        std::pair<QString, QVariant>("duration", QVariant(1)) };
+    QTest::newRow("simple_values_1") << QVariantMap { std::pair<QString, QVariant>("start_time", QVariant(0.6)),
+        std::pair<QString, QVariant>("duration", QVariant(1.6)) };
+    QTest::newRow("simple_values_2") << QVariantMap { std::pair<QString, QVariant>("start_time", QVariant(3.2)),
+        std::pair<QString, QVariant>("duration", QVariant(0.5)) };
 }
 
 void TestFadeInAndOut::propertyValueTest()
@@ -158,22 +151,18 @@ void TestFadeInAndOut::applyAnimationTest_data()
 
     QTest::newRow("start_project") << 0.0 << 0.0 << 1.0;
     QTest::newRow("before_fade_out_animation_start") << 0.25 << 0.0 << 1.0;
-    QTest::newRow("very_close_before_fade_out_animation_start")
-        << 0.499 << 0.0 << 1.0;
+    QTest::newRow("very_close_before_fade_out_animation_start") << 0.499 << 0.0 << 1.0;
     QTest::newRow("fade_out_animation_start") << 0.5 << 0.0 << 1.0;
     QTest::newRow("middle_of_fade_out_animation") << 0.9 << 0.0 << 0.5;
     QTest::newRow("end_of_fade_out_animation") << 1.3 << 0.0 << 0.0;
-    QTest::newRow("end_of_fade_out_animation_plus_safety_value")
-        << 1.3 + m_frame_time - 0.01 << 0.0 << 0.0;
+    QTest::newRow("end_of_fade_out_animation_plus_safety_value") << 1.3 + m_frame_time - 0.01 << 0.0 << 0.0;
     QTest::newRow("after_fade_out_animation") << 1.4 << 0.0 << 0.0;
     QTest::newRow("before_fade_in_animation_start") << 1.5 << 0.0 << 0.0;
-    QTest::newRow("very_close_before_fade_in_animation_start")
-        << 2.099 << 0.0 << 0.0;
+    QTest::newRow("very_close_before_fade_in_animation_start") << 2.099 << 0.0 << 0.0;
     QTest::newRow("fade_in_animation_start") << 2.1 << 0.0 << 0.0;
     QTest::newRow("middle_of_fade_in_animation") << 2.8 << 0.5 << 0.0;
     QTest::newRow("end_of_fade_in_animation") << 3.5 << 1.0 << 0.0;
-    QTest::newRow("end_of_fade_in_animation_plus_safety_value")
-        << 3.5 + m_frame_time - 0.01 << 1.0 << 0.0;
+    QTest::newRow("end_of_fade_in_animation_plus_safety_value") << 3.5 + m_frame_time - 0.01 << 1.0 << 0.0;
     QTest::newRow("after_fade_in_animation") << 3.6 << 1.0 << 0.0;
     QTest::newRow("project_end") << 5.0 << 1.0 << 0.0;
 }

@@ -27,11 +27,9 @@ Renderer::Renderer(QObject* parent)
 {
 }
 
-void Renderer::render(const QList<QSharedPointer<ItemObserver>>& item_list,
-    const QFileInfo& video_file)
+void Renderer::render(const QList<QSharedPointer<ItemObserver>>& item_list, const QFileInfo& video_file)
 {
-    qCInfo(renderer) << "Rendering process requested to file "
-                     << video_file.absoluteFilePath();
+    qCInfo(renderer) << "Rendering process requested to file " << video_file.absoluteFilePath();
 
     QString program = "ffmpeg";
     QStringList arguments;
@@ -57,26 +55,20 @@ void Renderer::render(const QList<QSharedPointer<ItemObserver>>& item_list,
      * the application, not in the unit/integration tests. I don't know why, but
      * like this it works also in the application.
      */
-    connect(render_process.data(), &QProcess::started, this,
-        [=, this] { renderingProcessStarted(item_list); });
-    connect(render_process.data(), &QProcess::finished, this,
-        [=, this](qint32 exitCode, QProcess::ExitStatus exitStatus) {
+    connect(render_process.data(), &QProcess::started, this, [=, this] { renderingProcessStarted(item_list); });
+    connect(
+        render_process.data(), &QProcess::finished, this, [=, this](qint32 exitCode, QProcess::ExitStatus exitStatus) {
             renderingProcessFinished(video_file, exitCode, exitStatus);
         });
     connect(render_process.data(), &QProcess::readyRead, this,
-        [this] {
-            qCInfo(renderer)
-                << qobject_cast<QProcess*>(sender())->readAllStandardOutput();
-        });
+        [this] { qCInfo(renderer) << qobject_cast<QProcess*>(sender())->readAllStandardOutput(); });
 
-    render_process->setProcessChannelMode(
-        QProcess::ProcessChannelMode::MergedChannels);
+    render_process->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 
     render_process->start(program, arguments);
 }
 
-void Renderer::renderingProcessStarted(
-    const QList<QSharedPointer<ItemObserver>>& item_list)
+void Renderer::renderingProcessStarted(const QList<QSharedPointer<ItemObserver>>& item_list)
 {
     qCInfo(renderer) << "Rendering process started";
 
@@ -86,23 +78,19 @@ void Renderer::renderingProcessStarted(
         auto image = createImage(item_list, frame / qreal(m_project_settings.fps));
         auto imageData = reinterpret_cast<char*>(image.bits());
 
-        qobject_cast<QProcess*>(sender())->write(
-            imageData, m_project_settings.width * m_project_settings.height * 4);
+        qobject_cast<QProcess*>(sender())->write(imageData, m_project_settings.width * m_project_settings.height * 4);
     }
 
     qobject_cast<QProcess*>(sender())->closeWriteChannel();
 }
 
-void Renderer::renderingProcessFinished(const QFileInfo& video_file,
-    qint32 exitCode,
-    QProcess::ExitStatus exitStatus)
+void Renderer::renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode, QProcess::ExitStatus exitStatus)
 {
     Q_UNUSED(exitCode)
 
     qCInfo(renderer) << "Process finished with status: " << exitStatus;
     if (exitStatus == QProcess::NormalExit) {
-        qCInfo(renderer) << "Video file rendered to "
-                         << video_file.absoluteFilePath();
+        qCInfo(renderer) << "Video file rendered to " << video_file.absoluteFilePath();
     }
 
     emit finishedRendering(video_file);
@@ -110,12 +98,9 @@ void Renderer::renderingProcessFinished(const QFileInfo& video_file,
     m_render_process_map.remove(qobject_cast<RenderProcess*>(sender())->id());
 }
 
-QImage Renderer::createImage(
-    const QList<QSharedPointer<ItemObserver>>& item_list,
-    const qreal current_time) const
+QImage Renderer::createImage(const QList<QSharedPointer<ItemObserver>>& item_list, const qreal current_time) const
 {
-    QImage image(m_project_settings.width, m_project_settings.height,
-        QImage::Format::Format_RGB32);
+    QImage image(m_project_settings.width, m_project_settings.height, QImage::Format::Format_RGB32);
     image.fill("white");
     QPainter painter(&image);
 
@@ -127,33 +112,17 @@ QImage Renderer::createImage(
     return image;
 }
 
-Renderer::ProjectSettings Renderer::projectSettings() const
-{
-    return m_project_settings;
-}
+Renderer::ProjectSettings Renderer::projectSettings() const { return m_project_settings; }
 
-void Renderer::setProjectSettings(
-    const Renderer::ProjectSettings& new_project_settings)
+void Renderer::setProjectSettings(const Renderer::ProjectSettings& new_project_settings)
 {
     m_project_settings = new_project_settings;
 }
 
-void Renderer::setWidth(const qint32 new_width)
-{
-    m_project_settings.width = new_width;
-}
+void Renderer::setWidth(const qint32 new_width) { m_project_settings.width = new_width; }
 
-void Renderer::setHeight(const qint32 new_height)
-{
-    m_project_settings.height = new_height;
-}
+void Renderer::setHeight(const qint32 new_height) { m_project_settings.height = new_height; }
 
-void Renderer::setFPS(const qint32 new_fps)
-{
-    m_project_settings.fps = new_fps;
-}
+void Renderer::setFPS(const qint32 new_fps) { m_project_settings.fps = new_fps; }
 
-void Renderer::setVideoLength(const qint32 new_video_length)
-{
-    m_project_settings.video_length = new_video_length;
-}
+void Renderer::setVideoLength(const qint32 new_video_length) { m_project_settings.video_length = new_video_length; }

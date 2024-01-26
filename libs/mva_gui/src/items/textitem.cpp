@@ -27,8 +27,7 @@
 
 TextItem::TextItem(QQuickItem* parent)
     : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent }
-    , m_svg_location(
-          QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
+    , m_svg_location(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
 {
     Q_INIT_RESOURCE(mva_gui_resources);
 
@@ -38,8 +37,7 @@ TextItem::TextItem(QQuickItem* parent)
 
     // FallbackLocation
     if (!QFileInfo(m_svg_location.absolutePath()).isWritable()) {
-        m_svg_location.setPath(
-            QStandardPaths::writableLocation(QStandardPaths::TempLocation));
+        m_svg_location.setPath(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
         if (!m_svg_location.exists()) {
             m_svg_location.mkpath(".");
         }
@@ -61,10 +59,7 @@ void TextItem::setSvgFile(const QFileInfo& newSvgFile)
     emit svgFileChanged(newSvgFile);
 }
 
-void TextItem::setSvgFile(const QString& newSvgFile)
-{
-    setSvgFile(QFileInfo(newSvgFile));
-}
+void TextItem::setSvgFile(const QString& newSvgFile) { setSvgFile(QFileInfo(newSvgFile)); }
 
 void TextItem::paint(QPainter* painter)
 {
@@ -103,9 +98,7 @@ void TextItem::setLatexSource(const QString& newLatexSource)
 
     latexTemplate.replace("%PLACEHOLDER%", newLatexSource);
 
-    const auto hash = QString(
-        QCryptographicHash::hash(latexTemplate.toUtf8(), QCryptographicHash::Md5)
-            .toHex());
+    const auto hash = QString(QCryptographicHash::hash(latexTemplate.toUtf8(), QCryptographicHash::Md5).toHex());
 
     QFileInfo svgFile(m_svg_location.absoluteFilePath(hash + ".svg"));
     if (svgFile.exists()) {
@@ -128,10 +121,10 @@ void TextItem::setLatexSource(const QString& newLatexSource)
 
     QProcess latexmk_process;
     latexmk_process.setWorkingDirectory(m_svg_location.absolutePath());
-    latexmk_process.setProcessChannelMode(
-        QProcess::ProcessChannelMode::MergedChannels);
-    latexmk_process.start(m_latex_path, QStringList {} << "-output-format=dvi"
-                                                       << "-interaction=batchmode" << latexFile.fileName());
+    latexmk_process.setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
+    latexmk_process.start(m_latex_path,
+        QStringList {} << "-output-format=dvi"
+                       << "-interaction=batchmode" << latexFile.fileName());
     if (!latexmk_process.waitForFinished()) {
         qDebug() << "Make failed:" << latexmk_process.errorString();
         removeUnusedLatexFiles(hash);
@@ -140,9 +133,10 @@ void TextItem::setLatexSource(const QString& newLatexSource)
 
     QProcess dvisvgm_process;
     dvisvgm_process.setWorkingDirectory(m_svg_location.absolutePath());
-    dvisvgm_process.start(m_dvisvgm_path, QStringList {} << hash + ".dvi"
-                                                         << "-n"
-                                                         << "-o" << hash + ".svg");
+    dvisvgm_process.start(m_dvisvgm_path,
+        QStringList {} << hash + ".dvi"
+                       << "-n"
+                       << "-o" << hash + ".svg");
     if (!dvisvgm_process.waitForFinished()) {
         qDebug() << "Make failed:" << dvisvgm_process.errorString();
         removeUnusedLatexFiles(hash);

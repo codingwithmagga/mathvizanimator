@@ -23,7 +23,7 @@
 
 class TestItemHandler : public QObject {
     Q_OBJECT
-private slots:
+  private slots:
 
     void addItem();
     void addItemDuplicate();
@@ -58,18 +58,16 @@ private slots:
 
     void clearHandler();
 
-private:
-    QList<QQuickItem*> prepareItemHandler(ItemHandler* itemhandler,
-        QList<QQmlComponent*> qml_components);
+  private:
+    QList<QQuickItem*> prepareItemHandler(ItemHandler* itemhandler, QList<QQmlComponent*> qml_components);
 
     QQuickItem* extractQuickItemFromStandardItem(ItemModelItem* item) const;
 
     QQmlEngine m_engine;
-    QQmlComponent m_circle_component = QQmlComponent(
-        &m_engine,
-        QUrl(QStringLiteral("qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml")));
-    QQmlComponent m_rect_component = QQmlComponent(
-        &m_engine, QUrl(QStringLiteral("qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml")));
+    QQmlComponent m_circle_component
+        = QQmlComponent(&m_engine, QUrl(QStringLiteral("qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml")));
+    QQmlComponent m_rect_component
+        = QQmlComponent(&m_engine, QUrl(QStringLiteral("qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml")));
 };
 
 void TestItemHandler::addItem()
@@ -179,8 +177,7 @@ void TestItemHandler::addAnimation()
     itemhandler.addItem(circle);
     const auto circle_item = qvariant_cast<AbstractItem*>(circle->property("item"));
 
-    itemhandler.addAnimation(circle_item->name(), animation_type, start_time,
-        duration);
+    itemhandler.addAnimation(circle_item->name(), animation_type, start_time, duration);
 
     const auto item_observer_list = itemhandler.items();
     QCOMPARE(item_observer_list.size(), 1);
@@ -220,8 +217,7 @@ void TestItemHandler::checkItemData()
 
     QCOMPARE(circle_item_1->data(Qt::DisplayRole), circle_item->name());
     QCOMPARE(extractQuickItemFromStandardItem(circle_item_1), circle);
-    QCOMPARE(extractQuickItemFromStandardItem(circle_item_1)->height(),
-        circleHeight);
+    QCOMPARE(extractQuickItemFromStandardItem(circle_item_1)->height(), circleHeight);
     QCOMPARE(circle_item_2->data(Qt::DisplayRole), "CircleItem");
     QCOMPARE(rect_item_1->data(Qt::DisplayRole), rect_item->name());
     QCOMPARE(extractQuickItemFromStandardItem(rect_item_1), rect);
@@ -329,9 +325,7 @@ void TestItemHandler::scaleItemsPosY()
 void TestItemHandler::scaleItemsWidth()
 {
     ItemHandler itemhandler;
-    auto items = prepareItemHandler(
-        &itemhandler,
-        QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
+    auto items = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
 
     const qreal circle_width_old = 222;
     const qreal circle_height_old = 133;
@@ -379,9 +373,7 @@ void TestItemHandler::scaleItemsHeight()
 void TestItemHandler::getItems()
 {
     ItemHandler itemhandler;
-    auto items = prepareItemHandler(
-        &itemhandler,
-        QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
+    auto items = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
 
     const auto item_list = itemhandler.quickItems();
 
@@ -392,9 +384,8 @@ void TestItemHandler::getItems()
 void TestItemHandler::setTime()
 {
     ItemHandler itemhandler;
-    const auto items = prepareItemHandler(
-        &itemhandler,
-        QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
+    const auto items
+        = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
     const auto circle_item = qvariant_cast<AbstractItem*>(items[0]->property("item"));
     const auto rect_item = qvariant_cast<AbstractItem*>(items[1]->property("item"));
 
@@ -409,8 +400,7 @@ void TestItemHandler::setTime()
 void TestItemHandler::removeItem()
 {
     ItemHandler itemhandler;
-    auto items = prepareItemHandler(&itemhandler,
-        QList<QQmlComponent*> { &m_circle_component });
+    auto items = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component });
 
     itemhandler.removeItem(items[0]);
 
@@ -420,9 +410,7 @@ void TestItemHandler::removeItem()
 void TestItemHandler::removeCurrentItem()
 {
     ItemHandler itemhandler;
-    auto items = prepareItemHandler(
-        &itemhandler,
-        QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
+    auto items = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
     const auto circle_item = qvariant_cast<AbstractItem*>(items[0]->property("item"));
     itemhandler.setCurrentItem(circle_item->name());
 
@@ -436,9 +424,7 @@ void TestItemHandler::removeCurrentItem()
 void TestItemHandler::removeMultipleItems()
 {
     ItemHandler itemhandler;
-    auto items = prepareItemHandler(
-        &itemhandler,
-        QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
+    auto items = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
 
     itemhandler.removeItem(items[1]);
     QCOMPARE(itemhandler.numItems(), 1);
@@ -450,9 +436,7 @@ void TestItemHandler::removeMultipleItems()
 void TestItemHandler::removeNonExistingItem()
 {
     ItemHandler itemhandler;
-    auto items = prepareItemHandler(
-        &itemhandler,
-        QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
+    auto items = prepareItemHandler(&itemhandler, QList<QQmlComponent*> { &m_circle_component, &m_rect_component });
 
     itemhandler.removeItem(items[1]);
     QCOMPARE(itemhandler.numItems(), 1);
@@ -492,8 +476,7 @@ void TestItemHandler::clearHandler()
     QCOMPARE(itemhandler.numItems(), 0);
 }
 
-QList<QQuickItem*> TestItemHandler::prepareItemHandler(
-    ItemHandler* itemhandler, QList<QQmlComponent*> qml_components)
+QList<QQuickItem*> TestItemHandler::prepareItemHandler(ItemHandler* itemhandler, QList<QQmlComponent*> qml_components)
 {
     QList<QQuickItem*> items;
 
@@ -508,8 +491,7 @@ QList<QQuickItem*> TestItemHandler::prepareItemHandler(
     return items;
 }
 
-QQuickItem* TestItemHandler::extractQuickItemFromStandardItem(
-    ItemModelItem* item) const
+QQuickItem* TestItemHandler::extractQuickItemFromStandardItem(ItemModelItem* item) const
 {
     return item->itemObserver()->item();
 }
