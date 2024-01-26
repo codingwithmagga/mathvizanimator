@@ -52,7 +52,9 @@ public:
 
         const QUrl url("qrc:/qt/qml/cwa/mva/gui/qml/MainWindow.qml");
 
-        if (gui_app) {
+        if (gui_app)
+
+        {
 
                      QCoreApplication::setApplicationName("mathvizanimator");
             QCoreApplication::setOrganizationName("codingwithmagga");
