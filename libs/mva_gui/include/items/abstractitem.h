@@ -38,7 +38,7 @@ class AbstractItem : public QQuickPaintedItem {
     Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
 
-public:
+  public:
     struct EditableProperties {
         QStringList abstract_item_properties;
         QStringList quick_item_properties;
@@ -68,14 +68,13 @@ public:
 
     void paintItem(QPainter* painter);
 
-signals:
+  signals:
     void nameChanged(const QString& new_name);
     void colorChanged(const QColor& new_color);
 
-private:
+  private:
     QList<QPair<QString, QVariant>> appendProperties(
-        const auto obj, auto meta_object,
-        const QStringList& allowedProperties) const;
+        const auto obj, auto meta_object, const QStringList& allowedProperties) const;
 
     QString m_name;
     QColor m_color;
