@@ -17,61 +17,64 @@
 
 #include "real_property_animation.h"
 
-RealPropertyAnimation::RealPropertyAnimation(const QString &property,
-                                             QObject *parent)
-    : PropertyAnimation{property, parent} {}
-
-void RealPropertyAnimation::applyAnimation(AbstractItem *item,
-                                           const qreal time) const {
-  if (state(time) != State::RUNNING) {
-    return;
-  }
-
-  auto property_value = calculatePropertyValue(time);
-
-  item->setProperty(property().toUtf8(), property_value);
+RealPropertyAnimation::RealPropertyAnimation(const QString& property,
+    QObject* parent)
+    : PropertyAnimation { property, parent }
+{
 }
 
-qreal RealPropertyAnimation::startPropertyValue() const {
-  return m_start_property_value;
+void RealPropertyAnimation::applyAnimation(AbstractItem* item,
+    const qreal time) const
+{
+    if (state(time) != State::RUNNING) {
+        return;
+    }
+
+    auto property_value = calculatePropertyValue(time);
+
+    item->setProperty(property().toUtf8(), property_value);
+}
+
+qreal RealPropertyAnimation::startPropertyValue() const
+{
+    return m_start_property_value;
 }
 
 void RealPropertyAnimation::setStartPropertyValue(
-    qreal new_start_property_value) {
-  if (qFuzzyCompare(m_start_property_value, new_start_property_value)) {
-    return;
-  }
+    qreal new_start_property_value)
+{
+    if (qFuzzyCompare(m_start_property_value, new_start_property_value)) {
+        return;
+    }
 
-  m_start_property_value = new_start_property_value;
-  emit startPropertyValueChanged();
+    m_start_property_value = new_start_property_value;
+    emit startPropertyValueChanged();
 }
 
-qreal RealPropertyAnimation::endPropertyValue() const {
-  return m_end_property_value;
+qreal RealPropertyAnimation::endPropertyValue() const
+{
+    return m_end_property_value;
 }
 
-void RealPropertyAnimation::setEndPropertyValue(qreal new_end_property_value) {
-  if (qFuzzyCompare(m_end_property_value, new_end_property_value)) {
-    return;
-  }
+void RealPropertyAnimation::setEndPropertyValue(qreal new_end_property_value)
+{
+    if (qFuzzyCompare(m_end_property_value, new_end_property_value)) {
+        return;
+    }
 
-  m_end_property_value = new_end_property_value;
-  emit endPropertyValueChanged();
+    m_end_property_value = new_end_property_value;
+    emit endPropertyValueChanged();
 }
 
-qreal RealPropertyAnimation::calculatePropertyValue(const qreal time) const {
-  auto property_value = m_start_property_value +
-                        (time - startTime()) *
-                            (m_end_property_value - m_start_property_value) /
-                            duration();
+qreal RealPropertyAnimation::calculatePropertyValue(const qreal time) const
+{
+    auto property_value = m_start_property_value + (time - startTime()) * (m_end_property_value - m_start_property_value) / duration();
 
-  if (m_start_property_value < m_end_property_value) {
-    property_value =
-        qBound(m_start_property_value, property_value, m_end_property_value);
-  } else {
-    property_value =
-        qBound(m_end_property_value, property_value, m_start_property_value);
-  }
+    if (m_start_property_value < m_end_property_value) {
+        property_value = qBound(m_start_property_value, property_value, m_end_property_value);
+    } else {
+        property_value = qBound(m_end_property_value, property_value, m_start_property_value);
+    }
 
-  return property_value;
+    return property_value;
 }

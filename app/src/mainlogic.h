@@ -30,42 +30,41 @@
 Q_DECLARE_LOGGING_CATEGORY(mainlogic)
 
 class MainLogic : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  explicit MainLogic(QObject *parent = Q_NULLPTR);
+public:
+    explicit MainLogic(QObject* parent = Q_NULLPTR);
 
-  void initEngine(QQmlApplicationEngine *const engine);
-  void connectEngine();
+    void initEngine(QQmlApplicationEngine* const engine);
+    void connectEngine();
 
- private slots:
-  void createSnapshot(const QFileInfo &snapshot_file_info);
-  void renderVideo(const QFileInfo &video_file_info);
+private slots:
+    void createSnapshot(const QFileInfo& snapshot_file_info);
+    void renderVideo(const QFileInfo& video_file_info);
 
-  void saveProject(const QFileInfo &save_file_info);
-  void loadProject(const QFileInfo &load_file_info);
+    void saveProject(const QFileInfo& save_file_info);
+    void loadProject(const QFileInfo& load_file_info);
 
-  void addItem(QQuickItem *quick_item,
-               const QList<QSharedPointer<AbstractAnimation>> &animations =
-                   QList<QSharedPointer<AbstractAnimation>>{});
+    void addItem(QQuickItem* quick_item,
+        const QList<QSharedPointer<AbstractAnimation>>& animations = QList<QSharedPointer<AbstractAnimation>> {});
 
-  void projectWidthChanged(const qint32 new_project_width);
-  void projectHeightChanged(const qint32 new_project_height);
+    void projectWidthChanged(const qint32 new_project_width);
+    void projectHeightChanged(const qint32 new_project_height);
 
-  void uiTimeChanged(const qreal time);
-  void renderingVideoFinished();
+    void uiTimeChanged(const qreal time);
+    void renderingVideoFinished();
 
- private:
-  QQmlApplicationEngine *m_qml_engine;
-  QObject *m_qml_creation_area;
+private:
+    QQmlApplicationEngine* m_qml_engine;
+    QObject* m_qml_creation_area;
 
-  qreal m_current_time = 0.0;
+    qreal m_current_time = 0.0;
 
-  MainWindowHandler m_mainwindowhandler;
+    MainWindowHandler m_mainwindowhandler;
 
-  SaveFileHandler m_savefilehandler;
-  Renderer m_renderer;
-  ItemHandler m_itemhandler;
+    SaveFileHandler m_savefilehandler;
+    Renderer m_renderer;
+    ItemHandler m_itemhandler;
 };
 
-#endif  // APP_SRC_MAINLOGIC_H_
+#endif // APP_SRC_MAINLOGIC_H_

@@ -26,136 +26,137 @@
 #include "test_helper_functions.h"
 
 class MenuFileIntegrationTest : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
- private slots:
-  void init();
+private slots:
+    void init();
 
-  void clearProject();
-  void loadProject();
-  void saveAsProject();
-  void quitApp();
+    void clearProject();
+    void loadProject();
+    void saveAsProject();
+    void quitApp();
 
-  void cleanup();
+    void cleanup();
 
- private:
-  SetupMain::SetupObjects m_app_objects;
-  QSharedPointer<TestHelperFunctions> m_helper_functions;
+private:
+    SetupMain::SetupObjects m_app_objects;
+    QSharedPointer<TestHelperFunctions> m_helper_functions;
 };
 
 class CloseEventFilter : public QObject {
-  Q_OBJECT
- public:
-  explicit CloseEventFilter(QObject* parent) : QObject(parent) {}
-
- signals:
-  void closeEventReceived();
-
- protected:
-  bool eventFilter(QObject* obj, QEvent* event) {
-    if (event->type() == QEvent::Close) {
-      emit closeEventReceived();
+    Q_OBJECT
+public:
+    explicit CloseEventFilter(QObject* parent)
+        : QObject(parent)
+    {
     }
 
-    return QObject::eventFilter(obj, event);
-  }
+signals:
+    void closeEventReceived();
+
+protected:
+    bool eventFilter(QObject* obj, QEvent* event)
+    {
+        if (event->type() == QEvent::Close) {
+            emit closeEventReceived();
+        }
+
+        return QObject::eventFilter(obj, event);
+    }
 };
 
-void MenuFileIntegrationTest::init() {
-  m_app_objects = SetupMain::setupApp();
+void MenuFileIntegrationTest::init()
+{
+    m_app_objects = SetupMain::setupApp();
 
-  m_helper_functions = QSharedPointer<TestHelperFunctions>(
-      new TestHelperFunctions(m_app_objects.engine));
+    m_helper_functions = QSharedPointer<TestHelperFunctions>(
+        new TestHelperFunctions(m_app_objects.engine));
 }
 
-void MenuFileIntegrationTest::clearProject() {
-  m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
-  QVERIFY(m_helper_functions->compareNumItems(1));
+void MenuFileIntegrationTest::clearProject()
+{
+    m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+    QVERIFY(m_helper_functions->compareNumItems(1));
 
-  auto new_action_item =
-      m_helper_functions->getChild<QObject*>("MVANewProjectAction");
-  QMetaObject::invokeMethod(new_action_item, "trigger");
+    auto new_action_item = m_helper_functions->getChild<QObject*>("MVANewProjectAction");
+    QMetaObject::invokeMethod(new_action_item, "trigger");
 
-  QVERIFY(m_helper_functions->compareNumItems(0));
+    QVERIFY(m_helper_functions->compareNumItems(0));
 }
 
-void MenuFileIntegrationTest::loadProject() {
-  QFile test_save_file(":/integrations_tests_data/test_save_file.json");
-  QVERIFY(test_save_file.exists());
+void MenuFileIntegrationTest::loadProject()
+{
+    QFile test_save_file(":/integrations_tests_data/test_save_file.json");
+    QVERIFY(test_save_file.exists());
 
-  const QString test_load_file_absolute_path =
-      TestHelperFunctions::absoluteFilePath("test_load_file.json");
-  test_save_file.copy(test_load_file_absolute_path);
-  QVERIFY(QFile::exists(test_load_file_absolute_path));
+    const QString test_load_file_absolute_path = TestHelperFunctions::absoluteFilePath("test_load_file.json");
+    test_save_file.copy(test_load_file_absolute_path);
+    QVERIFY(QFile::exists(test_load_file_absolute_path));
 
-  auto load_action_item =
-      m_helper_functions->getChild<QObject*>("MVALoadProjectAction");
-  QMetaObject::invokeMethod(load_action_item, "trigger");
+    auto load_action_item = m_helper_functions->getChild<QObject*>("MVALoadProjectAction");
+    QMetaObject::invokeMethod(load_action_item, "trigger");
 
-  auto load_file_dialog =
-      m_helper_functions->getChild<QObject*>("MVALoadFileDialog");
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return load_file_dialog->property("visible").toBool(); }));
+    auto load_file_dialog = m_helper_functions->getChild<QObject*>("MVALoadFileDialog");
+    QVERIFY(QTest::qWaitFor(
+        [&]() { return load_file_dialog->property("visible").toBool(); }));
 
-  load_file_dialog->setProperty(
-      "selectedFile",
-      QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
-  QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
-                            Qt::QueuedConnection);
+    load_file_dialog->setProperty(
+        "selectedFile",
+        QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
+    QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted",
+        Qt::QueuedConnection);
 
-  QVERIFY(QTest::qWaitFor(
-      [&]() { return !load_file_dialog->property("visible").toBool(); }));
-  QVERIFY(m_helper_functions->compareNumItems(3));
-  QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
-  QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
-  QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
+    QVERIFY(QTest::qWaitFor(
+        [&]() { return !load_file_dialog->property("visible").toBool(); }));
+    QVERIFY(m_helper_functions->compareNumItems(3));
+    QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
+    QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
+    QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
 }
 
-void MenuFileIntegrationTest::saveAsProject() {
-  m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
-  QVERIFY(m_helper_functions->compareNumItems(1));
+void MenuFileIntegrationTest::saveAsProject()
+{
+    m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+    QVERIFY(m_helper_functions->compareNumItems(1));
 
-  auto save_as_action_item =
-      m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
-  QMetaObject::invokeMethod(save_as_action_item, "trigger");
+    auto save_as_action_item = m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
+    QMetaObject::invokeMethod(save_as_action_item, "trigger");
 
-  const QString test_save_file_absolute_path =
-      TestHelperFunctions::absoluteFilePath("test_save_file.json");
-  if (QFile::exists(test_save_file_absolute_path)) {
-    QFile::remove(test_save_file_absolute_path);
-  }
+    const QString test_save_file_absolute_path = TestHelperFunctions::absoluteFilePath("test_save_file.json");
+    if (QFile::exists(test_save_file_absolute_path)) {
+        QFile::remove(test_save_file_absolute_path);
+    }
 
-  auto save_file_dialog =
-      m_helper_functions->getChild<QObject*>("MVASaveFileDialog");
-  QVERIFY(save_file_dialog->property("visible").toBool());
+    auto save_file_dialog = m_helper_functions->getChild<QObject*>("MVASaveFileDialog");
+    QVERIFY(save_file_dialog->property("visible").toBool());
 
-  save_file_dialog->setProperty(
-      "selectedFile",
-      QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
-  QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
-                            Qt::DirectConnection);
+    save_file_dialog->setProperty(
+        "selectedFile",
+        QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
+    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted",
+        Qt::DirectConnection);
 
-  QVERIFY(QFile::exists(test_save_file_absolute_path));
+    QVERIFY(QFile::exists(test_save_file_absolute_path));
 }
 
-void MenuFileIntegrationTest::quitApp() {
-  auto quit_app_action_item =
-      m_helper_functions->getChild<QObject*>("MVAQuitAppAction");
-  CloseEventFilter* closeFilter =
-      new CloseEventFilter(m_helper_functions->rootWindow());
-  m_helper_functions->rootWindow()->installEventFilter(closeFilter);
-  QSignalSpy closeEventSpy(closeFilter, &CloseEventFilter::closeEventReceived);
+void MenuFileIntegrationTest::quitApp()
+{
+    auto quit_app_action_item = m_helper_functions->getChild<QObject*>("MVAQuitAppAction");
+    CloseEventFilter* closeFilter = new CloseEventFilter(m_helper_functions->rootWindow());
+    m_helper_functions->rootWindow()->installEventFilter(closeFilter);
+    QSignalSpy closeEventSpy(closeFilter, &CloseEventFilter::closeEventReceived);
 
-  QMetaObject::invokeMethod(quit_app_action_item, "trigger");
+    QMetaObject::invokeMethod(quit_app_action_item, "trigger");
 
-  QVERIFY(QTest::qWaitFor([&]() { return closeEventSpy.count() == 1; }));
+    QVERIFY(QTest::qWaitFor([&]() { return closeEventSpy.count() == 1; }));
 }
 
-void MenuFileIntegrationTest::cleanup() {
-  m_helper_functions.clear();
+void MenuFileIntegrationTest::cleanup()
+{
+    m_helper_functions.clear();
 
-  m_app_objects.engine.clear();
-  m_app_objects.mainlogic.clear();
+    m_app_objects.engine.clear();
+    m_app_objects.mainlogic.clear();
 }
 
 QTEST_MAIN(MenuFileIntegrationTest)

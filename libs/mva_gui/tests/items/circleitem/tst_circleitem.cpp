@@ -21,86 +21,89 @@
 #include "circleitem.h"
 
 class TestCircleItem : public QObject {
-  Q_OBJECT
- private slots:
-  void initTestCase();
+    Q_OBJECT
+private slots:
+    void initTestCase();
 
-  void toJsonTest();
-  void paintTest();
+    void toJsonTest();
+    void paintTest();
 
-  void editablePropertiesTest();
+    void editablePropertiesTest();
 
- private:
-  const qreal m_circle_x = 123;
-  const qreal m_circle_y = 212;
-  const qreal m_circle_width = 150;
-  const qreal m_circle_height = 150;
+private:
+    const qreal m_circle_x = 123;
+    const qreal m_circle_y = 212;
+    const qreal m_circle_width = 150;
+    const qreal m_circle_height = 150;
 
-  const QString m_circle_color = "#0000ff";
-  const QString m_circle_name = "test_circle_name";
-  const qreal m_circle_opacity = 0.6;
-  const qreal m_circle_rotation = 32;
+    const QString m_circle_color = "#0000ff";
+    const QString m_circle_name = "test_circle_name";
+    const qreal m_circle_opacity = 0.6;
+    const qreal m_circle_rotation = 32;
 
-  QQuickItem m_circle_parent_item;
-  CircleItem m_circle_item;
+    QQuickItem m_circle_parent_item;
+    CircleItem m_circle_item;
 };
 
-void TestCircleItem::initTestCase() {
-  m_circle_parent_item.setX(m_circle_x);
-  m_circle_parent_item.setY(m_circle_y);
-  m_circle_parent_item.setWidth(m_circle_width);
-  m_circle_parent_item.setHeight(m_circle_height);
+void TestCircleItem::initTestCase()
+{
+    m_circle_parent_item.setX(m_circle_x);
+    m_circle_parent_item.setY(m_circle_y);
+    m_circle_parent_item.setWidth(m_circle_width);
+    m_circle_parent_item.setHeight(m_circle_height);
 
-  m_circle_item.setParentItem(&m_circle_parent_item);
-  m_circle_item.setColor(QColor(m_circle_color));
-  m_circle_item.setName(m_circle_name);
-  m_circle_item.setOpacity(m_circle_opacity);
-  m_circle_item.setRotation(m_circle_rotation);
+    m_circle_item.setParentItem(&m_circle_parent_item);
+    m_circle_item.setColor(QColor(m_circle_color));
+    m_circle_item.setName(m_circle_name);
+    m_circle_item.setOpacity(m_circle_opacity);
+    m_circle_item.setRotation(m_circle_rotation);
 
-  m_circle_item.setWidth(m_circle_width);
-  m_circle_item.setHeight(m_circle_width);
+    m_circle_item.setWidth(m_circle_width);
+    m_circle_item.setHeight(m_circle_width);
 }
 
-void TestCircleItem::toJsonTest() {
-  QJsonObject expected_json;
-  expected_json["x"] = QString::number(m_circle_x);
-  expected_json["y"] = QString::number(m_circle_y);
-  expected_json["width"] = QString::number(m_circle_width);
-  expected_json["height"] = QString::number(m_circle_height);
-  expected_json["item.color"] = m_circle_color;
-  expected_json["item.name"] = m_circle_name;
-  expected_json["item.rotation"] = QString::number(m_circle_rotation);
-  expected_json["item.opacity"] = QString::number(m_circle_opacity);
-  expected_json["item.file"] =
-      "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
+void TestCircleItem::toJsonTest()
+{
+    QJsonObject expected_json;
+    expected_json["x"] = QString::number(m_circle_x);
+    expected_json["y"] = QString::number(m_circle_y);
+    expected_json["width"] = QString::number(m_circle_width);
+    expected_json["height"] = QString::number(m_circle_height);
+    expected_json["item.color"] = m_circle_color;
+    expected_json["item.name"] = m_circle_name;
+    expected_json["item.rotation"] = QString::number(m_circle_rotation);
+    expected_json["item.opacity"] = QString::number(m_circle_opacity);
+    expected_json["item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
 
-  const auto circle_json = m_circle_item.toJson();
+    const auto circle_json = m_circle_item.toJson();
 
-  QCOMPARE(circle_json, expected_json);
+    QCOMPARE(circle_json, expected_json);
 }
 
-void TestCircleItem::paintTest() {
-  QImage image(600, 400, QImage::Format::Format_ARGB32);
-  QImage expected_image = image;
-  image.fill("white");
+void TestCircleItem::paintTest()
+{
+    QImage image(600, 400, QImage::Format::Format_ARGB32);
+    QImage expected_image = image;
+    image.fill("white");
 
-  QPainter painter(&image);
-  m_circle_item.paintItem(&painter);
+    QPainter painter(&image);
+    m_circle_item.paintItem(&painter);
 
-  expected_image.load("://test_images/test_circle_image.png");
-  QCOMPARE(image, expected_image);
+    expected_image.load("://test_images/test_circle_image.png");
+    QCOMPARE(image, expected_image);
 }
 
-void TestCircleItem::editablePropertiesTest() {
-  const auto editable_properties = m_circle_item.editableProperties();
-  const auto item_properties = editable_properties.abstract_item_properties;
-  const auto quick_item_properties = editable_properties.quick_item_properties;
+void TestCircleItem::editablePropertiesTest()
+{
+    const auto editable_properties = m_circle_item.editableProperties();
+    const auto item_properties = editable_properties.abstract_item_properties;
+    const auto quick_item_properties = editable_properties.quick_item_properties;
 
-  QStringList expected_item_properties{"name", "color", "opacity", "rotation"};
-  QStringList expected_quick_item_properties{"width", "height", "x", "y"};
+    QStringList expected_item_properties { "name", "color", "opacity", "rotation" };
+    QStringList expected_quick_item_properties { "width", "height", "x", "y" };
 
-  QCOMPARE(item_properties, expected_item_properties);
-  QCOMPARE(quick_item_properties, expected_quick_item_properties);
+    QCOMPARE(item_properties, expected_item_properties);
+    QCOMPARE(quick_item_properties, expected_quick_item_properties);
 }
 
 QTEST_MAIN(TestCircleItem)

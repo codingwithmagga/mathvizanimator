@@ -26,15 +26,15 @@
  * Longer description...
  */
 class CircleItem : public AbstractItem {
-  Q_OBJECT
-  QML_ELEMENT
+    Q_OBJECT
+    QML_ELEMENT
 
- public:
-  explicit CircleItem(QQuickItem* parent = nullptr);
+public:
+    explicit CircleItem(QQuickItem* parent = nullptr);
 
-  void paint(QPainter* painter) override;
+    void paint(QPainter* painter) override;
 
-  EditableProperties editableProperties() const override;
+    EditableProperties editableProperties() const override;
 };
 
-#endif  // LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
+#endif // LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_

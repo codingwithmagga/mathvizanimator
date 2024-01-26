@@ -23,84 +23,84 @@
 #include <QQuickItem>
 
 class MainWindowHandler : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY
-                 pixelWidthChanged)
-  Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY
-                 pixelHeightChanged)
-  Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
-  Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY
-                 videoLengthChanged)
+    Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY
+            pixelWidthChanged)
+    Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY
+            pixelHeightChanged)
+    Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
+    Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY
+            videoLengthChanged)
 
- public:
-  explicit MainWindowHandler(QObject *parent = Q_NULLPTR);
+public:
+    explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
 
-  qint32 pixelWidth() const;
-  qint32 pixelHeight() const;
-  qint32 fps() const;
-  qint32 videoLength() const;
+    qint32 pixelWidth() const;
+    qint32 pixelHeight() const;
+    qint32 fps() const;
+    qint32 videoLength() const;
 
- public slots:
+public slots:
 
-  void snapshot(const QVariant &file);
-  void render(const QVariant &file);
+    void snapshot(const QVariant& file);
+    void render(const QVariant& file);
 
-  void newProject();
-  void saveProject(const QVariant &file);
-  void loadProject(const QVariant &file);
+    void newProject();
+    void saveProject(const QVariant& file);
+    void loadProject(const QVariant& file);
 
-  void openSVGFolder() const;
+    void openSVGFolder() const;
 
-  void removeCurrentItem();
-  void removeAnimation(const qint32 animation_number);
+    void removeCurrentItem();
+    void removeAnimation(const qint32 animation_number);
 
-  void itemClickedByUser(const QVariant &itemName);
-  void setTimeByUser(const QVariant &time);
+    void itemClickedByUser(const QVariant& itemName);
+    void setTimeByUser(const QVariant& time);
 
-  void updateProjectSettings(const QVariantList &new_project_settings);
-  void updateProjectSettings(const QList<qint32> &new_project_settings);
+    void updateProjectSettings(const QVariantList& new_project_settings);
+    void updateProjectSettings(const QList<qint32>& new_project_settings);
 
-  void setPixelWidth(const qint32 new_pixel_width);
-  void setPixelHeight(const qint32 new_pixel_height);
-  void setFPS(const qint32 new_fps);
-  void setVideoLength(const qint32 new_video_length);
+    void setPixelWidth(const qint32 new_pixel_width);
+    void setPixelHeight(const qint32 new_pixel_height);
+    void setFPS(const qint32 new_fps);
+    void setVideoLength(const qint32 new_video_length);
 
-  void addAnimation(const QString &item_name, const QString &animation_type,
-                    const qreal start_time, const qreal duration);
+    void addAnimation(const QString& item_name, const QString& animation_type,
+        const qreal start_time, const qreal duration);
 
- signals:
-  void pixelWidthChanged(const qint32 new_pixel_width);
-  void pixelHeightChanged(const qint32 new_pixel_height);
-  void fpsChanged(const qint32 new_fps);
-  void videoLengthChanged(const qint32 new_video_length);
+signals:
+    void pixelWidthChanged(const qint32 new_pixel_width);
+    void pixelHeightChanged(const qint32 new_pixel_height);
+    void fpsChanged(const qint32 new_fps);
+    void videoLengthChanged(const qint32 new_video_length);
 
-  void snapshotRequested(const QFileInfo &snapshot_file_info);
-  void renderingRequested(const QFileInfo &video_file_info);
+    void snapshotRequested(const QFileInfo& snapshot_file_info);
+    void renderingRequested(const QFileInfo& video_file_info);
 
-  void newProjectRequested();
-  void saveProjectRequested(const QFileInfo &save_file_info);
-  void loadProjectRequested(const QFileInfo &load_file_info);
+    void newProjectRequested();
+    void saveProjectRequested(const QFileInfo& save_file_info);
+    void loadProjectRequested(const QFileInfo& load_file_info);
 
-  void removeCurrentItemRequested();
-  void removeAnimationRequested(const qint32 animation_number);
+    void removeCurrentItemRequested();
+    void removeAnimationRequested(const qint32 animation_number);
 
-  void itemClicked(const QString &name);
-  void timeChanged(const qreal time);
+    void itemClicked(const QString& name);
+    void timeChanged(const qreal time);
 
-  void renderingVideoFinished(const QFileInfo &video_file);
+    void renderingVideoFinished(const QFileInfo& video_file);
 
-  void addAnimationSignal(const QString &item_name,
-                          const QString &animation_type, const qreal start_time,
-                          const qreal duration);
+    void addAnimationSignal(const QString& item_name,
+        const QString& animation_type, const qreal start_time,
+        const qreal duration);
 
- private:
-  QObject *m_qml_creation_area;
+private:
+    QObject* m_qml_creation_area;
 
-  qint32 m_pixel_width;
-  qint32 m_pixel_height;
-  qint32 m_fps;
-  qint32 m_video_length;
+    qint32 m_pixel_width;
+    qint32 m_pixel_height;
+    qint32 m_fps;
+    qint32 m_video_length;
 };
 
-#endif  // LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_
+#endif // LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_
