@@ -53,7 +53,8 @@ public:
         const QUrl url("qrc:/qt/qml/cwa/mva/gui/qml/MainWindow.qml");
 
         if (gui_app) {
-              QCoreApplication::setApplicationName("mathvizanimator");
+
+                     QCoreApplication::setApplicationName("mathvizanimator");
             QCoreApplication::setOrganizationName("codingwithmagga");
             QObject::connect(
                 setup_objects.engine.data(),

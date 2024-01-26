@@ -86,8 +86,8 @@ jobs:
           #     github.ref == 'refs/heads/main'
           #   }}
           VALIDATE_ALL_CODEBASE: true
-          C_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir,whitespace"
-          CPP_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir,whitespace"
+          C_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir,-whitespace"
+          CPP_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir,-whitespace"
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
