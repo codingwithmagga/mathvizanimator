@@ -88,6 +88,8 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           C_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir,-whitespace"
           CPP_CPPLINT_ARGUMENTS: "--filter=-build/include_subdir,-whitespace"
+          C_CLANG_FORMAT_ARGUMENTS: "--dry-run --Werror"
+          CPP_CLANG_FORMAT_ARGUMENTS: "--dry-run --Werror"
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
