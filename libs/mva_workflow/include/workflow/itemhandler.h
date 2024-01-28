@@ -60,6 +60,8 @@ class ItemHandler : public QObject {
 
   void addAnimation(const QString& item_name, const QString& animation_type,
                     const qreal start_time, const qreal duration);
+  void addAnimations(const QString& item_name,
+                     const QList<QSharedPointer<AbstractAnimation>> animations);
   void removeAnimation(const qint32 animation_number);
 
   void scaleItemsX(const qreal ratio);

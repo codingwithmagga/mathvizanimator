@@ -154,3 +154,14 @@ void MainWindowHandler::openSVGFolder() const {
       << QDesktopServices::openUrl(QUrl(QStandardPaths::writableLocation(
              QStandardPaths::AppDataLocation)));
 }
+
+void MainWindowHandler::addItem(const QQuickItem *item) {
+  // clang-format off
+  connect(item, SIGNAL(clicked(QVariant)), this,
+          SLOT(itemClickedByUser(QVariant)));
+  connect(item, SIGNAL(animationAdded(QString,QString,qreal,qreal)), this,
+          SLOT(addAnimation(QString,QString,qreal,qreal)));
+  // clang-format on
+
+  emit itemAdded(item);
+}

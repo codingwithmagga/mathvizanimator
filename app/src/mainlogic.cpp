@@ -38,6 +38,9 @@ MainLogic::MainLogic(QObject *parent) : QObject{parent} {
   connect(&m_mainwindowhandler, &MainWindowHandler::loadProjectRequested, this,
           &MainLogic::loadProject);
 
+  // connect(&m_mainwindowhandler, &MainWindowHandler::itemAdded,
+  // &m_itemhandler,[this](){
+  //   m_itemhandler.addItem(item););
   connect(&m_mainwindowhandler, &MainWindowHandler::removeCurrentItemRequested,
           &m_itemhandler, &ItemHandler::removeCurrentItem);
   connect(&m_mainwindowhandler, &MainWindowHandler::removeAnimationRequested,
@@ -107,7 +110,7 @@ void MainLogic::connectEngine() {
   }
 
   // clang-format off
-  QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem*)), this,
+  QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem*)), &m_mainwindowhandler,
                    SLOT(addItem(QQuickItem*)));
   // clang-format on
 }
@@ -190,14 +193,10 @@ void MainLogic::loadProject(const QFileInfo &load_file_info) {
       qCWarning(mainlogic) << "item not found!";
     }
 
-    addItem(item, animations);
+    m_mainwindowhandler.addItem(item);
+    m_itemhandler.addAnimations(item_properties.value("item.name").toString(),
+                                animations);
   }
-}
-
-void MainLogic::addItem(
-    QQuickItem *quick_item,
-    const QList<QSharedPointer<AbstractAnimation>> &animations) {
-  m_itemhandler.addItem(quick_item, animations);
 }
 
 void MainLogic::projectWidthChanged(const qint32 new_project_width) {
