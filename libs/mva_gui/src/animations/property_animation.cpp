@@ -17,5 +17,8 @@
 
 #include "property_animation.h"
 
-PropertyAnimation::PropertyAnimation(const QString &property, QObject *parent)
-    : AbstractAnimation{parent}, m_property(property) {}
+PropertyAnimation::PropertyAnimation(const QString& property, QObject* parent)
+    : AbstractAnimation { parent }
+    , m_property(property)
+{
+}

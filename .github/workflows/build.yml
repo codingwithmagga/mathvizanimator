@@ -77,7 +77,7 @@ jobs:
         timeout-minutes: 10
         run: |
           sudo apt-get update && sudo apt-get upgrade
-          pip install gcovr
+          pip install gcovr==6.0
 
       - name: (3.4) Setup ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@v2

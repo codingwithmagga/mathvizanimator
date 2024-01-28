@@ -28,361 +28,334 @@
 #include "textitem.h"
 
 class TestRenderer : public QObject {
-  Q_OBJECT
- private slots:
-  void initTestCase();
+    Q_OBJECT
+  private slots:
+    void initTestCase();
 
-  void createImage_data();
-  void createImage();
+    void createImage_data();
+    void createImage();
 
-  void render_data();
-  void render();
+    void render_data();
+    void render();
 
-  void multipleRendering();
+    void multipleRendering();
 
-  void renderWithAnimation();
+    void renderWithAnimation();
 
-  void setIndividualProjectSettings();
+    void setIndividualProjectSettings();
 
-  void cleanupTestCase();
+    void cleanupTestCase();
 
- private:
-  QList<QQuickItem*> m_quickitem_list;
-  QList<QSharedPointer<ItemObserver>> m_item_list;
+  private:
+    QList<QQuickItem*> m_quickitem_list;
+    QList<QSharedPointer<ItemObserver>> m_item_list;
 };
 
-void TestRenderer::initTestCase() {
-  const qreal width_1 = 122;
-  const qreal height_1 = width_1;
-  const qreal width_2 = 111;
-  const qreal height_2 = 82;
+void TestRenderer::initTestCase()
+{
+    const qreal width_1 = 122;
+    const qreal height_1 = width_1;
+    const qreal width_2 = 111;
+    const qreal height_2 = 82;
 
-  auto parent_item_1 = new QQuickItem();
-  parent_item_1->setX(55);
-  parent_item_1->setY(65);
-  parent_item_1->setHeight(width_1);
-  parent_item_1->setWidth(height_1);
+    auto parent_item_1 = new QQuickItem();
+    parent_item_1->setX(55);
+    parent_item_1->setY(65);
+    parent_item_1->setHeight(width_1);
+    parent_item_1->setWidth(height_1);
 
-  auto parent_item_2 = new QQuickItem();
-  parent_item_2->setX(455);
-  parent_item_2->setY(265);
-  parent_item_2->setHeight(width_2);
-  parent_item_2->setWidth(height_2);
+    auto parent_item_2 = new QQuickItem();
+    parent_item_2->setX(455);
+    parent_item_2->setY(265);
+    parent_item_2->setHeight(width_2);
+    parent_item_2->setWidth(height_2);
 
-  auto parent_item_3 = new QQuickItem();
-  parent_item_3->setX(848);
-  parent_item_3->setY(165);
+    auto parent_item_3 = new QQuickItem();
+    parent_item_3->setX(848);
+    parent_item_3->setY(165);
 
-  auto circle = new CircleItem();
-  circle->setWidth(width_1);
-  circle->setHeight(height_1);
-  circle->setColor("red");
-  circle->setOpacity(0.7);
-  circle->setParentItem(parent_item_1);
-  parent_item_1->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    auto circle = new CircleItem();
+    circle->setWidth(width_1);
+    circle->setHeight(height_1);
+    circle->setColor("red");
+    circle->setOpacity(0.7);
+    circle->setParentItem(parent_item_1);
+    parent_item_1->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
-  auto rect = new RectangleItem();
-  rect->setWidth(width_2);
-  rect->setHeight(height_2);
-  rect->setColor("blue");
-  rect->setOpacity(0.7);
-  rect->setRotation(43);
-  rect->setParentItem(parent_item_2);
-  parent_item_2->setProperty("item", QVariant::fromValue<RectangleItem*>(rect));
+    auto rect = new RectangleItem();
+    rect->setWidth(width_2);
+    rect->setHeight(height_2);
+    rect->setColor("blue");
+    rect->setOpacity(0.7);
+    rect->setRotation(43);
+    rect->setParentItem(parent_item_2);
+    parent_item_2->setProperty("item", QVariant::fromValue<RectangleItem*>(rect));
 
-  auto tex = new TextItem;
-  tex->setLatexSource("Hello $\\delta=\\epsilon$");
-  tex->setScaleText(3);
-  tex->setOpacity(0.43);
-  tex->setRotation(-23);
-  tex->setParentItem(parent_item_3);
-  parent_item_3->setProperty("item", QVariant::fromValue<TextItem*>(tex));
+    auto tex = new TextItem;
+    tex->setLatexSource("Hello $\\delta=\\epsilon$");
+    tex->setScaleText(3);
+    tex->setOpacity(0.43);
+    tex->setRotation(-23);
+    tex->setParentItem(parent_item_3);
+    parent_item_3->setProperty("item", QVariant::fromValue<TextItem*>(tex));
 
-  m_item_list.push_back(
-      QSharedPointer<ItemObserver>(new ItemObserver(parent_item_1)));
-  m_item_list.push_back(
-      QSharedPointer<ItemObserver>(new ItemObserver(parent_item_2)));
-  m_item_list.push_back(
-      QSharedPointer<ItemObserver>(new ItemObserver(parent_item_3)));
+    m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item_1)));
+    m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item_2)));
+    m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item_3)));
 
-  m_quickitem_list.push_back(parent_item_1);
-  m_quickitem_list.push_back(parent_item_2);
-  m_quickitem_list.push_back(parent_item_3);
+    m_quickitem_list.push_back(parent_item_1);
+    m_quickitem_list.push_back(parent_item_2);
+    m_quickitem_list.push_back(parent_item_3);
 }
 
-void TestRenderer::createImage_data() {
-  QTest::addColumn<qint32>("height");
-  QTest::addColumn<qint32>("width");
-  QTest::addColumn<QImage>("test_frame_image");
+void TestRenderer::createImage_data()
+{
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<QImage>("test_frame_image");
 
-  QImage default_frame("://test_images/test_img_default.png");
-  QImage mod_frame("://test_images/test_img_mod.png");
+    QImage default_frame("://test_images/test_img_default.png");
+    QImage mod_frame("://test_images/test_img_mod.png");
 
-  Renderer::ProjectSettings defaultProjectSettings;
+    Renderer::ProjectSettings defaultProjectSettings;
 
-  QTest::newRow("default_setup")
-      << defaultProjectSettings.height << defaultProjectSettings.width
-      << default_frame;
-  QTest::newRow("mod_values") << 750 << 1250 << mod_frame;
+    QTest::newRow("default_setup") << defaultProjectSettings.height << defaultProjectSettings.width << default_frame;
+    QTest::newRow("mod_values") << 750 << 1250 << mod_frame;
 }
 
-void TestRenderer::createImage() {
-  QFETCH(qint32, height);
-  QFETCH(qint32, width);
-  QFETCH(QImage, test_frame_image);
+void TestRenderer::createImage()
+{
+    QFETCH(qint32, height);
+    QFETCH(qint32, width);
+    QFETCH(QImage, test_frame_image);
 
-  Renderer renderer;
+    Renderer renderer;
 
-  Renderer::ProjectSettings project_settings;
-  project_settings.width = width;
-  project_settings.height = height;
+    Renderer::ProjectSettings project_settings;
+    project_settings.width = width;
+    project_settings.height = height;
 
-  renderer.setProjectSettings(project_settings);
-  const auto rendered_image = renderer.createImage(m_item_list, 0.0);
+    renderer.setProjectSettings(project_settings);
+    const auto rendered_image = renderer.createImage(m_item_list, 0.0);
 
-  QCOMPARE(rendered_image, test_frame_image);
+    QCOMPARE(rendered_image, test_frame_image);
 }
 
-void TestRenderer::render_data() {
-  QTest::addColumn<qint32>("height");
-  QTest::addColumn<qint32>("width");
-  QTest::addColumn<qint32>("fps");
-  QTest::addColumn<qint32>("video_length");
-  QTest::addColumn<QFileInfo>("video_file");
-  QTest::addColumn<QImage>("test_frame_image");
+void TestRenderer::render_data()
+{
+    QTest::addColumn<qint32>("height");
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("fps");
+    QTest::addColumn<qint32>("video_length");
+    QTest::addColumn<QFileInfo>("video_file");
+    QTest::addColumn<QImage>("test_frame_image");
 
-  QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
-  QFileInfo temp_dir_video(QDir::temp(), "test_video_temp.mp4");
+    QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
+    QFileInfo temp_dir_video(QDir::temp(), "test_video_temp.mp4");
 
-  QImage default_frame("://test_images/test_frame_default.png");
-  QImage mod_frame("://test_images/test_frame_mod.png");
+    QImage default_frame("://test_images/test_frame_default.png");
+    QImage mod_frame("://test_images/test_frame_mod.png");
 
-  Renderer::ProjectSettings defaultProjectSettings;
+    Renderer::ProjectSettings defaultProjectSettings;
 
-  QTest::newRow("default_setup")
-      << defaultProjectSettings.height << defaultProjectSettings.width
-      << defaultProjectSettings.fps << defaultProjectSettings.video_length
-      << home_dir_video << default_frame;
-  QTest::newRow("mod_values")
-      << 750 << 1250 << 32 << 10 << temp_dir_video << mod_frame;
+    QTest::newRow("default_setup") << defaultProjectSettings.height << defaultProjectSettings.width
+                                   << defaultProjectSettings.fps << defaultProjectSettings.video_length
+                                   << home_dir_video << default_frame;
+    QTest::newRow("mod_values") << 750 << 1250 << 32 << 10 << temp_dir_video << mod_frame;
 }
 
-void TestRenderer::render() {
-  QFETCH(qint32, height);
-  QFETCH(qint32, width);
-  QFETCH(qint32, fps);
-  QFETCH(qint32, video_length);
-  QFETCH(QFileInfo, video_file);
-  QFETCH(QImage, test_frame_image);
+void TestRenderer::render()
+{
+    QFETCH(qint32, height);
+    QFETCH(qint32, width);
+    QFETCH(qint32, fps);
+    QFETCH(qint32, video_length);
+    QFETCH(QFileInfo, video_file);
+    QFETCH(QImage, test_frame_image);
 
-  Renderer renderer;
+    Renderer renderer;
 
-  QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+    QSignalSpy spy(&renderer, &Renderer::finishedRendering);
 
-  connect(
-      &renderer, &Renderer::finishedRendering, this,
-      [&height, &width, &fps, &video_length,
-       &test_frame_image](const QFileInfo& file) {
-        QVERIFY(file.exists());
+    connect(&renderer, &Renderer::finishedRendering, this,
+        [&height, &width, &fps, &video_length, &test_frame_image](const QFileInfo& file) {
+            QVERIFY(file.exists());
 
-        QMediaPlayer media_player;
-        media_player.setSource(QUrl(file.absoluteFilePath()));
+            QMediaPlayer media_player;
+            media_player.setSource(QUrl(file.absoluteFilePath()));
 
-        QCOMPARE(media_player.metaData()
-                     .value(QMediaMetaData::VideoFrameRate)
-                     .toInt(),
-                 fps);
-        QCOMPARE(media_player.metaData()
-                     .value(QMediaMetaData::Duration)
-                     .toLongLong(),
-                 video_length * 1000);
-        QCOMPARE(
-            media_player.metaData().value(QMediaMetaData::Resolution).toSize(),
-            QSize(width, height));
+            QCOMPARE(media_player.metaData().value(QMediaMetaData::VideoFrameRate).toInt(), fps);
+            QCOMPARE(media_player.metaData().value(QMediaMetaData::Duration).toLongLong(), video_length * 1000);
+            QCOMPARE(media_player.metaData().value(QMediaMetaData::Resolution).toSize(), QSize(width, height));
 
-        QFile extracted_frame_file("extracted_frame_" + QString::number(width) +
-                                   "x" + QString::number(height) + ".png");
-        QProcess ffmpeg_extract_frame;
-        ffmpeg_extract_frame.start(
-            "ffmpeg", QStringList{} << "-y"
-                                    << "-i" << file.absoluteFilePath()
-                                    << "-frames:v"
-                                    << "1" << extracted_frame_file.fileName());
+            QFile extracted_frame_file(
+                "extracted_frame_" + QString::number(width) + "x" + QString::number(height) + ".png");
+            QProcess ffmpeg_extract_frame;
+            ffmpeg_extract_frame.start("ffmpeg",
+                QStringList {} << "-y"
+                               << "-i" << file.absoluteFilePath() << "-frames:v"
+                               << "1" << extracted_frame_file.fileName());
 
-        QVERIFY(ffmpeg_extract_frame.waitForFinished());
-        QCOMPARE(QImage(extracted_frame_file.fileName()), test_frame_image);
-      });
+            QVERIFY(ffmpeg_extract_frame.waitForFinished());
+            QCOMPARE(QImage(extracted_frame_file.fileName()), test_frame_image);
+        });
 
-  Renderer::ProjectSettings project_settings;
-  project_settings.width = width;
-  project_settings.height = height;
-  project_settings.fps = fps;
-  project_settings.video_length = video_length;
+    Renderer::ProjectSettings project_settings;
+    project_settings.width = width;
+    project_settings.height = height;
+    project_settings.fps = fps;
+    project_settings.video_length = video_length;
 
-  if (QFile::exists(video_file.absoluteFilePath())) {
-    QFile(video_file.absoluteFilePath()).remove();
-  }
+    if (QFile::exists(video_file.absoluteFilePath())) {
+        QFile(video_file.absoluteFilePath()).remove();
+    }
 
-  renderer.setProjectSettings(project_settings);
-  renderer.render(m_item_list, video_file);
+    renderer.setProjectSettings(project_settings);
+    renderer.render(m_item_list, video_file);
 
-  QVERIFY(spy.wait(60000));
+    QVERIFY(spy.wait(60000));
 }
 
-void TestRenderer::multipleRendering() {
-  Renderer renderer;
+void TestRenderer::multipleRendering()
+{
+    Renderer renderer;
 
-  QSignalSpy spy(&renderer, &Renderer::finishedRendering);
-  QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
+    QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+    QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
 
-  renderer.render(m_item_list, home_dir_video);
-  QVERIFY(spy.wait(60000));
+    renderer.render(m_item_list, home_dir_video);
+    QVERIFY(spy.wait(60000));
 
-  auto parent_item = new QQuickItem();
-  parent_item->setX(312);
-  parent_item->setY(444);
+    auto parent_item = new QQuickItem();
+    parent_item->setX(312);
+    parent_item->setY(444);
 
-  auto circle = new CircleItem(parent_item);
-  circle->setWidth(121);
-  circle->setHeight(121);
-  circle->setColor("green");
-  circle->setOpacity(0.89);
-  parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    auto circle = new CircleItem(parent_item);
+    circle->setWidth(121);
+    circle->setHeight(121);
+    circle->setColor("green");
+    circle->setOpacity(0.89);
+    parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
-  m_item_list.push_back(
-      QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
+    m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
 
-  connect(
-      &renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
+    connect(&renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
         QVERIFY(file.exists());
 
         QFile extracted_frame_file("extracted_frame_multi.png");
         QProcess ffmpeg_extract_frame;
-        ffmpeg_extract_frame.start(
-            "ffmpeg", QStringList{} << "-y"
-                                    << "-i" << file.absoluteFilePath()
-                                    << "-frames:v"
-                                    << "1" << extracted_frame_file.fileName());
+        ffmpeg_extract_frame.start("ffmpeg",
+            QStringList {} << "-y"
+                           << "-i" << file.absoluteFilePath() << "-frames:v"
+                           << "1" << extracted_frame_file.fileName());
 
         QImage test_frame_image_multi("://test_images/test_frame_multi.png");
 
         QVERIFY(ffmpeg_extract_frame.waitForFinished());
-        QCOMPARE(QImage(extracted_frame_file.fileName()),
-                 test_frame_image_multi);
-      });
+        QCOMPARE(QImage(extracted_frame_file.fileName()), test_frame_image_multi);
+    });
 
-  renderer.render(m_item_list, home_dir_video);
-  QVERIFY(spy.wait(60000));
+    renderer.render(m_item_list, home_dir_video);
+    QVERIFY(spy.wait(60000));
 
-  parent_item->deleteLater();
-  m_item_list.removeLast();
+    parent_item->deleteLater();
+    m_item_list.removeLast();
 }
 
-void TestRenderer::renderWithAnimation() {
-  auto parent_item = new QQuickItem();
-  parent_item->setX(312);
-  parent_item->setY(444);
+void TestRenderer::renderWithAnimation()
+{
+    auto parent_item = new QQuickItem();
+    parent_item->setX(312);
+    parent_item->setY(444);
 
-  auto fadeInAnimation = QSharedPointer<FadeIn>(new FadeIn());
-  auto fadeOutAnimation = QSharedPointer<FadeOut>(new FadeOut());
-  fadeOutAnimation->setStartTime(2.2);
-  fadeOutAnimation->setDuration(1.5);
+    auto fadeInAnimation = QSharedPointer<FadeIn>(new FadeIn());
+    auto fadeOutAnimation = QSharedPointer<FadeOut>(new FadeOut());
+    fadeOutAnimation->setStartTime(2.2);
+    fadeOutAnimation->setDuration(1.5);
 
-  auto circle = new CircleItem(parent_item);
-  circle->setWidth(121);
-  circle->setHeight(121);
-  circle->setColor("green");
-  parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    auto circle = new CircleItem(parent_item);
+    circle->setWidth(121);
+    circle->setHeight(121);
+    circle->setColor("green");
+    parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
 
-  m_item_list.push_back(
-      QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
+    m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
 
-  m_item_list.last()->addAnimation(fadeInAnimation);
-  m_item_list.last()->addAnimation(fadeOutAnimation);
+    m_item_list.last()->addAnimation(fadeInAnimation);
+    m_item_list.last()->addAnimation(fadeOutAnimation);
 
-  Renderer renderer;
-  QSignalSpy spy(&renderer, &Renderer::finishedRendering);
-  QFileInfo home_dir_video(QDir::home(), "test_video_animation.mp4");
+    Renderer renderer;
+    QSignalSpy spy(&renderer, &Renderer::finishedRendering);
+    QFileInfo home_dir_video(QDir::home(), "test_video_animation.mp4");
 
-  connect(
-      &renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
+    connect(&renderer, &Renderer::finishedRendering, this, [](const QFileInfo& file) {
         QVERIFY(file.exists());
 
-        QFile extracted_frame_file_05s(
-            "extracted_test_frame_animation_05s.png");
+        QFile extracted_frame_file_05s("extracted_test_frame_animation_05s.png");
         QProcess ffmpeg_extract_frame_05s;
-        ffmpeg_extract_frame_05s.start(
-            "ffmpeg", QStringList{}
-                          << "-y"
-                          << "-i" << file.absoluteFilePath() << "-frames:v"
-                          << "1"
-                          << "-ss"
-                          << "0.5" << extracted_frame_file_05s.fileName());
+        ffmpeg_extract_frame_05s.start("ffmpeg",
+            QStringList {} << "-y"
+                           << "-i" << file.absoluteFilePath() << "-frames:v"
+                           << "1"
+                           << "-ss"
+                           << "0.5" << extracted_frame_file_05s.fileName());
 
-        QImage test_frame_image_animation(
-            "://test_images/test_frame_half_animation.png");
+        QImage test_frame_image_animation("://test_images/test_frame_half_animation.png");
 
         QVERIFY(ffmpeg_extract_frame_05s.waitForFinished());
-        QCOMPARE(QImage(extracted_frame_file_05s.fileName()),
-                 test_frame_image_animation);
+        QCOMPARE(QImage(extracted_frame_file_05s.fileName()), test_frame_image_animation);
 
         QFile extracted_frame_file_1s("extracted_test_frame_animation_1s.png");
         QProcess ffmpeg_extract_frame_1s;
-        ffmpeg_extract_frame_1s.start(
-            "ffmpeg", QStringList{}
-                          << "-y"
-                          << "-i" << file.absoluteFilePath() << "-frames:v"
-                          << "1"
-                          << "-ss"
-                          << "1.0" << extracted_frame_file_1s.fileName());
+        ffmpeg_extract_frame_1s.start("ffmpeg",
+            QStringList {} << "-y"
+                           << "-i" << file.absoluteFilePath() << "-frames:v"
+                           << "1"
+                           << "-ss"
+                           << "1.0" << extracted_frame_file_1s.fileName());
 
-        QImage test_frame_image_animation_finished(
-            "://test_images/test_frame_full_animation.png");
+        QImage test_frame_image_animation_finished("://test_images/test_frame_full_animation.png");
 
         QVERIFY(ffmpeg_extract_frame_1s.waitForFinished());
-        QCOMPARE(QImage(extracted_frame_file_1s.fileName()),
-                 test_frame_image_animation_finished);
+        QCOMPARE(QImage(extracted_frame_file_1s.fileName()), test_frame_image_animation_finished);
 
-        QFile extracted_frame_file_45s(
-            "extracted_test_frame_animation_45s.png");
+        QFile extracted_frame_file_45s("extracted_test_frame_animation_45s.png");
         QProcess ffmpeg_extract_frame_45s;
-        ffmpeg_extract_frame_45s.start(
-            "ffmpeg", QStringList{}
-                          << "-y"
-                          << "-i" << file.absoluteFilePath() << "-frames:v"
-                          << "1"
-                          << "-ss"
-                          << "4.5" << extracted_frame_file_45s.fileName());
+        ffmpeg_extract_frame_45s.start("ffmpeg",
+            QStringList {} << "-y"
+                           << "-i" << file.absoluteFilePath() << "-frames:v"
+                           << "1"
+                           << "-ss"
+                           << "4.5" << extracted_frame_file_45s.fileName());
 
-        QImage test_frame_image_fadeout_animation_finished(
-            "://test_images/test_frame_fadeout_animation.png");
+        QImage test_frame_image_fadeout_animation_finished("://test_images/test_frame_fadeout_animation.png");
 
         QVERIFY(ffmpeg_extract_frame_45s.waitForFinished());
-        QCOMPARE(QImage(extracted_frame_file_45s.fileName()),
-                 test_frame_image_fadeout_animation_finished);
-      });
+        QCOMPARE(QImage(extracted_frame_file_45s.fileName()), test_frame_image_fadeout_animation_finished);
+    });
 
-  renderer.render(m_item_list, home_dir_video);
-  QVERIFY(spy.wait(60000));
+    renderer.render(m_item_list, home_dir_video);
+    QVERIFY(spy.wait(60000));
 }
 
-void TestRenderer::setIndividualProjectSettings() {
-  Renderer renderer;
-  const qint32 width = 1200;
-  const qint32 height = 888;
-  const qint32 fps = 15;
-  const qint32 video_length = 12;
+void TestRenderer::setIndividualProjectSettings()
+{
+    Renderer renderer;
+    const qint32 width = 1200;
+    const qint32 height = 888;
+    const qint32 fps = 15;
+    const qint32 video_length = 12;
 
-  renderer.setWidth(width);
-  renderer.setHeight(height);
-  renderer.setFPS(fps);
-  renderer.setVideoLength(video_length);
+    renderer.setWidth(width);
+    renderer.setHeight(height);
+    renderer.setFPS(fps);
+    renderer.setVideoLength(video_length);
 
-  const auto renderer_project_settings = renderer.projectSettings();
-  QCOMPARE(renderer_project_settings.width, width);
-  QCOMPARE(renderer_project_settings.height, height);
-  QCOMPARE(renderer_project_settings.fps, fps);
-  QCOMPARE(renderer_project_settings.video_length, video_length);
+    const auto renderer_project_settings = renderer.projectSettings();
+    QCOMPARE(renderer_project_settings.width, width);
+    QCOMPARE(renderer_project_settings.height, height);
+    QCOMPARE(renderer_project_settings.fps, fps);
+    QCOMPARE(renderer_project_settings.video_length, video_length);
 }
 
 void TestRenderer::cleanupTestCase() { qDeleteAll(m_quickitem_list); }
