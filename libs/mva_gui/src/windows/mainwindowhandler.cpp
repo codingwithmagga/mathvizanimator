@@ -61,7 +61,7 @@ void MainWindowHandler::removeAnimation(const qint32 animation_number)
     emit removeAnimationRequested(animation_number);
 }
 
-void MainWindowHandler::itemClickedByUser(const QVariant& item_name) { emit itemClicked(item_name.toString()); }
+void MainWindowHandler::itemClickedByUser(const QString& item_name) { emit itemClicked(item_name); }
 
 void MainWindowHandler::setTimeByUser(const QVariant& time) { emit timeChanged(time.toDouble()); }
 
@@ -155,4 +155,16 @@ void MainWindowHandler::openSVGFolder() const
     qCInfo(mainwindow_handler) << "Opening SVG Folder successful: "
                                << QDesktopServices::openUrl(
                                       QUrl(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)));
+}
+
+void MainWindowHandler::addItem(QQuickItem* item)
+{
+    // clang-format off
+  connect(item, SIGNAL(clicked(QString)), this,
+          SLOT(itemClickedByUser(QString)));
+  connect(item, SIGNAL(animationAdded(QString,QString,qreal,qreal)), this,
+          SLOT(addAnimation(QString,QString,qreal,qreal)));
+    // clang-format on
+
+    emit itemAdded(item);
 }

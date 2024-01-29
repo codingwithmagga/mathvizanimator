@@ -506,18 +506,6 @@ ApplicationWindow {
                         Drag.keys: [root.thekey]
 
                         onDropped: drop => {
-                                       function itemClicked(itemName) {
-                                           main_window.itemClickedByUser(
-                                                       itemName)
-                                       }
-
-                                       function animationAdded(item_name, animation_type, start_time, duration) {
-                                           main_window.addAnimation(
-                                                       item_name,
-                                                       animation_type,
-                                                       start_time, duration)
-                                       }
-
                                        drop.accept(Qt.MoveAction)
 
                                        const component = Qt.createComponent(
@@ -531,11 +519,6 @@ ApplicationWindow {
                                                    "y": drag.y,
                                                    "init": true
                                                })
-
-                                           abstractItem.clicked.connect(
-                                               itemClicked)
-                                           abstractItem.animationAdded.connect(
-                                               animationAdded)
 
                                            itemAdded(abstractItem)
                                        } else {
@@ -700,6 +683,7 @@ ApplicationWindow {
 
                                 TableView {
                                     id: mPropertyTable
+                                    objectName: "MVAPropertyTable"
 
                                     alternatingRows: true
                                     clip: true

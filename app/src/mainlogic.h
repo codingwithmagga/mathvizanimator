@@ -45,9 +45,6 @@ class MainLogic : public QObject {
     void saveProject(const QFileInfo& save_file_info);
     void loadProject(const QFileInfo& load_file_info);
 
-    void addItem(QQuickItem* quick_item,
-        const QList<QSharedPointer<AbstractAnimation>>& animations = QList<QSharedPointer<AbstractAnimation>> {});
-
     void projectWidthChanged(const qint32 new_project_width);
     void projectHeightChanged(const qint32 new_project_height);
 

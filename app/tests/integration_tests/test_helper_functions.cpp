@@ -43,15 +43,19 @@ TestHelperFunctions::TestHelperFunctions(const QSharedPointer<QQmlApplicationEng
 
     m_draggable_item_list_view = root_objects.first()->findChild<QObject*>("MVADraggableItemListView");
     m_project_items_table_view = root_objects.first()->findChild<QObject*>("MVAProjectItemsTableView");
+    m_property_table_view = root_objects.first()->findChild<QObject*>("MVAPropertyTable");
     m_animations_table_view = root_objects.first()->findChild<QObject*>("MVAAnimationTable");
     m_creation_area = root_objects.first()->findChild<QQuickItem*>("MVACreationArea");
 
     auto items_model = m_project_items_table_view->property("model");
     m_project_items_model = qvariant_cast<QStandardItemModel*>(items_model);
+    auto property_model = m_property_table_view->property("model");
+    m_property_model = qvariant_cast<QStandardItemModel*>(property_model);
     auto animation_model = m_animations_table_view->property("model");
     m_animations_model = qvariant_cast<QStandardItemModel*>(animation_model);
 
-    QVERIFY2(m_draggable_item_list_view && m_project_items_table_view && m_creation_area && m_project_items_model,
+    QVERIFY2(m_draggable_item_list_view && m_project_items_table_view && m_property_table_view && m_creation_area
+            && m_project_items_model,
         "Important qml objects are missing!");
 }
 
@@ -123,6 +127,24 @@ qint32 TestHelperFunctions::numCreationAreaItems() const { return m_creation_are
 qint32 TestHelperFunctions::numProjectTableViewItems() const
 {
     return m_project_items_table_view->property("rows").toInt();
+}
+
+qint32 TestHelperFunctions::numPropertyTableViewItems() const
+{
+    return m_property_table_view->property("rows").toInt();
+}
+
+QVariant TestHelperFunctions::getPropertyValue(const QString& property_name) const
+{
+    QVariant property_value;
+    for (int row = 0; row < m_property_model->rowCount(); ++row) {
+        const auto model_property_name = m_property_model->item(row);
+        if (model_property_name->text() == property_name) {
+            property_value = m_property_model->item(row, 1)->text();
+        }
+    }
+
+    return property_value;
 }
 
 bool TestHelperFunctions::compareNumItems(const qint32 num_items)

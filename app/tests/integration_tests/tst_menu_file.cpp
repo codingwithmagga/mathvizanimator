@@ -106,6 +106,18 @@ void MenuFileIntegrationTest::loadProject()
     QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
     QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
     QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
+
+    // Check if item is clickable, see Issue #37
+    auto rect_item = m_helper_functions->getQuickItem(0);
+    auto circle_item = m_helper_functions->getQuickItem(1);
+
+    m_helper_functions->clickItem(rect_item);
+    QVERIFY(QTest::qWaitFor([&]() { return m_helper_functions->numPropertyTableViewItems() > 0; }));
+    QCOMPARE(m_helper_functions->getPropertyValue("name"), "rect");
+
+    m_helper_functions->clickItem(circle_item);
+    QVERIFY(QTest::qWaitFor([&]() { return m_helper_functions->numPropertyTableViewItems() > 0; }));
+    QCOMPARE(m_helper_functions->getPropertyValue("name"), "circle");
 }
 
 void MenuFileIntegrationTest::saveAsProject()

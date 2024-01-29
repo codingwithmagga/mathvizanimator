@@ -49,6 +49,9 @@ class TestHelperFunctions {
 
     qint32 numCreationAreaItems() const;
     qint32 numProjectTableViewItems() const;
+    qint32 numPropertyTableViewItems() const;
+
+    QVariant getPropertyValue(const QString& property_name) const;
 
     bool compareNumItems(const qint32 num_items);
     bool compareNumAnimations(const QString item_name, const qint32 num_animations);
@@ -70,8 +73,10 @@ class TestHelperFunctions {
     QQuickWindow* m_quick_window = Q_NULLPTR;
     QObject* m_draggable_item_list_view = Q_NULLPTR;
     QObject* m_project_items_table_view = Q_NULLPTR;
+    QObject* m_property_table_view = Q_NULLPTR;
     QObject* m_animations_table_view = Q_NULLPTR;
     QStandardItemModel* m_project_items_model = Q_NULLPTR;
+    QStandardItemModel* m_property_model = Q_NULLPTR;
     QStandardItemModel* m_animations_model = Q_NULLPTR;
     QQuickItem* m_creation_area = Q_NULLPTR;
 };

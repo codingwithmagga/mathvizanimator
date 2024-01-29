@@ -209,6 +209,20 @@ void ItemHandler::addAnimation(
                         << "was added to item:" << item_name;
 }
 
+void ItemHandler::addAnimations(const QString& item_name, const QList<QSharedPointer<AbstractAnimation>> animations)
+{
+    const auto item_list = m_item_model.findItems(item_name);
+
+    if (item_list.isEmpty()) {
+        qCWarning(itemhandler) << "Can't find item with name:" << item_name << "Animations can't be added.";
+        return;
+    }
+
+    auto model_item = dynamic_cast<ItemModelItem*>(item_list.first());
+    auto item_observer = model_item->itemObserver();
+    item_observer->addAnimations(animations);
+}
+
 void ItemHandler::removeAnimation(const qint32 animation_number)
 {
     const auto index_first_item = m_item_model.index(m_item_selection_model.currentIndex().row(), 0);
