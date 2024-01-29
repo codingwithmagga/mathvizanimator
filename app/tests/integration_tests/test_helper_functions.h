@@ -29,54 +29,51 @@ class QStandardItemModel;
 class QQmlApplicationEngine;
 
 class TestHelperFunctions {
- public:
-  explicit TestHelperFunctions(
-      const QSharedPointer<QQmlApplicationEngine> engine);
+  public:
+    explicit TestHelperFunctions(const QSharedPointer<QQmlApplicationEngine> engine);
 
-  void dragAndDropCurrentItem(const QPoint &end_pos);
-  void dragAndDropItem(const QPoint &start_pos, const QPoint &end_pos);
+    void dragAndDropCurrentItem(const QPoint& end_pos);
+    void dragAndDropItem(const QPoint& start_pos, const QPoint& end_pos);
 
-  void clickItem(QQuickItem *quick_item,
-                 Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
+    void clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
 
-  QQuickWindow *rootWindow() const { return m_quick_window; }
-  QObject *draggableItemListView() const { return m_draggable_item_list_view; }
-  QObject *projectItemsTableView() const { return m_project_items_table_view; }
-  QQuickItem *creationArea() const { return m_creation_area; }
+    QQuickWindow* rootWindow() const { return m_quick_window; }
+    QObject* draggableItemListView() const { return m_draggable_item_list_view; }
+    QObject* projectItemsTableView() const { return m_project_items_table_view; }
+    QQuickItem* creationArea() const { return m_creation_area; }
 
-  QSharedPointer<ItemObserver> getItemObserver(const qint32 item_number) const;
-  QQuickItem *getQuickItem(const qint32 item_number) const;
+    QSharedPointer<ItemObserver> getItemObserver(const qint32 item_number) const;
+    QQuickItem* getQuickItem(const qint32 item_number) const;
 
-  QQuickItem *getAnimationItem(const qint32 animation_number) const;
+    QQuickItem* getAnimationItem(const qint32 animation_number) const;
 
-  qint32 numCreationAreaItems() const;
-  qint32 numProjectTableViewItems() const;
+    qint32 numCreationAreaItems() const;
+    qint32 numProjectTableViewItems() const;
 
-  bool compareNumItems(const qint32 num_items);
-  bool compareNumAnimations(const QString item_name,
-                            const qint32 num_animations);
+    bool compareNumItems(const qint32 num_items);
+    bool compareNumAnimations(const QString item_name, const qint32 num_animations);
 
-  template <typename T>
-  T getChild(const QString &name) {
-    auto child = m_quick_window->findChild<T>(name);
-    if (!child) {
-      qFatal() << "Couldn't find child with name" << name;
+    template <typename T> T getChild(const QString& name)
+    {
+        auto child = m_quick_window->findChild<T>(name);
+        if (!child) {
+            qFatal() << "Couldn't find child with name" << name;
+        }
+        return child;
     }
-    return child;
-  }
 
-  static QString absoluteFilePath(const QString file_name);
+    static QString absoluteFilePath(const QString file_name);
 
- private:
-  QSharedPointer<QQmlApplicationEngine> m_engine;
+  private:
+    QSharedPointer<QQmlApplicationEngine> m_engine;
 
-  QQuickWindow *m_quick_window = Q_NULLPTR;
-  QObject *m_draggable_item_list_view = Q_NULLPTR;
-  QObject *m_project_items_table_view = Q_NULLPTR;
-  QObject *m_animations_table_view = Q_NULLPTR;
-  QStandardItemModel *m_project_items_model = Q_NULLPTR;
-  QStandardItemModel *m_animations_model = Q_NULLPTR;
-  QQuickItem *m_creation_area = Q_NULLPTR;
+    QQuickWindow* m_quick_window = Q_NULLPTR;
+    QObject* m_draggable_item_list_view = Q_NULLPTR;
+    QObject* m_project_items_table_view = Q_NULLPTR;
+    QObject* m_animations_table_view = Q_NULLPTR;
+    QStandardItemModel* m_project_items_model = Q_NULLPTR;
+    QStandardItemModel* m_animations_model = Q_NULLPTR;
+    QQuickItem* m_creation_area = Q_NULLPTR;
 };
 
-#endif  // APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
+#endif // APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_

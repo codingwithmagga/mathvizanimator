@@ -32,57 +32,56 @@
  * Longer description...
  */
 class AbstractItem : public QQuickPaintedItem {
-  Q_OBJECT
+    Q_OBJECT
 
-  Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-  Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
-  Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
+    Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
 
- public:
-  struct EditableProperties {
-    QStringList abstract_item_properties;
-    QStringList quick_item_properties;
-  };
+  public:
+    struct EditableProperties {
+        QStringList abstract_item_properties;
+        QStringList quick_item_properties;
+    };
 
-  /**
-   * @brief Constructor for MyClass. TODO
-   *
-   * Initializes the class with default values.
-   */
-  explicit AbstractItem(const QString& qml_file, QQuickItem* parent = nullptr);
+    /**
+     * @brief Constructor for MyClass. TODO
+     *
+     * Initializes the class with default values.
+     */
+    explicit AbstractItem(const QString& qml_file, QQuickItem* parent = nullptr);
 
-  QString name() const;
-  void setName(const QString& name);
+    QString name() const;
+    void setName(const QString& name);
 
-  QColor color() const;
-  void setColor(const QColor& color);
+    QColor color() const;
+    void setColor(const QColor& color);
 
-  virtual QJsonObject toJson() const;
+    virtual QJsonObject toJson() const;
 
-  virtual EditableProperties editableProperties() const;
+    virtual EditableProperties editableProperties() const;
 
-  // TODO(codingwithmagga): QVariantMap as return type seems to be a better
-  // choice
-  QList<QPair<QString, QVariant>> getItemProperties() const;
-  QList<QPair<QString, QVariant>> getParentItemProperties() const;
+    // TODO(codingwithmagga): QVariantMap as return type seems to be a better
+    // choice
+    QList<QPair<QString, QVariant>> getItemProperties() const;
+    QList<QPair<QString, QVariant>> getParentItemProperties() const;
 
-  void paintItem(QPainter* painter);
+    void paintItem(QPainter* painter);
 
- signals:
-  void nameChanged(const QString& new_name);
-  void colorChanged(const QColor& new_color);
+  signals:
+    void nameChanged(const QString& new_name);
+    void colorChanged(const QColor& new_color);
 
- private:
-  QList<QPair<QString, QVariant>> appendProperties(
-      const auto obj, auto meta_object,
-      const QStringList& allowedProperties) const;
+  private:
+    QList<QPair<QString, QVariant>> appendProperties(
+        const auto obj, auto meta_object, const QStringList& allowedProperties) const;
 
-  QString m_name;
-  QColor m_color;
+    QString m_name;
+    QColor m_color;
 
-  QString m_qml_file;
+    QString m_qml_file;
 };
 
-Q_DECLARE_METATYPE(AbstractItem)  // GCOVR_EXCL_LINE
+Q_DECLARE_METATYPE(AbstractItem) // GCOVR_EXCL_LINE
 
-#endif  // LIBS_MVA_GUI_INCLUDE_ITEMS_ABSTRACTITEM_H_
+#endif // LIBS_MVA_GUI_INCLUDE_ITEMS_ABSTRACTITEM_H_

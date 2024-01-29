@@ -24,47 +24,44 @@
 #include "abstract_animation.h"
 
 class ItemObserver : public QObject {
- public:
-  explicit ItemObserver(QQuickItem* const item, QObject* parent = nullptr);
+  public:
+    explicit ItemObserver(QQuickItem* const item, QObject* parent = nullptr);
 
-  void setTimeProgressive(const qreal time);
-  void setTime(const qreal time);
+    void setTimeProgressive(const qreal time);
+    void setTime(const qreal time);
 
-  void addAnimation(const QSharedPointer<AbstractAnimation>& animation);
-  void addAnimations(
-      const QList<QSharedPointer<AbstractAnimation>>& animations);
-  void removeAnimation(const QSharedPointer<AbstractAnimation>& animation);
-  void removeAnimation(const qint32 animation_number);
+    void addAnimation(const QSharedPointer<AbstractAnimation>& animation);
+    void addAnimations(const QList<QSharedPointer<AbstractAnimation>>& animations);
+    void removeAnimation(const QSharedPointer<AbstractAnimation>& animation);
+    void removeAnimation(const qint32 animation_number);
 
-  void updateItemProperty(const QString& property, const QVariant& value);
+    void updateItemProperty(const QString& property, const QVariant& value);
 
-  QJsonObject toJson() const;
+    QJsonObject toJson() const;
 
-  QQuickItem* item() const;
-  AbstractItem* abstractitem() const;
+    QQuickItem* item() const;
+    AbstractItem* abstractitem() const;
 
-  QList<QSharedPointer<AbstractAnimation>> animations() const;
+    QList<QSharedPointer<AbstractAnimation>> animations() const;
 
- private:
-  void sortAnimations();
-  void applyStartProperties();
+  private:
+    void sortAnimations();
+    void applyStartProperties();
 
-  QQuickItem* m_item;
-  QList<QSharedPointer<AbstractAnimation>> m_animations;
+    QQuickItem* m_item;
+    QList<QSharedPointer<AbstractAnimation>> m_animations;
 
-  QVariantMap m_item_start_property_values;
-  QVariantMap m_quick_item_start_property_values;
+    QVariantMap m_item_start_property_values;
+    QVariantMap m_quick_item_start_property_values;
 };
 
 inline QQuickItem* ItemObserver::item() const { return m_item; }
 
-inline AbstractItem* ItemObserver::abstractitem() const {
-  return qvariant_cast<AbstractItem*>(m_item->property("item"));
+inline AbstractItem* ItemObserver::abstractitem() const
+{
+    return qvariant_cast<AbstractItem*>(m_item->property("item"));
 }
 
-inline QList<QSharedPointer<AbstractAnimation>> ItemObserver::animations()
-    const {
-  return m_animations;
-}
+inline QList<QSharedPointer<AbstractAnimation>> ItemObserver::animations() const { return m_animations; }
 
-#endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEM_OBSERVER_H_
+#endif // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_ITEM_OBSERVER_H_

@@ -17,9 +17,10 @@
 
 #include "main.h"
 
-int main(int argc, char* argv[]) {
-  auto app = QSharedPointer<QGuiApplication>(new QGuiApplication(argc, argv));
-  const auto objects = SetupMain::setupApp(app);
+int main(int argc, char* argv[])
+{
+    auto app = QSharedPointer<QGuiApplication>(new QGuiApplication(argc, argv));
+    const auto objects = SetupMain::setupApp(app);
 
-  return app->exec();
+    return app->exec();
 }

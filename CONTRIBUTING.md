@@ -93,7 +93,7 @@ If it fails show in the corresponding github action what MegaLinter has noted. I
 
 ***Run clang-format***
 
-The code is formatted using clang-format with style=Google. You can do this automatically in most IDEs.
+The code is formatted using clang-format based on the WebKit Style. You can do this automatically in most IDEs.
 At every PR the format is checked using MegaLinter.
 
 ### Testing

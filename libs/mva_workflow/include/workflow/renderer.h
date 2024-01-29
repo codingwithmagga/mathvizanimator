@@ -26,60 +26,59 @@
 #include "item_observer.h"
 
 class Renderer : public QObject {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  struct ProjectSettings {
-    qint32 width = 1024;
-    qint32 height = 768;
-    qint32 fps = 24;
-    qint32 video_length = 5;
-  };
+  public:
+    struct ProjectSettings {
+        qint32 width = 1024;
+        qint32 height = 768;
+        qint32 fps = 24;
+        qint32 video_length = 5;
+    };
 
-  explicit Renderer(QObject* parent = Q_NULLPTR);
+    explicit Renderer(QObject* parent = Q_NULLPTR);
 
-  ProjectSettings projectSettings() const;
-  void setProjectSettings(const ProjectSettings& new_project_settings);
+    ProjectSettings projectSettings() const;
+    void setProjectSettings(const ProjectSettings& new_project_settings);
 
-  void setWidth(const qint32 new_width);
-  void setHeight(const qint32 new_height);
-  void setFPS(const qint32 new_fps);
-  void setVideoLength(const qint32 new_video_length);
+    void setWidth(const qint32 new_width);
+    void setHeight(const qint32 new_height);
+    void setFPS(const qint32 new_fps);
+    void setVideoLength(const qint32 new_video_length);
 
-  QImage createImage(const QList<QSharedPointer<ItemObserver>>& item_list,
-                     const qreal current_time) const;
+    QImage createImage(const QList<QSharedPointer<ItemObserver>>& item_list, const qreal current_time) const;
 
- public slots:
-  void render(const QList<QSharedPointer<ItemObserver>>& item_list,
-              const QFileInfo& video_file);
+  public slots:
+    void render(const QList<QSharedPointer<ItemObserver>>& item_list, const QFileInfo& video_file);
 
- signals:
-  void finishedRendering(const QFileInfo& video_file);
+  signals:
+    void finishedRendering(const QFileInfo& video_file);
 
- private slots:
-  void renderingProcessStarted(
-      const QList<QSharedPointer<ItemObserver>>& item_list);
-  void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode,
-                                QProcess::ExitStatus exitStatus);
+  private slots:
+    void renderingProcessStarted(const QList<QSharedPointer<ItemObserver>>& item_list);
+    void renderingProcessFinished(const QFileInfo& video_file, qint32 exitCode, QProcess::ExitStatus exitStatus);
 
- private:
-  ProjectSettings m_project_settings;
-  QMap<qint32, QSharedPointer<QProcess>> m_render_process_map;
+  private:
+    ProjectSettings m_project_settings;
+    QMap<qint32, QSharedPointer<QProcess>> m_render_process_map;
 
-  qint32 m_next_process_id = 0;
+    qint32 m_next_process_id = 0;
 };
 
 class RenderProcess : public QProcess {
-  Q_OBJECT
+    Q_OBJECT
 
- public:
-  explicit RenderProcess(const qint32 id, QObject* parent = Q_NULLPTR)
-      : QProcess{parent}, m_id(id) {}
+  public:
+    explicit RenderProcess(const qint32 id, QObject* parent = Q_NULLPTR)
+        : QProcess { parent }
+        , m_id(id)
+    {
+    }
 
-  qint32 id() const { return m_id; }
+    qint32 id() const { return m_id; }
 
- private:
-  const qint32 m_id;
+  private:
+    const qint32 m_id;
 };
 
-#endif  // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_RENDERER_H_
+#endif // LIBS_MVA_WORKFLOW_INCLUDE_WORKFLOW_RENDERER_H_
