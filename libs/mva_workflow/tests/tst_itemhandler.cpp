@@ -19,6 +19,8 @@
 #include <QQmlEngine>
 #include <QTest>
 
+#include "fade_in.h"
+#include "fade_out.h"
 #include "itemhandler.h"
 
 class TestItemHandler : public QObject {
@@ -33,6 +35,8 @@ class TestItemHandler : public QObject {
 
     void addAnimation_data();
     void addAnimation();
+
+    void addAnimations();
 
     void checkItemData();
     void checkItemProperties();
@@ -190,6 +194,41 @@ void TestItemHandler::addAnimation()
     QCOMPARE(animation->metaObject()->className(), animation_type);
     QCOMPARE(animation->duration(), duration);
     QCOMPARE(animation->startTime(), start_time);
+}
+
+void TestItemHandler::addAnimations()
+{
+
+    ItemHandler itemhandler;
+    auto rect = dynamic_cast<QQuickItem*>(m_rect_component.create());
+    itemhandler.addItem(rect);
+    const auto rect_item = qvariant_cast<AbstractItem*>(rect->property("item"));
+
+    qreal duration = 1.2;
+    qreal start_time = 2.5;
+
+    auto fade_in = QSharedPointer<FadeIn>(new FadeIn());
+    fade_in->setDuration(duration);
+    auto fade_out = QSharedPointer<FadeOut>(new FadeOut());
+    fade_out->setStartTime(start_time);
+    QList<QSharedPointer<AbstractAnimation>> animation_list { fade_in, fade_out };
+
+    itemhandler.addAnimations(rect_item->name(), animation_list);
+
+    const auto item_observer_list = itemhandler.items();
+    QCOMPARE(item_observer_list.size(), 1);
+
+    const auto rect_item_observer = item_observer_list.first();
+    const auto rect_animation_list = rect_item_observer->animations();
+    QCOMPARE(rect_animation_list.size(), 2);
+
+    const auto first_animation = rect_animation_list.first();
+    QCOMPARE(first_animation->metaObject()->className(), "FadeIn");
+    QCOMPARE(first_animation->duration(), duration);
+
+    const auto second_animation = rect_animation_list.at(1);
+    QCOMPARE(second_animation->metaObject()->className(), "FadeOut");
+    QCOMPARE(second_animation->startTime(), start_time);
 }
 
 void TestItemHandler::checkItemData()

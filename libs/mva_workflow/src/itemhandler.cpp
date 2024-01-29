@@ -156,11 +156,11 @@ void ItemHandler::setCurrentItem(const QString& itemName)
     m_item_selection_model.setCurrentIndex(currentItemIndex, QItemSelectionModel::Current | QItemSelectionModel::Rows);
 }
 
-void ItemHandler::removeCurrentItem() {
-  const auto current_item =
-      m_item_model.itemFromIndex(m_item_selection_model.currentIndex());
-  dynamic_cast<ItemModelItem*>(current_item)->setDeleteQuickitem(true);
-  m_item_model.removeRow(current_item->row());
+void ItemHandler::removeCurrentItem()
+{
+    const auto current_item = m_item_model.itemFromIndex(m_item_selection_model.currentIndex());
+    dynamic_cast<ItemModelItem*>(current_item)->setDeleteQuickitem(true);
+    m_item_model.removeRow(current_item->row());
 }
 
 void ItemHandler::addAnimation(
@@ -209,20 +209,18 @@ void ItemHandler::addAnimation(
                         << "was added to item:" << item_name;
 }
 
-void ItemHandler::addAnimations(
-    const QString& item_name,
-    const QList<QSharedPointer<AbstractAnimation>> animations) {
-  const auto item_list = m_item_model.findItems(item_name);
+void ItemHandler::addAnimations(const QString& item_name, const QList<QSharedPointer<AbstractAnimation>> animations)
+{
+    const auto item_list = m_item_model.findItems(item_name);
 
-  if (item_list.isEmpty()) {
-    qCWarning(itemhandler) << "Can't find item with name:" << item_name
-                           << "Animations can't be added.";
-    return;
-  }
+    if (item_list.isEmpty()) {
+        qCWarning(itemhandler) << "Can't find item with name:" << item_name << "Animations can't be added.";
+        return;
+    }
 
-  auto item = dynamic_cast<ItemModelItem*>(item_list.first());
-  auto item_observer = item->itemObserver();
-  item_observer->addAnimations(animations);
+    auto model_item = dynamic_cast<ItemModelItem*>(item_list.first());
+    auto item_observer = model_item->itemObserver();
+    item_observer->addAnimations(animations);
 }
 
 void ItemHandler::removeAnimation(const qint32 animation_number)

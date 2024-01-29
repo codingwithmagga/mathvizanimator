@@ -22,8 +22,6 @@
 #include <QObject>
 #include <QQuickItem>
 
-#include "abstract_animation.h"
-
 class MainWindowHandler : public QObject {
     Q_OBJECT
 
@@ -51,12 +49,12 @@ class MainWindowHandler : public QObject {
 
     void openSVGFolder() const;
 
-    void addItem(const QQuickItem *item);
+    void addItem(QQuickItem* item);
 
     void removeCurrentItem();
     void removeAnimation(const qint32 animation_number);
 
-    void itemClickedByUser(const QVariant& itemName);
+    void itemClickedByUser(const QString& itemName);
     void setTimeByUser(const QVariant& time);
 
     void updateProjectSettings(const QVariantList& new_project_settings);
@@ -86,8 +84,9 @@ class MainWindowHandler : public QObject {
     void removeCurrentItemRequested();
     void removeAnimationRequested(const qint32 animation_number);
 
-  void itemClicked(const QString &name);
-  void timeChanged(const qreal time);
+    void itemAdded(QQuickItem* item);
+    void itemClicked(const QString& name);
+    void timeChanged(const qreal time);
 
     void renderingVideoFinished(const QFileInfo& video_file);
 

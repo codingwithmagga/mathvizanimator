@@ -34,6 +34,8 @@ class TestMainWindowHandler : public QObject {
     void saveProjectRequested();
     void loadProjectRequested();
 
+    void addItemTest();
+
     void removeCurrentItemRequested();
     void itemClickedByUser();
 
@@ -160,6 +162,20 @@ void TestMainWindowHandler::loadProjectRequested()
     QCOMPARE(loadProjectRequestedSpy.count(), 1);
 }
 
+void TestMainWindowHandler::addItemTest()
+{
+    MainWindowHandler main_window_handler;
+    QSignalSpy itemAddedSignal(&main_window_handler, &MainWindowHandler::itemAdded);
+
+    // TODO(codingwithmagga): When MVABasicItem is implemented as C++ class, use this and check the connections, see
+    // QWarning log msgs
+    auto testitem = new QQuickItem;
+    main_window_handler.addItem(testitem);
+    testitem->deleteLater();
+
+    QCOMPARE(itemAddedSignal.count(), 1);
+}
+
 void TestMainWindowHandler::removeCurrentItemRequested()
 {
     MainWindowHandler main_window_handler;
@@ -178,7 +194,7 @@ void TestMainWindowHandler::itemClickedByUser()
     connect(&main_window_handler, &MainWindowHandler::itemClicked, this,
         [&item_name](const QString& item_name_signal) { QCOMPARE(item_name, item_name_signal); });
 
-    main_window_handler.itemClickedByUser(QVariant(item_name));
+    main_window_handler.itemClickedByUser(item_name);
 
     QCOMPARE(itemClickedSpy.count(), 1);
 }
