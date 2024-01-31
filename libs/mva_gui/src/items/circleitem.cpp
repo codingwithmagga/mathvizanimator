@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QPen>
 
-CircleItem::CircleItem(QQuickItem* parent)
+CircleItem::CircleItem(BasicItem* parent)
     : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml", parent }
 {
 }

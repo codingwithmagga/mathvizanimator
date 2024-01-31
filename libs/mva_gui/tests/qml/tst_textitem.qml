@@ -6,12 +6,11 @@ import cwa.mva.gui
 MVAText {
     id: test_text
 
-    property string textName: "testName"
+    property string textName: "text"
     property string clickName: ""
 
     width: 200
     height: 200
-    item.name: textName
 
     SignalSpy {
         id: spy
@@ -33,10 +32,10 @@ MVAText {
 
         function test_onpressed() {
             mousePress(test_text)
-            compare(test_text.dragActive, true)
+            compare(test_text.Drag.active, true)
 
             mouseRelease(test_text)
-            compare(test_text.dragActive, false)
+            compare(test_text.Drag.active, false)
         }
     }
 

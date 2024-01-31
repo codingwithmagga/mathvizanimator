@@ -17,7 +17,7 @@
 
 #include "item_observer.h"
 
-ItemObserver::ItemObserver(QQuickItem* const item, QObject* parent)
+ItemObserver::ItemObserver(BasicItem* const item, QObject* parent)
     : QObject(parent)
     , m_item(item)
 {

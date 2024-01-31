@@ -47,7 +47,7 @@ class TestRenderer : public QObject {
     void cleanupTestCase();
 
   private:
-    QList<QQuickItem*> m_quickitem_list;
+    QList<BasicItem*> m_basic_item_list;
     QList<QSharedPointer<ItemObserver>> m_item_list;
 };
 
@@ -58,19 +58,19 @@ void TestRenderer::initTestCase()
     const qreal width_2 = 111;
     const qreal height_2 = 82;
 
-    auto parent_item_1 = new QQuickItem();
+    auto parent_item_1 = new BasicItem();
     parent_item_1->setX(55);
     parent_item_1->setY(65);
     parent_item_1->setHeight(width_1);
     parent_item_1->setWidth(height_1);
 
-    auto parent_item_2 = new QQuickItem();
+    auto parent_item_2 = new BasicItem();
     parent_item_2->setX(455);
     parent_item_2->setY(265);
     parent_item_2->setHeight(width_2);
     parent_item_2->setWidth(height_2);
 
-    auto parent_item_3 = new QQuickItem();
+    auto parent_item_3 = new BasicItem();
     parent_item_3->setX(848);
     parent_item_3->setY(165);
 
@@ -80,7 +80,7 @@ void TestRenderer::initTestCase()
     circle->setColor("red");
     circle->setOpacity(0.7);
     circle->setParentItem(parent_item_1);
-    parent_item_1->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    parent_item_1->setAbstractItem(circle);
 
     auto rect = new RectangleItem();
     rect->setWidth(width_2);
@@ -89,7 +89,7 @@ void TestRenderer::initTestCase()
     rect->setOpacity(0.7);
     rect->setRotation(43);
     rect->setParentItem(parent_item_2);
-    parent_item_2->setProperty("item", QVariant::fromValue<RectangleItem*>(rect));
+    parent_item_2->setAbstractItem(rect);
 
     auto tex = new TextItem;
     tex->setLatexSource("Hello $\\delta=\\epsilon$");
@@ -97,15 +97,15 @@ void TestRenderer::initTestCase()
     tex->setOpacity(0.43);
     tex->setRotation(-23);
     tex->setParentItem(parent_item_3);
-    parent_item_3->setProperty("item", QVariant::fromValue<TextItem*>(tex));
+    parent_item_3->setAbstractItem(tex);
 
     m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item_1)));
     m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item_2)));
     m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item_3)));
 
-    m_quickitem_list.push_back(parent_item_1);
-    m_quickitem_list.push_back(parent_item_2);
-    m_quickitem_list.push_back(parent_item_3);
+    m_basic_item_list.push_back(parent_item_1);
+    m_basic_item_list.push_back(parent_item_2);
+    m_basic_item_list.push_back(parent_item_3);
 }
 
 void TestRenderer::createImage_data()
@@ -226,7 +226,7 @@ void TestRenderer::multipleRendering()
     renderer.render(m_item_list, home_dir_video);
     QVERIFY(spy.wait(60000));
 
-    auto parent_item = new QQuickItem();
+    auto parent_item = new BasicItem();
     parent_item->setX(312);
     parent_item->setY(444);
 
@@ -235,7 +235,7 @@ void TestRenderer::multipleRendering()
     circle->setHeight(121);
     circle->setColor("green");
     circle->setOpacity(0.89);
-    parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    parent_item->setAbstractItem(circle);
 
     m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
 
@@ -264,7 +264,7 @@ void TestRenderer::multipleRendering()
 
 void TestRenderer::renderWithAnimation()
 {
-    auto parent_item = new QQuickItem();
+    auto parent_item = new BasicItem();
     parent_item->setX(312);
     parent_item->setY(444);
 
@@ -277,7 +277,7 @@ void TestRenderer::renderWithAnimation()
     circle->setWidth(121);
     circle->setHeight(121);
     circle->setColor("green");
-    parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    parent_item->setAbstractItem(circle);
 
     m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));
 
@@ -358,7 +358,7 @@ void TestRenderer::setIndividualProjectSettings()
     QCOMPARE(renderer_project_settings.video_length, video_length);
 }
 
-void TestRenderer::cleanupTestCase() { qDeleteAll(m_quickitem_list); }
+void TestRenderer::cleanupTestCase() { qDeleteAll(m_basic_item_list); }
 
 QTEST_MAIN(TestRenderer)
 #include "tst_renderer.moc"

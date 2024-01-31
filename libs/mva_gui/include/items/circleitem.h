@@ -1,5 +1,5 @@
 /* mathvizanimator
- * Copyright (C) 2023 codingwithmagga
+ * Copyright (C) 2023-2024 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ class CircleItem : public AbstractItem {
     QML_ELEMENT
 
   public:
-    explicit CircleItem(QQuickItem* parent = nullptr);
+    explicit CircleItem(BasicItem* parent = nullptr);
 
     void paint(QPainter* painter) override;
 

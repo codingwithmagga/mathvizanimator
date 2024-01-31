@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QPen>
 
-RectangleItem::RectangleItem(QQuickItem* parent)
+RectangleItem::RectangleItem(BasicItem* parent)
     : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml", parent }
 {
 }

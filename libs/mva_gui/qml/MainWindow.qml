@@ -42,7 +42,7 @@ ApplicationWindow {
     minimumWidth: 1200
 
     property ApplicationWindow appWindow: root
-    property string thekey: "specialkeyhere"
+    property string thekey: "MVADropAreaKey"
     property url saveFile: ""
     property var dragItem: null
     property bool objectDragActive: false
@@ -486,7 +486,7 @@ ApplicationWindow {
                         id: creationArea
                         objectName: "MVACreationArea"
 
-                        property var abstractItem: null
+                        property var newItem: null
                         property var abstractComponent: null
 
                         property double baseWidth: main_window.pixel_width
@@ -509,18 +509,18 @@ ApplicationWindow {
                                        drop.accept(Qt.MoveAction)
 
                                        const component = Qt.createComponent(
-                                           drag.source.item.file)
+                                           drag.source.abstract_item.file)
 
                                        if (component.status === Component.Ready) {
 
-                                           abstractItem = component.createObject(
+                                           newItem = component.createObject(
                                                creationArea, {
                                                    "x": drag.x,
                                                    "y": drag.y,
-                                                   "init": true
+                                                   "is_initialized": true
                                                })
 
-                                           itemAdded(abstractItem)
+                                           itemAdded(newItem)
                                        } else {
                                            console.log("Error creating object")
                                        }

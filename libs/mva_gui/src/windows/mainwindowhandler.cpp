@@ -159,12 +159,20 @@ void MainWindowHandler::openSVGFolder() const
 
 void MainWindowHandler::addItem(QQuickItem* item)
 {
+    qCInfo(mainwindow_handler) << "addItem";
+    auto basic_item = dynamic_cast<BasicItem*>(item);
+    if (!basic_item) {
+        qCWarning(mainwindow_handler)
+            << "Added item is not a BasicItem (or derived from it). Item can't be added to Project.";
+        return;
+    }
+
     // clang-format off
-  connect(item, SIGNAL(clicked(QString)), this,
-          SLOT(itemClickedByUser(QString)));
-  connect(item, SIGNAL(animationAdded(QString,QString,qreal,qreal)), this,
-          SLOT(addAnimation(QString,QString,qreal,qreal)));
+    connect(basic_item, SIGNAL(clicked(QString)), this,
+            SLOT(itemClickedByUser(QString)));
+    connect(basic_item, SIGNAL(animationAdded(QString,QString,qreal,qreal)), this,
+            SLOT(addAnimation(QString,QString,qreal,qreal)));
     // clang-format on
 
-    emit itemAdded(item);
+    emit itemAdded(basic_item);
 }

@@ -1,6 +1,5 @@
-
 /* mathvizanimator
- * Copyright (C) 2023 codingwithmagga
+ * Copyright (C) 2023-2024 codingwithmagga
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick
 
-Item {
-    id: rootItem
+#include "basic_item.h"
 
-    property bool dragActive: false
-    property string dragKey: ""
-    property bool init: false
+#include "abstractitem.h"
 
-    signal clicked(string name)
-    signal animationAdded(string name, string type, double start_time, double duration)
-
-    width: 100
-    height: 100
-
-    Drag.active: dragActive
-    Drag.keys: dragKey
+BasicItem::BasicItem(QQuickItem* parent)
+    : QQuickItem(parent)
+{
+    setHeight(100);
+    setWidth(100);
 }
+
+void BasicItem::setAbstractItem(AbstractItem* const new_item)
+{
+    if (new_item == m_abstract_item) {
+        return;
+    }
+    m_abstract_item = new_item;
+    emit abstractItemChanged();
+}
+
+QString BasicItem::abstractItemName() const { return m_abstract_item->name(); }

@@ -40,17 +40,18 @@ qt_add_qml_module(cwa.mva.gui
         qml/items/MVAText.qml
         qml/items/MVAMouseArea.qml
         qml/items/MVASurroundingRectangle.qml
-        qml/items/MVABasicItem.qml
     SOURCES
         include/items/abstractitem.h
         include/items/circleitem.h
         include/items/rectangle.h
         include/items/textitem.h
+        include/items/basic_item.h
 
         src/items/abstractitem.cpp
         src/items/circleitem.cpp
         src/items/rectangle.cpp
         src/items/textitem.cpp
+        src/items/basic_item.cpp
     DEPENDENCIES QtQuick
     OUTPUT_DIRECTORY cwa/mva/gui
     RESOURCES mva_gui_resources.qrc

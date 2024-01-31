@@ -22,10 +22,11 @@
 #include <QVariantMap>
 
 #include "abstract_animation.h"
+#include "basic_item.h"
 
 class ItemObserver : public QObject {
   public:
-    explicit ItemObserver(QQuickItem* const item, QObject* parent = nullptr);
+    explicit ItemObserver(BasicItem* const item, QObject* parent = nullptr);
 
     void setTimeProgressive(const qreal time);
     void setTime(const qreal time);
@@ -39,7 +40,7 @@ class ItemObserver : public QObject {
 
     QJsonObject toJson() const;
 
-    QQuickItem* item() const;
+    BasicItem* item() const;
     AbstractItem* abstractitem() const;
 
     QList<QSharedPointer<AbstractAnimation>> animations() const;
@@ -48,19 +49,16 @@ class ItemObserver : public QObject {
     void sortAnimations();
     void applyStartProperties();
 
-    QQuickItem* m_item;
+    BasicItem* m_item;
     QList<QSharedPointer<AbstractAnimation>> m_animations;
 
     QVariantMap m_item_start_property_values;
     QVariantMap m_quick_item_start_property_values;
 };
 
-inline QQuickItem* ItemObserver::item() const { return m_item; }
+inline BasicItem* ItemObserver::item() const { return m_item; }
 
-inline AbstractItem* ItemObserver::abstractitem() const
-{
-    return qvariant_cast<AbstractItem*>(m_item->property("item"));
-}
+inline AbstractItem* ItemObserver::abstractitem() const { return m_item->abstractItem(); }
 
 inline QList<QSharedPointer<AbstractAnimation>> ItemObserver::animations() const { return m_animations; }
 

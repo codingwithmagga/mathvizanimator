@@ -97,7 +97,7 @@ void TestCircleItem::editablePropertiesTest()
 {
     const auto editable_properties = m_circle_item.editableProperties();
     const auto item_properties = editable_properties.abstract_item_properties;
-    const auto quick_item_properties = editable_properties.quick_item_properties;
+    const auto quick_item_properties = editable_properties.basic_item_properties;
 
     QStringList expected_item_properties { "name", "color", "opacity", "rotation" };
     QStringList expected_quick_item_properties { "width", "height", "x", "y" };

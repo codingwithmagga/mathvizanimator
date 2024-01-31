@@ -19,10 +19,10 @@ import QtQuick
 
 import cwa.mva.gui
 
-MVABasicItem {
+BasicItem {
     id: rootMVACircle
 
-    property alias item: circleItem
+    abstract_item: circleItem
 
     CircleItem {
         id: circleItem
