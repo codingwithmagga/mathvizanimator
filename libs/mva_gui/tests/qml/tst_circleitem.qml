@@ -6,12 +6,11 @@ import cwa.mva.gui
 MVACircle {
     id: test_circle
 
-    property string circleName: "testName"
+    property string circleName: "circle"
     property string clickName: ""
 
     width: 200
     height: 200
-    item.name: circleName
 
     SignalSpy {
         id: spy
@@ -33,10 +32,10 @@ MVACircle {
 
         function test_onpressed() {
             mousePress(test_circle)
-            compare(test_circle.isDragActive, true)
+            compare(test_circle.Drag.active, true)
 
             mouseRelease(test_circle)
-            compare(test_circle.isDragActive, false)
+            compare(test_circle.Drag.active, false)
         }
     }
 

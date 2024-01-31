@@ -6,12 +6,11 @@ import cwa.mva.gui
 MVARectangle {
     id: test_rect
 
-    property string rectName: "testName"
+    property string rectName: "rect"
     property string clickName: ""
 
     width: 200
     height: 200
-    item.name: rectName
 
     SignalSpy {
         id: spy
@@ -33,10 +32,10 @@ MVARectangle {
 
         function test_onpressed() {
             mousePress(test_rect)
-            compare(test_rect.isDragActive, true)
+            compare(test_rect.Drag.active, true)
 
             mouseRelease(test_rect)
-            compare(test_rect.isDragActive, false)
+            compare(test_rect.Drag.active, false)
         }
     }
 
