@@ -165,15 +165,19 @@ void TestMainWindowHandler::loadProjectRequested()
 void TestMainWindowHandler::addItemTest()
 {
     MainWindowHandler main_window_handler;
-    QSignalSpy itemAddedSignal(&main_window_handler, &MainWindowHandler::itemAdded);
-
-    // TODO(codingwithmagga): When MVABasicItem is implemented as C++ class, use this and check the connections, see
-    // QWarning log msgs
     auto test_item = new BasicItem;
+    QSignalSpy itemAddedSignalSpy(&main_window_handler, &MainWindowHandler::itemAdded);
+    QSignalSpy itemClickedSignalSpy(&main_window_handler, &MainWindowHandler::itemClicked);
+    QSignalSpy addAnimationSignalSpy(&main_window_handler, &MainWindowHandler::addAnimationSignal);
+
     main_window_handler.addItem(test_item);
+    emit test_item->clicked("name");
+    emit test_item->animationAdded("name", "type", 0.0, 1.0);
     test_item->deleteLater();
 
-    QCOMPARE(itemAddedSignal.count(), 1);
+    QCOMPARE(itemAddedSignalSpy.count(), 1);
+    QCOMPARE(itemClickedSignalSpy.count(), 1);
+    QCOMPARE(addAnimationSignalSpy.count(), 1);
 }
 
 void TestMainWindowHandler::removeCurrentItemRequested()
