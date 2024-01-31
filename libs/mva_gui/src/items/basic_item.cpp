@@ -15,26 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
-#define LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
+#include "basic_item.h"
 
 #include "abstractitem.h"
 
-/**
- * @brief UI class which represents a circle
- *
- * Longer description...
- */
-class CircleItem : public AbstractItem {
-    Q_OBJECT
-    QML_ELEMENT
+BasicItem::BasicItem(QQuickItem* parent)
+    : QQuickItem(parent)
+{
+    setHeight(100);
+    setWidth(100);
+}
 
-  public:
-    explicit CircleItem(BasicItem* parent = nullptr);
+void BasicItem::setAbstractItem(AbstractItem* const new_item)
+{
+    if (new_item == m_abstract_item) {
+        return;
+    }
+    m_abstract_item = new_item;
+    emit abstractItemChanged();
+}
 
-    void paint(QPainter* painter) override;
-
-    EditableProperties editableProperties() const override;
-};
-
-#endif // LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
+QString BasicItem::abstractItemName() const { return m_abstract_item->name(); }

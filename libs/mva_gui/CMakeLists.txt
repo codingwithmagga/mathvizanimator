@@ -45,13 +45,13 @@ qt_add_qml_module(cwa.mva.gui
         include/items/circleitem.h
         include/items/rectangle.h
         include/items/textitem.h
-        include/items/basicitem.h
+        include/items/basic_item.h
 
         src/items/abstractitem.cpp
         src/items/circleitem.cpp
         src/items/rectangle.cpp
         src/items/textitem.cpp
-        src/items/basicitem.cpp
+        src/items/basic_item.cpp
     DEPENDENCIES QtQuick
     OUTPUT_DIRECTORY cwa/mva/gui
     RESOURCES mva_gui_resources.qrc

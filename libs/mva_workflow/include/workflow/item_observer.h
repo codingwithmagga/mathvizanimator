@@ -22,7 +22,7 @@
 #include <QVariantMap>
 
 #include "abstract_animation.h"
-#include "basicitem.h"
+#include "basic_item.h"
 
 class ItemObserver : public QObject {
   public:

@@ -19,7 +19,7 @@
 
 #include <QPainter>
 
-#include "basicitem.h"
+#include "basic_item.h"
 
 AbstractItem::AbstractItem(const QString& qml_file, BasicItem* parent)
     : QQuickPaintedItem(parent)

@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QQuickItem>
 
-#include "basicitem.h"
+#include "basic_item.h"
 
 class MainWindowHandler : public QObject {
     Q_OBJECT

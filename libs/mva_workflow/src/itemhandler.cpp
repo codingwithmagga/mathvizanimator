@@ -18,7 +18,7 @@
 #include "itemhandler.h"
 
 #include "abstractitem.h"
-#include "basicitem.h"
+#include "basic_item.h"
 #include "fade_in.h"
 #include "fade_out.h"
 #include "logging.h"
