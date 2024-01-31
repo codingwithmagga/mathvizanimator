@@ -40,7 +40,7 @@ MouseArea {
                }
 
     onPressed: mouse => {
-                   dragActive = true
+                   basicItem.Drag.active = true
                    drag.target = basicItem
 
                    const component = Qt.createComponent(
@@ -54,7 +54,7 @@ MouseArea {
                }
 
     onReleased: {
-        dragActive = false
+        basicItem.Drag.active = false
         drag.target = null
         highlightRect.destroy()
     }

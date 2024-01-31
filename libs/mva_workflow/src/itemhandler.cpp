@@ -18,6 +18,7 @@
 #include "itemhandler.h"
 
 #include "abstractitem.h"
+#include "basicitem.h"
 #include "fade_in.h"
 #include "fade_out.h"
 #include "logging.h"
@@ -49,9 +50,9 @@ ItemHandler::ItemHandler(QObject* parent)
     m_item_selection_model.setModel(&m_item_model);
 }
 
-QList<QQuickItem*> ItemHandler::quickItems()
+QList<BasicItem*> ItemHandler::basicItems()
 {
-    QList<QQuickItem*> item_list;
+    QList<BasicItem*> item_list;
 
     for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
         const auto model_item = dynamic_cast<ItemModelItem*>(m_item_model.item(row));
@@ -94,47 +95,34 @@ void ItemHandler::clear()
     m_item_model.removeRows(0, m_item_model.rowCount());
 }
 
-void ItemHandler::addItem(QQuickItem* const quick_item, const QList<QSharedPointer<AbstractAnimation>>& animations)
+void ItemHandler::addItem(BasicItem* const basic_item)
 {
-    if (itemAlreadyExists(quick_item)) {
+    if (itemAlreadyExists(basic_item)) {
         return;
     }
 
-    const auto item_extract = extractAbstractItem(quick_item);
-
-    if (item_extract.error) {
-        return;
-    }
-
-    auto item_name = item_extract.item->name();
+    auto item_name = basic_item->abstractItemName();
 
     if (itemNameAlreadyExists(item_name)) {
         item_name = prepareNewItemName(item_name);
-        item_extract.item->setName(item_name);
+        basic_item->abstractItem()->setName(item_name);
     }
 
-    const auto item_type = item_extract.item->metaObject()->className();
+    const auto item_type = basic_item->abstractItem()->metaObject()->className();
     auto stdItemName(new ItemModelItem(item_name));
     auto stdItemType(new ItemModelItem(item_type));
 
-    const auto item_observer = QSharedPointer<ItemObserver>(new ItemObserver(quick_item));
-    item_observer->addAnimations(animations);
+    const auto item_observer = QSharedPointer<ItemObserver>(new ItemObserver(basic_item));
     stdItemName->setItemObserver(item_observer);
 
     m_item_model.appendRow(QList<QStandardItem*> { stdItemName, stdItemType });
     qCInfo(itemhandler) << "An item with name" << item_name << "of type" << item_type
-                        << "was added at:" << quick_item->position();
+                        << "was added at:" << basic_item->position();
 }
 
-void ItemHandler::removeItem(QQuickItem* const quick_item)
+void ItemHandler::removeItem(BasicItem* const basic_item)
 {
-    const auto item_extract = extractAbstractItem(quick_item);
-
-    if (item_extract.error) {
-        return;
-    }
-
-    const auto remove_item_name = item_extract.item->name();
+    const auto remove_item_name = basic_item->abstractItemName();
 
     auto item_name_list = m_item_model.findItems(remove_item_name);
     for (auto& item : item_name_list) {
@@ -267,24 +255,20 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex)
     m_property_model.removeRows(0, m_property_model.rowCount());
 
     const auto model_item = dynamic_cast<ItemModelItem*>(m_item_model.itemFromIndex(currentIndex));
-    const auto quick_item = model_item->itemObserver()->item();
-    const auto o = extractAbstractItem(quick_item);
+    const auto basic_item = model_item->itemObserver()->item();
+    const auto abstract_item = basic_item->abstractItem();
 
-    if (o.error) {
-        return;
-    }
+    auto mo_abstract = abstract_item->metaObject();
+    auto mo = basic_item->metaObject();
 
-    auto mo_abstract = o.item->metaObject();
-    auto mo = quick_item->metaObject();
-
-    const auto allowedProperties = o.item->editableProperties();
+    const auto allowedProperties = abstract_item->editableProperties();
 
     do {
-        appendProperties(o.item, mo_abstract, allowedProperties.abstract_item_properties);
+        appendProperties(abstract_item, mo_abstract, allowedProperties.abstract_item_properties);
     } while ((mo_abstract = mo_abstract->superClass()));
 
     do {
-        appendProperties(quick_item, mo, allowedProperties.quick_item_properties);
+        appendProperties(basic_item, mo, allowedProperties.basic_item_properties);
     } while ((mo = mo->superClass())); // TODO(codingwithmagga): sort elements?
 }
 
@@ -307,7 +291,7 @@ void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item)
 
 void ItemHandler::scaleItemsX(const qreal ratio)
 {
-    const auto itemList = quickItems();
+    const auto itemList = basicItems();
 
     for (auto& item : itemList) {
         item->setX(qRound(item->x() * ratio));
@@ -316,7 +300,7 @@ void ItemHandler::scaleItemsX(const qreal ratio)
 
 void ItemHandler::scaleItemsY(const qreal ratio)
 {
-    const auto itemList = quickItems();
+    const auto itemList = basicItems();
 
     for (auto& item : itemList) {
         item->setY(qRound(item->y() * ratio));
@@ -325,7 +309,7 @@ void ItemHandler::scaleItemsY(const qreal ratio)
 
 void ItemHandler::scaleItemsWidth(const qreal ratio)
 {
-    const auto itemList = quickItems();
+    const auto itemList = basicItems();
 
     for (auto& item : itemList) {
         item->setWidth(qRound(item->width() * ratio));
@@ -334,7 +318,7 @@ void ItemHandler::scaleItemsWidth(const qreal ratio)
 
 void ItemHandler::scaleItemsHeight(const qreal ratio)
 {
-    const auto itemList = quickItems();
+    const auto itemList = basicItems();
 
     for (auto& item : itemList) {
         item->setHeight(qRound(item->height() * ratio));
@@ -405,11 +389,11 @@ void ItemHandler::currentItemChanged(const QModelIndex& current, const QModelInd
     repopulateAnimationModel(first_item);
 }
 
-bool ItemHandler::itemAlreadyExists(QQuickItem* const quick_item)
+bool ItemHandler::itemAlreadyExists(BasicItem* const basic_item)
 {
     for (qint32 row = 0; row < m_item_model.rowCount(); ++row) {
         const auto model_item = dynamic_cast<ItemModelItem*>(m_item_model.item(row));
-        if (model_item->itemObserver()->item() == quick_item) {
+        if (model_item->itemObserver()->item() == basic_item) {
             return true;
         }
     }
@@ -425,21 +409,6 @@ bool ItemHandler::itemNameAlreadyExists(const QString& name)
         }
     }
     return false;
-}
-
-ItemHandler::ItemExtract ItemHandler::extractAbstractItem(QQuickItem* const quick_item)
-{
-    ItemHandler::ItemExtract item_extract;
-
-    item_extract.error = false;
-    item_extract.item = qvariant_cast<AbstractItem*>(quick_item->property("item"));
-
-    if (!item_extract.item) {
-        qCWarning(itemhandler) << "Given QQuickItem has no item property. Task can't be fulfilled";
-        item_extract.error = true;
-    }
-
-    return item_extract;
 }
 
 QString ItemHandler::prepareNewItemName(const QString& old_item_name)

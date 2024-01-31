@@ -22,6 +22,8 @@
 #include <QObject>
 #include <QQuickItem>
 
+#include "basicitem.h"
+
 class MainWindowHandler : public QObject {
     Q_OBJECT
 
@@ -84,7 +86,7 @@ class MainWindowHandler : public QObject {
     void removeCurrentItemRequested();
     void removeAnimationRequested(const qint32 animation_number);
 
-    void itemAdded(QQuickItem* item);
+    void itemAdded(BasicItem* item);
     void itemClicked(const QString& name);
     void timeChanged(const qreal time);
 

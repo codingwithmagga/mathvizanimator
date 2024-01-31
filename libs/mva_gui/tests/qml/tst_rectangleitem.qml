@@ -33,10 +33,10 @@ MVARectangle {
 
         function test_onpressed() {
             mousePress(test_rect)
-            compare(test_rect.dragActive, true)
+            compare(test_rect.isDragActive, true)
 
             mouseRelease(test_rect)
-            compare(test_rect.dragActive, false)
+            compare(test_rect.isDragActive, false)
         }
     }
 

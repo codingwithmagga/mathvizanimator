@@ -33,10 +33,10 @@ MVAText {
 
         function test_onpressed() {
             mousePress(test_text)
-            compare(test_text.dragActive, true)
+            compare(test_text.isDragActive, true)
 
             mouseRelease(test_text)
-            compare(test_text.dragActive, false)
+            compare(test_text.isDragActive, false)
         }
     }
 

@@ -19,7 +19,9 @@
 
 #include <QPainter>
 
-AbstractItem::AbstractItem(const QString& qml_file, QQuickItem* parent)
+#include "basicitem.h"
+
+AbstractItem::AbstractItem(const QString& qml_file, BasicItem* parent)
     : QQuickPaintedItem(parent)
     , m_qml_file(qml_file)
 {
@@ -89,7 +91,7 @@ QList<QPair<QString, QVariant>> AbstractItem::getParentItemProperties() const
     QList<QPair<QString, QVariant>> prop_list;
 
     do {
-        prop_list.append(appendProperties(parentItem(), parent_meta_object, properties.quick_item_properties));
+        prop_list.append(appendProperties(parentItem(), parent_meta_object, properties.basic_item_properties));
     } while ((parent_meta_object = parent_meta_object->superClass()));
 
     return prop_list;
@@ -133,7 +135,7 @@ AbstractItem::EditableProperties AbstractItem::editableProperties() const
     EditableProperties editable_properties;
 
     editable_properties.abstract_item_properties = QStringList { "name", "color", "opacity", "rotation" };
-    editable_properties.quick_item_properties = QStringList { "width", "height", "x", "y" };
+    editable_properties.basic_item_properties = QStringList { "width", "height", "x", "y" };
 
     return editable_properties;
 }

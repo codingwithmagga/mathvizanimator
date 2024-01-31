@@ -21,10 +21,10 @@ import QtQuick.Controls
 
 import cwa.mva.gui
 
-MVABasicItem {
+BasicItem {
     id: rootMVAText
 
-    property alias item: textItem
+    abstract_item: textItem
 
     TextItem {
         id: textItem
@@ -51,7 +51,7 @@ MVABasicItem {
     }
 
     Component.onCompleted: {
-        if (init) {
+        if (is_initialized) {
             createText.open()
         }
     }

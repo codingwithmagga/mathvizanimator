@@ -35,8 +35,7 @@ MainLogic::MainLogic(QObject* parent)
     connect(&m_mainwindowhandler, &MainWindowHandler::saveProjectRequested, this, &MainLogic::saveProject);
     connect(&m_mainwindowhandler, &MainWindowHandler::loadProjectRequested, this, &MainLogic::loadProject);
 
-    connect(&m_mainwindowhandler, &MainWindowHandler::itemAdded, this,
-        [this](QQuickItem* item) { m_itemhandler.addItem(item); });
+    connect(&m_mainwindowhandler, &MainWindowHandler::itemAdded, &m_itemhandler, &ItemHandler::addItem);
     connect(&m_mainwindowhandler, &MainWindowHandler::removeCurrentItemRequested, &m_itemhandler,
         &ItemHandler::removeCurrentItem);
     connect(&m_mainwindowhandler, &MainWindowHandler::removeAnimationRequested, &m_itemhandler,
@@ -134,7 +133,7 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
     for (const QString& itemKey : json.keys()) {
         auto item_json = json[itemKey].toObject();
 
-        QQmlComponent component(m_qml_engine, QUrl(item_json["item.file"].toString()));
+        QQmlComponent component(m_qml_engine, QUrl(item_json["abstract_item.file"].toString()));
 
         QList<QSharedPointer<AbstractAnimation>> animations;
         const auto keys = item_json.keys();
@@ -165,20 +164,20 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
 
         // "file" is a read-only property which will be set when the item is
         // created. It is not possible (or necessary) to set it in this context.
-        item_properties.remove("item.file");
+        item_properties.remove("abstract_item.file");
 
         item_properties.insert("parent", QVariant::fromValue(m_qml_creation_area));
         QObject* comp = component.createWithInitialProperties(item_properties);
         if (!comp) {
             qCWarning(mainlogic) << "component not found!";
         }
-        QQuickItem* item = qobject_cast<QQuickItem*>(comp);
+        BasicItem* item = qobject_cast<BasicItem*>(comp);
         if (!item) {
             qCWarning(mainlogic) << "item not found!";
         }
 
         m_mainwindowhandler.addItem(item);
-        m_itemhandler.addAnimations(item_properties.value("item.name").toString(), animations);
+        m_itemhandler.addAnimations(item_properties.value("abstract_item.name").toString(), animations);
     }
 }
 

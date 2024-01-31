@@ -169,7 +169,7 @@ void TestMainWindowHandler::addItemTest()
 
     // TODO(codingwithmagga): When MVABasicItem is implemented as C++ class, use this and check the connections, see
     // QWarning log msgs
-    auto test_item = new QQuickItem;
+    auto test_item = new BasicItem;
     main_window_handler.addItem(test_item);
     test_item->deleteLater();
 

@@ -49,13 +49,13 @@ void TestSaveFileHandler::initTestCase()
     data1["y"] = 100;
     data1["width"] = 200;
     data1["height"] = 300;
-    data1["item.color"] = "red";
+    data1["abstract_item.color"] = "red";
 
     QJsonObject data2;
     data2["x"] = 100;
     data2["width"] = 220;
     data2["height"] = 100;
-    data1["item.name"] = "Item";
+    data1["abstract_item.name"] = "Item";
 
     m_test_json_data["data1"] = data1;
     m_test_json_data["data2"] = data2;

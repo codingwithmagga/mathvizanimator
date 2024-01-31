@@ -25,7 +25,7 @@
 #include <QProcess>
 #include <QSvgRenderer>
 
-TextItem::TextItem(QQuickItem* parent)
+TextItem::TextItem(BasicItem* parent)
     : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml", parent }
     , m_svg_location(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation))
 {
@@ -165,8 +165,8 @@ void TextItem::setScaleText(qreal newScaleText)
 AbstractItem::EditableProperties TextItem::editableProperties() const
 {
     auto abstractList = AbstractItem::editableProperties();
-    abstractList.quick_item_properties.removeOne("width");
-    abstractList.quick_item_properties.removeOne("height");
+    abstractList.basic_item_properties.removeOne("width");
+    abstractList.basic_item_properties.removeOne("height");
     abstractList.abstract_item_properties.removeOne("color");
 
     abstractList.abstract_item_properties.append("latexSource");

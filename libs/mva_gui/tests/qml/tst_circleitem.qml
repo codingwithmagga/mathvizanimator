@@ -33,10 +33,10 @@ MVACircle {
 
         function test_onpressed() {
             mousePress(test_circle)
-            compare(test_circle.dragActive, true)
+            compare(test_circle.isDragActive, true)
 
             mouseRelease(test_circle)
-            compare(test_circle.dragActive, false)
+            compare(test_circle.isDragActive, false)
         }
     }
 

@@ -23,6 +23,7 @@
 #include <QQuickItem>
 #include <QStandardItemModel>
 
+#include "basicitem.h"
 #include "item_observer.h"
 
 class ItemModelItem;
@@ -45,15 +46,14 @@ class ItemHandler : public QObject {
     QItemSelectionModel* selectionModel() { return &m_item_selection_model; }
     QStandardItemModel* propertyModel() { return &m_property_model; }
     QStandardItemModel* animationModel() { return &m_animation_model; }
-    QList<QQuickItem*> quickItems();
+    QList<BasicItem*> basicItems();
     QList<QSharedPointer<ItemObserver>> items();
 
   public slots:
     void clear();
 
-    void addItem(QQuickItem* const quick_item,
-        const QList<QSharedPointer<AbstractAnimation>>& animations = QList<QSharedPointer<AbstractAnimation>> {});
-    void removeItem(QQuickItem* const quick_item);
+    void addItem(BasicItem* const basic_item);
+    void removeItem(BasicItem* const basic_item);
     void setCurrentItem(const QString& itemName);
     void removeCurrentItem();
 
@@ -81,9 +81,8 @@ class ItemHandler : public QObject {
         bool error;
     };
 
-    bool itemAlreadyExists(QQuickItem* const quick_item);
+    bool itemAlreadyExists(BasicItem* const basic_item);
     bool itemNameAlreadyExists(const QString& name);
-    ItemExtract extractAbstractItem(QQuickItem* const quick_item);
 
     QString prepareNewItemName(const QString& old_item_name);
 

@@ -19,10 +19,10 @@ import QtQuick
 
 import cwa.mva.gui
 
-MVABasicItem {
+BasicItem {
     id: rootMVARectangle
 
-    property alias item: rectangleItem
+    abstract_item: rectangleItem
 
     RectangleItem {
         id: rectangleItem

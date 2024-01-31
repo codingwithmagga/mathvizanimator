@@ -32,24 +32,24 @@ Item {
     MouseArea {
 
         function createShadow(file) {
+            console.log("Create shadow")
             var point = mapToItem(null, mouseX, mouseY)
 
             const component = Qt.createComponent(file)
+
             if (component.status === Component.Ready) {
                 var object = component.createObject(root, {
                                                         "x": point.x - 15,
                                                         "y": point.y - 8,
                                                         "width": 30,
                                                         "height": 16,
-                                                        "item.color": "red",
-                                                        "dragActive": true,
-                                                        "dragKey": thekey
+                                                        "Drag.active": true,
+                                                        "Drag.keys": thekey
                                                     })
                 return object
-            } else {
-                console.log("Error occured during component creation: " + component.errorString(
-                                ))
             }
+            console.log("Error occured during component creation: " + component.errorString(
+                            ))
 
             return null
         }

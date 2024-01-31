@@ -45,7 +45,7 @@ class TestItemObserver : public QObject {
     QSharedPointer<ItemObserver> m_item_observer_no_animations;
     QSharedPointer<FadeIn> m_fade_in_animation;
     QSharedPointer<FadeOut> m_fade_out_animation;
-    QSharedPointer<QQuickItem> m_parent_item;
+    QSharedPointer<BasicItem> m_parent_item;
 };
 
 void TestItemObserver::initTestCase()
@@ -53,7 +53,7 @@ void TestItemObserver::initTestCase()
     const qreal width = 244;
     const qreal height = width;
 
-    m_parent_item = QSharedPointer<QQuickItem>(new QQuickItem());
+    m_parent_item = QSharedPointer<BasicItem>(new BasicItem());
     m_parent_item->setX(23);
     m_parent_item->setY(155);
     m_parent_item->setHeight(width);
@@ -65,7 +65,7 @@ void TestItemObserver::initTestCase()
     circle->setColor("blue");
     circle->setOpacity(0.0);
     circle->setParentItem(m_parent_item.data());
-    m_parent_item->setProperty("item", QVariant::fromValue<CircleItem*>(circle));
+    m_parent_item->setAbstractItem(circle);
 
     m_item_observer = QSharedPointer<ItemObserver>(new ItemObserver(m_parent_item.data()));
     m_item_observer_no_animations = QSharedPointer<ItemObserver>(new ItemObserver(m_parent_item.data()));

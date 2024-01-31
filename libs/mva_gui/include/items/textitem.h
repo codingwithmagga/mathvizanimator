@@ -37,7 +37,7 @@ class TextItem : public AbstractItem {
     Q_PROPERTY(qreal scaleText READ getScaleText WRITE setScaleText NOTIFY scaleTextChanged)
 
   public:
-    explicit TextItem(QQuickItem* parent = nullptr);
+    explicit TextItem(BasicItem* parent = nullptr);
 
     QString getSvgFile() const { return m_svg_file.absoluteFilePath(); }
     void setSvgFile(const QFileInfo& newSvgFile);

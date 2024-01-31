@@ -25,6 +25,8 @@
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
+class BasicItem;
+
 /**
  * @brief An abstract class representing a visible item like a circle or a
  * rectangle.
@@ -41,7 +43,7 @@ class AbstractItem : public QQuickPaintedItem {
   public:
     struct EditableProperties {
         QStringList abstract_item_properties;
-        QStringList quick_item_properties;
+        QStringList basic_item_properties;
     };
 
     /**
@@ -49,7 +51,7 @@ class AbstractItem : public QQuickPaintedItem {
      *
      * Initializes the class with default values.
      */
-    explicit AbstractItem(const QString& qml_file, QQuickItem* parent = nullptr);
+    explicit AbstractItem(const QString& qml_file, BasicItem* parent = nullptr);
 
     QString name() const;
     void setName(const QString& name);
