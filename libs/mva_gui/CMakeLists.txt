@@ -40,6 +40,7 @@ qt_add_qml_module(cwa.mva.gui
         qml/items/MVAText.qml
         qml/items/MVAMouseArea.qml
         qml/items/MVASurroundingRectangle.qml
+        qml/windows/TextDialog.qml
     SOURCES
         include/items/abstractitem.h
         include/items/circleitem.h
