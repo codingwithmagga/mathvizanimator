@@ -87,7 +87,7 @@ void TestHelperFunctions::clickItem(QQuickItem* quick_item, Qt::MouseButton mous
 
 void TestHelperFunctions::moveItem(QQuickItem* quick_item, const QPoint& move_dist)
 {
-    dragAndDropItem(quick_item_center, itemCenter(quick_item) + move_dist);
+    dragAndDropItem(itemCenter(quick_item), itemCenter(quick_item) + move_dist);
 }
 
 void TestHelperFunctions::changeTime(const qreal time) { m_time_slider->setProperty("value", time); }
