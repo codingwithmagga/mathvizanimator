@@ -89,6 +89,28 @@ void ItemHandler::setDeleteEachQuickItem(QModelIndex parent)
     }
 }
 
+ItemModelItem* ItemHandler::getItemModelItemByName(const QString& item_name)
+{
+    const auto item_list = m_item_model.findItems(item_name);
+
+    if (item_list.isEmpty()) {
+        return nullptr;
+    }
+
+    return dynamic_cast<ItemModelItem*>(item_list.first());
+}
+
+QSharedPointer<ItemObserver> ItemHandler::getItemObserverByName(const QString& item_name)
+{
+    const auto model_item = getItemModelItemByName(item_name);
+
+    if (!model_item) {
+        return nullptr;
+    }
+
+    return model_item->itemObserver();
+}
+
 void ItemHandler::clear()
 {
     setDeleteEachQuickItem();
@@ -154,15 +176,12 @@ void ItemHandler::removeCurrentItem()
 void ItemHandler::addAnimation(
     const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration)
 {
-    const auto item_list = m_item_model.findItems(item_name);
-
-    if (item_list.isEmpty()) {
+    auto item = getItemModelItemByName(item_name);
+    if (!item) {
         qCWarning(itemhandler) << "Can't find item with name:" << item_name << "Animation can't be added.";
         return;
     }
-
-    auto item = dynamic_cast<ItemModelItem*>(item_list.first());
-    auto item_observer = item->itemObserver();
+    const auto item_observer = item->itemObserver();
 
     QString animation_name;
 
@@ -199,15 +218,11 @@ void ItemHandler::addAnimation(
 
 void ItemHandler::addAnimations(const QString& item_name, const QList<QSharedPointer<AbstractAnimation>> animations)
 {
-    const auto item_list = m_item_model.findItems(item_name);
-
-    if (item_list.isEmpty()) {
+    auto item_observer = getItemObserverByName(item_name);
+    if (!item_observer) {
         qCWarning(itemhandler) << "Can't find item with name:" << item_name << "Animations can't be added.";
         return;
     }
-
-    auto model_item = dynamic_cast<ItemModelItem*>(item_list.first());
-    auto item_observer = model_item->itemObserver();
     item_observer->addAnimations(animations);
 }
 
@@ -332,6 +347,13 @@ void ItemHandler::setTime(const qreal time)
     for (auto& item_observer : item_observer_list) {
         item_observer->setTime(time);
     }
+}
+
+void ItemHandler::changeProperty(const QString& item_name, const QByteArray& property, const QVariant& value)
+{
+    const auto item_observer = getItemObserverByName(item_name);
+
+    item_observer->updateItemProperty(property, value);
 }
 
 // TODO(codingwithmagga): Refactor this

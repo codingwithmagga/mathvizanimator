@@ -41,6 +41,7 @@ MainLogic::MainLogic(QObject* parent)
     connect(&m_mainwindowhandler, &MainWindowHandler::removeAnimationRequested, &m_itemhandler,
         &ItemHandler::removeAnimation);
     connect(&m_mainwindowhandler, &MainWindowHandler::itemClicked, &m_itemhandler, &ItemHandler::setCurrentItem);
+    connect(&m_mainwindowhandler, &MainWindowHandler::propertyChanged, &m_itemhandler, &ItemHandler::changeProperty);
     connect(&m_mainwindowhandler, &MainWindowHandler::newProjectRequested, &m_itemhandler, &ItemHandler::clear);
     connect(&m_mainwindowhandler, &MainWindowHandler::addAnimationSignal, &m_itemhandler, &ItemHandler::addAnimation);
 
@@ -90,8 +91,8 @@ void MainLogic::connectEngine()
     }
 
     // clang-format off
-      QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem*)), &m_mainwindowhandler,
-                       SLOT(addItem(QQuickItem*)));
+    QObject::connect(m_qml_creation_area, SIGNAL(itemAdded(QQuickItem*)), &m_mainwindowhandler,
+                     SLOT(addItem(QQuickItem*)));
     // clang-format on
 }
 

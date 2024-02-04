@@ -69,6 +69,7 @@ class ItemHandler : public QObject {
     void scaleItemsHeight(const qreal ratio);
 
     void setTime(const qreal time);
+    void changeProperty(const QString& item_name, const QByteArray& property, const QVariant& value);
 
   private slots:
     void propertyDataChanged(
@@ -92,6 +93,9 @@ class ItemHandler : public QObject {
     void repopulateAnimationModel(const ItemModelItem* const item);
 
     void setDeleteEachQuickItem(QModelIndex parent = QModelIndex());
+
+    ItemModelItem* getItemModelItemByName(const QString& item_name);
+    QSharedPointer<ItemObserver> getItemObserverByName(const QString& item_name);
 
     QStandardItemModel m_item_model;
     QStandardItemModel m_animation_model;

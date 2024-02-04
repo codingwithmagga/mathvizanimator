@@ -36,6 +36,9 @@ class TestHelperFunctions {
     void dragAndDropItem(const QPoint& start_pos, const QPoint& end_pos);
 
     void clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
+    void moveItem(QQuickItem* quick_item, const QPoint& move_dist);
+
+    void changeTime(const qreal time);
 
     QQuickWindow* rootWindow() const { return m_quick_window; }
     QObject* draggableItemListView() const { return m_draggable_item_list_view; }
@@ -79,6 +82,7 @@ class TestHelperFunctions {
     QStandardItemModel* m_property_model = Q_NULLPTR;
     QStandardItemModel* m_animations_model = Q_NULLPTR;
     QQuickItem* m_creation_area = Q_NULLPTR;
+    QQuickItem* m_time_slider = Q_NULLPTR;
 };
 
 #endif // APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_

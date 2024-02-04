@@ -43,6 +43,8 @@ MouseArea {
                    basicItem.Drag.active = true
                    drag.target = basicItem
 
+                   console.log("Press")
+
                    const component = Qt.createComponent(
                        "MVASurroundingRectangle.qml")
                    if (component.status === Component.Ready) {
@@ -57,6 +59,12 @@ MouseArea {
         basicItem.Drag.active = false
         drag.target = null
         highlightRect.destroy()
+
+        root.userChangedProperty(basicItem.abstract_item.name, "x", basicItem.x)
+        root.userChangedProperty(basicItem.abstract_item.name, "y", basicItem.y)
+
+        console.log("Item", basicItem.abstract_item.name, "moved to (",
+                    basicItem.x, ",", basicItem.y, ")")
     }
 
     Menu {

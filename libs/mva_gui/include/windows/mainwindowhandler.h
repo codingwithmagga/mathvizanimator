@@ -58,6 +58,7 @@ class MainWindowHandler : public QObject {
 
     void itemClickedByUser(const QString& itemName);
     void setTimeByUser(const QVariant& time);
+    void propertyChangedByUser(const QString& item_name, const QByteArray& property, const QVariant& value);
 
     void updateProjectSettings(const QVariantList& new_project_settings);
     void updateProjectSettings(const QList<qint32>& new_project_settings);
@@ -89,6 +90,7 @@ class MainWindowHandler : public QObject {
     void itemAdded(BasicItem* item);
     void itemClicked(const QString& name);
     void timeChanged(const qreal time);
+    void propertyChanged(const QString& item_name, const QByteArray& property, const QVariant& value);
 
     void renderingVideoFinished(const QFileInfo& video_file);
 
