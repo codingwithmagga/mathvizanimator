@@ -34,7 +34,11 @@
 # qt files
 *.user
 
+# IDES
+.vscode/
+
 # build folders
 /build-*
 
+# megalinter
 megalinter-reports/
