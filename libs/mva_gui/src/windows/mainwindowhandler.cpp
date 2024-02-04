@@ -65,6 +65,12 @@ void MainWindowHandler::itemClickedByUser(const QString& item_name) { emit itemC
 
 void MainWindowHandler::setTimeByUser(const QVariant& time) { emit timeChanged(time.toDouble()); }
 
+void MainWindowHandler::propertyChangedByUser(
+    const QString& item_name, const QByteArray& property, const QVariant& value)
+{
+    emit propertyChanged(item_name, property, value);
+}
+
 void MainWindowHandler::updateProjectSettings(const QVariantList& new_project_settings)
 {
     if (new_project_settings.size() != 4) {

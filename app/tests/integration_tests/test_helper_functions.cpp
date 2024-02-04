@@ -46,6 +46,7 @@ TestHelperFunctions::TestHelperFunctions(const QSharedPointer<QQmlApplicationEng
     m_property_table_view = root_objects.first()->findChild<QObject*>("MVAPropertyTable");
     m_animations_table_view = root_objects.first()->findChild<QObject*>("MVAAnimationTable");
     m_creation_area = root_objects.first()->findChild<QQuickItem*>("MVACreationArea");
+    m_time_slider = root_objects.first()->findChild<QQuickItem*>("MVATimeSlider");
 
     auto items_model = m_project_items_table_view->property("model");
     m_project_items_model = qvariant_cast<QStandardItemModel*>(items_model);
@@ -74,20 +75,22 @@ void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos, const QPoint&
 {
     const QPoint minimum_drag_distance(20, 20);
 
-    QTest::mousePress(m_quick_window, Qt::LeftButton, Qt::NoModifier, start_pos);
-    QTest::mouseMove(m_quick_window, start_pos + minimum_drag_distance);
-    QTest::mouseRelease(m_quick_window, Qt::LeftButton, Qt::NoModifier, end_pos);
+    QTest::mousePress(m_quick_window, Qt::LeftButton, Qt::NoModifier, start_pos, 20);
+    QTest::mouseMove(m_quick_window, start_pos + minimum_drag_distance, 20);
+    QTest::mouseRelease(m_quick_window, Qt::LeftButton, Qt::NoModifier, end_pos, 20);
 }
 
 void TestHelperFunctions::clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button)
 {
-    auto oPoint = quick_item->mapToScene(QPoint(0, 0)).toPoint();
-
-    oPoint.rx() += quick_item->width() / 2;
-    oPoint.ry() += quick_item->height() / 2;
-
-    QTest::mouseClick(m_quick_window, mouse_button, Qt::NoModifier, oPoint);
+    QTest::mouseClick(m_quick_window, mouse_button, Qt::NoModifier, itemCenter(quick_item));
 }
+
+void TestHelperFunctions::moveItem(QQuickItem* quick_item, const QPoint& move_dist)
+{
+    dragAndDropItem(itemCenter(quick_item), itemCenter(quick_item) + move_dist);
+}
+
+void TestHelperFunctions::changeTime(const qreal time) { m_time_slider->setProperty("value", time); }
 
 QSharedPointer<ItemObserver> TestHelperFunctions::getItemObserver(const qint32 item_number) const
 {
@@ -179,4 +182,14 @@ QString TestHelperFunctions::absoluteFilePath(const QString file_name)
     current_dir.cd(save_dir);
 
     return current_dir.absoluteFilePath(file_name);
+}
+
+QPoint TestHelperFunctions::itemCenter(QQuickItem* item) const
+{
+    auto item_center = item->mapToScene(QPoint(0, 0)).toPoint();
+
+    item_center.rx() += item->width() / 2;
+    item_center.ry() += item->height() / 2;
+
+    return item_center;
 }

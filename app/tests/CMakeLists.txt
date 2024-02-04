@@ -23,10 +23,16 @@ qt_add_executable(int_animation_test
     integration_tests/test_helper_functions.h
     integration_tests/test_helper_functions.cpp
 )
+qt_add_executable(int_user_interaction_test
+    integration_tests/tst_user_interaction.cpp
+    integration_tests/test_helper_functions.h
+    integration_tests/test_helper_functions.cpp
+)
 
 add_test(NAME int_menu_file_test COMMAND int_menu_file_test)
 add_test(NAME int_menu_project_test COMMAND int_menu_project_test)
 add_test(NAME int_animation_test COMMAND int_animation_test)
+add_test(NAME int_user_interaction_test COMMAND int_user_interaction_test)
 
 target_link_libraries(
     int_menu_file_test
@@ -43,6 +49,12 @@ target_link_libraries(
 )
 target_link_libraries(
     int_animation_test
+    PRIVATE Qt::Test
+    PRIVATE Qt6::Quick
+    PRIVATE mva::applib
+)
+target_link_libraries(
+    int_user_interaction_test
     PRIVATE Qt::Test
     PRIVATE Qt6::Quick
     PRIVATE mva::applib

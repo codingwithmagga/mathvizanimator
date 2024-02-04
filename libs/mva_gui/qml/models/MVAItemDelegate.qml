@@ -32,7 +32,6 @@ Item {
     MouseArea {
 
         function createShadow(file) {
-            console.log("Create shadow")
             var point = mapToItem(null, mouseX, mouseY)
 
             const component = Qt.createComponent(file)

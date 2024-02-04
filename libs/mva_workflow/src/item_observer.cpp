@@ -29,7 +29,7 @@ ItemObserver::ItemObserver(BasicItem* const item, QObject* parent)
     }
 
     for (const auto& property : quick_item_properties) {
-        m_quick_item_start_property_values.insert(property.first, property.second);
+        m_basic_item_start_property_values.insert(property.first, property.second);
     }
 }
 
@@ -47,9 +47,9 @@ void ItemObserver::applyStartProperties()
         abstractitem()->setProperty(property.toUtf8(), m_item_start_property_values.value(property));
     }
 
-    const auto quick_item_properties = m_quick_item_start_property_values.keys();
-    for (const auto& property : quick_item_properties) {
-        m_item->setProperty(property.toUtf8(), m_quick_item_start_property_values.value(property));
+    const auto basic_item_properties = m_basic_item_start_property_values.keys();
+    for (const auto& property : basic_item_properties) {
+        m_item->setProperty(property.toUtf8(), m_basic_item_start_property_values.value(property));
     }
 }
 
@@ -99,7 +99,7 @@ void ItemObserver::updateItemProperty(const QString& property, const QVariant& v
         return;
     }
     m_item->setProperty(property.toUtf8(), value);
-    m_quick_item_start_property_values.insert(property.toUtf8(), value);
+    m_basic_item_start_property_values.insert(property.toUtf8(), value);
     m_item->update();
 }
 

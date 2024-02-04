@@ -48,6 +48,7 @@ ApplicationWindow {
     property bool objectDragActive: false
 
     signal renderingVideoFinished
+    signal userChangedProperty(string item_name, string property_name, var value)
 
     Shortcut {
         sequences: [StandardKey.Delete]
@@ -855,6 +856,12 @@ ApplicationWindow {
             }
         }
     }
+
+    onUserChangedProperty: (item_name, property_name, value) => {
+                               main_window.propertyChangedByUser(item_name,
+                                                                 property_name,
+                                                                 value)
+                           }
 
     Connections {
         target: main_window
