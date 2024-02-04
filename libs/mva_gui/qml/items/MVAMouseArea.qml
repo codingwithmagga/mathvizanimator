@@ -43,8 +43,6 @@ MouseArea {
                    basicItem.Drag.active = true
                    drag.target = basicItem
 
-                   console.log("Press")
-
                    const component = Qt.createComponent(
                        "MVASurroundingRectangle.qml")
                    if (component.status === Component.Ready) {
