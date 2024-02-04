@@ -71,6 +71,8 @@ class TestHelperFunctions {
     static QString absoluteFilePath(const QString file_name);
 
   private:
+    QPoint itemCenter(QQuickItem* item) const;
+
     QSharedPointer<QQmlApplicationEngine> m_engine;
 
     QQuickWindow* m_quick_window = Q_NULLPTR;

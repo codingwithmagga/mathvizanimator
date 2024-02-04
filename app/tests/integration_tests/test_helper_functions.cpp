@@ -82,22 +82,12 @@ void TestHelperFunctions::dragAndDropItem(const QPoint& start_pos, const QPoint&
 
 void TestHelperFunctions::clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button)
 {
-    auto quick_item_center = quick_item->mapToScene(QPoint(0, 0)).toPoint();
-
-    quick_item_center.rx() += quick_item->width() / 2;
-    quick_item_center.ry() += quick_item->height() / 2;
-
-    QTest::mouseClick(m_quick_window, mouse_button, Qt::NoModifier, quick_item_center);
+    QTest::mouseClick(m_quick_window, mouse_button, Qt::NoModifier, itemCenter(quick_item));
 }
 
 void TestHelperFunctions::moveItem(QQuickItem* quick_item, const QPoint& move_dist)
 {
-    auto quick_item_center = quick_item->mapToScene(QPoint(0, 0)).toPoint();
-
-    quick_item_center.rx() += quick_item->width() / 2;
-    quick_item_center.ry() += quick_item->height() / 2;
-
-    dragAndDropItem(quick_item_center, quick_item_center + move_dist);
+    dragAndDropItem(quick_item_center, itemCenter(quick_item) + move_dist);
 }
 
 void TestHelperFunctions::changeTime(const qreal time) { m_time_slider->setProperty("value", time); }
@@ -192,4 +182,14 @@ QString TestHelperFunctions::absoluteFilePath(const QString file_name)
     current_dir.cd(save_dir);
 
     return current_dir.absoluteFilePath(file_name);
+}
+
+QPoint TestHelperFunctions::itemCenter(QQuickItem* item) const
+{
+    auto item_center = item->mapToScene(QPoint(0, 0)).toPoint();
+
+    item_center.rx() += item->width() / 2;
+    item_center.ry() += item->height() / 2;
+
+    return item_center;
 }
