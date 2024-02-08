@@ -100,7 +100,6 @@ void ItemObserver::updateItemProperty(const QString& property, const QVariant& v
     }
     m_item->setProperty(property.toUtf8(), value);
     m_basic_item_start_property_values.insert(property.toUtf8(), value);
-    m_item->update();
 }
 
 QJsonObject ItemObserver::toJson() const
