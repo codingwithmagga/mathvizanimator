@@ -24,10 +24,6 @@ Dialog {
     }
     onRejected: createText.close()
 
-    background: Rectangle {
-        color: palette.dark
-    }
-
     ScrollView {
         id: view
 
@@ -46,10 +42,6 @@ Dialog {
 
             cursorPosition: 0
             cursorVisible: true
-
-            background: Rectangle {
-                color: palette.dark
-            }
         }
     }
 }
