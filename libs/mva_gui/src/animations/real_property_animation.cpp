@@ -19,7 +19,7 @@
 
 #include <QLoggingCategory>
 
-Q_LOGGING_CATEGORY(realpropertyanimation, "cwa.mva.realpropertyanimation")
+Q_LOGGING_CATEGORY(real_property_animation, "cwa.mva.real_property_animation")
 
 RealPropertyAnimation::RealPropertyAnimation(const QStringList& properties, QObject* parent)
     : PropertyAnimation { properties, parent }
@@ -37,8 +37,8 @@ void RealPropertyAnimation::applyAnimation(AbstractItem* item, const qreal time)
 
     if (m_start_property_values.size() != m_end_property_values.size()
         || m_start_property_values.size() != property_list.size()) {
-        qCWarning(realpropertyanimation) << "Size mismatch for property animation:" << m_start_property_values.size()
-                                         << m_end_property_values.size() << property_list.size();
+        qCWarning(real_property_animation) << "Size mismatch for property animation:" << m_start_property_values.size()
+                                           << m_end_property_values.size() << property_list.size();
         return;
     }
 

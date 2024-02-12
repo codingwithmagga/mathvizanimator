@@ -32,18 +32,10 @@ void RectangleItem::paint(QPainter* painter)
     const qreal border_width = borderWidth();
     painter->setRenderHints(QPainter::Antialiasing, true);
 
-    QPen pen_filled(QColor(), 0);
-    pen_filled.setBrush(QBrush());
-    painter->setPen(pen_filled);
-    painter->setBrush(filledColor());
-    painter->setOpacity(opacity() * filledOpacity());
+    preparePainterForFill(painter);
     painter->drawRect(x() + border_width, y() + border_width, width() - 2 * border_width, height() - 2 * border_width);
 
-    QPen pen_border(borderColor(), border_width);
-    pen_border.setJoinStyle(Qt::MiterJoin);
-    painter->setPen(pen_border);
-    painter->setBrush(QBrush());
-    painter->setOpacity(opacity() * borderOpacity());
+    preparePainterForBorder(painter);
     painter->drawRect(
         x() + border_width / 2.0, y() + border_width / 2.0, width() - border_width, height() - border_width);
 

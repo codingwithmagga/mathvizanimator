@@ -17,6 +17,9 @@
 
 #include "geometry_item.h"
 
+#include <QPainter>
+#include <QPen>
+
 GeometryItem::GeometryItem(const QString& qml_file, BasicItem* parent)
     : AbstractItem(qml_file, parent)
 {
@@ -90,4 +93,22 @@ AbstractItem::EditableProperties GeometryItem::editableProperties() const
     abstractList.abstract_item_properties.append("borderWidth");
 
     return abstractList;
+}
+
+void GeometryItem::preparePainterForBorder(QPainter* painter)
+{
+    QPen pen_border(borderColor(), borderWidth());
+    pen_border.setJoinStyle(Qt::MiterJoin);
+    painter->setPen(pen_border);
+    painter->setBrush(QBrush());
+    painter->setOpacity(opacity() * borderOpacity());
+}
+
+void GeometryItem::preparePainterForFill(QPainter* painter)
+{
+    QPen pen_filled(QColor(), 0);
+    pen_filled.setBrush(QBrush());
+    painter->setPen(pen_filled);
+    painter->setBrush(filledColor());
+    painter->setOpacity(opacity() * filledOpacity());
 }

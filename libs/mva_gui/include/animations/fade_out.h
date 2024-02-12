@@ -27,14 +27,8 @@ class FadeOut : public RealPropertyAnimation {
     explicit FadeOut(QObject* parent = nullptr);
 
   private:
-    void setStartPropertyValue(qreal new_start_property_value)
-    {
-        RealPropertyAnimation::setStartPropertyValues(QList<qreal> { new_start_property_value });
-    }
-    void setEndPropertyValue(qreal new_end_property_value)
-    {
-        RealPropertyAnimation::setEndPropertyValues(QList<qreal> { new_end_property_value });
-    }
+    void setStartPropertyValue(qreal new_start_property_value);
+    void setEndPropertyValue(qreal new_end_property_value);
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_ANIMATIONS_FADE_OUT_H_

@@ -32,18 +32,11 @@ void CircleItem::paint(QPainter* painter)
     const auto border_width = borderWidth();
     painter->setRenderHints(QPainter::Antialiasing, true);
 
-    QPen pen_filled(QColor(), 0);
-    pen_filled.setBrush(QBrush());
-    painter->setPen(pen_filled);
-    painter->setBrush(filledColor());
-    painter->setOpacity(opacity() * filledOpacity());
+    preparePainterForFill(painter);
     painter->drawEllipse(x() + border_width - 1, y() + border_width - 1, width() - 2 * border_width + 2,
         height() - 2 * border_width + 2);
 
-    QPen pen(borderColor(), border_width);
-    painter->setPen(pen);
-    painter->setBrush(QBrush());
-    painter->setOpacity(opacity() * borderOpacity());
+    preparePainterForBorder(painter);
     painter->drawEllipse(
         x() + border_width / 2.0, y() + border_width / 2.0, width() - border_width, height() - border_width);
 

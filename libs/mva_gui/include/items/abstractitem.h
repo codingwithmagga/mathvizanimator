@@ -74,8 +74,6 @@ class AbstractItem : public QQuickPaintedItem {
         const auto obj, auto meta_object, const QStringList& allowedProperties) const;
 
     QString m_name;
-    qreal m_start_at = 0.0;
-    qreal m_end_at = std::numeric_limits<qreal>::infinity();
 
     QString m_qml_file;
 };

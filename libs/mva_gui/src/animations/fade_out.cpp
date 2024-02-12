@@ -23,3 +23,13 @@ FadeOut::FadeOut(QObject* parent)
     setStartPropertyValue(1.0);
     setEndPropertyValue(0.0);
 }
+
+void FadeOut::setStartPropertyValue(qreal new_start_property_value)
+{
+    RealPropertyAnimation::setStartPropertyValues(QList<qreal> { new_start_property_value });
+}
+
+void FadeOut::setEndPropertyValue(qreal new_end_property_value)
+{
+    RealPropertyAnimation::setEndPropertyValues(QList<qreal> { new_end_property_value });
+}

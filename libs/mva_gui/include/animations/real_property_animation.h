@@ -18,9 +18,9 @@
 #ifndef LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
 #define LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
 
-#include "property_animation.h"
-
 #include <QList>
+
+#include "property_animation.h"
 
 class RealPropertyAnimation : public PropertyAnimation {
     Q_OBJECT

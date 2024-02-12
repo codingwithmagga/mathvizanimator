@@ -60,6 +60,10 @@ class GeometryItem : public AbstractItem {
     void borderOpacityChanged();
     void borderWidthChanged();
 
+  protected:
+    void preparePainterForBorder(QPainter* painter);
+    void preparePainterForFill(QPainter* painter);
+
   private:
     QColor m_filled_color = Qt::transparent;
     qreal m_filled_opacity = 1.0;
