@@ -77,7 +77,7 @@ void TestRenderer::initTestCase()
     auto circle = new CircleItem();
     circle->setWidth(width_1);
     circle->setHeight(height_1);
-    circle->setFilledColor("red");
+    circle->setBorderColor("red");
     circle->setOpacity(0.7);
     circle->setParentItem(parent_item_1);
     parent_item_1->setAbstractItem(circle);
@@ -85,7 +85,7 @@ void TestRenderer::initTestCase()
     auto rect = new RectangleItem();
     rect->setWidth(width_2);
     rect->setHeight(height_2);
-    rect->setFilledColor("blue");
+    rect->setBorderColor("blue");
     rect->setOpacity(0.7);
     rect->setRotation(43);
     rect->setParentItem(parent_item_2);
@@ -233,7 +233,7 @@ void TestRenderer::multipleRendering()
     auto circle = new CircleItem(parent_item);
     circle->setWidth(121);
     circle->setHeight(121);
-    circle->setFilledColor("green");
+    circle->setBorderColor("green");
     circle->setOpacity(0.89);
     parent_item->setAbstractItem(circle);
 
@@ -276,7 +276,7 @@ void TestRenderer::renderWithAnimation()
     auto circle = new CircleItem(parent_item);
     circle->setWidth(121);
     circle->setHeight(121);
-    circle->setFilledColor("green");
+    circle->setBorderColor("green");
     parent_item->setAbstractItem(circle);
 
     m_item_list.push_back(QSharedPointer<ItemObserver>(new ItemObserver(parent_item)));

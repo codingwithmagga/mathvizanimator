@@ -265,15 +265,17 @@ void TestItemHandler::checkItemProperties()
     itemhandler.addItem(rect);
     itemhandler.setCurrentItem(circle_item->name());
 
+    auto item_properties = circle_item->getItemProperties();
+    item_properties.append(circle_item->getParentItemProperties());
     const auto propModel = itemhandler.propertyModel();
 
-    QVERIFY(propModel->rowCount() > 0);
+    QCOMPARE(propModel->rowCount(), item_properties.size());
 
-    const auto prop_1_type = propModel->item(0);
-    const auto prop_1_val = propModel->item(0, 1);
-
-    QCOMPARE(prop_1_type->data(Qt::DisplayRole).toString(), "name");
-    QCOMPARE(prop_1_val->data(Qt::DisplayRole).toString(), circle_item->name());
+    for (int i = 0; i < item_properties.size(); ++i) {
+        const auto model_property = propModel->item(i)->data(Qt::DisplayRole).toString();
+        const auto value = propModel->item(i, 1)->data(Qt::DisplayRole).toString();
+        QCOMPARE(value, circle_item->property(model_property.toUtf8()).toString());
+    }
 }
 
 void TestItemHandler::changeItemProperty()
@@ -288,14 +290,26 @@ void TestItemHandler::changeItemProperty()
     const auto prop_model = itemhandler.propertyModel();
     const QString new_name("newName");
     const QColor new_color("green");
-    prop_model->setData(prop_model->index(0, 1), new_name);
-    prop_model->setData(prop_model->index(1, 1), new_color);
 
-    const auto item_model = itemhandler.model();
-    const auto item_model_circle = item_model->item(0);
+    QStandardItem* model_item_circle_name = nullptr;
+    QStandardItem* model_item_circle_filled_color = nullptr;
+    for (int i = 0; i < prop_model->rowCount(); ++i) {
+        const auto model_property = prop_model->item(i)->data(Qt::DisplayRole).toString();
+        if (model_property == "name") {
+            prop_model->setData(prop_model->index(i, 1), new_name);
+            model_item_circle_name = prop_model->item(i, 1);
+        } else if (model_property == "filledColor") {
+            prop_model->setData(prop_model->index(i, 1), new_color);
+            model_item_circle_filled_color = prop_model->item(i, 1);
+        }
+    }
+
     QCOMPARE(circle_item->name(), new_name);
     QCOMPARE(circle_item->filledColor(), new_color);
-    QCOMPARE(item_model_circle->data(Qt::DisplayRole).toString(), new_name);
+    QVERIFY(model_item_circle_name);
+    QVERIFY(model_item_circle_filled_color);
+    QCOMPARE(model_item_circle_name->data(Qt::DisplayRole).toString(), new_name);
+    QCOMPARE(model_item_circle_filled_color->data(Qt::DisplayRole).value<QColor>(), new_color);
 }
 
 void TestItemHandler::scaleItemsPosX()

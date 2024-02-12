@@ -67,7 +67,11 @@ void TestRectangleItem::toJsonTest()
     expected_json["y"] = QString::number(m_rect_y);
     expected_json["width"] = QString::number(m_rect_width);
     expected_json["height"] = QString::number(m_rect_height);
-    expected_json["item.color"] = m_rect_color;
+    expected_json["item.filledColor"] = "#00000000";
+    expected_json["item.filledOpacity"] = "1";
+    expected_json["item.borderColor"] = m_rect_color;
+    expected_json["item.borderOpacity"] = "1";
+    expected_json["item.borderWidth"] = "4";
     expected_json["item.name"] = m_rect_name;
     expected_json["item.rotation"] = QString::number(m_rect_rotation);
     expected_json["item.opacity"] = QString::number(m_rect_opacity);
