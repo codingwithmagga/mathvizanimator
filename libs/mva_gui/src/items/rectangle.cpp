@@ -21,7 +21,7 @@
 #include <QPen>
 
 RectangleItem::RectangleItem(BasicItem* parent)
-    : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml", parent }
+    : GeometryItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml", parent }
 {
 }
 
@@ -29,17 +29,23 @@ void RectangleItem::paint(QPainter* painter)
 {
     painter->save();
 
-    const qreal pen_width = 4;
-
-    QPen pen(color(), pen_width);
-    pen.setJoinStyle(Qt::MiterJoin);
-    painter->setPen(pen);
+    const qreal border_width = borderWidth();
     painter->setRenderHints(QPainter::Antialiasing, true);
-    painter->drawRect(x() + pen_width / 2.0, y() + pen_width / 2.0, width() - pen_width, height() - pen_width);
-    painter->restore();
-}
 
-AbstractItem::EditableProperties RectangleItem::editableProperties() const
-{
-    return AbstractItem::editableProperties();
+    QPen pen_filled(QColor(), 0);
+    pen_filled.setBrush(QBrush());
+    painter->setPen(pen_filled);
+    painter->setBrush(filledColor());
+    painter->setOpacity(opacity() * filledOpacity());
+    painter->drawRect(x() + border_width, y() + border_width, width() - 2 * border_width, height() - 2 * border_width);
+
+    QPen pen_border(borderColor(), border_width);
+    pen_border.setJoinStyle(Qt::MiterJoin);
+    painter->setPen(pen_border);
+    painter->setBrush(QBrush());
+    painter->setOpacity(opacity() * borderOpacity());
+    painter->drawRect(
+        x() + border_width / 2.0, y() + border_width / 2.0, width() - border_width, height() - border_width);
+
+    painter->restore();
 }

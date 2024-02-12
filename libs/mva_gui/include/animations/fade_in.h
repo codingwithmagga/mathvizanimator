@@ -29,11 +29,11 @@ class FadeIn : public RealPropertyAnimation {
   private:
     void setStartPropertyValue(qreal new_start_property_value)
     {
-        RealPropertyAnimation::setStartPropertyValue(new_start_property_value);
+        RealPropertyAnimation::setStartPropertyValues(QList<qreal> { new_start_property_value });
     }
     void setEndPropertyValue(qreal new_end_property_value)
     {
-        RealPropertyAnimation::setEndPropertyValue(new_end_property_value);
+        RealPropertyAnimation::setEndPropertyValues(QList<qreal> { new_end_property_value });
     }
 };
 

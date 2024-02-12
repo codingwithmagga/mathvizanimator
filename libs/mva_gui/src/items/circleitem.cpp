@@ -21,20 +21,31 @@
 #include <QPen>
 
 CircleItem::CircleItem(BasicItem* parent)
-    : AbstractItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml", parent }
+    : GeometryItem { "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml", parent }
 {
 }
 
 void CircleItem::paint(QPainter* painter)
 {
     painter->save();
-    const auto pen_width = 4.0;
 
-    QPen pen(color(), pen_width);
-    painter->setPen(pen);
+    const auto border_width = borderWidth();
     painter->setRenderHints(QPainter::Antialiasing, true);
-    painter->drawEllipse(x() + pen_width / 2.0, y() + pen_width / 2.0, width() - pen_width, height() - pen_width);
+
+    QPen pen_filled(QColor(), 0);
+    pen_filled.setBrush(QBrush());
+    painter->setPen(pen_filled);
+    painter->setBrush(filledColor());
+    painter->setOpacity(opacity() * filledOpacity());
+    painter->drawEllipse(x() + border_width - 1, y() + border_width - 1, width() - 2 * border_width + 2,
+        height() - 2 * border_width + 2);
+
+    QPen pen(borderColor(), border_width);
+    painter->setPen(pen);
+    painter->setBrush(QBrush());
+    painter->setOpacity(opacity() * borderOpacity());
+    painter->drawEllipse(
+        x() + border_width / 2.0, y() + border_width / 2.0, width() - border_width, height() - border_width);
+
     painter->restore();
 }
-
-AbstractItem::EditableProperties CircleItem::editableProperties() const { return AbstractItem::editableProperties(); }

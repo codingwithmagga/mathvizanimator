@@ -18,7 +18,7 @@
 #include "fade_in.h"
 
 FadeIn::FadeIn(QObject* parent)
-    : RealPropertyAnimation { "opacity", parent }
+    : RealPropertyAnimation { QStringList { "opacity" }, parent }
 {
     setStartPropertyValue(0.0);
     setEndPropertyValue(1.0);

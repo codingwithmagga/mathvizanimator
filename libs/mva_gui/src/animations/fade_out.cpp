@@ -18,7 +18,7 @@
 #include "fade_out.h"
 
 FadeOut::FadeOut(QObject* parent)
-    : RealPropertyAnimation { "opacity", parent }
+    : RealPropertyAnimation { QStringList { "opacity" }, parent }
 {
     setStartPropertyValue(1.0);
     setEndPropertyValue(0.0);

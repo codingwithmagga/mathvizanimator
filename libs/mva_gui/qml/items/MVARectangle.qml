@@ -28,7 +28,7 @@ BasicItem {
         id: rectangleItem
 
         name: "rect"
-        color: "red"
+        borderColor: "red"
 
         anchors.fill: parent
 

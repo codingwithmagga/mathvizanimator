@@ -107,13 +107,13 @@ void TestFadeInAndOut::defaultPropertyValueTest()
     QCOMPARE(m_fade_in.duration(), m_duration_fade_in);
     QCOMPARE(m_fade_in.startTime(), m_start_time_fade_in);
 
-    QCOMPARE(m_fade_in.startPropertyValue(), 0.0);
-    QCOMPARE(m_fade_in.endPropertyValue(), 1.0);
-    QCOMPARE(m_fade_in.property(), "opacity");
+    QCOMPARE(m_fade_in.startPropertyValues(), QList<qreal> { 0.0 });
+    QCOMPARE(m_fade_in.endPropertyValues(), QList<qreal> { 1.0 });
+    QCOMPARE(m_fade_in.property(), QStringList { "opacity" });
 
-    QCOMPARE(m_fade_out.startPropertyValue(), 1.0);
-    QCOMPARE(m_fade_out.endPropertyValue(), 0.0);
-    QCOMPARE(m_fade_out.property(), "opacity");
+    QCOMPARE(m_fade_out.startPropertyValues(), QList<qreal> { 1.0 });
+    QCOMPARE(m_fade_out.endPropertyValues(), QList<qreal> { 0.0 });
+    QCOMPARE(m_fade_out.property(), QStringList { "opacity" });
 }
 
 void TestFadeInAndOut::propertyValueTest_data()

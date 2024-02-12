@@ -17,56 +17,89 @@
 
 #include "real_property_animation.h"
 
+#include <QLoggingCategory>
+
+Q_LOGGING_CATEGORY(realpropertyanimation, "cwa.mva.realpropertyanimation")
+
+RealPropertyAnimation::RealPropertyAnimation(const QStringList& properties, QObject* parent)
+    : PropertyAnimation { properties, parent }
+{
+}
+
 RealPropertyAnimation::RealPropertyAnimation(const QString& property, QObject* parent)
-    : PropertyAnimation { property, parent }
+    : RealPropertyAnimation { QStringList { property }, parent }
 {
 }
 
 void RealPropertyAnimation::applyAnimation(AbstractItem* item, const qreal time) const
 {
+    const auto property_list = property();
+
+    if (m_start_property_values.size() != m_end_property_values.size()
+        || m_start_property_values.size() != property_list.size()) {
+        qCWarning(realpropertyanimation) << "Size mismatch for property animation:" << m_start_property_values.size()
+                                         << m_end_property_values.size() << property_list.size();
+        return;
+    }
+
     if (state(time) != State::RUNNING) {
         return;
     }
 
-    auto property_value = calculatePropertyValue(time);
-
-    item->setProperty(property().toUtf8(), property_value);
+    for (int i = 0; i < m_start_property_values.size(); ++i) {
+        auto property_value = linearApprox(m_start_property_values[i], m_end_property_values[i], time);
+        item->setProperty(property_list[i].toUtf8(), property_value);
+    }
 }
 
-qreal RealPropertyAnimation::startPropertyValue() const { return m_start_property_value; }
+QList<qreal> RealPropertyAnimation::startPropertyValues() const { return m_start_property_values; }
 
-void RealPropertyAnimation::setStartPropertyValue(qreal new_start_property_value)
+void RealPropertyAnimation::setStartPropertyValues(QList<qreal> new_start_property_values)
 {
-    if (qFuzzyCompare(m_start_property_value, new_start_property_value)) {
+    if (qFuzzyListCompare(m_start_property_values, new_start_property_values)) {
         return;
     }
 
-    m_start_property_value = new_start_property_value;
-    emit startPropertyValueChanged();
+    m_start_property_values = new_start_property_values;
+    emit startPropertyValuesChanged();
 }
 
-qreal RealPropertyAnimation::endPropertyValue() const { return m_end_property_value; }
+QList<qreal> RealPropertyAnimation::endPropertyValues() const { return m_end_property_values; }
 
-void RealPropertyAnimation::setEndPropertyValue(qreal new_end_property_value)
+void RealPropertyAnimation::setEndPropertyValues(QList<qreal> new_end_property_values)
 {
-    if (qFuzzyCompare(m_end_property_value, new_end_property_value)) {
+    if (qFuzzyListCompare(m_end_property_values, new_end_property_values)) {
         return;
     }
 
-    m_end_property_value = new_end_property_value;
-    emit endPropertyValueChanged();
+    m_end_property_values = new_end_property_values;
+    emit endPropertyValuesChanged();
 }
 
-qreal RealPropertyAnimation::calculatePropertyValue(const qreal time) const
+qreal RealPropertyAnimation::linearApprox(const qreal start_value, const qreal end_value, const qreal time) const
 {
-    auto property_value
-        = m_start_property_value + (time - startTime()) * (m_end_property_value - m_start_property_value) / duration();
+    auto property_value = start_value + (time - startTime()) * (end_value - start_value) / duration();
 
-    if (m_start_property_value < m_end_property_value) {
-        property_value = qBound(m_start_property_value, property_value, m_end_property_value);
+    if (start_value < end_value) {
+        property_value = qBound(start_value, property_value, end_value);
     } else {
-        property_value = qBound(m_end_property_value, property_value, m_start_property_value);
+        property_value = qBound(end_value, property_value, start_value);
     }
 
     return property_value;
+}
+
+bool RealPropertyAnimation::qFuzzyListCompare(const QList<qreal>& first_list, const QList<qreal>& second_list)
+{
+    if (first_list.size() != second_list.size()) {
+        return false;
+    }
+
+    for (auto it1 = first_list.begin(), it2 = second_list.begin(); it1 != first_list.end() && it2 != second_list.end();
+         ++it1, ++it2) {
+        if (!qFuzzyCompare(*it1, *it2)) {
+            return false;
+        }
+    }
+    return true;
 }

@@ -51,7 +51,7 @@ void TestRectangleItem::initTestCase()
     m_rect_parent_item.setHeight(m_rect_height);
 
     m_rect_item.setParentItem(&m_rect_parent_item);
-    m_rect_item.setColor(QColor(m_rect_color));
+    m_rect_item.setBorderColor(QColor(m_rect_color));
     m_rect_item.setName(m_rect_name);
     m_rect_item.setOpacity(m_rect_opacity);
     m_rect_item.setRotation(m_rect_rotation);

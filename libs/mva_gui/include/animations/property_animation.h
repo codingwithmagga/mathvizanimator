@@ -22,12 +22,12 @@
 
 class PropertyAnimation : public AbstractAnimation {
   public:
-    explicit PropertyAnimation(const QString& property, QObject* parent = nullptr);
+    explicit PropertyAnimation(const QStringList& property, QObject* parent = nullptr);
 
-    QString property() const { return m_property; }
+    QStringList property() const { return m_property; }
 
   private:
-    const QString m_property;
+    const QStringList m_property;
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_ANIMATIONS_PROPERTY_ANIMATION_H_

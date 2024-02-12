@@ -19,6 +19,7 @@
 #include <QQmlEngine>
 #include <QTest>
 
+#include "circleitem.h"
 #include "fade_in.h"
 #include "fade_out.h"
 #include "itemhandler.h"
@@ -278,7 +279,7 @@ void TestItemHandler::checkItemProperties()
 void TestItemHandler::changeItemProperty()
 {
     auto circle = dynamic_cast<BasicItem*>(m_circle_component.create());
-    const auto circle_item = circle->abstractItem();
+    const auto circle_item = dynamic_cast<CircleItem*>(circle->abstractItem());
 
     ItemHandler itemhandler;
     itemhandler.addItem(circle);
@@ -293,7 +294,7 @@ void TestItemHandler::changeItemProperty()
     const auto item_model = itemhandler.model();
     const auto item_model_circle = item_model->item(0);
     QCOMPARE(circle_item->name(), new_name);
-    QCOMPARE(circle_item->color(), new_color);
+    QCOMPARE(circle_item->filledColor(), new_color);
     QCOMPARE(item_model_circle->data(Qt::DisplayRole).toString(), new_name);
 }
 

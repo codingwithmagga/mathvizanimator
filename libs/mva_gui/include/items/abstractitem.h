@@ -37,7 +37,6 @@ class AbstractItem : public QQuickPaintedItem {
     Q_OBJECT
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
 
   public:
@@ -56,9 +55,6 @@ class AbstractItem : public QQuickPaintedItem {
     QString name() const;
     void setName(const QString& name);
 
-    QColor color() const;
-    void setColor(const QColor& color);
-
     virtual QJsonObject toJson() const;
 
     virtual EditableProperties editableProperties() const;
@@ -72,14 +68,14 @@ class AbstractItem : public QQuickPaintedItem {
 
   signals:
     void nameChanged(const QString& new_name);
-    void colorChanged(const QColor& new_color);
 
   private:
     QList<QPair<QString, QVariant>> appendProperties(
         const auto obj, auto meta_object, const QStringList& allowedProperties) const;
 
     QString m_name;
-    QColor m_color;
+    qreal m_start_at = 0.0;
+    qreal m_end_at = std::numeric_limits<qreal>::infinity();
 
     QString m_qml_file;
 };

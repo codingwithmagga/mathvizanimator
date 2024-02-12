@@ -53,7 +53,7 @@ void TestCircleItem::initTestCase()
     m_circle_parent_item.setHeight(m_circle_height);
 
     m_circle_item.setParentItem(&m_circle_parent_item);
-    m_circle_item.setColor(QColor(m_circle_color));
+    m_circle_item.setBorderColor(QColor(m_circle_color));
     m_circle_item.setName(m_circle_name);
     m_circle_item.setOpacity(m_circle_opacity);
     m_circle_item.setRotation(m_circle_rotation);
