@@ -27,6 +27,12 @@ target_include_directories(mva-applib
         src/
 )
 
+target_compile_definitions(mva-applib
+    PUBLIC
+        MVA_PROJECT_VERSION="${PROJECT_VERSION}"
+)
+
+
 add_library(mva::applib ALIAS mva-applib)
 
 qt_add_executable(mva-app

@@ -122,6 +122,8 @@ void MainLogic::saveProject(const QFileInfo& save_file_info)
         count++;
     }
 
+    save_json.insert("mva-version", MVA_PROJECT_VERSION);
+
     m_savefilehandler.setSaveDir(save_file_info.absoluteDir());
     m_savefilehandler.saveJSON(save_file_info.fileName(), save_json);
 }

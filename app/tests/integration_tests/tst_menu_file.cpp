@@ -140,6 +140,12 @@ void MenuFileIntegrationTest::saveAsProject()
     QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted", Qt::DirectConnection);
 
     QVERIFY(QFile::exists(test_save_file_absolute_path));
+
+    SaveFileHandler save_file_handler;
+    const auto load_json_object = save_file_handler.loadJSON(QFileInfo(test_save_file_absolute_path)).object();
+    QVERIFY(load_json_object.contains("item_0"));
+    QVERIFY(load_json_object.contains("mva-version"));
+    QCOMPARE(load_json_object.value("mva-version").toString(), "0.0.1");
 }
 
 void MenuFileIntegrationTest::quitApp()
