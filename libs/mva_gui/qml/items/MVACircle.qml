@@ -28,7 +28,7 @@ BasicItem {
         id: circleItem
 
         name: "circle"
-        color: "blue"
+        borderColor: "blue"
 
         anchors.fill: parent
 

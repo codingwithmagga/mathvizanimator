@@ -18,9 +18,9 @@
 #ifndef LIBS_MVA_GUI_INCLUDE_ITEMS_RECTANGLE_H_
 #define LIBS_MVA_GUI_INCLUDE_ITEMS_RECTANGLE_H_
 
-#include "abstractitem.h"
+#include "geometry_item.h"
 
-class RectangleItem : public AbstractItem {
+class RectangleItem : public GeometryItem {
     Q_OBJECT
     QML_ELEMENT
 
@@ -28,8 +28,6 @@ class RectangleItem : public AbstractItem {
     explicit RectangleItem(BasicItem* parent = nullptr);
 
     void paint(QPainter* painter) override;
-
-    EditableProperties editableProperties() const override;
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_ITEMS_RECTANGLE_H_

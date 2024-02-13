@@ -167,7 +167,6 @@ AbstractItem::EditableProperties TextItem::editableProperties() const
     auto abstractList = AbstractItem::editableProperties();
     abstractList.basic_item_properties.removeOne("width");
     abstractList.basic_item_properties.removeOne("height");
-    abstractList.abstract_item_properties.removeOne("color");
 
     abstractList.abstract_item_properties.append("latexSource");
     abstractList.abstract_item_properties.append("scaleText");

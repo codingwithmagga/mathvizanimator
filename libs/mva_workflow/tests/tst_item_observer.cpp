@@ -62,7 +62,7 @@ void TestItemObserver::initTestCase()
     auto circle = new CircleItem();
     circle->setWidth(width);
     circle->setHeight(height);
-    circle->setColor("blue");
+    circle->setFillColor("blue");
     circle->setOpacity(0.0);
     circle->setParentItem(m_parent_item.data());
     m_parent_item->setAbstractItem(circle);

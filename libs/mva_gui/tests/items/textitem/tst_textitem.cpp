@@ -33,7 +33,6 @@ class TestTextItem : public QObject {
     const qreal m_text_x = 46;
     const qreal m_text_y = 98;
 
-    const QString m_text_color = "#0000ff";
     const QString m_text_name = "test_text_name";
     const qreal m_text_rotation = 43;
     const qreal m_text_opacity = 0.8;
@@ -49,7 +48,6 @@ void TestTextItem::initTestCase()
     m_text_parent_item.setY(m_text_y);
 
     m_text_item.setParentItem(&m_text_parent_item);
-    m_text_item.setColor(QColor(m_text_color));
     m_text_item.setName(m_text_name);
     m_text_item.setRotation(m_text_rotation);
     m_text_item.setOpacity(m_text_opacity);

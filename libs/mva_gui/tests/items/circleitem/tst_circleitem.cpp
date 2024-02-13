@@ -36,9 +36,13 @@ class TestCircleItem : public QObject {
     const qreal m_circle_width = 150;
     const qreal m_circle_height = 150;
 
-    const QString m_circle_color = "#0000ff";
+    const QString m_circle_border_color = "#ff00ff";
+    const QString m_circle_filled_color = "#0000ff";
     const QString m_circle_name = "test_circle_name";
-    const qreal m_circle_opacity = 0.6;
+    const qreal m_circle_filled_opacity = 0.6;
+    const qreal m_circle_border_opacity = 0.42;
+    const qreal m_circle_opacity = 0.99;
+    const qreal m_circle_border_width = 5;
     const qreal m_circle_rotation = 32;
 
     QQuickItem m_circle_parent_item;
@@ -53,8 +57,12 @@ void TestCircleItem::initTestCase()
     m_circle_parent_item.setHeight(m_circle_height);
 
     m_circle_item.setParentItem(&m_circle_parent_item);
-    m_circle_item.setColor(QColor(m_circle_color));
+    m_circle_item.setBorderColor(QColor(m_circle_border_color));
+    m_circle_item.setBorderWidth(m_circle_border_width);
+    m_circle_item.setFilledColor(QColor(m_circle_filled_color));
     m_circle_item.setName(m_circle_name);
+    m_circle_item.setFilledOpacity(m_circle_filled_opacity);
+    m_circle_item.setBorderOpacity(m_circle_border_opacity);
     m_circle_item.setOpacity(m_circle_opacity);
     m_circle_item.setRotation(m_circle_rotation);
 
@@ -69,10 +77,14 @@ void TestCircleItem::toJsonTest()
     expected_json["y"] = QString::number(m_circle_y);
     expected_json["width"] = QString::number(m_circle_width);
     expected_json["height"] = QString::number(m_circle_height);
-    expected_json["item.color"] = m_circle_color;
+    expected_json["item.filledColor"] = m_circle_filled_color;
+    expected_json["item.filledOpacity"] = QString::number(m_circle_filled_opacity);
+    expected_json["item.borderColor"] = m_circle_border_color;
+    expected_json["item.borderOpacity"] = QString::number(m_circle_border_opacity);
+    expected_json["item.borderWidth"] = QString::number(m_circle_border_width);
     expected_json["item.name"] = m_circle_name;
-    expected_json["item.rotation"] = QString::number(m_circle_rotation);
     expected_json["item.opacity"] = QString::number(m_circle_opacity);
+    expected_json["item.rotation"] = QString::number(m_circle_rotation);
     expected_json["item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
 
     const auto circle_json = m_circle_item.toJson();
@@ -89,6 +101,7 @@ void TestCircleItem::paintTest()
     QPainter painter(&image);
     m_circle_item.paintItem(&painter);
 
+    image.save("test_circle_image_new.png");
     expected_image.load("://test_images/test_circle_image.png");
     QCOMPARE(image, expected_image);
 }
@@ -99,7 +112,8 @@ void TestCircleItem::editablePropertiesTest()
     const auto item_properties = editable_properties.abstract_item_properties;
     const auto quick_item_properties = editable_properties.basic_item_properties;
 
-    QStringList expected_item_properties { "name", "color", "opacity", "rotation" };
+    QStringList expected_item_properties { "name", "opacity", "rotation", "filledColor", "filledOpacity", "borderColor",
+        "borderOpacity", "borderWidth" };
     QStringList expected_quick_item_properties { "width", "height", "x", "y" };
 
     QCOMPARE(item_properties, expected_item_properties);

@@ -18,14 +18,14 @@
 #ifndef LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
 #define LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_
 
-#include "abstractitem.h"
+#include "geometry_item.h"
 
 /**
  * @brief UI class which represents a circle
  *
  * Longer description...
  */
-class CircleItem : public AbstractItem {
+class CircleItem : public GeometryItem {
     Q_OBJECT
     QML_ELEMENT
 
@@ -33,8 +33,6 @@ class CircleItem : public AbstractItem {
     explicit CircleItem(BasicItem* parent = nullptr);
 
     void paint(QPainter* painter) override;
-
-    EditableProperties editableProperties() const override;
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_ITEMS_CIRCLEITEM_H_

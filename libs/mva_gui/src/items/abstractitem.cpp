@@ -39,17 +39,6 @@ void AbstractItem::setName(const QString& name)
     emit nameChanged(m_name);
 }
 
-QColor AbstractItem::color() const { return m_color; }
-
-void AbstractItem::setColor(const QColor& color)
-{
-    if (m_color == color) {
-        return;
-    }
-    m_color = color;
-    emit colorChanged(m_color);
-}
-
 QJsonObject AbstractItem::toJson() const
 {
     QJsonObject json;
@@ -134,7 +123,7 @@ AbstractItem::EditableProperties AbstractItem::editableProperties() const
 {
     EditableProperties editable_properties;
 
-    editable_properties.abstract_item_properties = QStringList { "name", "color", "opacity", "rotation" };
+    editable_properties.abstract_item_properties = QStringList { "name", "opacity", "rotation" };
     editable_properties.basic_item_properties = QStringList { "width", "height", "x", "y" };
 
     return editable_properties;

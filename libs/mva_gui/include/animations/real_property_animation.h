@@ -18,35 +18,40 @@
 #ifndef LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
 #define LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
 
+#include <QList>
+
 #include "property_animation.h"
 
 class RealPropertyAnimation : public PropertyAnimation {
     Q_OBJECT
 
-    Q_PROPERTY(
-        qreal start_property_value READ startPropertyValue WRITE setStartPropertyValue NOTIFY startPropertyValueChanged)
-    Q_PROPERTY(qreal end_property_value READ endPropertyValue WRITE setEndPropertyValue NOTIFY endPropertyValueChanged)
+    Q_PROPERTY(QList<qreal> start_property_values READ startPropertyValues WRITE setStartPropertyValues NOTIFY
+            startPropertyValuesChanged)
+    Q_PROPERTY(QList<qreal> end_property_values READ endPropertyValues WRITE setEndPropertyValues NOTIFY
+            endPropertyValuesChanged)
 
   public:
+    explicit RealPropertyAnimation(const QStringList& properties, QObject* parent = Q_NULLPTR);
     explicit RealPropertyAnimation(const QString& property, QObject* parent = Q_NULLPTR);
 
     void applyAnimation(AbstractItem* item, const qreal time) const override;
 
-    qreal startPropertyValue() const;
-    void setStartPropertyValue(qreal new_start_property_value);
+    QList<qreal> startPropertyValues() const;
+    void setStartPropertyValues(QList<qreal> new_start_property_values);
 
-    qreal endPropertyValue() const;
-    void setEndPropertyValue(qreal new_end_property_value);
+    QList<qreal> endPropertyValues() const;
+    void setEndPropertyValues(QList<qreal> new_end_property_values);
 
   signals:
-    void startPropertyValueChanged();
-    void endPropertyValueChanged();
+    void startPropertyValuesChanged();
+    void endPropertyValuesChanged();
 
   private:
-    qreal calculatePropertyValue(const qreal time) const;
+    qreal linearApprox(const qreal start_value, const qreal end_value, const qreal time) const;
+    bool qFuzzyListCompare(const QList<qreal>& first_list, const QList<qreal>& second_list);
 
-    qreal m_start_property_value = 0.0;
-    qreal m_end_property_value = 1.0;
+    QList<qreal> m_start_property_values { 0.0 };
+    QList<qreal> m_end_property_values { 1.0 };
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_ANIMATIONS_REAL_PROPERTY_ANIMATION_H_
