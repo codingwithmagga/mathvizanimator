@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-set(PROJECT_VERSION 0.0.1)
-project(mathvizanimator VERSION ${PROJECT_VERSION} LANGUAGES CXX C)
+project(mathvizanimator VERSION 0.0.1 LANGUAGES CXX C)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 message("Run Code Coverage: ${RUN_CODE_COVERAGE}")
