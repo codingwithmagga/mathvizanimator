@@ -54,7 +54,7 @@ author = 'CodingWithMagga'
 # ones.
 #...
 
-extensions = [ "breathe", "sphinx.ext.graphviz" ]
+extensions = [ "breathe", "sphinx.ext.graphviz", "sphinx.ext.autosectionlabel" ]
 
 #...
 

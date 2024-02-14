@@ -1,10 +1,10 @@
-# mathvizanimator
+# MathVizAnimator
 
 [![build](https://github.com/codingwithmagga/mathvizanimator/actions/workflows/build.yml/badge.svg)](https://github.com/codingwithmagga/mathvizanimator/actions)
 [![mega-linter](https://github.com/codingwithmagga/mathvizanimator/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/codingwithmagga/mathvizanimator/actions)
 [![codecov](https://codecov.io/github/codingwithmagga/mathvizanimator/graph/badge.svg?token=NNOP09V20E)](https://codecov.io/github/codingwithmagga/mathvizanimator)
 
-Graphical Program to create math based animation videos, highly inspired by [manim](https://www.manim.community/).
+**MathVizAnimator** is a program to create mathematical based animations and render them into a video file. It is highly inspired by [manim](https://www.manim.community/).
 
 The program is written in C++ extensively using the [Qt](https://www.qt.io/) Library. For rendering the [ffmpeg](https://ffmpeg.org/) library is used and text can be created and added by using [LaTeX](https://www.latex-project.org/). 
 
