@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>templates/template.tex</file>
         <file>templates/placeholder.svg</file>
+        <file>resources/circle_icon.svg</file>
+        <file>resources/rectangle_icon.svg</file>
+        <file>resources/text_icon.svg</file>
     </qresource>
 </RCC>
