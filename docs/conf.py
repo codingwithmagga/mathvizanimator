@@ -54,7 +54,7 @@ author = 'CodingWithMagga'
 # ones.
 #...
 
-extensions = [ "breathe", "sphinx.ext.graphviz", "sphinx.ext.autosectionlabel" ]
+extensions = [ "breathe", "sphinx.ext.graphviz", "sphinx.ext.autosectionlabel" ] # cspell:disable-line
 
 #...
 
