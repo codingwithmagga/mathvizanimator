@@ -66,6 +66,7 @@ Item {
         Image {
             id: objectImage
             height: parent.height
+            width: height
 
             fillMode: Image.PreserveAspectFit
             source: image_src
@@ -73,6 +74,8 @@ Item {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.bottom: parent.bottom
+
+            anchors.margins: 5
         }
 
         Label {

@@ -20,17 +20,17 @@ import QtQuick
 ListModel {
     ListElement {
         name: "Rectangle"
-        image_src: "http://doc.qt.io/qt-5/images/declarative-qtlogo.png"
+        image_src: "qrc:/resources/rectangle_icon.svg"
         file: "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml"
     }
     ListElement {
         name: "Circle"
-        image_src: "http://doc.qt.io/qt-5/images/declarative-qtlogo.png"
+        image_src: "qrc:/resources/circle_icon.svg"
         file: "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml"
     }
     ListElement {
         name: "Text"
-        image_src: "http://doc.qt.io/qt-5/images/declarative-qtlogo.png"
+        image_src: "qrc:/resources/text_icon.svg"
         file: "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml"
     }
 }
