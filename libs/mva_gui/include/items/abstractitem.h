@@ -28,10 +28,23 @@
 class BasicItem;
 
 /**
- * @brief An abstract class representing a visible item like a circle or a
+ * @brief An abstract class representing a visible object like a circle or a
  * rectangle.
  *
- * Longer description...
+ * This is the base class for an visible object which can be added to the project. Derived classes have to implement the
+ * QQuickPaintedItem::paint(QPainter* painter) function to specify how the object will be painted on the screen. In
+ * addition the following functions should be implemented by a derived class if necessary:
+ *
+ * <ul>
+ *   <li> QJsonObject AbstractItem::toJson() const;
+ *   <li> EditableProperties AbstractItem::editableProperties() const;
+ * </ul>
+ *
+ * The AbstractItem::paintItem(QPainter* painter) serves as some kind of wrapper function, which will be called when
+ * rendering an image for the video. It applies properties to the items which otherwise is done by automatically by the
+ * Qt Qml Framework.
+ *
+ * TODO: Qml file explain, needs BasicItem as parent class
  */
 class AbstractItem : public QQuickPaintedItem {
     Q_OBJECT
@@ -52,6 +65,11 @@ class AbstractItem : public QQuickPaintedItem {
      */
     explicit AbstractItem(const QString& qml_file, BasicItem* parent = nullptr);
 
+    /**
+     * @brief Returns name of the item
+     *
+     * @return name of the item
+     */
     QString name() const;
     void setName(const QString& name);
 
