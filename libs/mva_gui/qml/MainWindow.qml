@@ -85,6 +85,7 @@ ApplicationWindow {
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.HomeLocation)[0]
         fileMode: FileDialog.SaveFile
+        defaultSuffix: ".json"
         nameFilters: ["JSON (*.json)"]
 
         onAccepted: main_window.saveProject(selectedFile)
@@ -103,6 +104,7 @@ ApplicationWindow {
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.HomeLocation)[0]
         fileMode: FileDialog.SaveFile
+        defaultSuffix: ".mp4"
         nameFilters: ["MP4 (*.mp4)"]
 
         onAccepted: main_window.render(selectedFile)
@@ -121,6 +123,7 @@ ApplicationWindow {
         currentFolder: StandardPaths.standardLocations(
                            StandardPaths.HomeLocation)[0]
         fileMode: FileDialog.SaveFile
+        defaultSuffix: ".png"
         nameFilters: ["PNG (*.png)"]
 
         onAccepted: main_window.snapshot(selectedFile)
