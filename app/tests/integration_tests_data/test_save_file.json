@@ -45,5 +45,11 @@
         "abstract_item.scaleText": "5",
         "x": "200",
         "y": "499"
+    },
+    "project-settings": {
+        "fps": 32,
+        "height": 800,
+        "video_length": 8,
+        "width": 1200
     }
 }
