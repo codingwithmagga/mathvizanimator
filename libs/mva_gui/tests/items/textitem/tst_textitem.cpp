@@ -59,12 +59,12 @@ void TestTextItem::toJsonTest()
     QJsonObject expected_json;
     expected_json["x"] = QString::number(m_text_x);
     expected_json["y"] = QString::number(m_text_y);
-    expected_json["item.name"] = m_text_name;
-    expected_json["item.rotation"] = QString::number(m_text_rotation);
-    expected_json["item.opacity"] = QString::number(m_text_opacity);
-    expected_json["item.scaleText"] = QString::number(m_text_scale);
-    expected_json["item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml";
-    expected_json["item.latexSource"] = "";
+    expected_json["abstract_item.name"] = m_text_name;
+    expected_json["abstract_item.rotation"] = QString::number(m_text_rotation);
+    expected_json["abstract_item.opacity"] = QString::number(m_text_opacity);
+    expected_json["abstract_item.scaleText"] = QString::number(m_text_scale);
+    expected_json["abstract_item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml";
+    expected_json["abstract_item.latexSource"] = "";
 
     const auto text_json = m_text_item.toJson();
 

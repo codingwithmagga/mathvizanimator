@@ -48,7 +48,7 @@ QJsonObject AbstractItem::toJson() const
     properties.append(QPair<QString, QVariant> { "file", m_qml_file });
 
     for (auto& property : properties) {
-        json["item." + property.first] = property.second.toString();
+        json["abstract_item." + property.first] = property.second.toString();
     }
 
     for (auto& property : parent_properties) {

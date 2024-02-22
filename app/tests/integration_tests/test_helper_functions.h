@@ -27,6 +27,7 @@ class QQuickItem;
 class QQuickWindow;
 class QStandardItemModel;
 class QQmlApplicationEngine;
+class MainWindowHandler;
 
 class TestHelperFunctions {
   public:
@@ -44,6 +45,7 @@ class TestHelperFunctions {
     QObject* draggableItemListView() const { return m_draggable_item_list_view; }
     QObject* projectItemsTableView() const { return m_project_items_table_view; }
     QQuickItem* creationArea() const { return m_creation_area; }
+    MainWindowHandler* mainWindowHandler() const { return m_main_window_handler; }
 
     QSharedPointer<ItemObserver> getItemObserver(const qint32 item_number) const;
     QQuickItem* getQuickItem(const qint32 item_number) const;
@@ -85,6 +87,8 @@ class TestHelperFunctions {
     QStandardItemModel* m_animations_model = Q_NULLPTR;
     QQuickItem* m_creation_area = Q_NULLPTR;
     QQuickItem* m_time_slider = Q_NULLPTR;
+
+    MainWindowHandler* m_main_window_handler = Q_NULLPTR;
 };
 
 #endif // APP_TESTS_INTEGRATION_TESTS_TEST_HELPER_FUNCTIONS_H_
