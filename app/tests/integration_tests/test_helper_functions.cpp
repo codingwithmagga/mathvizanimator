@@ -140,6 +140,18 @@ qint32 TestHelperFunctions::numPropertyTableViewItems() const
     return m_property_table_view->property("rows").toInt();
 }
 
+void TestHelperFunctions::changePropertyValue(
+    const qint32 item_number, const QString& property_name, const QString& property_value)
+{
+    clickItem(getQuickItem(item_number));
+    for (int row = 0; row < m_property_model->rowCount(); ++row) {
+        const auto model_property_name = m_property_model->item(row);
+        if (model_property_name->text() == property_name) {
+            m_property_model->item(row, 1)->setText(property_value);
+        }
+    }
+}
+
 QVariant TestHelperFunctions::getPropertyValue(const QString& property_name) const
 {
     QVariant property_value;

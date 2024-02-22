@@ -105,7 +105,7 @@ void AnimationIntegrationTest::setUserTime()
     m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
     m_helper_functions->clickItem(m_helper_functions->getQuickItem(item_number));
 
-    addAnimationToItem(item_number, 1.0, 2.0);
+    m_helper_functions->addAnimationToItem(item_number, 1.0, 2.0);
     const auto item_observer = m_helper_functions->getItemObserver(item_number);
     const auto item = item_observer->abstractitem();
     item_observer->updateItemProperty("opacity", 0.0);

@@ -58,6 +58,7 @@ class TestHelperFunctions {
     qint32 numProjectTableViewItems() const;
     qint32 numPropertyTableViewItems() const;
 
+    void changePropertyValue(const qint32 item_number, const QString& property_name, const QString& property_value);
     QVariant getPropertyValue(const QString& property_name) const;
 
     bool compareNumItems(const qint32 num_items);
