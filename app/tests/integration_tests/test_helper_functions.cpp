@@ -19,12 +19,14 @@
 
 #include <QAbstractEventDispatcher>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QQuickItem>
 #include <QQuickWindow>
 #include <QStandardItemModel>
 #include <QTest> // should be removed, see comment in constructor
 
 #include "itemhandler.h"
+#include "mainwindowhandler.h"
 
 TestHelperFunctions::TestHelperFunctions(const QSharedPointer<QQmlApplicationEngine> engine)
     : m_engine(engine)
@@ -47,6 +49,7 @@ TestHelperFunctions::TestHelperFunctions(const QSharedPointer<QQmlApplicationEng
     m_animations_table_view = root_objects.first()->findChild<QObject*>("MVAAnimationTable");
     m_creation_area = root_objects.first()->findChild<QQuickItem*>("MVACreationArea");
     m_time_slider = root_objects.first()->findChild<QQuickItem*>("MVATimeSlider");
+    m_main_window_handler = m_engine->rootContext()->contextProperty("main_window").value<MainWindowHandler*>();
 
     auto items_model = m_project_items_table_view->property("model");
     m_project_items_model = qvariant_cast<QStandardItemModel*>(items_model);
