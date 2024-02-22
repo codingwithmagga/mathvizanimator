@@ -193,3 +193,21 @@ QPoint TestHelperFunctions::itemCenter(QQuickItem* item) const
 
     return item_center;
 }
+
+void TestHelperFunctions::addAnimationToItem(const qint32 item_number, const qreal start_time, const qreal duration)
+{
+    clickItem(getQuickItem(item_number), Qt::MouseButton::RightButton);
+    auto item_context_menu = getChild<QObject*>("MVAItemContextMenu");
+    auto item_context_menu_add_animation = getChild<QObject*>("MVAItemContextMenuAddAnimation");
+
+    QVERIFY(QTest::qWaitFor([&]() { return item_context_menu->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return item_context_menu_add_animation->property("visible").toBool(); }));
+
+    QMetaObject::invokeMethod(item_context_menu_add_animation, "simulateClicked");
+
+    auto add_animation_dialog = getChild<QObject*>("MVAAnimationDialog");
+    QVERIFY(QTest::qWaitFor([&]() { return add_animation_dialog->property("visible").toBool(); }));
+
+    QMetaObject::invokeMethod(add_animation_dialog, "simulateAccepted", Q_ARG(QVariant, QVariant(start_time)),
+        Q_ARG(QVariant, QVariant(duration)));
+}

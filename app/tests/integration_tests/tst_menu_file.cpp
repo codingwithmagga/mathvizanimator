@@ -124,6 +124,8 @@ void MenuFileIntegrationTest::saveAsProject()
 {
     m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
     QVERIFY(m_helper_functions->compareNumItems(1));
+    m_helper_functions->addAnimationToItem(0, 1.0, 2.0);
+    m_helper_functions->changeTime(1.7);
 
     auto save_as_action_item = m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
     QMetaObject::invokeMethod(save_as_action_item, "trigger");

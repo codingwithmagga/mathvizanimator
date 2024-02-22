@@ -35,6 +35,8 @@ class TestHelperFunctions {
     void dragAndDropCurrentItem(const QPoint& end_pos);
     void dragAndDropItem(const QPoint& start_pos, const QPoint& end_pos);
 
+    void addAnimationToItem(const qint32 item_number, const qreal start_time, const qreal duration);
+
     void clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
     void moveItem(QQuickItem* quick_item, const QPoint& move_dist);
 
