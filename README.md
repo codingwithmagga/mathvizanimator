@@ -27,7 +27,10 @@ The program is written in C++ extensively using the [Qt](https://www.qt.io/) Lib
 These instructions will get you a copy of the project up and running on your local
 machine for development and testing purposes. Since this is just an alpha version, there exists no release or any option to install the program at the moment.
 
-> ***Important Note:*** As stated above the program is currently under development and in an really early (alpha) stage. Be aware that using the program for important or long tasks is not recommended. For example there is no autosave function, not even a check if there are changes when closing the program. Crashes can occur at any time. Please keep that in mind. If you discover an issue (which is very likely) or have an idea for a new feature (which wouldn't surprise me) please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
+> ***Important Note:*** As stated above the program is currently under development and in an really early (alpha) stage. Be aware that using the program for 
+important or long tasks is not recommended. For example there is no autosave function, not even a check if there are changes when closing the program. Crashes 
+can occur at any time. Please keep that in mind. If you discover an issue (which is very likely) or have an idea for a new feature (which wouldn't surprise me) 
+please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Prerequisites
 
@@ -79,7 +82,7 @@ to use Doxygen. This is easily done, by modifying the workflow shown above as fo
 
 ```bash
 mkdir build/ && cd build/
-cmake .. -DBUILD_DOCUMENTATION=1
+cmake .. -D BUILD_DOCUMENTATION=1
 cmake --build .
 ```
 
