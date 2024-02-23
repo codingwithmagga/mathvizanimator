@@ -81,3 +81,6 @@ html_static_path = []
 
 # Breathe Configuration
 breathe_default_project = "MathVizAnimator"
+
+# For code highlighting
+pygments_style = 'sphinx'
