@@ -80,7 +80,7 @@ In this example the **filledOpacity** property is set to 0.4 and the **filledCol
 
 .. note:: The values for the **x** and **y** property are in pixels. So you can work pixel perfect if you want to. How to change the resolution of the project will be shown in section :ref:`Change project settings`.
 
-The width of the border can be changed using the property **borderWidth**. Here it is set to 10, so the it is a big visible border of the rectangle. The color of the border can be changed by changing the property **borderColor**, but let's keep it in *red* in this example. The only property left is now the **name** property of the object, which is also shown in the top right object list. It has no direct effect on the appearance of the object, but keep the warning below in mind.
+The width of the border can be changed using the property **borderWidth**. Here it is set to 10, so that we have a big visible border of the rectangle. The color of the border can be changed by changing the property **borderColor**, but let's keep it in *red* in this example. The only property left is now the **name** property of the object, which is also shown in the top right object list. It has no direct effect on the appearance of the object, but keep the warning below in mind.
 
 .. warning:: The name property is used internally to distinguish between the objects. So it is not allows to have multiple objects sharing the same name!
 
@@ -140,7 +140,7 @@ Here is the resulting snapshot for the current time of 2.2 seconds. Note that th
 Render the video
 ++++++++++++++++
 
-The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that ffmpeg supports other like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. 
+The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that ffmpeg supports other formats like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. The save file is stored in json-format. So you can open and inspect it with any text editor if you like.
 
 .. image:: images/snapshot_example.png
   :width: 600
@@ -151,6 +151,10 @@ The animated video can be rendered by clicking on **Project->Render** and choose
 Save the project
 ++++++++++++++++
 
+The project can be saved by clicking on **File->Save As** and choose file name and destination. There is currently no option to save via shortcut or directly to the same file. You have to overwrite by following the process as explained before.
 
+.. image:: images/save_project.png
+  :width: 600
+  :alt: Save project menu
 
-.. note:: The saved file of this example can be found in the examples/TODO folder of the repository.
+.. note:: The files (save file, video and snapshot) of this example can be found in the examples/first_steps folder of the repository.

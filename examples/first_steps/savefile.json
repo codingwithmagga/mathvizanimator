@@ -1,0 +1,34 @@
+{
+    "item_0": {
+        "abstract_item.borderColor": "#ff0000",
+        "abstract_item.borderOpacity": "1",
+        "abstract_item.borderWidth": "10",
+        "abstract_item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml",
+        "abstract_item.filledColor": "#0000ff",
+        "abstract_item.filledOpacity": "0.4",
+        "abstract_item.name": "rect",
+        "abstract_item.opacity": "0",
+        "abstract_item.rotation": "55",
+        "animation_0": {
+            "duration": 2,
+            "start_time": 1,
+            "type": "FadeIn"
+        },
+        "animation_1": {
+            "duration": 1,
+            "start_time": 4,
+            "type": "FadeOut"
+        },
+        "height": "350",
+        "width": "250",
+        "x": "400",
+        "y": "200"
+    },
+    "mva-version": "0.0.1",
+    "project-settings": {
+        "fps": 24,
+        "height": 768,
+        "video_length": 7,
+        "width": 1024
+    }
+}
