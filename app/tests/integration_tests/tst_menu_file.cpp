@@ -134,6 +134,9 @@ void MenuFileIntegrationTest::saveAsProject()
 {
     m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
     QVERIFY(m_helper_functions->compareNumItems(1));
+    m_helper_functions->addAnimationToItem(0, 1.0, 2.0);
+    m_helper_functions->changePropertyValue(0, "opacity", "0.0");
+    m_helper_functions->changeTime(1.7);
 
     auto save_as_action_item = m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
     QMetaObject::invokeMethod(save_as_action_item, "trigger");
@@ -156,10 +159,15 @@ void MenuFileIntegrationTest::saveAsProject()
     QVERIFY(load_json_object.contains("item_0"));
     QVERIFY(load_json_object.contains("mva-version"));
     QVERIFY(load_json_object.contains("project-settings"));
+    QVERIFY(load_json_object.value("item_0").isObject());
     QVERIFY(load_json_object.value("project-settings").isObject());
 
-    const auto project_settings_object = load_json_object.value("project-settings").toObject();
     QCOMPARE(load_json_object.value("mva-version").toString(), "0.0.1");
+
+    const auto item_save_data = load_json_object.value("item_0").toObject();
+    QCOMPARE(item_save_data.value("abstract_item.opacity").toString(), "0");
+
+    const auto project_settings_object = load_json_object.value("project-settings").toObject();
     QCOMPARE(project_settings_object.value("width").toInt(), 1024);
     QCOMPARE(project_settings_object.value("height").toInt(), 768);
     QCOMPARE(project_settings_object.value("fps").toInt(), 24);

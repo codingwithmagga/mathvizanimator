@@ -36,6 +36,8 @@ class TestHelperFunctions {
     void dragAndDropCurrentItem(const QPoint& end_pos);
     void dragAndDropItem(const QPoint& start_pos, const QPoint& end_pos);
 
+    void addAnimationToItem(const qint32 item_number, const qreal start_time, const qreal duration);
+
     void clickItem(QQuickItem* quick_item, Qt::MouseButton mouse_button = Qt::MouseButton::LeftButton);
     void moveItem(QQuickItem* quick_item, const QPoint& move_dist);
 
@@ -56,12 +58,16 @@ class TestHelperFunctions {
     qint32 numProjectTableViewItems() const;
     qint32 numPropertyTableViewItems() const;
 
+    void changePropertyValue(const qint32 item_number, const QString& property_name, const QString& property_value);
     QVariant getPropertyValue(const QString& property_name) const;
 
     bool compareNumItems(const qint32 num_items);
     bool compareNumAnimations(const QString item_name, const qint32 num_animations);
 
-    template <typename T> T getChild(const QString& name)
+    bool renderVideo(const QString& render_file) const;
+    QImage extractImage(const QString& video_file) const;
+
+    template <typename T> T getChild(const QString& name) const
     {
         auto child = m_quick_window->findChild<T>(name);
         if (!child) {

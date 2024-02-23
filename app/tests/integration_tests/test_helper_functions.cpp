@@ -18,10 +18,12 @@
 #include "test_helper_functions.h"
 
 #include <QAbstractEventDispatcher>
+#include <QProcess>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QSignalSpy>
 #include <QStandardItemModel>
 #include <QTest> // should be removed, see comment in constructor
 
@@ -140,6 +142,18 @@ qint32 TestHelperFunctions::numPropertyTableViewItems() const
     return m_property_table_view->property("rows").toInt();
 }
 
+void TestHelperFunctions::changePropertyValue(
+    const qint32 item_number, const QString& property_name, const QString& property_value)
+{
+    clickItem(getQuickItem(item_number));
+    for (int row = 0; row < m_property_model->rowCount(); ++row) {
+        const auto model_property_name = m_property_model->item(row);
+        if (model_property_name->text() == property_name) {
+            m_property_model->item(row, 1)->setText(property_value);
+        }
+    }
+}
+
 QVariant TestHelperFunctions::getPropertyValue(const QString& property_name) const
 {
     QVariant property_value;
@@ -177,6 +191,43 @@ bool TestHelperFunctions::compareNumAnimations(const QString item_name, const qi
     return QTest::qWaitFor([&]() { return item_observer->animations().size() == num_animations; });
 }
 
+bool TestHelperFunctions::renderVideo(const QString& render_file) const
+{
+    QSignalSpy finishedVideoRenderingSpy(m_quick_window, SIGNAL(renderingVideoFinished()));
+
+    if (QFile::exists(render_file)) {
+        QFile::remove(render_file);
+    }
+    auto render_action_item = getChild<QObject*>("MVARenderProjectAction");
+    QMetaObject::invokeMethod(render_action_item, "trigger");
+
+    auto render_file_dialog = getChild<QObject*>("MVARenderFileDialog");
+    if (!QTest::qWaitFor([&]() { return render_file_dialog->property("visible").toBool(); })) {
+        return false;
+    }
+
+    render_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(render_file)));
+    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted", Qt::DirectConnection);
+
+    return finishedVideoRenderingSpy.wait(60000);
+}
+
+QImage TestHelperFunctions::extractImage(const QString& video_file) const
+{
+    QFile extracted_frame_file("extracted_frame.png");
+    QProcess ffmpeg_extract_frame;
+    ffmpeg_extract_frame.start("ffmpeg",
+        QStringList {} << "-y"
+                       << "-i" << video_file << "-frames:v"
+                       << "1" << extracted_frame_file.fileName());
+
+    if (!ffmpeg_extract_frame.waitForFinished()) {
+        qCritical() << "Couldn't extract frame with ffmpeg";
+        return QImage();
+    }
+    return QImage(extracted_frame_file.fileName());
+}
+
 QString TestHelperFunctions::absoluteFilePath(const QString file_name)
 {
     const QString save_dir = "test_files";
@@ -195,4 +246,22 @@ QPoint TestHelperFunctions::itemCenter(QQuickItem* item) const
     item_center.ry() += item->height() / 2;
 
     return item_center;
+}
+
+void TestHelperFunctions::addAnimationToItem(const qint32 item_number, const qreal start_time, const qreal duration)
+{
+    clickItem(getQuickItem(item_number), Qt::MouseButton::RightButton);
+    auto item_context_menu = getChild<QObject*>("MVAItemContextMenu");
+    auto item_context_menu_add_animation = getChild<QObject*>("MVAItemContextMenuAddAnimation");
+
+    QVERIFY(QTest::qWaitFor([&]() { return item_context_menu->property("visible").toBool(); }));
+    QVERIFY(QTest::qWaitFor([&]() { return item_context_menu_add_animation->property("visible").toBool(); }));
+
+    QMetaObject::invokeMethod(item_context_menu_add_animation, "simulateClicked");
+
+    auto add_animation_dialog = getChild<QObject*>("MVAAnimationDialog");
+    QVERIFY(QTest::qWaitFor([&]() { return add_animation_dialog->property("visible").toBool(); }));
+
+    QMetaObject::invokeMethod(add_animation_dialog, "simulateAccepted", Q_ARG(QVariant, QVariant(start_time)),
+        Q_ARG(QVariant, QVariant(duration)));
 }
