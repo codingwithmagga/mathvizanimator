@@ -10,8 +10,9 @@ The development is currently at an early stage, but there are already some inter
 
 .. toctree::
     :maxdepth: 2
+    :titlesonly:
     
     Home <self>
-    first_steps
+    first_steps/index
     user_guide/index
     developer/index
