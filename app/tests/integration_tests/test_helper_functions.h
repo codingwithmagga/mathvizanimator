@@ -64,7 +64,10 @@ class TestHelperFunctions {
     bool compareNumItems(const qint32 num_items);
     bool compareNumAnimations(const QString item_name, const qint32 num_animations);
 
-    template <typename T> T getChild(const QString& name)
+    bool renderVideo(const QString& render_file) const;
+    QImage extractImage(const QString& video_file) const;
+
+    template <typename T> T getChild(const QString& name) const
     {
         auto child = m_quick_window->findChild<T>(name);
         if (!child) {

@@ -18,10 +18,12 @@
 #include "test_helper_functions.h"
 
 #include <QAbstractEventDispatcher>
+#include <QProcess>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <QSignalSpy>
 #include <QStandardItemModel>
 #include <QTest> // should be removed, see comment in constructor
 
@@ -187,6 +189,43 @@ bool TestHelperFunctions::compareNumAnimations(const QString item_name, const qi
     const auto item_observer = item->itemObserver();
 
     return QTest::qWaitFor([&]() { return item_observer->animations().size() == num_animations; });
+}
+
+bool TestHelperFunctions::renderVideo(const QString& render_file) const
+{
+    QSignalSpy finishedVideoRenderingSpy(m_quick_window, SIGNAL(renderingVideoFinished()));
+
+    if (QFile::exists(render_file)) {
+        QFile::remove(render_file);
+    }
+    auto render_action_item = getChild<QObject*>("MVARenderProjectAction");
+    QMetaObject::invokeMethod(render_action_item, "trigger");
+
+    auto render_file_dialog = getChild<QObject*>("MVARenderFileDialog");
+    if (!QTest::qWaitFor([&]() { return render_file_dialog->property("visible").toBool(); })) {
+        return false;
+    }
+
+    render_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(render_file)));
+    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted", Qt::DirectConnection);
+
+    return finishedVideoRenderingSpy.wait(60000);
+}
+
+QImage TestHelperFunctions::extractImage(const QString& video_file) const
+{
+    QFile extracted_frame_file("extracted_frame.png");
+    QProcess ffmpeg_extract_frame;
+    ffmpeg_extract_frame.start("ffmpeg",
+        QStringList {} << "-y"
+                       << "-i" << video_file << "-frames:v"
+                       << "1" << extracted_frame_file.fileName());
+
+    if (!ffmpeg_extract_frame.waitForFinished()) {
+        qCritical() << "Couldn't extract frame with ffmpeg";
+        return QImage();
+    }
+    return QImage(extracted_frame_file.fileName());
 }
 
 QString TestHelperFunctions::absoluteFilePath(const QString file_name)
