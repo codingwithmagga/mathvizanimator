@@ -52,6 +52,9 @@ class MainLogic : public QObject {
     void renderingVideoFinished();
 
   private:
+    QJsonObject projectSettingsJson() const;
+    void setProjectSettings(const QJsonObject& json);
+
     QQmlApplicationEngine* m_qml_engine;
     QObject* m_qml_creation_area;
 

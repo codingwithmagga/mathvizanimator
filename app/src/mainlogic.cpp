@@ -106,6 +106,7 @@ void MainLogic::createSnapshot(const QFileInfo& snapshot_file_info)
 
 void MainLogic::renderVideo(const QFileInfo& video_file_info)
 {
+    m_itemhandler.setTime(0.0);
     auto item_list = m_itemhandler.items();
     m_renderer.render(item_list, video_file_info);
 }
@@ -114,6 +115,7 @@ void MainLogic::saveProject(const QFileInfo& save_file_info)
 {
     QJsonObject save_json;
     qint32 count = 0;
+    m_itemhandler.setTime(0.0);
     const auto item_observer_list = m_itemhandler.items();
 
     for (const auto& item_observer : item_observer_list) {
@@ -123,9 +125,11 @@ void MainLogic::saveProject(const QFileInfo& save_file_info)
     }
 
     save_json.insert("mva-version", MVA_PROJECT_VERSION);
+    save_json.insert("project-settings", projectSettingsJson());
 
     m_savefilehandler.setSaveDir(save_file_info.absoluteDir());
     m_savefilehandler.saveJSON(save_file_info.fileName(), save_json);
+    m_itemhandler.setTime(m_current_time);
 }
 
 void MainLogic::loadProject(const QFileInfo& load_file_info)
@@ -133,6 +137,9 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
     QJsonDocument loadDoc = m_savefilehandler.loadJSON(load_file_info);
 
     QJsonObject json = loadDoc.object();
+
+    setProjectSettings(json["project-settings"].toObject());
+
     for (const QString& itemKey : json.keys()) {
         auto item_json = json[itemKey].toObject();
 
@@ -217,3 +224,25 @@ void MainLogic::uiTimeChanged(const qreal time)
 }
 
 void MainLogic::renderingVideoFinished() { uiTimeChanged(m_current_time); }
+
+QJsonObject MainLogic::projectSettingsJson() const
+{
+    QJsonObject json;
+
+    const auto current_project_settings = m_renderer.projectSettings();
+
+    json.insert("width", current_project_settings.width);
+    json.insert("height", current_project_settings.height);
+    json.insert("fps", current_project_settings.fps);
+    json.insert("video_length", current_project_settings.video_length);
+
+    return json;
+}
+
+void MainLogic::setProjectSettings(const QJsonObject& json)
+{
+    m_mainwindowhandler.setPixelWidth(json["width"].toInt());
+    m_mainwindowhandler.setPixelHeight(json["height"].toInt());
+    m_mainwindowhandler.setFPS(json["fps"].toInt());
+    m_mainwindowhandler.setVideoLength(json["video_length"].toInt());
+}

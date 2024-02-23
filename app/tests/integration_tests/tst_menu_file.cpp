@@ -89,6 +89,10 @@ void MenuFileIntegrationTest::loadProject()
     QVERIFY(test_save_file.exists());
 
     const QString test_load_file_absolute_path = TestHelperFunctions::absoluteFilePath("test_load_file.json");
+    if (QFile::exists(test_load_file_absolute_path)) {
+        QFile::remove(test_load_file_absolute_path);
+    }
+
     test_save_file.copy(test_load_file_absolute_path);
     QVERIFY(QFile::exists(test_load_file_absolute_path));
 
@@ -101,11 +105,17 @@ void MenuFileIntegrationTest::loadProject()
     load_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
     QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted", Qt::QueuedConnection);
 
+    const auto main_window_handler = m_helper_functions->mainWindowHandler();
+
     QVERIFY(QTest::qWaitFor([&]() { return !load_file_dialog->property("visible").toBool(); }));
     QVERIFY(m_helper_functions->compareNumItems(3));
     QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
     QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
     QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
+    QCOMPARE(main_window_handler->property("pixel_width").toInt(), 1200);
+    QCOMPARE(main_window_handler->property("pixel_height").toInt(), 800);
+    QCOMPARE(main_window_handler->property("fps").toInt(), 32);
+    QCOMPARE(main_window_handler->property("video_length").toInt(), 8);
 
     // Check if item is clickable, see Issue #37
     auto rect_item = m_helper_functions->getQuickItem(0);
@@ -124,6 +134,9 @@ void MenuFileIntegrationTest::saveAsProject()
 {
     m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
     QVERIFY(m_helper_functions->compareNumItems(1));
+    m_helper_functions->addAnimationToItem(0, 1.0, 2.0);
+    m_helper_functions->changePropertyValue(0, "opacity", "0.0");
+    m_helper_functions->changeTime(1.7);
 
     auto save_as_action_item = m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
     QMetaObject::invokeMethod(save_as_action_item, "trigger");
@@ -145,7 +158,20 @@ void MenuFileIntegrationTest::saveAsProject()
     const auto load_json_object = save_file_handler.loadJSON(QFileInfo(test_save_file_absolute_path)).object();
     QVERIFY(load_json_object.contains("item_0"));
     QVERIFY(load_json_object.contains("mva-version"));
+    QVERIFY(load_json_object.contains("project-settings"));
+    QVERIFY(load_json_object.value("item_0").isObject());
+    QVERIFY(load_json_object.value("project-settings").isObject());
+
     QCOMPARE(load_json_object.value("mva-version").toString(), "0.0.1");
+
+    const auto item_save_data = load_json_object.value("item_0").toObject();
+    QCOMPARE(item_save_data.value("abstract_item.opacity").toString(), "0");
+
+    const auto project_settings_object = load_json_object.value("project-settings").toObject();
+    QCOMPARE(project_settings_object.value("width").toInt(), 1024);
+    QCOMPARE(project_settings_object.value("height").toInt(), 768);
+    QCOMPARE(project_settings_object.value("fps").toInt(), 24);
+    QCOMPARE(project_settings_object.value("video_length").toInt(), 5);
 }
 
 void MenuFileIntegrationTest::quitApp()

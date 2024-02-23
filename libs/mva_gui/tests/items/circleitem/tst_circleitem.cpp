@@ -77,15 +77,15 @@ void TestCircleItem::toJsonTest()
     expected_json["y"] = QString::number(m_circle_y);
     expected_json["width"] = QString::number(m_circle_width);
     expected_json["height"] = QString::number(m_circle_height);
-    expected_json["item.filledColor"] = m_circle_filled_color;
-    expected_json["item.filledOpacity"] = QString::number(m_circle_filled_opacity);
-    expected_json["item.borderColor"] = m_circle_border_color;
-    expected_json["item.borderOpacity"] = QString::number(m_circle_border_opacity);
-    expected_json["item.borderWidth"] = QString::number(m_circle_border_width);
-    expected_json["item.name"] = m_circle_name;
-    expected_json["item.opacity"] = QString::number(m_circle_opacity);
-    expected_json["item.rotation"] = QString::number(m_circle_rotation);
-    expected_json["item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
+    expected_json["abstract_item.filledColor"] = m_circle_filled_color;
+    expected_json["abstract_item.filledOpacity"] = QString::number(m_circle_filled_opacity);
+    expected_json["abstract_item.borderColor"] = m_circle_border_color;
+    expected_json["abstract_item.borderOpacity"] = QString::number(m_circle_border_opacity);
+    expected_json["abstract_item.borderWidth"] = QString::number(m_circle_border_width);
+    expected_json["abstract_item.name"] = m_circle_name;
+    expected_json["abstract_item.opacity"] = QString::number(m_circle_opacity);
+    expected_json["abstract_item.rotation"] = QString::number(m_circle_rotation);
+    expected_json["abstract_item.file"] = "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml";
 
     const auto circle_json = m_circle_item.toJson();
 
