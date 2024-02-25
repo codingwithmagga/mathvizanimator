@@ -368,7 +368,7 @@ void ItemHandler::propertyDataChanged(
         return;
     }
 
-    // Give a critical warning when this happens. Should normally be avoided by using PropertModel class.
+    // Give a critical warning when this happens. Should normally be avoided by using PropertyModel class.
     if (topLeft.column() != 1) {
         qCCritical(itemhandler) << "Dont change values in column " << topLeft.column() << "in property editor.";
         return;
