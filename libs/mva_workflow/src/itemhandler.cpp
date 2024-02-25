@@ -368,9 +368,9 @@ void ItemHandler::propertyDataChanged(
         return;
     }
 
-    // TODO(codingwithmagga): Prevent editing other columns
+    // Give a critical warning when this happens. Should normally be avoided by using PropertModel class.
     if (topLeft.column() != 1) {
-        qCWarning(itemhandler) << "Dont change values in column " << topLeft.column() << "in property editor.";
+        qCCritical(itemhandler) << "Dont change values in column " << topLeft.column() << "in property editor.";
         return;
     }
 
