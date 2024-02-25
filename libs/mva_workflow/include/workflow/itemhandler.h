@@ -30,7 +30,7 @@ class ItemModelItem;
 
 class PropertyModel : public QStandardItemModel {
   public:
-    Qt::ItemFlags flags(const QModelIndex& index) const;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 
 class ItemHandler : public QObject {
@@ -44,7 +44,7 @@ class ItemHandler : public QObject {
     qsizetype numItems() const { return m_item_model.rowCount(); }
     QStandardItemModel* model() { return &m_item_model; }
     QItemSelectionModel* selectionModel() { return &m_item_selection_model; }
-    QStandardItemModel* propertyModel() { return &m_property_model; }
+    PropertyModel* propertyModel() { return &m_property_model; }
     QStandardItemModel* animationModel() { return &m_animation_model; }
     QList<BasicItem*> basicItems();
     QList<QSharedPointer<ItemObserver>> items();

@@ -14,6 +14,7 @@ qt_add_executable(rectangleitem_test items/rectangleitem/tst_rectangleitem.cpp t
 qt_add_executable(textitem_test items/textitem/tst_textitem.cpp test_images.qrc)
 
 qt_add_executable(fade_in_and_out_test animations/tst_fade_in_and_out.cpp)
+qt_add_executable(property_animation_test animations/tst_property_animation.cpp)
 
 add_test(NAME mainwindowhandler_test COMMAND mainwindowhandler_test)
 add_test(NAME qml_item_tests COMMAND qml_item_tests)
@@ -21,6 +22,7 @@ add_test(NAME circleitem_test COMMAND circleitem_test)
 add_test(NAME rectangleitem_test COMMAND rectangleitem_test)
 add_test(NAME textitem_test COMMAND textitem_test)
 add_test(NAME fade_in_and_out_test COMMAND fade_in_and_out_test)
+add_test(NAME property_animation_test COMMAND property_animation_test)
 
 target_link_libraries(
     mainwindowhandler_test
@@ -63,6 +65,14 @@ target_link_libraries(
 
 target_link_libraries(
     fade_in_and_out_test
+    PRIVATE Qt6::QuickTest
+    PRIVATE Qt6::Qml
+    PRIVATE mva::gui
+    PRIVATE mva::guiplugin
+)
+
+target_link_libraries(
+    property_animation_test
     PRIVATE Qt6::QuickTest
     PRIVATE Qt6::Qml
     PRIVATE mva::gui

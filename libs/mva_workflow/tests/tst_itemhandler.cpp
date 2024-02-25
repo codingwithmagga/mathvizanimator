@@ -60,6 +60,8 @@ class TestItemHandler : public QObject {
 
     void removeAnimation();
 
+    void propertyModelFlags();
+
     void clearHandler();
 
   private:
@@ -507,6 +509,23 @@ void TestItemHandler::removeAnimation()
         num_animations--;
         QCOMPARE(item_observer->animations().size(), num_animations);
     }
+}
+
+void TestItemHandler::propertyModelFlags()
+{
+    PropertyModel prop_model;
+    prop_model.appendRow({ new QStandardItem, new QStandardItem, new QStandardItem });
+    const auto index_column_0 = prop_model.index(0, 0);
+    const auto index_column_1 = prop_model.index(0, 1);
+    const auto index_column_2 = prop_model.index(0, 2);
+
+    const auto flags_column_0 = prop_model.flags(index_column_0);
+    const auto flags_column_1 = prop_model.flags(index_column_1);
+    const auto flags_column_2 = prop_model.flags(index_column_2);
+
+    QVERIFY(!flags_column_0.testAnyFlag(Qt::ItemIsEditable));
+    QVERIFY(flags_column_1.testAnyFlag(Qt::ItemIsEditable));
+    QVERIFY(!flags_column_2.testAnyFlag(Qt::ItemIsEditable));
 }
 
 void TestItemHandler::clearHandler()

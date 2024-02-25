@@ -37,8 +37,10 @@ void RealPropertyAnimation::applyAnimation(AbstractItem* item, const qreal time)
 
     if (m_start_property_values.size() != m_end_property_values.size()
         || m_start_property_values.size() != property_list.size()) {
-        qCWarning(real_property_animation) << "Size mismatch for property animation:" << m_start_property_values.size()
-                                           << m_end_property_values.size() << property_list.size();
+        qCWarning(real_property_animation).nospace()
+            << "Size mismatch for property animation: " << m_start_property_values.size()
+            << "-(Start property value size) " << m_end_property_values.size() << "-(End property value size) "
+            << property_list.size() << "-(Internal property list size)";
         return;
     }
 

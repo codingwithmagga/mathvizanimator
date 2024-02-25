@@ -32,6 +32,7 @@ set(CMAKE_AUTORCC TRUE)
 set(CMAKE_AUTOUIC TRUE)
 
 set(BUILD_DOCUMENTATION CACHE BOOL OFF)
+set(RUN_CODE_COVERAGE CACHE BOOL OFF)
 
 # For QtCreator to recognize the qml gui lib
 set(QML_IMPORT_PATH ${CMAKE_BINARY_DIR}/libs/mva_gui CACHE STRING "" FORCE)
@@ -57,4 +58,5 @@ if(CMAKE_COMPILER_IS_GNUCC AND RUN_CODE_COVERAGE)
     include(CheckCCompilerFlag)
     include(CodeCoverage)
     append_coverage_compiler_flags()
+    enable_cxx_compiler_flag_if_supported("-fno-exceptions")
 endif()
