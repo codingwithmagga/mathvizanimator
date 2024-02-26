@@ -25,8 +25,8 @@ In this example a rectangle is selected by holding the left mouse button and dra
   :width: 600
   :alt: Rectangle in the middle of the application
 
-Adding an animation
-+++++++++++++++++++
+Adding animations
++++++++++++++++++
 
 Right clicking on the item opens a menu, where you can choose the option "Add animation".
 
@@ -90,7 +90,7 @@ After changing all this properties lets have a look at our rectangle:
   :width: 600
   :alt: Changed rectangle
 
-There is one thing left to do. Changing the **opacity** to 0.0. Since we use the fade in animation (see section :ref:`Adding an animation`) the rectangle would be visible at the beginning and just disappear at one second if we don't change this property. After doing so you will see that the rectangle disappears on the screen. This is because the current project time is set to 0.0. How to change that is described in the next section.
+There is one thing left to do. Changing the **opacity** to 0.0. Since we use the fade in animation (see section :ref:`Adding animations`) the rectangle would be visible at the beginning and just disappear at one second if we don't change this property. After doing so you will see that the rectangle disappears on the screen. This is because the current project time is set to 0.0. How to change that is described in the next section.
 
 Change current project time
 +++++++++++++++++++++++++++
