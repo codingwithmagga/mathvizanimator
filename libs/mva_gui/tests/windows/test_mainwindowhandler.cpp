@@ -212,9 +212,7 @@ void TestMainWindowHandler::updateProjectSettingsAsVariant()
 
     main_window_handler.updateProjectSettings(project_settings);
 
-    QTest::qSleep(200);
     for (const auto& spy : spyList) {
-        qInfo() << spy->signal();
         QCOMPARE(spy->count(), 1);
     }
     checkProperties(main_window_handler);
