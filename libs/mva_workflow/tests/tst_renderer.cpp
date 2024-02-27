@@ -134,6 +134,7 @@ void TestRenderer::createImage()
     Renderer::ProjectSettings project_settings;
     project_settings.width = width;
     project_settings.height = height;
+    project_settings.background_color = QColor("white");
 
     renderer.setProjectSettings(project_settings);
     const auto rendered_image = renderer.createImage(m_item_list, 0.0);
@@ -205,6 +206,7 @@ void TestRenderer::render()
     project_settings.height = height;
     project_settings.fps = fps;
     project_settings.video_length = video_length;
+    project_settings.background_color = QColor("white");
 
     if (QFile::exists(video_file.absoluteFilePath())) {
         QFile(video_file.absoluteFilePath()).remove();
@@ -224,6 +226,7 @@ void TestRenderer::multipleRendering()
     QFileInfo home_dir_video(QDir::home(), "test_video_home.mp4");
 
     renderer.render(m_item_list, home_dir_video);
+    renderer.setBackgroundColor(QColor("white"));
     QVERIFY(spy.wait(60000));
 
     auto parent_item = new BasicItem();
@@ -285,6 +288,7 @@ void TestRenderer::renderWithAnimation()
     m_item_list.last()->addAnimation(fadeOutAnimation);
 
     Renderer renderer;
+    renderer.setBackgroundColor(QColor("white"));
     QSignalSpy spy(&renderer, &Renderer::finishedRendering);
     QFileInfo home_dir_video(QDir::home(), "test_video_animation.mp4");
 

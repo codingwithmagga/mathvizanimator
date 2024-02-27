@@ -122,6 +122,8 @@ In this example the **video length** is changed to seven seconds. In this menu a
   :width: 600
   :alt: Project setting popup
 
+Also the background color can be changed here by clicking on the rectangle and choosing a color. This is not visible in the screenshot
+
 Create a snapshot
 +++++++++++++++++
 
