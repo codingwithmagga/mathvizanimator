@@ -103,7 +103,8 @@ void Renderer::renderingProcessFinished(const QFileInfo& video_file, qint32 exit
 QImage Renderer::createImage(const QList<QSharedPointer<ItemObserver>>& item_list, const qreal current_time) const
 {
     QImage image(m_project_settings.size, QImage::Format::Format_RGB32);
-    image.fill("white");
+    image.fill(m_project_settings.background_color);
+  
     QPainter painter(&image);
 
     for (const auto& item_observer : item_list) {
@@ -126,3 +127,8 @@ void Renderer::setProjectSize(const QSize new_project_size) { m_project_settings
 void Renderer::setFPS(const qint32 new_fps) { m_project_settings.fps = new_fps; }
 
 void Renderer::setVideoLength(const qint32 new_video_length) { m_project_settings.video_length = new_video_length; }
+
+void Renderer::setBackgroundColor(const QColor& new_background_color)
+{
+    m_project_settings.background_color = new_background_color;
+}

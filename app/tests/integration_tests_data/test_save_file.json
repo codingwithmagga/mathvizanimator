@@ -50,6 +50,7 @@
         "fps": 32,
         "height": 800,
         "video_length": 8,
-        "width": 1200
+        "width": 1200,
+        "background_color": "yellow"
     }
 }

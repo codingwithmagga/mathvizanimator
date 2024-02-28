@@ -30,15 +30,22 @@ class MainWindowHandler : public QObject {
     Q_PROPERTY(QSize project_size READ projectSize WRITE setProjectSize NOTIFY projectSizeChanged)
     Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
     Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY videoLengthChanged)
+    Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
 
   public:
     explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
-
+  
     qint32 fps() const;
+    void setFPS(const qint32 new_fps);
+
     qint32 videoLength() const;
+    void setVideoLength(const qint32 new_video_length);
 
     QSize projectSize() const;
     void setProjectSize(const QSize& new_project_size);
+
+    QColor backgroundColor() const;
+    void setBackgroundColor(const QColor& newBackground_color);
 
   public slots:
 
@@ -61,10 +68,7 @@ class MainWindowHandler : public QObject {
     void propertyChangedByUser(const QString& item_name, const QByteArray& property, const QVariant& value);
 
     void updateProjectSettings(const QVariantList& new_project_settings);
-    void updateProjectSettings(const QList<qint32>& new_project_settings);
-
-    void setFPS(const qint32 new_fps);
-    void setVideoLength(const qint32 new_video_length);
+    void updateProjectSettings(const QList<qint32>& new_project_settings, const QColor& new_background_color);
 
     void addAnimation(
         const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
@@ -73,6 +77,7 @@ class MainWindowHandler : public QObject {
     void fpsChanged(const qint32 new_fps);
     void videoLengthChanged(const qint32 new_video_length);
     void projectSizeChanged();
+    void backgroundColorChanged(const QColor& new_background_color);
 
     void snapshotRequested(const QFileInfo& snapshot_file_info);
     void renderingRequested(const QFileInfo& video_file_info);
@@ -97,9 +102,11 @@ class MainWindowHandler : public QObject {
   private:
     QObject* m_qml_creation_area;
 
-    qint32 m_fps;
-    qint32 m_video_length;
-    QSize m_project_size;
+
+    QSize m_project_size = QSize(1024, 768);
+    qint32 m_fps = 24;
+    qint32 m_video_length = 5;
+    QColor m_background_color = QColor("black");
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_

@@ -54,6 +54,7 @@ class TestMainWindowHandler : public QObject {
     const QSize m_size = QSize(1000, 800);
     const qint32 m_fps = 12;
     const qint32 m_video_length = 8;
+    const QColor m_background_color = QColor("yellow");
 };
 
 void TestMainWindowHandler::changedPropertyTests()
@@ -73,7 +74,8 @@ void TestMainWindowHandler::unchangedPropertyTests()
 {
     MainWindowHandler main_window_handler;
     QList<int> project_settings { m_size.width(), m_size.height(), m_fps, m_video_length };
-    main_window_handler.updateProjectSettings(project_settings);
+    main_window_handler.updateProjectSettings(project_settings, m_background_color);
+
     const auto spyList = createPropertySignalSpies(main_window_handler);
 
     setMainWindowProperties(&main_window_handler);
@@ -206,7 +208,7 @@ void TestMainWindowHandler::updateProjectSettingsAsVariant()
 {
     MainWindowHandler main_window_handler;
     const auto spyList = createPropertySignalSpies(main_window_handler);
-    QVariantList project_settings { m_size.width(), m_size.height(), m_fps, m_video_length };
+    QVariantList project_settings { m_size.width(), m_size.height(), m_fps, m_video_length, m_background_color };
 
     main_window_handler.updateProjectSettings(project_settings);
 
@@ -222,7 +224,7 @@ void TestMainWindowHandler::updateProjectSettingsAsInt()
     const auto spyList = createPropertySignalSpies(main_window_handler);
     QList<qint32> project_settings { m_size.width(), m_size.height(), m_fps, m_video_length };
 
-    main_window_handler.updateProjectSettings(project_settings);
+    main_window_handler.updateProjectSettings(project_settings, m_background_color);
 
     checkProperties(main_window_handler);
     for (const auto& spy : spyList) {
@@ -249,7 +251,7 @@ void TestMainWindowHandler::updateProjectSettingsAsIntWrongSize()
     const auto spyList = createPropertySignalSpies(main_window_handler);
     QList<qint32> project_settings { m_size.width(), m_fps, m_video_length };
 
-    main_window_handler.updateProjectSettings(project_settings);
+    main_window_handler.updateProjectSettings(project_settings, m_background_color);
 
     for (const auto& spy : spyList) {
         QCOMPARE(spy->count(), 0);
@@ -261,6 +263,7 @@ void TestMainWindowHandler::setMainWindowProperties(MainWindowHandler* main_wind
     main_window_handler->setProjectSize(m_size);
     main_window_handler->setFPS(m_fps);
     main_window_handler->setVideoLength(m_video_length);
+    main_window_handler->setBackgroundColor(m_background_color);
 }
 
 void TestMainWindowHandler::checkProperties(const MainWindowHandler& main_window_handler)
@@ -268,6 +271,7 @@ void TestMainWindowHandler::checkProperties(const MainWindowHandler& main_window
     QCOMPARE(main_window_handler.projectSize(), m_size);
     QCOMPARE(main_window_handler.fps(), m_fps);
     QCOMPARE(main_window_handler.videoLength(), m_video_length);
+    QCOMPARE(main_window_handler.backgroundColor(), m_background_color);
 }
 
 QList<QSharedPointer<QSignalSpy>> TestMainWindowHandler::createPropertySignalSpies(
@@ -280,6 +284,8 @@ QList<QSharedPointer<QSignalSpy>> TestMainWindowHandler::createPropertySignalSpi
     spy_list.append(QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::fpsChanged)));
     spy_list.append(
         QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::videoLengthChanged)));
+    spy_list.append(
+        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::backgroundColorChanged)));
 
     return spy_list;
 }

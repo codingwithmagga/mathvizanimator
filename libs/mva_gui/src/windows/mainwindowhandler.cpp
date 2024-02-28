@@ -73,17 +73,18 @@ void MainWindowHandler::propertyChangedByUser(
 
 void MainWindowHandler::updateProjectSettings(const QVariantList& new_project_settings)
 {
-    if (new_project_settings.size() != 4) {
+    if (new_project_settings.size() != 5) {
         qCCritical(mainwindow_handler) << "Internal error. Wrong number of project settings delivered.";
         return;
     }
 
     QList<qint32> conv_project_settings { new_project_settings[0].toInt(), new_project_settings[1].toInt(),
         new_project_settings[2].toInt(), new_project_settings[3].toInt() };
-    updateProjectSettings(conv_project_settings);
+    updateProjectSettings(conv_project_settings, new_project_settings[4].value<QColor>());
 }
 
-void MainWindowHandler::updateProjectSettings(const QList<qint32>& new_project_settings)
+void MainWindowHandler::updateProjectSettings(
+    const QList<qint32>& new_project_settings, const QColor& new_background_color)
 {
     if (new_project_settings.size() != 4) {
         qCCritical(mainwindow_handler) << "Internal error. Wrong number of project settings delivered.";
@@ -93,6 +94,7 @@ void MainWindowHandler::updateProjectSettings(const QList<qint32>& new_project_s
     setProjectSize(QSize(new_project_settings[0], new_project_settings[1]));
     setFPS(new_project_settings[2]);
     setVideoLength(new_project_settings[3]);
+    setBackgroundColor(new_background_color);
 }
 
 void MainWindowHandler::newProject()
@@ -148,12 +150,8 @@ void MainWindowHandler::addItem(QQuickItem* item)
         return;
     }
 
-    // clang-format off
-    connect(basic_item, SIGNAL(clicked(QString)), this,
-            SLOT(itemClickedByUser(QString)));
-    connect(basic_item, SIGNAL(animationAdded(QString,QString,qreal,qreal)), this,
-            SLOT(addAnimation(QString,QString,qreal,qreal)));
-    // clang-format on
+    connect(basic_item, &BasicItem::clicked, this, &MainWindowHandler::itemClickedByUser);
+    connect(basic_item, &BasicItem::animationAdded, this, &MainWindowHandler::addAnimation);
 
     emit itemAdded(basic_item);
 }
@@ -168,4 +166,15 @@ void MainWindowHandler::setProjectSize(const QSize& new_project_size)
 
     m_project_size = new_project_size;
     emit projectSizeChanged();
+
+QColor MainWindowHandler::backgroundColor() const { return m_background_color; }
+
+void MainWindowHandler::setBackgroundColor(const QColor& newBackgroundColor)
+{
+    if (m_background_color == newBackgroundColor) {
+        return;
+    }
+
+    m_background_color = newBackgroundColor;
+    emit backgroundColorChanged(m_background_color);
 }

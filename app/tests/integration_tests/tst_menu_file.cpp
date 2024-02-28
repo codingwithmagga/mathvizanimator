@@ -115,6 +115,7 @@ void MenuFileIntegrationTest::loadProject()
     QCOMPARE(main_window_handler->property("project_size").toSize(), QSize(1200, 800));
     QCOMPARE(main_window_handler->property("fps").toInt(), 32);
     QCOMPARE(main_window_handler->property("video_length").toInt(), 8);
+    QCOMPARE(main_window_handler->property("background_color").value<QColor>(), QColor("yellow"));
 
     // Check if item is clickable, see Issue #37
     auto rect_item = m_helper_functions->getQuickItem(0);
@@ -171,6 +172,7 @@ void MenuFileIntegrationTest::saveAsProject()
     QCOMPARE(project_settings_object.value("height").toInt(), 768);
     QCOMPARE(project_settings_object.value("fps").toInt(), 24);
     QCOMPARE(project_settings_object.value("video_length").toInt(), 5);
+    QCOMPARE(project_settings_object.value("background_color").toString(), QColor("black").name());
 }
 
 void MenuFileIntegrationTest::quitApp()
