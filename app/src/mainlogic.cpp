@@ -45,8 +45,7 @@ MainLogic::MainLogic(QObject* parent)
     connect(&m_mainwindowhandler, &MainWindowHandler::newProjectRequested, &m_itemhandler, &ItemHandler::clear);
     connect(&m_mainwindowhandler, &MainWindowHandler::addAnimationSignal, &m_itemhandler, &ItemHandler::addAnimation);
 
-    connect(&m_mainwindowhandler, &MainWindowHandler::pixelWidthChanged, this, &MainLogic::projectWidthChanged);
-    connect(&m_mainwindowhandler, &MainWindowHandler::pixelHeightChanged, this, &MainLogic::projectHeightChanged);
+    connect(&m_mainwindowhandler, &MainWindowHandler::projectSizeChanged, this, &MainLogic::projectSizeChanged);
     connect(&m_mainwindowhandler, &MainWindowHandler::fpsChanged, &m_renderer, &Renderer::setFPS);
     connect(&m_mainwindowhandler, &MainWindowHandler::videoLengthChanged, &m_renderer, &Renderer::setVideoLength);
 
@@ -57,7 +56,7 @@ MainLogic::MainLogic(QObject* parent)
     connect(&m_renderer, &Renderer::finishedRendering, this, &MainLogic::renderingVideoFinished);
 
     const auto default_project_settings = m_renderer.projectSettings();
-    QList<qint32> conv_project_settings { default_project_settings.width, default_project_settings.height,
+    QList<qint32> conv_project_settings { default_project_settings.size.width(), default_project_settings.size.height(),
         default_project_settings.fps, default_project_settings.video_length };
     m_mainwindowhandler.updateProjectSettings(conv_project_settings);
 }
@@ -191,30 +190,16 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
     }
 }
 
-void MainLogic::projectWidthChanged(const qint32 new_project_width)
+void MainLogic::projectSizeChanged()
 {
-    if (m_renderer.projectSettings().width == new_project_width) {
-        return;
-    }
+    const auto project_size = m_mainwindowhandler.projectSize();
+    const auto previous_project_size = m_renderer.projectSettings().size;
 
-    const qreal ratio = new_project_width / qreal(m_renderer.projectSettings().width);
-    m_itemhandler.scaleItemsX(ratio);
-    m_itemhandler.scaleItemsWidth(ratio);
+    const auto width_ratio = project_size.width() / qreal(previous_project_size.width());
+    const auto height_ratio = project_size.height() / qreal(previous_project_size.height());
 
-    m_renderer.setWidth(new_project_width);
-}
-
-void MainLogic::projectHeightChanged(const qint32 new_project_height)
-{
-    if (m_renderer.projectSettings().height == new_project_height) {
-        return;
-    }
-
-    const qreal ratio = new_project_height / qreal(m_renderer.projectSettings().height);
-    m_itemhandler.scaleItemsY(ratio);
-    m_itemhandler.scaleItemsHeight(ratio);
-
-    m_renderer.setHeight(new_project_height);
+    m_itemhandler.scaleItems(width_ratio, height_ratio);
+    m_renderer.setProjectSize(project_size);
 }
 
 void MainLogic::uiTimeChanged(const qreal time)
@@ -231,8 +216,8 @@ QJsonObject MainLogic::projectSettingsJson() const
 
     const auto current_project_settings = m_renderer.projectSettings();
 
-    json.insert("width", current_project_settings.width);
-    json.insert("height", current_project_settings.height);
+    json.insert("width", current_project_settings.size.width());
+    json.insert("height", current_project_settings.size.height());
     json.insert("fps", current_project_settings.fps);
     json.insert("video_length", current_project_settings.video_length);
 
@@ -241,8 +226,7 @@ QJsonObject MainLogic::projectSettingsJson() const
 
 void MainLogic::setProjectSettings(const QJsonObject& json)
 {
-    m_mainwindowhandler.setPixelWidth(json["width"].toInt());
-    m_mainwindowhandler.setPixelHeight(json["height"].toInt());
+    m_mainwindowhandler.setProjectSize(QSize(json["width"].toInt(), json["height"].toInt()));
     m_mainwindowhandler.setFPS(json["fps"].toInt());
     m_mainwindowhandler.setVideoLength(json["video_length"].toInt());
 }

@@ -31,14 +31,15 @@ void Renderer::render(const QList<QSharedPointer<ItemObserver>>& item_list, cons
 {
     qCInfo(renderer) << "Rendering process requested to file " << video_file.absoluteFilePath();
 
+    const auto project_width = QString::number(m_project_settings.size.width());
+    const auto project_height = QString::number(m_project_settings.size.height());
+
     QString program = "ffmpeg";
     QStringList arguments;
     arguments << "-y"
               << "-f"
               << "rawvideo"
-              << "-video_size"
-              << QString::number(m_project_settings.width) + "x" + QString::number(m_project_settings.height)
-              << "-pix_fmt"
+              << "-video_size" << project_width + "x" + project_height << "-pix_fmt"
               << "rgb32"
               << "-r" << QString::number(m_project_settings.fps) << "-i"
               << "-"
@@ -78,7 +79,8 @@ void Renderer::renderingProcessStarted(const QList<QSharedPointer<ItemObserver>>
         auto image = createImage(item_list, frame / qreal(m_project_settings.fps));
         auto imageData = reinterpret_cast<char*>(image.bits());
 
-        qobject_cast<QProcess*>(sender())->write(imageData, m_project_settings.width * m_project_settings.height * 4);
+        qobject_cast<QProcess*>(sender())->write(
+            imageData, m_project_settings.size.width() * m_project_settings.size.height() * 4);
     }
 
     qobject_cast<QProcess*>(sender())->closeWriteChannel();
@@ -100,7 +102,7 @@ void Renderer::renderingProcessFinished(const QFileInfo& video_file, qint32 exit
 
 QImage Renderer::createImage(const QList<QSharedPointer<ItemObserver>>& item_list, const qreal current_time) const
 {
-    QImage image(m_project_settings.width, m_project_settings.height, QImage::Format::Format_RGB32);
+    QImage image(m_project_settings.size, QImage::Format::Format_RGB32);
     image.fill("white");
     QPainter painter(&image);
 
@@ -119,9 +121,7 @@ void Renderer::setProjectSettings(const Renderer::ProjectSettings& new_project_s
     m_project_settings = new_project_settings;
 }
 
-void Renderer::setWidth(const qint32 new_width) { m_project_settings.width = new_width; }
-
-void Renderer::setHeight(const qint32 new_height) { m_project_settings.height = new_height; }
+void Renderer::setProjectSize(const QSize new_project_size) { m_project_settings.size = new_project_size; }
 
 void Renderer::setFPS(const qint32 new_fps) { m_project_settings.fps = new_fps; }
 

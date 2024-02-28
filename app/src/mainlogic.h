@@ -45,8 +45,7 @@ class MainLogic : public QObject {
     void saveProject(const QFileInfo& save_file_info);
     void loadProject(const QFileInfo& load_file_info);
 
-    void projectWidthChanged(const qint32 new_project_width);
-    void projectHeightChanged(const qint32 new_project_height);
+    void projectSizeChanged();
 
     void uiTimeChanged(const qreal time);
     void renderingVideoFinished();

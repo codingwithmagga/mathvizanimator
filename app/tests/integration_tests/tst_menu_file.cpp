@@ -112,8 +112,7 @@ void MenuFileIntegrationTest::loadProject()
     QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
     QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
     QVERIFY(m_helper_functions->compareNumAnimations("text", 0));
-    QCOMPARE(main_window_handler->property("pixel_width").toInt(), 1200);
-    QCOMPARE(main_window_handler->property("pixel_height").toInt(), 800);
+    QCOMPARE(main_window_handler->property("project_size").toSize(), QSize(1200, 800));
     QCOMPARE(main_window_handler->property("fps").toInt(), 32);
     QCOMPARE(main_window_handler->property("video_length").toInt(), 8);
 

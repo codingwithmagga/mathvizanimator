@@ -21,7 +21,9 @@
 #include "basic_item.h"
 #include "fade_in.h"
 #include "fade_out.h"
+#include "geometry_item.h"
 #include "logging.h"
+#include "textitem.h"
 
 ItemHandler::ItemHandler(QObject* parent)
     : QObject { parent }
@@ -73,6 +75,29 @@ QList<QSharedPointer<ItemObserver>> ItemHandler::items()
         list.append(dynamic_cast<ItemModelItem*>(item)->itemObserver());
     }
     return list;
+}
+
+void ItemHandler::scaleItems(const qreal width_ratio, const qreal height_ratio)
+{
+    const auto itemList = basicItems();
+    const auto avg_ratio = (width_ratio + height_ratio) / 2.0;
+
+    for (auto& item : itemList) {
+        item->setX(qRound(item->x() * width_ratio));
+        item->setWidth(qRound(item->width() * width_ratio));
+        item->setY(qRound(item->y() * height_ratio));
+        item->setHeight(qRound(item->height() * height_ratio));
+
+        auto abstract_item = item->abstractItem();
+        auto geometry_item = qobject_cast<GeometryItem*>(abstract_item);
+        auto text_item = qobject_cast<TextItem*>(abstract_item);
+        if (geometry_item) {
+            geometry_item->setBorderWidth(qRound(geometry_item->borderWidth() * avg_ratio));
+        }
+        if (text_item) {
+            text_item->setScaleText(text_item->scaleText() * avg_ratio);
+        }
+    }
 }
 
 void ItemHandler::setDeleteEachQuickItem(QModelIndex parent)
@@ -301,42 +326,6 @@ void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item)
         auto std_item_time_span(new QStandardItem(animation_time_span));
 
         m_animation_model.appendRow(QList<QStandardItem*> { std_item_name, std_item_time_span });
-    }
-}
-
-void ItemHandler::scaleItemsX(const qreal ratio)
-{
-    const auto itemList = basicItems();
-
-    for (auto& item : itemList) {
-        item->setX(qRound(item->x() * ratio));
-    }
-}
-
-void ItemHandler::scaleItemsY(const qreal ratio)
-{
-    const auto itemList = basicItems();
-
-    for (auto& item : itemList) {
-        item->setY(qRound(item->y() * ratio));
-    }
-}
-
-void ItemHandler::scaleItemsWidth(const qreal ratio)
-{
-    const auto itemList = basicItems();
-
-    for (auto& item : itemList) {
-        item->setWidth(qRound(item->width() * ratio));
-    }
-}
-
-void ItemHandler::scaleItemsHeight(const qreal ratio)
-{
-    const auto itemList = basicItems();
-
-    for (auto& item : itemList) {
-        item->setHeight(qRound(item->height() * ratio));
     }
 }
 

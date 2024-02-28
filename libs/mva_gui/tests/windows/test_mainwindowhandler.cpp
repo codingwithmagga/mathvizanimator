@@ -51,8 +51,7 @@ class TestMainWindowHandler : public QObject {
 
     QList<QSharedPointer<QSignalSpy>> createPropertySignalSpies(const MainWindowHandler& main_window_handler);
 
-    const qint32 m_width = 1000;
-    const qint32 m_height = 800;
+    const QSize m_size = QSize(1000, 800);
     const qint32 m_fps = 12;
     const qint32 m_video_length = 8;
 };
@@ -73,7 +72,7 @@ void TestMainWindowHandler::changedPropertyTests()
 void TestMainWindowHandler::unchangedPropertyTests()
 {
     MainWindowHandler main_window_handler;
-    QList<int> project_settings { m_width, m_height, m_fps, m_video_length };
+    QList<int> project_settings { m_size.width(), m_size.height(), m_fps, m_video_length };
     main_window_handler.updateProjectSettings(project_settings);
     const auto spyList = createPropertySignalSpies(main_window_handler);
 
@@ -207,7 +206,7 @@ void TestMainWindowHandler::updateProjectSettingsAsVariant()
 {
     MainWindowHandler main_window_handler;
     const auto spyList = createPropertySignalSpies(main_window_handler);
-    QVariantList project_settings { m_width, m_height, m_fps, m_video_length };
+    QVariantList project_settings { m_size.width(), m_size.height(), m_fps, m_video_length };
 
     main_window_handler.updateProjectSettings(project_settings);
 
@@ -221,7 +220,7 @@ void TestMainWindowHandler::updateProjectSettingsAsInt()
 {
     MainWindowHandler main_window_handler;
     const auto spyList = createPropertySignalSpies(main_window_handler);
-    QList<qint32> project_settings { m_width, m_height, m_fps, m_video_length };
+    QList<qint32> project_settings { m_size.width(), m_size.height(), m_fps, m_video_length };
 
     main_window_handler.updateProjectSettings(project_settings);
 
@@ -235,7 +234,7 @@ void TestMainWindowHandler::updateProjectSettingsAsVariantWrongSize()
 {
     MainWindowHandler main_window_handler;
     const auto spyList = createPropertySignalSpies(main_window_handler);
-    QVariantList project_settings { m_width, m_height, m_fps };
+    QVariantList project_settings { m_size.width(), m_fps };
 
     main_window_handler.updateProjectSettings(project_settings);
 
@@ -248,7 +247,7 @@ void TestMainWindowHandler::updateProjectSettingsAsIntWrongSize()
 {
     MainWindowHandler main_window_handler;
     const auto spyList = createPropertySignalSpies(main_window_handler);
-    QList<qint32> project_settings { m_width, m_fps, m_video_length };
+    QList<qint32> project_settings { m_size.width(), m_fps, m_video_length };
 
     main_window_handler.updateProjectSettings(project_settings);
 
@@ -259,16 +258,14 @@ void TestMainWindowHandler::updateProjectSettingsAsIntWrongSize()
 
 void TestMainWindowHandler::setMainWindowProperties(MainWindowHandler* main_window_handler)
 {
-    main_window_handler->setPixelWidth(m_width);
-    main_window_handler->setPixelHeight(m_height);
+    main_window_handler->setProjectSize(m_size);
     main_window_handler->setFPS(m_fps);
     main_window_handler->setVideoLength(m_video_length);
 }
 
 void TestMainWindowHandler::checkProperties(const MainWindowHandler& main_window_handler)
 {
-    QCOMPARE(main_window_handler.pixelWidth(), m_width);
-    QCOMPARE(main_window_handler.pixelHeight(), m_height);
+    QCOMPARE(main_window_handler.projectSize(), m_size);
     QCOMPARE(main_window_handler.fps(), m_fps);
     QCOMPARE(main_window_handler.videoLength(), m_video_length);
 }
@@ -279,9 +276,7 @@ QList<QSharedPointer<QSignalSpy>> TestMainWindowHandler::createPropertySignalSpi
     QList<QSharedPointer<QSignalSpy>> spy_list;
 
     spy_list.append(
-        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::pixelWidthChanged)));
-    spy_list.append(
-        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::pixelHeightChanged)));
+        QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::projectSizeChanged)));
     spy_list.append(QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::fpsChanged)));
     spy_list.append(
         QSharedPointer<QSignalSpy>(new QSignalSpy(&main_window_handler, &MainWindowHandler::videoLengthChanged)));

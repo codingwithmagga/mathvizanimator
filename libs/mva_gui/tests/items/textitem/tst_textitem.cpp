@@ -85,8 +85,8 @@ void TestTextItem::latexRenderTest()
     m_text_item.setLatexSource(test_latex);
 
     QVERIFY(svg_file.exists());
-    QCOMPARE(m_text_item.getLatexSource(), test_latex);
-    QCOMPARE(m_text_item.getSvgFile(), appPath.absoluteFilePath(svg_file.fileName()));
+    QCOMPARE(m_text_item.latexSource(), test_latex);
+    QCOMPARE(m_text_item.svgFile(), appPath.absoluteFilePath(svg_file.fileName()));
     QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".aux")));
     QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".dvi")));
     QVERIFY(!QFile::exists(appPath.absoluteFilePath(hash + ".log")));

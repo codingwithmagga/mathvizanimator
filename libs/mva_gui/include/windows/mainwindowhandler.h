@@ -27,18 +27,18 @@
 class MainWindowHandler : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY pixelWidthChanged)
-    Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY pixelHeightChanged)
+    Q_PROPERTY(QSize project_size READ projectSize WRITE setProjectSize NOTIFY projectSizeChanged)
     Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
     Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY videoLengthChanged)
 
   public:
     explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
 
-    qint32 pixelWidth() const;
-    qint32 pixelHeight() const;
     qint32 fps() const;
     qint32 videoLength() const;
+
+    QSize projectSize() const;
+    void setProjectSize(const QSize& new_project_size);
 
   public slots:
 
@@ -63,8 +63,6 @@ class MainWindowHandler : public QObject {
     void updateProjectSettings(const QVariantList& new_project_settings);
     void updateProjectSettings(const QList<qint32>& new_project_settings);
 
-    void setPixelWidth(const qint32 new_pixel_width);
-    void setPixelHeight(const qint32 new_pixel_height);
     void setFPS(const qint32 new_fps);
     void setVideoLength(const qint32 new_video_length);
 
@@ -72,10 +70,9 @@ class MainWindowHandler : public QObject {
         const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
 
   signals:
-    void pixelWidthChanged(const qint32 new_pixel_width);
-    void pixelHeightChanged(const qint32 new_pixel_height);
     void fpsChanged(const qint32 new_fps);
     void videoLengthChanged(const qint32 new_video_length);
+    void projectSizeChanged();
 
     void snapshotRequested(const QFileInfo& snapshot_file_info);
     void renderingRequested(const QFileInfo& video_file_info);
@@ -100,10 +97,9 @@ class MainWindowHandler : public QObject {
   private:
     QObject* m_qml_creation_area;
 
-    qint32 m_pixel_width;
-    qint32 m_pixel_height;
     qint32 m_fps;
     qint32 m_video_length;
+    QSize m_project_size;
 };
 
 #endif // LIBS_MVA_GUI_INCLUDE_WINDOWS_MAINWINDOWHANDLER_H_

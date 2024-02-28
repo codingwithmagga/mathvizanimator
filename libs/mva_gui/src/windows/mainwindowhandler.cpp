@@ -90,8 +90,7 @@ void MainWindowHandler::updateProjectSettings(const QList<qint32>& new_project_s
         return;
     }
 
-    setPixelWidth(new_project_settings[0]);
-    setPixelHeight(new_project_settings[1]);
+    setProjectSize(QSize(new_project_settings[0], new_project_settings[1]));
     setFPS(new_project_settings[2]);
     setVideoLength(new_project_settings[3]);
 }
@@ -102,33 +101,9 @@ void MainWindowHandler::newProject()
     emit newProjectRequested();
 }
 
-qint32 MainWindowHandler::pixelWidth() const { return m_pixel_width; }
-
-qint32 MainWindowHandler::pixelHeight() const { return m_pixel_height; }
-
 qint32 MainWindowHandler::fps() const { return m_fps; }
 
 qint32 MainWindowHandler::videoLength() const { return m_video_length; }
-
-void MainWindowHandler::setPixelWidth(const qint32 new_pixel_width)
-{
-    if (m_pixel_width == new_pixel_width) {
-        return;
-    }
-
-    m_pixel_width = new_pixel_width;
-    emit pixelWidthChanged(new_pixel_width);
-}
-
-void MainWindowHandler::setPixelHeight(const qint32 new_pixel_height)
-{
-    if (m_pixel_height == new_pixel_height) {
-        return;
-    }
-
-    m_pixel_height = new_pixel_height;
-    emit pixelHeightChanged(new_pixel_height);
-}
 
 void MainWindowHandler::setFPS(const qint32 new_fps)
 {
@@ -181,4 +156,16 @@ void MainWindowHandler::addItem(QQuickItem* item)
     // clang-format on
 
     emit itemAdded(basic_item);
+}
+
+QSize MainWindowHandler::projectSize() const { return m_project_size; }
+
+void MainWindowHandler::setProjectSize(const QSize& new_project_size)
+{
+    if (m_project_size == new_project_size) {
+        return;
+    }
+
+    m_project_size = new_project_size;
+    emit projectSizeChanged();
 }
