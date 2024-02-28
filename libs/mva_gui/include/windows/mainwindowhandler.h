@@ -36,10 +36,19 @@ class MainWindowHandler : public QObject {
   public:
     explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
 
+    void setPixelWidth(const qint32 new_pixel_width);
     qint32 pixelWidth() const;
+
+    void setPixelHeight(const qint32 new_pixel_height);
     qint32 pixelHeight() const;
+
+    void setFPS(const qint32 new_fps);
     qint32 fps() const;
+
+    void setVideoLength(const qint32 new_video_length);
     qint32 videoLength() const;
+
+    void setBackgroundColor(const QColor& newBackground_color);
     QColor backgroundColor() const;
 
   public slots:
@@ -64,12 +73,6 @@ class MainWindowHandler : public QObject {
 
     void updateProjectSettings(const QVariantList& new_project_settings);
     void updateProjectSettings(const QList<qint32>& new_project_settings, const QColor& new_background_color);
-
-    void setPixelWidth(const qint32 new_pixel_width);
-    void setPixelHeight(const qint32 new_pixel_height);
-    void setFPS(const qint32 new_fps);
-    void setVideoLength(const qint32 new_video_length);
-    void setBackgroundColor(const QColor& newBackground_color);
 
     void addAnimation(
         const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
