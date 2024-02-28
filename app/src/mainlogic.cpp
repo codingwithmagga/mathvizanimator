@@ -49,6 +49,8 @@ MainLogic::MainLogic(QObject* parent)
     connect(&m_mainwindowhandler, &MainWindowHandler::pixelHeightChanged, this, &MainLogic::projectHeightChanged);
     connect(&m_mainwindowhandler, &MainWindowHandler::fpsChanged, &m_renderer, &Renderer::setFPS);
     connect(&m_mainwindowhandler, &MainWindowHandler::videoLengthChanged, &m_renderer, &Renderer::setVideoLength);
+    connect(
+        &m_mainwindowhandler, &MainWindowHandler::backgroundColorChanged, &m_renderer, &Renderer::setBackgroundColor);
 
     connect(&m_mainwindowhandler, &MainWindowHandler::timeChanged, this, &MainLogic::uiTimeChanged);
 
@@ -59,7 +61,7 @@ MainLogic::MainLogic(QObject* parent)
     const auto default_project_settings = m_renderer.projectSettings();
     QList<qint32> conv_project_settings { default_project_settings.width, default_project_settings.height,
         default_project_settings.fps, default_project_settings.video_length };
-    m_mainwindowhandler.updateProjectSettings(conv_project_settings);
+    m_mainwindowhandler.updateProjectSettings(conv_project_settings, default_project_settings.background_color);
 }
 
 void MainLogic::initEngine(QQmlApplicationEngine* const engine)
@@ -235,6 +237,7 @@ QJsonObject MainLogic::projectSettingsJson() const
     json.insert("height", current_project_settings.height);
     json.insert("fps", current_project_settings.fps);
     json.insert("video_length", current_project_settings.video_length);
+    json.insert("background_color", current_project_settings.background_color.name());
 
     return json;
 }
@@ -245,4 +248,5 @@ void MainLogic::setProjectSettings(const QJsonObject& json)
     m_mainwindowhandler.setPixelHeight(json["height"].toInt());
     m_mainwindowhandler.setFPS(json["fps"].toInt());
     m_mainwindowhandler.setVideoLength(json["video_length"].toInt());
+    m_mainwindowhandler.setBackgroundColor(json["background_color"].toVariant().value<QColor>());
 }

@@ -34,6 +34,7 @@ class Renderer : public QObject {
         qint32 height = 768;
         qint32 fps = 24;
         qint32 video_length = 5;
+        QColor background_color = QColor("black");
     };
 
     explicit Renderer(QObject* parent = Q_NULLPTR);
@@ -45,6 +46,7 @@ class Renderer : public QObject {
     void setHeight(const qint32 new_height);
     void setFPS(const qint32 new_fps);
     void setVideoLength(const qint32 new_video_length);
+    void setBackgroundColor(const QColor& new_background_color);
 
     QImage createImage(const QList<QSharedPointer<ItemObserver>>& item_list, const qreal current_time) const;
 

@@ -183,7 +183,7 @@ ApplicationWindow {
 
         title: qsTr("Project Settings")
 
-        property list<int> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text, videoLengthInputField.text]
+        property list<var> projectData: [widthInputField.text, heightInputField.text, fpsInputField.text, videoLengthInputField.text, backgroundColorInputField.color]
 
         // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
@@ -290,6 +290,43 @@ ApplicationWindow {
                     validator: IntValidator {
                         bottom: 1
                         top: 9999
+                    }
+                }
+
+                Label {
+                    text: qsTr("Background color:")
+
+                    Layout.alignment: Qt.AlignRight
+
+                    horizontalAlignment: Text.AlignRight
+                }
+
+                Rectangle {
+                    id: backgroundColorInputField
+                    objectName: "MVAVideoLengthInputField"
+
+                    color: main_window.background_color
+
+                    width: videoLengthInputField.width
+                    height: videoLengthInputField.height
+                    radius: 10
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        onClicked: {
+                            backgroundColorSelectDialog.open()
+                        }
+                    }
+
+                    ColorDialog {
+                        id: backgroundColorSelectDialog
+
+                        selectedColor: backgroundColorInputField.color
+
+                        onAccepted: {
+                            backgroundColorInputField.color = selectedColor
+                        }
                     }
                 }
             }
@@ -535,7 +572,7 @@ ApplicationWindow {
                             id: dropZone
 
                             anchors.fill: parent
-                            color: "white"
+                            color: main_window.background_color
                         }
 
                         // Clear current item if user clicks in an empty area

@@ -90,10 +90,10 @@ void MenuProjectIntegrationTest::renderProjectAtNonZeroProjectTime()
     const auto main_window_handler = m_helper_functions->mainWindowHandler();
     const auto width = main_window_handler->property("pixel_width").toInt();
     const auto height = main_window_handler->property("pixel_height").toInt();
-    QImage full_white_image(QSize(width, height), QImage::Format::Format_RGB32);
-    full_white_image.fill(QColor("white"));
+    QImage full_black_image(QSize(width, height), QImage::Format::Format_RGB32);
+    full_black_image.fill(QColor("black"));
 
-    QCOMPARE(rendered_image, full_white_image);
+    QCOMPARE(rendered_image, full_black_image);
 }
 
 void MenuProjectIntegrationTest::createSnapshot()
