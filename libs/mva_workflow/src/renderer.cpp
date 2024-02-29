@@ -104,7 +104,7 @@ QImage Renderer::createImage(const QList<QSharedPointer<ItemObserver>>& item_lis
 {
     QImage image(m_project_settings.size, QImage::Format::Format_RGB32);
     image.fill(m_project_settings.background_color);
-  
+
     QPainter painter(&image);
 
     for (const auto& item_observer : item_list) {

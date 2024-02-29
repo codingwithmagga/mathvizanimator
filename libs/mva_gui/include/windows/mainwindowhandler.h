@@ -34,7 +34,7 @@ class MainWindowHandler : public QObject {
 
   public:
     explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
-  
+
     qint32 fps() const;
     void setFPS(const qint32 new_fps);
 
@@ -101,7 +101,6 @@ class MainWindowHandler : public QObject {
 
   private:
     QObject* m_qml_creation_area;
-
 
     QSize m_project_size = QSize(1024, 768);
     qint32 m_fps = 24;

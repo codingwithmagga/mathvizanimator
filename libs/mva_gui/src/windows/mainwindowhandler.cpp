@@ -166,6 +166,7 @@ void MainWindowHandler::setProjectSize(const QSize& new_project_size)
 
     m_project_size = new_project_size;
     emit projectSizeChanged();
+}
 
 QColor MainWindowHandler::backgroundColor() const { return m_background_color; }
 
