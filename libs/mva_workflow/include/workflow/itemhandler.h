@@ -49,6 +49,8 @@ class ItemHandler : public QObject {
     QList<BasicItem*> basicItems();
     QList<QSharedPointer<ItemObserver>> items();
 
+    void scaleItems(const qreal width_ratio, const qreal height_ratio);
+
   public slots:
     void clear();
 
@@ -61,12 +63,6 @@ class ItemHandler : public QObject {
         const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
     void addAnimations(const QString& item_name, const QList<QSharedPointer<AbstractAnimation>> animations);
     void removeAnimation(const qint32 animation_number);
-
-    void scaleItemsX(const qreal ratio);
-    void scaleItemsY(const qreal ratio);
-
-    void scaleItemsWidth(const qreal ratio);
-    void scaleItemsHeight(const qreal ratio);
 
     void setTime(const qreal time);
     void changeProperty(const QString& item_name, const QByteArray& property, const QVariant& value);

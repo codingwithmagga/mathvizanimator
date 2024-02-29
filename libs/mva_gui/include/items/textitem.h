@@ -31,26 +31,26 @@ class TextItem : public AbstractItem {
 
     // TODO(codingwithmagga): Relocate to a SvgHandler class or LatexHandler or
     // similar
-    Q_PROPERTY(QString latexSource READ getLatexSource WRITE setLatexSource NOTIFY latexSourceChanged)
+    Q_PROPERTY(QString latexSource READ latexSource WRITE setLatexSource NOTIFY latexSourceChanged)
 
-    Q_PROPERTY(QString svgFile READ getSvgFile WRITE setSvgFile NOTIFY svgFileChanged)
-    Q_PROPERTY(qreal scaleText READ getScaleText WRITE setScaleText NOTIFY scaleTextChanged)
+    Q_PROPERTY(QString svgFile READ svgFile WRITE setSvgFile NOTIFY svgFileChanged)
+    Q_PROPERTY(qreal scaleText READ scaleText WRITE setScaleText NOTIFY scaleTextChanged)
 
   public:
     explicit TextItem(BasicItem* parent = nullptr);
 
-    QString getSvgFile() const { return m_svg_file.absoluteFilePath(); }
+    QString svgFile() const { return m_svg_file.absoluteFilePath(); }
     void setSvgFile(const QFileInfo& newSvgFile);
     void setSvgFile(const QString& newSvgFile);
 
     void paint(QPainter* painter) override;
 
-    QString getLatexSource() const;
+    QString latexSource() const;
     // TODO(codingwithmagga): Relocate to a SvgHandler class or LatexHandler or
     // similar
     void setLatexSource(const QString& newLatexSource);
 
-    qreal getScaleText() const;
+    qreal scaleText() const;
     void setScaleText(qreal newScaleText);
 
     EditableProperties editableProperties() const override;

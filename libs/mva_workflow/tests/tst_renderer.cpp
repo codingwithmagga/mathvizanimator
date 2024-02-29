@@ -119,7 +119,8 @@ void TestRenderer::createImage_data()
 
     Renderer::ProjectSettings defaultProjectSettings;
 
-    QTest::newRow("default_setup") << defaultProjectSettings.height << defaultProjectSettings.width << default_frame;
+    QTest::newRow("default_setup") << defaultProjectSettings.size.height() << defaultProjectSettings.size.width()
+                                   << default_frame;
     QTest::newRow("mod_values") << 750 << 1250 << mod_frame;
 }
 
@@ -132,8 +133,7 @@ void TestRenderer::createImage()
     Renderer renderer;
 
     Renderer::ProjectSettings project_settings;
-    project_settings.width = width;
-    project_settings.height = height;
+    project_settings.size = QSize(width, height);
     project_settings.background_color = QColor("white");
 
     renderer.setProjectSettings(project_settings);
@@ -159,7 +159,7 @@ void TestRenderer::render_data()
 
     Renderer::ProjectSettings defaultProjectSettings;
 
-    QTest::newRow("default_setup") << defaultProjectSettings.height << defaultProjectSettings.width
+    QTest::newRow("default_setup") << defaultProjectSettings.size.height() << defaultProjectSettings.size.width()
                                    << defaultProjectSettings.fps << defaultProjectSettings.video_length
                                    << home_dir_video << default_frame;
     QTest::newRow("mod_values") << 750 << 1250 << 32 << 10 << temp_dir_video << mod_frame;
@@ -202,8 +202,7 @@ void TestRenderer::render()
         });
 
     Renderer::ProjectSettings project_settings;
-    project_settings.width = width;
-    project_settings.height = height;
+    project_settings.size = QSize(width, height);
     project_settings.fps = fps;
     project_settings.video_length = video_length;
     project_settings.background_color = QColor("white");
@@ -345,19 +344,16 @@ void TestRenderer::renderWithAnimation()
 void TestRenderer::setIndividualProjectSettings()
 {
     Renderer renderer;
-    const qint32 width = 1200;
-    const qint32 height = 888;
+    const QSize project_size = QSize(1200, 888);
     const qint32 fps = 15;
     const qint32 video_length = 12;
 
-    renderer.setWidth(width);
-    renderer.setHeight(height);
+    renderer.setProjectSize(project_size);
     renderer.setFPS(fps);
     renderer.setVideoLength(video_length);
 
     const auto renderer_project_settings = renderer.projectSettings();
-    QCOMPARE(renderer_project_settings.width, width);
-    QCOMPARE(renderer_project_settings.height, height);
+    QCOMPARE(renderer_project_settings.size, project_size);
     QCOMPARE(renderer_project_settings.fps, fps);
     QCOMPARE(renderer_project_settings.video_length, video_length);
 }

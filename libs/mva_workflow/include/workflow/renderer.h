@@ -30,8 +30,7 @@ class Renderer : public QObject {
 
   public:
     struct ProjectSettings {
-        qint32 width = 1024;
-        qint32 height = 768;
+        QSize size = QSize(1024, 768);
         qint32 fps = 24;
         qint32 video_length = 5;
         QColor background_color = QColor("black");
@@ -42,8 +41,7 @@ class Renderer : public QObject {
     ProjectSettings projectSettings() const;
     void setProjectSettings(const ProjectSettings& new_project_settings);
 
-    void setWidth(const qint32 new_width);
-    void setHeight(const qint32 new_height);
+    void setProjectSize(const QSize new_project_size);
     void setFPS(const qint32 new_fps);
     void setVideoLength(const qint32 new_video_length);
     void setBackgroundColor(const QColor& new_background_color);

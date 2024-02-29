@@ -27,8 +27,7 @@
 class MainWindowHandler : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(qint32 pixel_width READ pixelWidth WRITE setPixelWidth NOTIFY pixelWidthChanged)
-    Q_PROPERTY(qint32 pixel_height READ pixelHeight WRITE setPixelHeight NOTIFY pixelHeightChanged)
+    Q_PROPERTY(QSize project_size READ projectSize WRITE setProjectSize NOTIFY projectSizeChanged)
     Q_PROPERTY(qint32 fps READ fps WRITE setFPS NOTIFY fpsChanged)
     Q_PROPERTY(qint32 video_length READ videoLength WRITE setVideoLength NOTIFY videoLengthChanged)
     Q_PROPERTY(QColor background_color READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
@@ -36,20 +35,17 @@ class MainWindowHandler : public QObject {
   public:
     explicit MainWindowHandler(QObject* parent = Q_NULLPTR);
 
-    void setPixelWidth(const qint32 new_pixel_width);
-    qint32 pixelWidth() const;
-
-    void setPixelHeight(const qint32 new_pixel_height);
-    qint32 pixelHeight() const;
-
-    void setFPS(const qint32 new_fps);
     qint32 fps() const;
+    void setFPS(const qint32 new_fps);
 
-    void setVideoLength(const qint32 new_video_length);
     qint32 videoLength() const;
+    void setVideoLength(const qint32 new_video_length);
 
-    void setBackgroundColor(const QColor& newBackground_color);
+    QSize projectSize() const;
+    void setProjectSize(const QSize& new_project_size);
+
     QColor backgroundColor() const;
+    void setBackgroundColor(const QColor& newBackground_color);
 
   public slots:
 
@@ -78,10 +74,9 @@ class MainWindowHandler : public QObject {
         const QString& item_name, const QString& animation_type, const qreal start_time, const qreal duration);
 
   signals:
-    void pixelWidthChanged(const qint32 new_pixel_width);
-    void pixelHeightChanged(const qint32 new_pixel_height);
     void fpsChanged(const qint32 new_fps);
     void videoLengthChanged(const qint32 new_video_length);
+    void projectSizeChanged();
     void backgroundColorChanged(const QColor& new_background_color);
 
     void snapshotRequested(const QFileInfo& snapshot_file_info);
@@ -107,11 +102,9 @@ class MainWindowHandler : public QObject {
   private:
     QObject* m_qml_creation_area;
 
-    qint32 m_pixel_width = 1024;
-    qint32 m_pixel_height = 768;
+    QSize m_project_size = QSize(1024, 768);
     qint32 m_fps = 24;
     qint32 m_video_length = 5;
-
     QColor m_background_color = QColor("black");
 };
 

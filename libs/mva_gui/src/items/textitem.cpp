@@ -82,7 +82,7 @@ void TextItem::paint(QPainter* painter)
     painter->restore();
 }
 
-QString TextItem::getLatexSource() const { return m_latex_source; }
+QString TextItem::latexSource() const { return m_latex_source; }
 
 // TODO(codingwithmagga): Refactor this function
 void TextItem::setLatexSource(const QString& newLatexSource)
@@ -150,7 +150,7 @@ void TextItem::setLatexSource(const QString& newLatexSource)
     emit latexSourceChanged(newLatexSource);
 }
 
-qreal TextItem::getScaleText() const { return m_scale_text; }
+qreal TextItem::scaleText() const { return m_scale_text; }
 
 void TextItem::setScaleText(qreal newScaleText)
 {

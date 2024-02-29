@@ -88,9 +88,8 @@ void MenuProjectIntegrationTest::renderProjectAtNonZeroProjectTime()
     const auto rendered_image = m_helper_functions->extractImage(render_file);
 
     const auto main_window_handler = m_helper_functions->mainWindowHandler();
-    const auto width = main_window_handler->property("pixel_width").toInt();
-    const auto height = main_window_handler->property("pixel_height").toInt();
-    QImage full_black_image(QSize(width, height), QImage::Format::Format_RGB32);
+    const auto size = main_window_handler->property("project_size").toSize();
+    QImage full_black_image(size, QImage::Format::Format_RGB32);
     full_black_image.fill(QColor("black"));
 
     QCOMPARE(rendered_image, full_black_image);

@@ -218,7 +218,7 @@ ApplicationWindow {
                     id: widthInputField
                     objectName: "MVAWidthInputField"
 
-                    text: main_window.pixel_width
+                    text: main_window.project_size.width
 
                     horizontalAlignment: TextInput.AlignRight
 
@@ -239,7 +239,7 @@ ApplicationWindow {
                     id: heightInputField
                     objectName: "MVAHeightInputField"
 
-                    text: main_window.pixel_height
+                    text: main_window.project_size.height
 
                     horizontalAlignment: TextInput.AlignRight
 
@@ -515,7 +515,8 @@ ApplicationWindow {
                 Item {
                     id: dropAreaContainer
 
-                    property real aimedRatio: main_window.pixel_height / main_window.pixel_width
+                    property real aimedRatio: main_window.project_size.height
+                                              / main_window.project_size.width
 
                     property bool parentIsLarge: parentRatio > aimedRatio
                     property real parentRatio: parent.height / parent.width
@@ -530,7 +531,7 @@ ApplicationWindow {
                         property var newItem: null
                         property var abstractComponent: null
 
-                        property double baseWidth: main_window.pixel_width
+                        property double baseWidth: main_window.project_size.width
                         property double baseHeight: baseWidth * dropAreaContainer.aimedRatio
                         property double scaleFactor: dropAreaContainer.availableWidth / baseWidth
 

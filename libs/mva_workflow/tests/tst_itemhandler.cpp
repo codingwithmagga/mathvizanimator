@@ -23,6 +23,7 @@
 #include "fade_in.h"
 #include "fade_out.h"
 #include "itemhandler.h"
+#include "rectangle.h"
 
 class TestItemHandler : public QObject {
     Q_OBJECT
@@ -332,7 +333,7 @@ void TestItemHandler::scaleItemsPosX()
     itemhandler.addItem(rect);
 
     const qreal ratio = 0.65;
-    itemhandler.scaleItemsX(ratio);
+    itemhandler.scaleItems(ratio, 1.0);
 
     QCOMPARE(circle->x(), qRound(circle_x_old * ratio));
     QCOMPARE(circle->y(), circle_y_old);
@@ -358,7 +359,7 @@ void TestItemHandler::scaleItemsPosY()
     rect->setPosition(QPointF(rect_x_old, rect_y_old));
 
     const qreal ratio = 1.4;
-    itemhandler.scaleItemsY(ratio);
+    itemhandler.scaleItems(1.0, ratio);
 
     QCOMPARE(circle->x(), circle_x_old);
     QCOMPARE(circle->y(), qRound(circle_y_old * ratio));
@@ -375,17 +376,26 @@ void TestItemHandler::scaleItemsWidth()
     const qreal circle_height_old = 133;
     const qreal rect_width_old = 116;
     const qreal rect_height_old = 332;
+    const qreal circle_border_width_old = 20;
+    const qreal rect_border_width_old = 5;
 
     items[0]->setSize(QSizeF(circle_width_old, circle_height_old));
+    qobject_cast<CircleItem*>(items[0]->abstractItem())->setBorderWidth(circle_border_width_old);
     items[1]->setSize(QSizeF(rect_width_old, rect_height_old));
+    qobject_cast<RectangleItem*>(items[1]->abstractItem())->setBorderWidth(rect_border_width_old);
 
     const qreal ratio = 1.2;
-    itemhandler.scaleItemsWidth(ratio);
+    const qreal avg_ratio = (ratio + 1.0) / 2.0;
+    itemhandler.scaleItems(ratio, 1.0);
 
     QCOMPARE(items[0]->width(), qRound(circle_width_old * ratio));
     QCOMPARE(items[0]->height(), circle_height_old);
+    QCOMPARE(qobject_cast<CircleItem*>(items[0]->abstractItem())->borderWidth(),
+        qRound(avg_ratio * circle_border_width_old));
     QCOMPARE(items[1]->width(), qRound(rect_width_old * ratio));
     QCOMPARE(items[1]->height(), rect_height_old);
+    QCOMPARE(qobject_cast<RectangleItem*>(items[1]->abstractItem())->borderWidth(),
+        qRound(avg_ratio * rect_border_width_old));
 }
 
 void TestItemHandler::scaleItemsHeight()
@@ -397,21 +407,30 @@ void TestItemHandler::scaleItemsHeight()
     const qreal circle_height_old = 276;
     const qreal rect_width_old = 454;
     const qreal rect_height_old = 238;
+    const qreal circle_border_width_old = 50;
+    const qreal rect_border_width_old = 35;
 
     circle->setSize(QSizeF(circle_width_old, circle_height_old));
+    qobject_cast<CircleItem*>(circle->abstractItem())->setBorderWidth(circle_border_width_old);
     rect->setSize(QSizeF(rect_width_old, rect_height_old));
+    qobject_cast<RectangleItem*>(rect->abstractItem())->setBorderWidth(rect_border_width_old);
 
     ItemHandler itemhandler;
     itemhandler.addItem(circle);
     itemhandler.addItem(rect);
 
     const qreal ratio = 0.4;
-    itemhandler.scaleItemsHeight(ratio);
+    const qreal avg_ratio = (ratio + 1.0) / 2.0;
+    itemhandler.scaleItems(1.0, ratio);
 
     QCOMPARE(circle->height(), qRound(circle_height_old * ratio));
     QCOMPARE(circle->width(), circle_width_old);
+    QCOMPARE(
+        qobject_cast<CircleItem*>(circle->abstractItem())->borderWidth(), qRound(avg_ratio * circle_border_width_old));
     QCOMPARE(rect->height(), qRound(rect_height_old * ratio));
     QCOMPARE(rect->width(), rect_width_old);
+    QCOMPARE(
+        qobject_cast<RectangleItem*>(rect->abstractItem())->borderWidth(), qRound(avg_ratio * rect_border_width_old));
 }
 
 void TestItemHandler::getItems()
