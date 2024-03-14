@@ -5,7 +5,6 @@ The project is structured in multiple libraries and an application executable us
 
 .. graphviz::
 
-
     digraph G {
         compound = true
         subgraph "cluster_mva_gui" {
