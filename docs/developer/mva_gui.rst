@@ -62,7 +62,7 @@ It is important to set abstract_item property in the BasicItem element to the id
 Animations
 ++++++++++
 
-Explain AbstractAnimation interface
+Animations can be added by the user to items, specifying the starting time and duration. All animations are all derived from the **AbstractAnimation** class, which itself is derived from `QObject <https://doc.qt.io/qt-6/qobject.html>`_.
 
 .. graphviz::
 
@@ -73,3 +73,5 @@ Explain AbstractAnimation interface
         RealPropertyAnimation -> FadeIn;
         RealPropertyAnimation -> FadeOut;
     }
+
+Derived from the **AbstractAnimation** class is the **PropertyAnimation** class, which is the base class for animations which are based on item properties. The **RealPropertyAnimation** class, derived from **PropertyAnimation**, is the base class for real property based animations like **FadeIn** and **FadeOut**. Both animations are changing the opacity of an item from 0 to 1 or reverse.
