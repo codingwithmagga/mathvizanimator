@@ -63,3 +63,13 @@ Animations
 ++++++++++
 
 Explain AbstractAnimation interface
+
+.. graphviz::
+
+    digraph G {
+        QObject -> AbstractAnimation;
+        AbstractAnimation -> PropertyAnimation;
+        PropertyAnimation -> RealPropertyAnimation;
+        RealPropertyAnimation -> FadeIn;
+        RealPropertyAnimation -> FadeOut;
+    }

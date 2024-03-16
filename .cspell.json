@@ -69,6 +69,7 @@
     "keeped",
     "latexmk",
     "libx",
+    "ltail",
     "mainlogic",
     "mainwindow",
     "mainwindowhandler",
