@@ -6,7 +6,7 @@
 
 **MathVizAnimator** is a program to create mathematical based animations and render them into a video file. It is highly inspired by [manim](https://www.manim.community/).
 
-The program is written in C++ extensively using the [Qt](https://www.qt.io/) Library. For rendering the [ffmpeg](https://ffmpeg.org/) library is used and text can be created and added by using [LaTeX](https://www.latex-project.org/). 
+The program is written in C++ extensively using the [Qt](https://www.qt.io/) Library. For rendering the [FFmpeg](https://ffmpeg.org/) library is used and text can be created and added by using [LaTeX](https://www.latex-project.org/). 
 
 ## Features
 
@@ -20,7 +20,7 @@ The program is written in C++ extensively using the [Qt](https://www.qt.io/) Lib
 
 * Animations like FadeIn or FadeOut
 
-* Interface to create videos by using ffmpeg
+* Interface to create videos by using FFmpeg
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 > ***Note:*** *You also need to be able to provide ***CMake*** a supported
 [generator](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html).*
 
-* **ffmpeg** - found at [https://ffmpeg.org/](https://ffmpeg.org/)
+* **FFmpeg** - found at [https://ffmpeg.org/](https://ffmpeg.org/)
 
 * **LaTeX** - Depends on your OS, see [https://www.latex-project.org/get/](https://www.latex-project.org/get/)
 

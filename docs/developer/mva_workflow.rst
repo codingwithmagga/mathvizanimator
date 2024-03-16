@@ -19,7 +19,7 @@ There are also some basic information, which are stored in every json save file.
         "width": 1024
     }
 
-Interface to ffmpeg 
+Interface to FFmpeg 
 +++++++++++++++++++
 
-The Renderer class contains the interface to ffmpeg or rather the call of the ffmpeg process using the `QProcess <https://doc.qt.io/qt-6.5/qprocess.html>`_ class. ffmpeg is started using the *-rawvideo* flag which allows to send raw images for every video frame to the process. The raw images are created using a QImage together with the QPainter class. The used method (*AbstractItem::paintItem(QPainter\* painter)*) uses the same method (`void QQuickPaintedItem::paint(QPainter *painter) <https://doc.qt.io/qt-6.5/qquickpainteditem.html#paint>`_) which draws the items to the gui.
+The Renderer class contains the interface to FFmpeg or rather the call of the FFmpeg process using the `QProcess <https://doc.qt.io/qt-6.5/qprocess.html>`_ class. FFmpeg is started using the *-rawvideo* flag which allows to send raw images for every video frame to the process. The raw images are created using a QImage together with the QPainter class. The used method (*AbstractItem::paintItem(QPainter\* painter)*) uses the same method (`void QQuickPaintedItem::paint(QPainter *painter) <https://doc.qt.io/qt-6.5/qquickpainteditem.html#paint>`_) which draws the items to the gui.

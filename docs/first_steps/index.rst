@@ -140,13 +140,13 @@ Here is the resulting snapshot for the current time of 2.2 seconds. Note that th
 Render the video
 ++++++++++++++++
 
-The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that ffmpeg supports other formats like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. The save file is stored in json-format. So you can open and inspect it with any text editor if you like.
+The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that FFmpeg supports other formats like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. The save file is stored in json-format. So you can open and inspect it with any text editor if you like.
 
 .. image:: images/snapshot_example.png
   :width: 600
   :alt: Render menu
 
-.. note:: Note that there is currently no progress indicator or something similar to show the progress of the rendering process. If you can observe the logging output of the program, for example in your IDE, you can see the output from ffmpeg there and how it's progressing. 
+.. note:: Note that there is currently no progress indicator or something similar to show the progress of the rendering process. If you can observe the logging output of the program, for example in your IDE, you can see the output from FFmpeg there and how it's progressing. 
 
 Save the project
 ++++++++++++++++
