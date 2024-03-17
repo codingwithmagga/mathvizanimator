@@ -142,7 +142,7 @@ Render the video
 
 The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that FFmpeg supports other formats like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. The save file is stored in json-format. So you can open and inspect it with any text editor if you like.
 
-.. image:: images/snapshot_example.png
+.. image:: images/render_menu.png
   :width: 600
   :alt: Render menu
 
@@ -151,7 +151,7 @@ The animated video can be rendered by clicking on **Project->Render** and choose
 Save the project
 ++++++++++++++++
 
-The project can be saved by clicking on **File->Save As** and choose file name and destination. There is currently no option to save via shortcut or directly to the same file. You have to overwrite by following the process as explained before.
+The project can be saved by clicking on **File->Save As** and choose file name and destination. There is currently no option to save via shortcut or directly to the same file. You have to overwrite your save file by following the process as explained before.
 
 .. image:: images/save_project.png
   :width: 600

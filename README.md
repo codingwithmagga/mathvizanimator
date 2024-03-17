@@ -25,12 +25,14 @@ The program is written in C++ extensively using the [Qt](https://www.qt.io/) Lib
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local
-machine for development and testing purposes. Since this is just an alpha version, there exists no release or any option to install the program at the moment.
+machine for development and testing purposes. Since this is just an alpha version, there exists no release or any option to install the program at the moment. Please also have a look at the current [documentation](https://mathvizanimator.readthedocs.io/en/latest/).
 
 > ***Important Note:*** As stated above the program is currently under development and in an really early (alpha) stage. Be aware that using the program for
 important or long tasks is not recommended. For example there is no autosave function, not even a check if there are changes when closing the program. Crashes
 can occur at any time. Please keep that in mind. If you discover an issue (which is very likely) or have an idea for a new feature (which wouldn't surprise me)
 please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
+
+> ***Important Note:*** Currently only Linux and Windows builds are tested live. There is a github action to build and run tests on MacOS, but it was never executed there directly. If you want to run MathVizAnimator on MacOS be aware that there could be unknown bugs and behavior. Please open an [Issue](https://github.com/codingwithmagga/mathvizanimator/issues/new/choose) if any problems occur.
 
 ### Prerequisites
 

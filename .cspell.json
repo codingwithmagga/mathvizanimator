@@ -28,6 +28,7 @@
     "DRUN",
     "GCOVR",
     "GNUCC",
+    "ISSUE_NUMBER",
     "ITEMHANDLER",
     "LIBDIR",
     "MAINWINDOW",
