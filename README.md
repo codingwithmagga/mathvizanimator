@@ -6,7 +6,7 @@
 
 **MathVizAnimator** is a program to create mathematical based animations and render them into a video file. It is highly inspired by [manim](https://www.manim.community/).
 
-The program is written in C++ extensively using the [Qt](https://www.qt.io/) Library. For rendering the [ffmpeg](https://ffmpeg.org/) library is used and text can be created and added by using [LaTeX](https://www.latex-project.org/). 
+The program is written in C++ extensively using the [Qt](https://www.qt.io/) Library. For rendering the [FFmpeg](https://ffmpeg.org/) library is used and text can be created and added by using [LaTeX](https://www.latex-project.org/). 
 
 ## Features
 
@@ -20,17 +20,21 @@ The program is written in C++ extensively using the [Qt](https://www.qt.io/) Lib
 
 * Animations like FadeIn or FadeOut
 
-* Interface to create videos by using ffmpeg
+* Interface to create videos by using FFmpeg
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local
-machine for development and testing purposes. Since this is just an alpha version, there exists no release or any option to install the program at the moment.
+machine for development and testing purposes. Since this is just an alpha version, there exists no release or any option to install the program at the moment. Please also have a look at the current [documentation](https://mathvizanimator.readthedocs.io/en/latest/).
 
 > ***Important Note:*** As stated above the program is currently under development and in an really early (alpha) stage. Be aware that using the program for
 important or long tasks is not recommended. For example there is no autosave function, not even a check if there are changes when closing the program. Crashes
 can occur at any time. Please keep that in mind. If you discover an issue (which is very likely) or have an idea for a new feature (which wouldn't surprise me)
 please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
+
+If you want to use MathVizAnimator on MacOS please be aware of the following note.
+
+> ***Important Note for MacOS:*** Currently only Linux and Windows builds are tested live. There is a github action to build and run tests on MacOS, but it was never executed there directly. If you want to run MathVizAnimator on MacOS be aware that there could be unknown bugs and behavior. Please open an [Issue](https://github.com/codingwithmagga/mathvizanimator/issues/new/choose) if any problems occur.
 
 ### Prerequisites
 
@@ -44,7 +48,7 @@ please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 > ***Note:*** *You also need to be able to provide ***CMake*** a supported
 [generator](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html).*
 
-* **ffmpeg** - found at [https://ffmpeg.org/](https://ffmpeg.org/)
+* **FFmpeg** - found at [https://ffmpeg.org/](https://ffmpeg.org/)
 
 * **LaTeX** - Depends on your OS, see [https://www.latex-project.org/get/](https://www.latex-project.org/get/)
 

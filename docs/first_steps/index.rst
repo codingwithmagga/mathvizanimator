@@ -25,8 +25,8 @@ In this example a rectangle is selected by holding the left mouse button and dra
   :width: 600
   :alt: Rectangle in the middle of the application
 
-Adding an animation
-+++++++++++++++++++
+Adding animations
++++++++++++++++++
 
 Right clicking on the item opens a menu, where you can choose the option "Add animation".
 
@@ -90,7 +90,7 @@ After changing all this properties lets have a look at our rectangle:
   :width: 600
   :alt: Changed rectangle
 
-There is one thing left to do. Changing the **opacity** to 0.0. Since we use the fade in animation (see section :ref:`Adding an animation`) the rectangle would be visible at the beginning and just disappear at one second if we don't change this property. After doing so you will see that the rectangle disappears on the screen. This is because the current project time is set to 0.0. How to change that is described in the next section.
+There is one thing left to do. Changing the **opacity** to 0.0. Since we use the fade in animation (see section :ref:`Adding animations`) the rectangle would be visible at the beginning and just disappear at one second if we don't change this property. After doing so you will see that the rectangle disappears on the screen. This is because the current project time is set to 0.0. How to change that is described in the next section.
 
 Change current project time
 +++++++++++++++++++++++++++
@@ -142,18 +142,18 @@ Here is the resulting snapshot for the current time of 2.2 seconds. Note that th
 Render the video
 ++++++++++++++++
 
-The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that ffmpeg supports other formats like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. The save file is stored in json-format. So you can open and inspect it with any text editor if you like.
+The animated video can be rendered by clicking on **Project->Render** and choose file name and destination. The video will be saved as *.mp4* file as default. Note that FFmpeg supports other formats like *.mov*, which can be set manually by the user. Currently there is no check or anything so if you use another extension than *.mp4* it is not guaranteed that the rendering process works. The save file is stored in json-format. So you can open and inspect it with any text editor if you like.
 
-.. image:: images/snapshot_example.png
+.. image:: images/render_menu.png
   :width: 600
   :alt: Render menu
 
-.. note:: Note that there is currently no progress indicator or something similar to show the progress of the rendering process. If you can observe the logging output of the program, for example in your IDE, you can see the output from ffmpeg there and how it's progressing. 
+.. note:: Note that there is currently no progress indicator or something similar to show the progress of the rendering process. If you can observe the logging output of the program, for example in your IDE, you can see the output from FFmpeg there and how it's progressing. 
 
 Save the project
 ++++++++++++++++
 
-The project can be saved by clicking on **File->Save As** and choose file name and destination. There is currently no option to save via shortcut or directly to the same file. You have to overwrite by following the process as explained before.
+The project can be saved by clicking on **File->Save As** and choose file name and destination. There is currently no option to save via shortcut or directly to the same file. You have to overwrite your save file by following the process as explained before.
 
 .. image:: images/save_project.png
   :width: 600

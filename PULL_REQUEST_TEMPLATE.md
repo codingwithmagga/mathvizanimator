@@ -31,14 +31,16 @@ for how to format your code.
 
 ### Closing Issues
 
-Put `Fixes #XXXX` or similar in your comment to auto-close the issue that your PR fixes
+Put `Fixes #<ISSUE_NUMBER>` or similar in your comment to auto-close the issue that your PR fixes
 (if such).
 
 ---
 
 ## Template
 
-Fixes #XXXX
+Please delete all the above lines (including this one) and replace <ISSUE_NUMBER> with the issue you are fixing with this PR. Fill out the topics below if necessary.
+
+Fixes #<ISSUE_NUMBER>
 
 ### Proposed changes
 
@@ -65,14 +67,12 @@ See details at [CONTRIBUTING.md](CONTRIBUTING.md).
 [License](LICENSE).
 
 * [ ] To the best of my knowledge, the proposed patch is not based on a code under
-GPL or other license that is incompatible with MathVizAnimator
+a license that is incompatible with MathVizAnimator.
 
-* [ ] The PR is proposed to proper branch
+* [ ] The PR is proposed to proper branch.
 
-* [ ] There is reference to original bug report and related work
+* [ ] There is reference to original bug report and related work.
 
-* [ ] There is accuracy test, performance test and test data in the repository,
-if applicable
+* [ ] There is a unit test and or integration test added if necessary.
 
-* [ ] The feature is well documented and sample code can be built with the project
-CMake
+* [ ] The feature is well documented and an example was added if necessary.
