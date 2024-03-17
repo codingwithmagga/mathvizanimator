@@ -38,7 +38,7 @@ Put `Fixes #<ISSUE_NUMBER>` or similar in your comment to auto-close the issue t
 
 ## Template
 
-Please delete all the above lines (including this one) and replace <ISSUE_NUMBER> with the issue you are fixing with this PR.
+Please delete all the above lines (including this one) and replace <ISSUE_NUMBER> with the issue you are fixing with this PR. Fill out the topics below if necessary.
 
 Fixes #<ISSUE_NUMBER>
 
