@@ -32,7 +32,9 @@ important or long tasks is not recommended. For example there is no autosave fun
 can occur at any time. Please keep that in mind. If you discover an issue (which is very likely) or have an idea for a new feature (which wouldn't surprise me)
 please have a look at [CONTRIBUTING.md](CONTRIBUTING.md).
 
-> ***Important Note:*** Currently only Linux and Windows builds are tested live. There is a github action to build and run tests on MacOS, but it was never executed there directly. If you want to run MathVizAnimator on MacOS be aware that there could be unknown bugs and behavior. Please open an [Issue](https://github.com/codingwithmagga/mathvizanimator/issues/new/choose) if any problems occur.
+If you want to use MathVizAnimator on MacOS please be aware of the following note.
+
+> ***Important Note for MacOS:*** Currently only Linux and Windows builds are tested live. There is a github action to build and run tests on MacOS, but it was never executed there directly. If you want to run MathVizAnimator on MacOS be aware that there could be unknown bugs and behavior. Please open an [Issue](https://github.com/codingwithmagga/mathvizanimator/issues/new/choose) if any problems occur.
 
 ### Prerequisites
 
