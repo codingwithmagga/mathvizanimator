@@ -7,6 +7,9 @@ run-name: 'Pull request by @${{ github.actor }}'
     branches:
       - main
       - develop_*
+  push:
+    tags:
+      - "v*"
 
 permissions: read-all
 
@@ -146,9 +149,21 @@ jobs:
           files: build/mva_test_coverage.xml
           flags: unittests
           name: codecov-mva
-
-      #- name: (8) Setup tmate session
+      
+      #- name: (x) Setup tmate session
       #  if: ${{ failure() }}
       #  timeout-minutes: 60
       #  uses: mxschmitt/action-tmate@v3
 
+  after_build:
+    runs-on: ubuntu-latest
+    needs: build_matrix
+
+    steps:
+      - name: (8) Create release
+        if: startsWith(github.event_name, 'push tag')
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          automatic_release_tag: "latest"
