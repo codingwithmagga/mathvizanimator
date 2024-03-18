@@ -1,0 +1,169 @@
+---
+name: Build
+run-name: 'Pull request by @${{ github.actor }}'
+"on":
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - develop_*
+  push:
+    tags:
+      - "v*"
+
+permissions: read-all
+
+env:
+  SOURCE_DIR: ${{ github.workspace }}
+  QT_VERSION: 6.5.1
+
+jobs:
+  build_matrix:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+           - os: ubuntu-latest
+             qt-os: linux
+             qt-arch: gcc_64
+           - os: windows-latest
+             qt-os: windows
+             qt-arch: 'win64_msvc2019_64'
+           - os: macos-latest
+             qt-os: mac
+             qt-arch: 'clang_64'
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+
+    steps:
+      - name: (1) Checkout repo
+        uses: actions/checkout@v4
+        timeout-minutes: 5
+        with:
+          fetch-depth: 0
+
+      - name: (2) Get all tags for correct version determination
+        working-directory: "${{ env.SOURCE_DIR }}"
+        timeout-minutes: 5
+        shell: bash
+        run: |
+          git fetch --all --tags -f
+
+      - name: (3.1) Install Latex 
+        uses: teatimeguest/setup-texlive-action@v3
+        timeout-minutes: 10
+        with:
+          packages: >-
+            scheme-basic
+            preview
+            standalone
+            xcolor
+            dvisvgm
+
+      - name: (3.2) Install Qt
+        uses: jurplel/install-qt-action@v3
+        timeout-minutes: 30
+        with:
+          version: '${{ env.QT_VERSION }}'
+          host: ${{ matrix.qt-os }}
+          target: desktop
+          arch: ${{ matrix.qt-arch }}
+          dir: "${{ env.SOURCE_DIR }}"
+          setup-python: false
+          aqtversion: ==3.1.*
+          modules: 'qtmultimedia'  
+      
+      - name: (3.3) Install gcov on ubuntu
+        working-directory: "${{ env.SOURCE_DIR }}"
+        if: startsWith(matrix.os, 'ubuntu')
+        timeout-minutes: 10
+        run: |
+          sudo apt-get update && sudo apt-get upgrade
+          pip install gcovr==6.0
+
+      - name: (3.4) Setup FFmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
+        timeout-minutes: 5
+        id: setup-ffmpeg
+
+      - name: (4) Create build directory unix
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos') 
+        timeout-minutes: 1
+        run: |
+          mkdir -p "${{ env.SOURCE_DIR }}"/build
+      
+      - name: (4) Create build directory windows
+        if: startsWith(matrix.os, 'windows')
+        timeout-minutes: 1
+        run: |
+          mkdir -p "${{ env.SOURCE_DIR }}\build"
+
+      - name: (5) Build unix
+        if: startsWith(matrix.os, 'ubuntu') 
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}"
+          cmake --build . 
+          
+      - name: (5) Build macos
+        if: startsWith(matrix.os, 'macos') 
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          cmake -DCMAKE_BUILD_TYPE=Release "${{ env.SOURCE_DIR }}"
+          cmake --build . 
+     
+      - name: (5) Build windows
+        if: startsWith(matrix.os, 'windows')
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        shell: bash
+        run: |
+          cmake "${{ env.SOURCE_DIR }}"
+          cmake --build . --config Release
+      
+      - name: (6) Run tests on windows and macos
+        if: startsWith(matrix.os, 'windows') || startsWith(matrix.os, 'macos') 
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        shell: bash
+        timeout-minutes: 15
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          ctest -VV -C Release --output-on-failure
+
+      - name: (6) Run tests and code coverage on unix 
+        if: startsWith(matrix.os, 'ubuntu')
+        working-directory: "${{ env.SOURCE_DIR }}/build"
+        timeout-minutes: 15
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          cmake --build . --target mva_test_coverage -j4
+
+      - name: (7) Upload coverage reports to Codecov
+        if: startsWith(matrix.os, 'ubuntu') 
+        uses: codecov/codecov-action@v3
+        env:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: build/mva_test_coverage.xml
+          flags: unittests
+          name: codecov-mva
+      
+      #- name: (x) Setup tmate session
+      #  if: ${{ failure() }}
+      #  timeout-minutes: 60
+      #  uses: mxschmitt/action-tmate@v3
+
+  after_build:
+    runs-on: ubuntu-latest
+    needs: build_matrix
+
+    steps:
+      - name: (8) Create release
+        if: startsWith(github.event_name, 'push tag')
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          automatic_release_tag: "latest"

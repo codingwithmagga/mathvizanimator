@@ -1,0 +1,56 @@
+{
+    "item_0": {
+        "animation_0": {
+            "duration": 1,
+            "start_time": 0,
+            "type": "FadeIn"
+        },
+        "animation_1": {
+            "duration": 3,
+            "start_time": 3,
+            "type": "FadeOut"
+        },
+        "height": "100",
+        "abstract_item.color": "#008000",
+        "abstract_item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVARectangle.qml",
+        "abstract_item.name": "rect",
+        "abstract_item.opacity": "1",
+        "abstract_item.rotation": "45",
+        "width": "100",
+        "x": "293",
+        "y": "162"
+    },
+    "item_1": {
+        "animation_0": {
+            "duration": 1,
+            "start_time": 0,
+            "type": "FadeIn"
+        },
+        "height": "100",
+        "abstract_item.color": "#ffff00",
+        "abstract_item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVACircle.qml",
+        "abstract_item.name": "circle",
+        "abstract_item.opacity": "0.7",
+        "abstract_item.rotation": "0",
+        "width": "100",
+        "x": "670",
+        "y": "230"
+    },
+    "item_2": {
+        "abstract_item.file": "qrc:/qt/qml/cwa/mva/gui/qml/items/MVAText.qml",
+        "abstract_item.latexSource": "Hello World!",
+        "abstract_item.name": "text",
+        "abstract_item.opacity": "1",
+        "abstract_item.rotation": "0",
+        "abstract_item.scaleText": "5",
+        "x": "200",
+        "y": "499"
+    },
+    "project-settings": {
+        "fps": 32,
+        "height": 800,
+        "video_length": 8,
+        "width": 1200,
+        "background_color": "yellow"
+    }
+}
