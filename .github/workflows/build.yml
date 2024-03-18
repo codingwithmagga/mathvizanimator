@@ -149,7 +149,17 @@ jobs:
           files: build/mva_test_coverage.xml
           flags: unittests
           name: codecov-mva
+      
+      #- name: (x) Setup tmate session
+      #  if: ${{ failure() }}
+      #  timeout-minutes: 60
+      #  uses: mxschmitt/action-tmate@v3
 
+  after_build:
+    runs-on: ubuntu-latest
+    needs: build_matrix
+
+    steps:
       - name: (8) Create release
         if: startsWith(github.event_name, 'push tag')
         uses: "marvinpinto/action-automatic-releases@latest"
@@ -157,9 +167,3 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: true
           automatic_release_tag: "latest"
-
-      #- name: (9) Setup tmate session
-      #  if: ${{ failure() }}
-      #  timeout-minutes: 60
-      #  uses: mxschmitt/action-tmate@v3
-
