@@ -6,7 +6,7 @@ run-name: 'Pull request by @${{ github.actor }}'
   pull_request:
     branches:
       - main
-      - develop_*
+      - develop
   push:
     tags:
       - "v*"
