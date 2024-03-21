@@ -20,9 +20,10 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLoggingCategory>>
 #include <QSaveFile>
 
-#include "logging.h"
+Q_LOGGING_CATEGORY(savefilehandler, "cwa.mva.workflow.savefilehandler")
 
 bool SaveFileHandler::saveJSON(const QString& file_name, const QJsonObject json_data) const
 {
