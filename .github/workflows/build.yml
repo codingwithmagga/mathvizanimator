@@ -15,7 +15,7 @@ permissions: read-all
 
 env:
   SOURCE_DIR: ${{ github.workspace }}
-  QT_VERSION: 6.5.1
+  QT_VERSION: 6.5.3
 
 jobs:
   build_matrix:

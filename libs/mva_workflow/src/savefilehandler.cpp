@@ -20,7 +20,7 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QLoggingCategory>>
+#include <QLoggingCategory>
 #include <QSaveFile>
 
 Q_LOGGING_CATEGORY(savefilehandler, "cwa.mva.workflow.savefilehandler")
