@@ -15,7 +15,7 @@ permissions: read-all
 
 env:
   SOURCE_DIR: ${{ github.workspace }}
-  QT_VERSION: 6.5.3
+  QT_VERSION: 6.5.2 # https://bugreports.qt.io/browse/QTBUG-117765 Issue with MacOS with 6.5.3, will be fixed in 6.5.4
 
 jobs:
   build_matrix:
