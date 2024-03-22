@@ -17,16 +17,13 @@
 
 #include "itemhandler.h"
 
-#include <QLoggingCategory>
-
 #include "abstractitem.h"
 #include "basic_item.h"
 #include "fade_in.h"
 #include "fade_out.h"
 #include "geometry_item.h"
+#include "logging.h"
 #include "textitem.h"
-
-Q_LOGGING_CATEGORY(itemhandler, "cwa.mva.workflow.itemhandler")
 
 ItemHandler::ItemHandler(QObject* parent)
     : QObject { parent }
