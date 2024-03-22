@@ -104,7 +104,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}"
+          cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}"
           cmake --build . 
           
       - name: (5) Build macos
