@@ -13,11 +13,12 @@ qt_add_library(workflow
     STATIC
 
     src/savefilehandler.cpp
-
+    src/logging.cpp
     src/renderer.cpp
     src/itemhandler.cpp
     src/item_observer.cpp
 
+    include/private/logging.h
     include/workflow/savefilehandler.h
     include/workflow/renderer.h
     include/workflow/itemhandler.h
@@ -35,6 +36,8 @@ target_link_libraries(workflow
 target_include_directories(workflow
     PUBLIC
         include/workflow
+    PRIVATE
+        include/private
 )
 
 add_subdirectory(tests)

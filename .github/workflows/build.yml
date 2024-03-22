@@ -6,7 +6,7 @@ run-name: 'Pull request by @${{ github.actor }}'
   pull_request:
     branches:
       - main
-      - develop
+      - develop_*
   push:
     tags:
       - "v*"
@@ -15,7 +15,7 @@ permissions: read-all
 
 env:
   SOURCE_DIR: ${{ github.workspace }}
-  QT_VERSION: 6.5.2 # https://bugreports.qt.io/browse/QTBUG-117765 Issue with MacOS with 6.5.3, will be fixed in 6.5.4
+  QT_VERSION: 6.5.1
 
 jobs:
   build_matrix:
@@ -104,7 +104,7 @@ jobs:
         working-directory: "${{ env.SOURCE_DIR }}/build"
         timeout-minutes: 15
         run: |
-          cmake -DCMAKE_BUILD_TYPE=Debug -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}"
+          cmake -DCMAKE_BUILD_TYPE=Release -DRUN_CODE_COVERAGE=True "${{ env.SOURCE_DIR }}"
           cmake --build . 
           
       - name: (5) Build macos
