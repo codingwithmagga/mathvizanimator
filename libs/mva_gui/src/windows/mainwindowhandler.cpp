@@ -18,9 +18,10 @@
 #include "mainwindowhandler.h"
 
 #include <QDesktopServices>
+#include <QLoggingCategory>
 #include <QStandardPaths>
 
-#include "logging.h"
+Q_LOGGING_CATEGORY(mainwindow_handler, "cwa.mva.gui.mainwindow_handler")
 
 MainWindowHandler::MainWindowHandler(QObject* parent)
     : QObject(parent)
