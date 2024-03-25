@@ -18,9 +18,10 @@
 #include "renderer.h"
 
 #include <QImage>
+#include <QLoggingCategory>
 #include <QPainter>
 
-#include "logging.h"
+Q_LOGGING_CATEGORY(renderer, "cwa.mva.workflow.renderer")
 
 Renderer::Renderer(QObject* parent)
     : QObject { parent }
