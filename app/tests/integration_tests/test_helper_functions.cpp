@@ -228,6 +228,70 @@ QImage TestHelperFunctions::extractImage(const QString& video_file) const
     return QImage(extracted_frame_file.fileName());
 }
 
+bool TestHelperFunctions::loadFile(const QString& full_file_path) const
+{
+    if (!QFile::exists(full_file_path)) {
+        return false;
+    }
+
+    auto load_action_item = getChild<QObject*>("MVALoadProjectAction");
+    QMetaObject::invokeMethod(load_action_item, "trigger");
+
+    auto load_file_dialog = getChild<QObject*>("MVALoadFileDialog");
+    if (!QTest::qWaitFor([&]() { return load_file_dialog->property("visible").toBool(); })) {
+        return false;
+    }
+
+    load_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(full_file_path)));
+    QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted", Qt::QueuedConnection);
+
+    return QTest::qWaitFor([&]() { return !load_file_dialog->property("visible").toBool(); });
+}
+
+QString TestHelperFunctions::copyFileToTestDir(QFile& file, const QString& new_file_name) const
+{
+    if (!file.exists()) {
+        return QString();
+    }
+
+    const QString file_path = TestHelperFunctions::absoluteFilePath(new_file_name);
+    if (QFile::exists(file_path)) {
+        QFile::remove(file_path);
+    }
+
+    if (!file.copy(file_path)) {
+        return QString();
+    }
+    QFile::setPermissions(file_path, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    return file_path;
+}
+
+void TestHelperFunctions::saveFile() const
+{
+    auto save_action_item = getChild<QObject*>("MVASaveProjectAction");
+    QMetaObject::invokeMethod(save_action_item, "trigger");
+}
+
+bool TestHelperFunctions::saveFileAs(const QString& full_file_path) const
+{
+    auto save_as_action_item = getChild<QObject*>("MVASaveProjectAsAction");
+    QMetaObject::invokeMethod(save_as_action_item, "trigger");
+
+    if (QFile::exists(full_file_path)) {
+        QFile::remove(full_file_path);
+    }
+
+    auto save_file_dialog = getChild<QObject*>("MVASaveFileDialog");
+    if (!save_file_dialog->property("visible").toBool()) {
+        return false;
+    }
+
+    save_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(full_file_path)));
+    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted", Qt::DirectConnection);
+
+    return true;
+}
+
 QString TestHelperFunctions::absoluteFilePath(const QString file_name)
 {
     const QString save_dir = "test_files";

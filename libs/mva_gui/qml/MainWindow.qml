@@ -32,7 +32,9 @@ ApplicationWindow {
     visible: true
     width: 1600
     height: 1200
-    title: qsTr("mathvizanimator")
+    title: saveFile.toString(
+               ) === "" ? qsTr("mathvizanimator") : qsTr(
+                              "mathvizanimator") + " - " + saveFileTitle
 
     font.pointSize: 14
 
@@ -44,6 +46,7 @@ ApplicationWindow {
     property ApplicationWindow appWindow: root
     property string thekey: "MVADropAreaKey"
     property url saveFile: ""
+    property string saveFileTitle: saveFile.toString().substring(7)
     property var dragItem: null
     property bool objectDragActive: false
 
@@ -69,6 +72,7 @@ ApplicationWindow {
         onAccepted: {
             newAction.trigger(loadFileDialog)
             main_window.loadProject(selectedFile)
+            saveFile = selectedFile
         }
 
         // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
@@ -88,7 +92,10 @@ ApplicationWindow {
         defaultSuffix: ".json"
         nameFilters: ["JSON (*.json)"]
 
-        onAccepted: main_window.saveProject(selectedFile)
+        onAccepted: {
+            main_window.saveProject(selectedFile)
+            saveFile = selectedFile
+        }
 
         // Necessary for integration testing, close() is needed for macOS test, it crashes (segmentation fault) otherwise
         function simulateAccepted() {
@@ -365,6 +372,21 @@ ApplicationWindow {
 
                 text: qsTr("&Open...")
                 onTriggered: loadFileDialog.open()
+            }
+
+            Action {
+                id: saveAction
+                objectName: "MVASaveProjectAction"
+
+                text: qsTr("&Save")
+                onTriggered: {
+                    if (saveFile.toString() === "") {
+                        saveAsAction.trigger()
+                        return
+                    }
+
+                    main_window.saveProject(saveFile)
+                }
             }
 
             Action {
