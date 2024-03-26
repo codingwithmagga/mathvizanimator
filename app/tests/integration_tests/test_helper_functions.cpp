@@ -259,7 +259,7 @@ QString TestHelperFunctions::copyFileToTestDir(const QFile& file, const QString&
         QFile::remove(file_path);
     }
 
-    if (!QFile::copy(file.fileName(), file_path)) {
+    if (!QFile::copy(file.fileName(), file_path)) { // NOLINT, false positive
         return QString();
     }
     QFile::setPermissions(file_path, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
