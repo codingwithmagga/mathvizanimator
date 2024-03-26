@@ -153,10 +153,12 @@ The animated video can be rendered by clicking on **Project->Render** and choose
 Save the project
 ++++++++++++++++
 
-The project can be saved by clicking on **File->Save As** and choose file name and destination. There is currently no option to save via shortcut or directly to the same file. You have to overwrite your save file by following the process as explained before.
+The project can be saved by clicking on **File->Save As** and choose file name and destination. 
 
 .. image:: images/save_project.png
   :width: 600
   :alt: Save project menu
+
+Clicking on **File->Save** will save the project to the current file, which is either the last file saved to or the last file which was loaded using **File->Open Project**. If there is no current file, a file dialog will be opened to specify a file. There is currently no option to save via shortcut like *STRG + S*. 
 
 .. note:: The files (save file, video and snapshot) of this example can be found in the examples/first_steps folder of the repository.

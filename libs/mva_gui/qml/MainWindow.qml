@@ -370,7 +370,7 @@ ApplicationWindow {
                 id: loadAction
                 objectName: "MVALoadProjectAction"
 
-                text: qsTr("&Open...")
+                text: qsTr("&Open Project")
                 onTriggered: loadFileDialog.open()
             }
 
@@ -393,7 +393,7 @@ ApplicationWindow {
                 id: saveAsAction
                 objectName: "MVASaveProjectAsAction"
 
-                text: qsTr("Save &As...")
+                text: qsTr("Save &As")
                 onTriggered: saveFileDialog.open()
             }
 
