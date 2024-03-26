@@ -71,7 +71,7 @@ class TestHelperFunctions {
     bool saveFileAs(const QString& full_file_path) const;
     bool loadFile(const QString& full_file_path) const;
 
-    QString copyFileToTestDir(QFile& file, const QString& new_file_name) const;
+    QString copyFileToTestDir(const QFile& file, const QString& new_file_name) const;
 
     template <typename T> T getChild(const QString& name) const
     {

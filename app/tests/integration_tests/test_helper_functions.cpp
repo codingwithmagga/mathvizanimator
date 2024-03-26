@@ -248,7 +248,7 @@ bool TestHelperFunctions::loadFile(const QString& full_file_path) const
     return QTest::qWaitFor([&]() { return !load_file_dialog->property("visible").toBool(); });
 }
 
-QString TestHelperFunctions::copyFileToTestDir(QFile& file, const QString& new_file_name) const
+QString TestHelperFunctions::copyFileToTestDir(const QFile& file, const QString& new_file_name) const
 {
     if (!file.exists()) {
         return QString();
@@ -259,7 +259,7 @@ QString TestHelperFunctions::copyFileToTestDir(QFile& file, const QString& new_f
         QFile::remove(file_path);
     }
 
-    if (!file.copy(file_path)) {
+    if (!QFile::copy(file.fileName(), file_path)) {
         return QString();
     }
     QFile::setPermissions(file_path, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
