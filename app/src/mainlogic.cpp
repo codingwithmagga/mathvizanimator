@@ -142,6 +142,9 @@ void MainLogic::loadProject(const QFileInfo& load_file_info)
     setProjectSettings(json["project-settings"].toObject());
 
     for (const QString& itemKey : json.keys()) {
+        if (!itemKey.startsWith("item_")) {
+            continue;
+        }
         auto item_json = json[itemKey].toObject();
 
         QQmlComponent component(m_qml_engine, QUrl(item_json["abstract_item.file"].toString()));

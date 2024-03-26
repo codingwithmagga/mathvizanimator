@@ -67,6 +67,12 @@ class TestHelperFunctions {
     bool renderVideo(const QString& render_file) const;
     QImage extractImage(const QString& video_file) const;
 
+    void saveFile() const;
+    bool saveFileAs(const QString& full_file_path) const;
+    bool loadFile(const QString& full_file_path) const;
+
+    QString copyFileToTestDir(const QFile& file, const QString& new_file_name) const;
+
     template <typename T> T getChild(const QString& name) const
     {
         auto child = m_quick_window->findChild<T>(name);

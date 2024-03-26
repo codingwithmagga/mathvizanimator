@@ -33,6 +33,9 @@ class MenuFileIntegrationTest : public QObject {
 
     void clearProject();
     void loadProject();
+    void saveProjectFromScratch();
+    void saveProjectFromFile();
+    void saveProjectWithoutFile();
     void saveAsProject();
     void quitApp();
 
@@ -86,28 +89,11 @@ void MenuFileIntegrationTest::clearProject()
 void MenuFileIntegrationTest::loadProject()
 {
     QFile test_save_file(":/integrations_tests_data/test_save_file.json");
-    QVERIFY(test_save_file.exists());
-
-    const QString test_load_file_absolute_path = TestHelperFunctions::absoluteFilePath("test_load_file.json");
-    if (QFile::exists(test_load_file_absolute_path)) {
-        QFile::remove(test_load_file_absolute_path);
-    }
-
-    test_save_file.copy(test_load_file_absolute_path);
-    QVERIFY(QFile::exists(test_load_file_absolute_path));
-
-    auto load_action_item = m_helper_functions->getChild<QObject*>("MVALoadProjectAction");
-    QMetaObject::invokeMethod(load_action_item, "trigger");
-
-    auto load_file_dialog = m_helper_functions->getChild<QObject*>("MVALoadFileDialog");
-    QVERIFY(QTest::qWaitFor([&]() { return load_file_dialog->property("visible").toBool(); }));
-
-    load_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(test_load_file_absolute_path)));
-    QMetaObject::invokeMethod(load_file_dialog, "simulateAccepted", Qt::QueuedConnection);
+    const QString file_path = m_helper_functions->copyFileToTestDir(test_save_file, "test_load_file.json");
+    QVERIFY(m_helper_functions->loadFile(file_path));
 
     const auto main_window_handler = m_helper_functions->mainWindowHandler();
 
-    QVERIFY(QTest::qWaitFor([&]() { return !load_file_dialog->property("visible").toBool(); }));
     QVERIFY(m_helper_functions->compareNumItems(3));
     QVERIFY(m_helper_functions->compareNumAnimations("rect", 2));
     QVERIFY(m_helper_functions->compareNumAnimations("circle", 1));
@@ -130,6 +116,48 @@ void MenuFileIntegrationTest::loadProject()
     QCOMPARE(m_helper_functions->getPropertyValue("name"), "circle");
 }
 
+void MenuFileIntegrationTest::saveProjectFromScratch()
+{
+    m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
+    const QString test_save_file_absolute_path = TestHelperFunctions::absoluteFilePath("test_save_file.json");
+    m_helper_functions->saveFileAs(test_save_file_absolute_path);
+
+    m_helper_functions->dragAndDropCurrentItem(QPoint(200, 200));
+    m_helper_functions->saveFile();
+
+    SaveFileHandler save_file_handler;
+    const auto load_json_object = save_file_handler.loadJSON(QFileInfo(test_save_file_absolute_path)).object();
+    QVERIFY(load_json_object.value("item_0").isObject());
+    QVERIFY(load_json_object.value("item_1").isObject());
+}
+
+void MenuFileIntegrationTest::saveProjectFromFile()
+{
+    QFile test_save_file(":/integrations_tests_data/test_save_file.json");
+    const QString file_path = m_helper_functions->copyFileToTestDir(test_save_file, "test_load_file.json");
+    QVERIFY(m_helper_functions->loadFile(file_path));
+
+    m_helper_functions->dragAndDropCurrentItem(QPoint(200, 200));
+    m_helper_functions->saveFile();
+
+    SaveFileHandler save_file_handler;
+    const auto load_json_object = save_file_handler.loadJSON(QFileInfo(file_path)).object();
+    QVERIFY(load_json_object.value("item_0").isObject());
+    QVERIFY(load_json_object.value("item_1").isObject());
+    QVERIFY(load_json_object.value("item_2").isObject());
+    QVERIFY(load_json_object.value("item_3").isObject());
+}
+
+void MenuFileIntegrationTest::saveProjectWithoutFile()
+{
+    m_helper_functions->dragAndDropCurrentItem(QPoint(200, 200));
+    m_helper_functions->saveFile();
+
+    auto save_file_dialog = m_helper_functions->getChild<QObject*>("MVASaveFileDialog");
+
+    QVERIFY(QTest::qWaitFor([&]() { return save_file_dialog->property("visible").toBool(); }));
+}
+
 void MenuFileIntegrationTest::saveAsProject()
 {
     m_helper_functions->dragAndDropCurrentItem(QPoint(100, 100));
@@ -138,19 +166,8 @@ void MenuFileIntegrationTest::saveAsProject()
     m_helper_functions->changePropertyValue(0, "opacity", "0.0");
     m_helper_functions->changeTime(1.7);
 
-    auto save_as_action_item = m_helper_functions->getChild<QObject*>("MVASaveProjectAsAction");
-    QMetaObject::invokeMethod(save_as_action_item, "trigger");
-
     const QString test_save_file_absolute_path = TestHelperFunctions::absoluteFilePath("test_save_file.json");
-    if (QFile::exists(test_save_file_absolute_path)) {
-        QFile::remove(test_save_file_absolute_path);
-    }
-
-    auto save_file_dialog = m_helper_functions->getChild<QObject*>("MVASaveFileDialog");
-    QVERIFY(save_file_dialog->property("visible").toBool());
-
-    save_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(test_save_file_absolute_path)));
-    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted", Qt::DirectConnection);
+    m_helper_functions->saveFileAs(test_save_file_absolute_path);
 
     QVERIFY(QFile::exists(test_save_file_absolute_path));
 
