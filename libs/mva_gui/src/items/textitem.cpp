@@ -170,7 +170,6 @@ AbstractItem::EditableProperties TextItem::editableProperties() const
 
     abstractList.abstract_item_properties.append("latexSource");
     abstractList.abstract_item_properties.append("scaleText");
-
     return abstractList;
 }
 
