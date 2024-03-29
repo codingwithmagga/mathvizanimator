@@ -47,7 +47,9 @@ void TestLaTeXProcess::renderHelloWorld()
         QVERIFY(QFile::exists(dvi_file.absoluteFilePath()));
 
         latex_process.cleanup();
-        QCOMPARE(SVGConfig::getInstance().svgDir().entryInfoList(QDir::NoDotAndDotDot).length(), 0);
+        QVERIFY(!QFile::exists(dvi_file.absoluteFilePath()));
+        QVERIFY(!QFile::exists(QFileInfo(dvi_file.baseName() + ".log").absoluteFilePath()));
+        QVERIFY(!QFile::exists(QFileInfo(dvi_file.baseName() + ".aux").absoluteFilePath()));
     });
 
     latex_process.start();

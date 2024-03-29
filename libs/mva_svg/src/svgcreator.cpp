@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <QStandardPaths>
 
+#include "dvisvgmprocess.h"
 #include "latexprocess.h"
 #include "svg_config.h"
 
@@ -36,22 +37,24 @@ void SVGCreator::latexProcessFinished(const QFileInfo& dvi_file)
 {
     const auto hash = dvi_file.baseName();
 
-    QProcess dvisvgm_process;
-    dvisvgm_process.setWorkingDirectory(SVGConfig::getInstance().svgDir().absolutePath());
-    dvisvgm_process.start(m_dvisvgm_path,
-        QStringList {} << dvi_file.absoluteFilePath() << "-n"
-                       << "-o" << hash + ".svg");
+    const auto dvisvgm_process = QSharedPointer<DvisvgmProcess>(new DvisvgmProcess(dvi_file));
+    m_dvisvgm_process_map.insert(hash, dvisvgm_process);
 
+    connect(dvisvgm_process.data(), &DvisvgmProcess::processFinished, this,
+        [&](const QFileInfo& dvi_file) { dvisvgmProcessFinished(dvi_file); });
+
+    dvisvgm_process->start();
+}
+
+void SVGCreator::dvisvgmProcessFinished(const QFileInfo& svg_file)
+{
+    const auto hash = svg_file.baseName();
+
+    m_dvisvgm_process_map.take(hash);
     const auto latex_process = m_latex_process_map.take(hash);
-    if (!dvisvgm_process.waitForFinished()) {
-        qDebug() << "Make failed:" << dvisvgm_process.errorString();
-        latex_process->cleanup();
-        return;
-    }
     latex_process->cleanup();
 
-    const QFileInfo svgFile(SVGConfig::getInstance().svgDir().absoluteFilePath(hash + ".svg"));
-    emit latexRenderingFinished(svgFile);
+    emit latexRenderingFinished(svg_file);
 }
 
 void SVGCreator::latexProcessFailed(QProcess::ProcessError error)

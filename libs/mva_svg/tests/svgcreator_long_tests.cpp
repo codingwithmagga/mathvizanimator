@@ -53,6 +53,10 @@ void TestSVGCreator::renderHelloWorld()
 
         const QString validation_svg = readData("://validation_data/hello_world.svg");
         QCOMPARE(readData(created_svg_file.absoluteFilePath()), validation_svg);
+
+        QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".dvi").absoluteFilePath()));
+        QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".log").absoluteFilePath()));
+        QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".aux").absoluteFilePath()));
     });
 
     svg_creator.renderLaTeX(latex_text);

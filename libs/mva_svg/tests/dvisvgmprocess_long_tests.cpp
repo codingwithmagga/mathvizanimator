@@ -19,10 +19,11 @@
 #include <QStandardPaths>
 #include <QTest>
 
-#include "latexprocess.h"
+#include "dvisvgmprocess.h"
 #include "svg_config.h"
+#include "svg_test_helper_functions.h"
 
-class TestLaTeXProcess : public QObject {
+class TestDvisvgmProcess : public QObject {
     Q_OBJECT
 
   private slots:
@@ -30,59 +31,40 @@ class TestLaTeXProcess : public QObject {
 
     void renderHelloWorld();
     void renderError();
-
-  private:
-    QFileInfo createLocalFile(const QString& resource_file_path);
 };
 
-void TestLaTeXProcess::initTestCase() { SVGConfig::getInstance().setSVGDir(QDir::current()); }
+void TestDvisvgmProcess::initTestCase() { SVGConfig::getInstance().setSVGDir(QDir::current()); }
 
-void TestLaTeXProcess::renderHelloWorld()
+void TestDvisvgmProcess::renderHelloWorld()
 {
-    LaTeXProcess latex_process(createLocalFile("://test_data/latex_hello_world.tex"));
+    const auto local_dvi_file = SVGTestHelperFunctions::createLocalFile("://test_data/latex_hello_world.dvi");
+    DvisvgmProcess dvi_process(local_dvi_file);
 
-    QSignalSpy spyFinished(&latex_process, &LaTeXProcess::processFinished);
-    QSignalSpy spyError(&latex_process, &LaTeXProcess::processFailed);
-    connect(&latex_process, &LaTeXProcess::processFinished, this, [&](const QFileInfo& dvi_file) {
-        QVERIFY(QFile::exists(dvi_file.absoluteFilePath()));
+    QSignalSpy spyFinished(&dvi_process, &DvisvgmProcess::processFinished);
+    QSignalSpy spyError(&dvi_process, &DvisvgmProcess::processFailed);
+    connect(&dvi_process, &DvisvgmProcess::processFinished, this, [&](const QFileInfo& svg_file) {
+        QVERIFY(QFile::exists(svg_file.absoluteFilePath()));
 
-        latex_process.cleanup();
-        QCOMPARE(SVGConfig::getInstance().svgDir().entryInfoList(QDir::NoDotAndDotDot).length(), 0);
+        const QString validation_svg = SVGTestHelperFunctions::readData("://validation_data/hello_world.svg");
+        QCOMPARE(SVGTestHelperFunctions::readData(svg_file.absoluteFilePath()), validation_svg);
     });
 
-    latex_process.start();
+    dvi_process.start();
     QVERIFY(spyFinished.wait(10000));
     QCOMPARE(spyError.count(), 0);
 }
 
-void TestLaTeXProcess::renderError()
+void TestDvisvgmProcess::renderError()
 {
-    LaTeXProcess latex_process(createLocalFile("://test_data/latex_error.tex"));
+    DvisvgmProcess dvi_process(QFileInfo("://test_data/latex_hello_world.dvi"));
 
-    QSignalSpy spyFinished(&latex_process, &LaTeXProcess::processFinished);
-    QSignalSpy spyError(&latex_process, &LaTeXProcess::processFailed);
+    QSignalSpy spyFinished(&dvi_process, &DvisvgmProcess::processFinished);
+    QSignalSpy spyError(&dvi_process, &DvisvgmProcess::processFailed);
 
-    connect(&latex_process, &LaTeXProcess::processFailed, this, [&]() { latex_process.cleanup(); });
-
-    latex_process.start();
+    dvi_process.start();
     QVERIFY(spyError.wait(10000));
     QCOMPARE(spyFinished.count(), 0);
 }
 
-QFileInfo TestLaTeXProcess::createLocalFile(const QString& resource_file_path)
-{
-    QFile resource_file(resource_file_path);
-    const QString copy_file_name
-        = SVGConfig::getInstance().svgDir().absoluteFilePath(QFileInfo(resource_file.fileName()).baseName())
-        + "_copy.tex";
-
-    if (QFile::exists(copy_file_name)) {
-        QFile::remove(copy_file_name);
-    }
-    resource_file.copy(copy_file_name);
-
-    return QFileInfo(copy_file_name);
-}
-
-QTEST_MAIN(TestLaTeXProcess)
-#include "latexprocess_long_tests.moc"
+QTEST_MAIN(TestDvisvgmProcess)
+#include "dvisvgmprocess_long_tests.moc"

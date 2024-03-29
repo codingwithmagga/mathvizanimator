@@ -1,28 +1,26 @@
-#ifndef LATEXPROCESS_H
-#define LATEXPROCESS_H
+#ifndef DVISVGMPROCESS_H
+#define DVISVGMPROCESS_H
 
 #include <QFileInfo>
 #include <QProcess>
 
-class LaTeXProcess : public QProcess {
+class DvisvgmProcess : public QProcess {
 
     Q_OBJECT
 
   public:
-    LaTeXProcess(const QFileInfo& latex_file, QObject* parent = nullptr);
+    DvisvgmProcess(const QFileInfo& dvi_file, QObject* parent = nullptr);
 
-    void cleanup() const;
-
-    QFileInfo latexFile() const { return m_latex_file; }
+    QFileInfo dviFile() const { return m_dvi_file; }
 
   signals:
     void processFailed();
-    void processFinished(const QFileInfo& dvi_file);
+    void processFinished(const QFileInfo& svg_file);
 
   private:
     void onFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
-    QFileInfo m_latex_file;
+    QFileInfo m_dvi_file;
 };
 
-#endif // LATEXPROCESS_H
+#endif // DVISVGMPROCESS_H

@@ -3,5 +3,6 @@
         <file>test_data/latex_hello_world.tex</file>
         <file>validation_data/hello_world.svg</file>
         <file>test_data/latex_error.tex</file>
+        <file>test_data/latex_hello_world.dvi</file>
     </qresource>
 </RCC>
