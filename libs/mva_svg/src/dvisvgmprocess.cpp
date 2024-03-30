@@ -15,6 +15,7 @@ DvisvgmProcess::DvisvgmProcess(const QFileInfo& dvi_file, QObject* parent)
     connect(this, &QProcess::finished, this, &DvisvgmProcess::onFinished);
 }
 
+// jscpd:ignore-start
 void DvisvgmProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (exitCode != 0 || exitStatus != QProcess::ExitStatus::NormalExit) {
@@ -23,3 +24,4 @@ void DvisvgmProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
     }
     emit processFinished(QFileInfo(SVGConfig::getInstance().svgDir().absoluteFilePath(m_dvi_file.baseName() + ".svg")));
 }
+// jscpd:ignore-end

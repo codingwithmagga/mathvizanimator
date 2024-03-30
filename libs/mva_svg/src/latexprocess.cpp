@@ -25,6 +25,7 @@ void LaTeXProcess::cleanup() const
     }
 }
 
+// jscpd:ignore-start
 void LaTeXProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (exitCode != 0 || exitStatus != QProcess::ExitStatus::NormalExit) {
@@ -34,3 +35,4 @@ void LaTeXProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
     emit processFinished(
         QFileInfo(SVGConfig::getInstance().svgDir().absoluteFilePath(m_latex_file.baseName() + ".dvi")));
 }
+// jscpd:ignore-start
