@@ -55,6 +55,6 @@ QString readData(const QString& file_path)
     return data;
 }
 
-} // namespace SVGTestHelperFunctions"
+} // namespace SVGTestHelperFunctions
 
 #endif // LIBS_MVA_SVG_TESTS_SVG_TEST_HELPER_FUNCTIONS_H_

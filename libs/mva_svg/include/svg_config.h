@@ -41,9 +41,9 @@ class SVGConfig {
 
     QDir svgDir() { return m_svg_dir; }
 
-    static QString hash(const QString& string)
+    static QString hash(const QString& text)
     {
-        return QString(QCryptographicHash::hash(string.toUtf8(), QCryptographicHash::Md5).toHex());
+        return QString(QCryptographicHash::hash(text.toUtf8(), QCryptographicHash::Md5).toHex());
     }
 
   private:
