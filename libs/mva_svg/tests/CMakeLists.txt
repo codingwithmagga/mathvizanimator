@@ -7,50 +7,50 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Test)
 qt_standard_project_setup()
 
 qt_add_executable(
-    svgcreator_long_tests
+    svg_creator_long_tests
     svg_creator_long_tests.cpp
         svg_test_helper_functions.h
         svg_test_resources.qrc
 )
 qt_add_executable(
-    latexprocess_long_tests
+    latex_process_long_tests
     latex_process_long_tests.cpp
         svg_test_helper_functions.h
         svg_test_resources.qrc
 )
 qt_add_executable(
-    dvisvgmprocess_long_tests
+    dvisvgm_process_long_tests
     dvisvgm_process_long_tests.cpp
         svg_test_helper_functions.h
         svg_test_resources.qrc
 )
 
-add_test(NAME svgcreator_long_tests COMMAND svgcreator_long_tests)
-add_test(NAME latexprocess_long_tests COMMAND latexprocess_long_tests)
-add_test(NAME dvisvgmprocess_long_tests COMMAND dvisvgmprocess_long_tests)
+add_test(NAME svg_creator_long_tests COMMAND svg_creator_long_tests)
+add_test(NAME latex_process_long_tests COMMAND latex_process_long_tests)
+add_test(NAME dvisvgm_process_long_tests COMMAND dvisvgm_process_long_tests)
 
 set_tests_properties(
-    svgcreator_long_tests
-    latexprocess_long_tests
-    dvisvgmprocess_long_tests
+    svg_creator_long_tests
+    latex_process_long_tests
+    dvisvgm_process_long_tests
     PROPERTIES
         LABELS LONG
 )
 
 target_link_libraries(
-    svgcreator_long_tests
+    svg_creator_long_tests
     PRIVATE
         Qt6::Test
         mva::svg
 )
 target_link_libraries(
-    latexprocess_long_tests
+    latex_process_long_tests
     PRIVATE
         Qt6::Test
         mva::svg
 )
 target_link_libraries(
-    dvisvgmprocess_long_tests
+    dvisvgm_process_long_tests
     PRIVATE
         Qt6::Test
         mva::svg
