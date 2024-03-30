@@ -11,7 +11,6 @@
 SVGCreator::SVGCreator(QObject* parent)
     : QObject { parent }
 {
-    m_dvisvgm_path = QStandardPaths::findExecutable("dvisvgm");
 }
 
 void SVGCreator::renderLaTeX(const QString& latex)
