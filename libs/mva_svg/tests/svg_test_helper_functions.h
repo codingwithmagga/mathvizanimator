@@ -41,7 +41,7 @@ QFileInfo createLocalFile(const QString& resource_file_path)
     return QFileInfo(copy_file_name);
 }
 
-QString readData(QString file_path)
+QString readData(const QString& file_path)
 {
     QFile file(file_path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -55,6 +55,6 @@ QString readData(QString file_path)
     return data;
 }
 
-}
+} // namespace SVGTestHelperFunctions"
 
 #endif // LIBS_MVA_SVG_TESTS_SVG_TEST_HELPER_FUNCTIONS_H_
