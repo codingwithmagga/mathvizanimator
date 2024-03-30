@@ -13,13 +13,13 @@ SVGCreator::SVGCreator(QObject* parent)
 {
 }
 
-void SVGCreator::renderLaTeX(const QString& latex)
+void SVGCreator::svgFromLaTeX(const QString& latex)
 {
     const auto hash = SVGConfig::hash(latex);
 
     QFileInfo svgFile(SVGConfig::getInstance().svgDir().absoluteFilePath(hash + ".svg"));
     if (svgFile.exists()) {
-        emit latexRenderingFinished(svgFile);
+        emit svgCreated(svgFile);
         return;
     }
 
@@ -53,7 +53,7 @@ void SVGCreator::dvisvgmProcessFinished(const QFileInfo& svg_file)
     const auto latex_process = m_latex_process_map.take(hash);
     latex_process->cleanup();
 
-    emit latexRenderingFinished(svg_file);
+    emit svgCreated(svg_file);
 }
 
 void SVGCreator::latexProcessFailed(QProcess::ProcessError error)

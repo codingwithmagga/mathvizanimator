@@ -47,8 +47,8 @@ void TestSVGCreator::renderHelloWorld()
         svg_file.remove();
     }
 
-    QSignalSpy spy(&svg_creator, &SVGCreator::latexRenderingFinished);
-    connect(&svg_creator, &SVGCreator::latexRenderingFinished, this, [&](const QFileInfo& created_svg_file) {
+    QSignalSpy spy(&svg_creator, &SVGCreator::svgCreated);
+    connect(&svg_creator, &SVGCreator::svgCreated, this, [&](const QFileInfo& created_svg_file) {
         QVERIFY(svg_file.exists());
 
         const QString validation_svg = readData("://validation_data/hello_world.svg");
@@ -59,7 +59,7 @@ void TestSVGCreator::renderHelloWorld()
         QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".aux").absoluteFilePath()));
     });
 
-    svg_creator.renderLaTeX(latex_text);
+    svg_creator.svgFromLaTeX(latex_text);
     QVERIFY(spy.wait(10000));
 }
 

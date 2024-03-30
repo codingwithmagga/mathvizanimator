@@ -14,10 +14,10 @@ class SVGCreator : public QObject {
   public:
     explicit SVGCreator(QObject* parent = nullptr);
 
-    void renderLaTeX(const QString& latex);
+    void svgFromLaTeX(const QString& latex);
 
   signals:
-    void latexRenderingFinished(const QFileInfo& svg_file);
+    void svgCreated(const QFileInfo& svg_file);
 
   private slots:
     void latexProcessFinished(const QFileInfo& dvi_file);
