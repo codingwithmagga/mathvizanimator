@@ -30,8 +30,6 @@ class SVGCreator : public QObject {
 
     QMap<QString, QSharedPointer<LaTeXProcess>> m_latex_process_map;
     QMap<QString, QSharedPointer<DvisvgmProcess>> m_dvisvgm_process_map;
-
-    QString m_dvisvgm_path;
 };
 
 #endif // SVGCREATOR_H
