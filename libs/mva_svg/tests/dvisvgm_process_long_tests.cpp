@@ -67,4 +67,4 @@ void TestDvisvgmProcess::renderError()
 }
 
 QTEST_MAIN(TestDvisvgmProcess)
-#include "dvisvgmprocess_long_tests.moc"
+#include "dvisvgm_process_long_tests.moc"

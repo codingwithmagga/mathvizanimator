@@ -20,8 +20,8 @@
 #include <QTest>
 
 #include "svg_config.h"
-#include "svg_test_helper_functions.h"
 #include "svg_creator.h"
+#include "svg_test_helper_functions.h"
 
 class TestSVGCreator : public QObject {
     Q_OBJECT
@@ -75,4 +75,4 @@ void TestSVGCreator::renderError()
 }
 
 QTEST_MAIN(TestSVGCreator)
-#include "svgcreator_long_tests.moc"
+#include "svg_creator_long_tests.moc"

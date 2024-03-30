@@ -8,19 +8,19 @@ qt_standard_project_setup()
 
 qt_add_executable(
     svgcreator_long_tests
-        svgcreator_long_tests.cpp
+    svg_creator_long_tests.cpp
         svg_test_helper_functions.h
         svg_test_resources.qrc
 )
 qt_add_executable(
     latexprocess_long_tests
-        latexprocess_long_tests.cpp
+    latex_process_long_tests.cpp
         svg_test_helper_functions.h
         svg_test_resources.qrc
 )
 qt_add_executable(
     dvisvgmprocess_long_tests
-        dvisvgmprocess_long_tests.cpp
+    dvisvgm_process_long_tests.cpp
         svg_test_helper_functions.h
         svg_test_resources.qrc
 )

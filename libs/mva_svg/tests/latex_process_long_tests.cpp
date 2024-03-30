@@ -87,4 +87,4 @@ QFileInfo TestLaTeXProcess::createLocalFile(const QString& resource_file_path)
 }
 
 QTEST_MAIN(TestLaTeXProcess)
-#include "latexprocess_long_tests.moc"
+#include "latex_process_long_tests.moc"
