@@ -91,6 +91,7 @@ void MenuFileIntegrationTest::loadProject()
     QFile test_save_file(":/integrations_tests_data/test_save_file.json");
     const QString file_path = m_helper_functions->copyFileToTestDir(test_save_file, "test_load_file.json");
     QVERIFY(m_helper_functions->loadFile(file_path));
+    QTest::qWait(3000); // Wait s.t. TextItem can be rendered
 
     const auto main_window_handler = m_helper_functions->mainWindowHandler();
 
@@ -136,6 +137,7 @@ void MenuFileIntegrationTest::saveProjectFromFile()
     QFile test_save_file(":/integrations_tests_data/test_save_file.json");
     const QString file_path = m_helper_functions->copyFileToTestDir(test_save_file, "test_load_file.json");
     QVERIFY(m_helper_functions->loadFile(file_path));
+    QTest::qWait(3000); // Wait s.t. TextItem can be rendered
 
     m_helper_functions->dragAndDropCurrentItem(QPoint(200, 200));
     m_helper_functions->saveFile();
