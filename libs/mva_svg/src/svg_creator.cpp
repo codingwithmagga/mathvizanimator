@@ -1,11 +1,11 @@
-#include "svgcreator.h"
+#include "svg_creator.h"
 
 #include <QCryptographicHash>
 #include <QProcess>
 #include <QStandardPaths>
 
-#include "dvisvgmprocess.h"
-#include "latexprocess.h"
+#include "dvisvgm_process.h"
+#include "latex_process.h"
 #include "svg_config.h"
 
 SVGCreator::SVGCreator(QObject* parent)

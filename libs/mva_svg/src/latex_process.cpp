@@ -1,4 +1,4 @@
-#include "latexprocess.h"
+#include "latex_process.h"
 
 #include "svg_config.h"
 

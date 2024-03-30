@@ -1,5 +1,5 @@
-#ifndef LATEXPROCESS_H
-#define LATEXPROCESS_H
+#ifndef LATEX_PROCESS_H
+#define LATEX_PROCESS_H
 
 #include <QFileInfo>
 #include <QProcess>
@@ -25,4 +25,4 @@ class LaTeXProcess : public QProcess {
     QFileInfo m_latex_file;
 };
 
-#endif // LATEXPROCESS_H
+#endif // LATEX_PROCESS_H

@@ -1,13 +1,13 @@
-#ifndef SVGCREATOR_H
-#define SVGCREATOR_H
+#ifndef SVG_CREATOR_H
+#define SVG_CREATOR_H
 
 #include <QDir>
 #include <QFileInfo>
 #include <QObject>
 #include <QProcess>
 
-#include "dvisvgmprocess.h"
-#include "latexprocess.h"
+#include "dvisvgm_process.h"
+#include "latex_process.h"
 
 class SVGCreator : public QObject {
     Q_OBJECT
@@ -31,4 +31,4 @@ class SVGCreator : public QObject {
     QMap<QString, QSharedPointer<DvisvgmProcess>> m_dvisvgm_process_map;
 };
 
-#endif // SVGCREATOR_H
+#endif // SVG_CREATOR_H

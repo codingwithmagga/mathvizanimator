@@ -1,5 +1,5 @@
-#ifndef DVISVGMPROCESS_H
-#define DVISVGMPROCESS_H
+#ifndef DVISVGM_PROCESS_H
+#define DVISVGM_PROCESS_H
 
 #include <QFileInfo>
 #include <QProcess>
@@ -23,4 +23,4 @@ class DvisvgmProcess : public QProcess {
     QFileInfo m_dvi_file;
 };
 
-#endif // DVISVGMPROCESS_H
+#endif // DVISVGM_PROCESS_H

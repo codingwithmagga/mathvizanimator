@@ -21,7 +21,7 @@
 
 #include "svg_config.h"
 #include "svg_test_helper_functions.h"
-#include "svgcreator.h"
+#include "svg_creator.h"
 
 class TestSVGCreator : public QObject {
     Q_OBJECT

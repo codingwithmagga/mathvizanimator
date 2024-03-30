@@ -1,4 +1,4 @@
-#include "dvisvgmprocess.h"
+#include "dvisvgm_process.h"
 
 #include "svg_config.h"
 

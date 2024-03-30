@@ -19,7 +19,7 @@
 #include <QStandardPaths>
 #include <QTest>
 
-#include "dvisvgmprocess.h"
+#include "dvisvgm_process.h"
 #include "svg_config.h"
 #include "svg_test_helper_functions.h"
 
