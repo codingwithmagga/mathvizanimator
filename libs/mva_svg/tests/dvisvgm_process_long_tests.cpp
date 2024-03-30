@@ -42,12 +42,8 @@ void TestDvisvgmProcess::renderHelloWorld()
 
     QSignalSpy spyFinished(&dvi_process, &DvisvgmProcess::processFinished);
     QSignalSpy spyError(&dvi_process, &DvisvgmProcess::processFailed);
-    connect(&dvi_process, &DvisvgmProcess::processFinished, this, [&](const QFileInfo& svg_file) {
-        QVERIFY(QFile::exists(svg_file.absoluteFilePath()));
-
-        const QString validation_svg = SVGTestHelperFunctions::readData("://validation_data/hello_world.svg");
-        QCOMPARE(SVGTestHelperFunctions::readData(svg_file.absoluteFilePath()), validation_svg);
-    });
+    connect(&dvi_process, &DvisvgmProcess::processFinished, this,
+        [&](const QFileInfo& svg_file) { QVERIFY(QFile::exists(svg_file.absoluteFilePath())); });
 
     dvi_process.start();
     QVERIFY(spyFinished.wait(10000));

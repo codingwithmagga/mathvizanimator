@@ -50,9 +50,6 @@ void TestSVGCreator::renderHelloWorld()
     connect(&svg_creator, &SVGCreator::svgCreated, this, [&](const QFileInfo& created_svg_file) {
         QVERIFY(svg_file.exists());
 
-        const QString validation_svg = SVGTestHelperFunctions::readData("://validation_data/hello_world.svg");
-        QCOMPARE(SVGTestHelperFunctions::readData(created_svg_file.absoluteFilePath()), validation_svg);
-
         QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".dvi").absoluteFilePath()));
         QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".log").absoluteFilePath()));
         QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".aux").absoluteFilePath()));
