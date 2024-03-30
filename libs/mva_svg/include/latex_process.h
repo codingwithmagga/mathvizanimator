@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LATEX_PROCESS_H
-#define LATEX_PROCESS_H
+#ifndef LIBS_MVA_SVG_INCLUDE_LATEX_PROCESS_H_
+#define LIBS_MVA_SVG_INCLUDE_LATEX_PROCESS_H_
 
 #include <QFileInfo>
 #include <QProcess>
@@ -42,4 +42,4 @@ class LaTeXProcess : public QProcess {
     QFileInfo m_latex_file;
 };
 
-#endif // LATEX_PROCESS_H
+#endif // LIBS_MVA_SVG_INCLUDE_LATEX_PROCESS_H_

@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DVISVGM_PROCESS_H
-#define DVISVGM_PROCESS_H
+#ifndef LIBS_MVA_SVG_INCLUDE_DVISVGM_PROCESS_H_
+#define LIBS_MVA_SVG_INCLUDE_DVISVGM_PROCESS_H_
 
 #include <QFileInfo>
 #include <QProcess>
@@ -40,4 +40,4 @@ class DvisvgmProcess : public QProcess {
     QFileInfo m_dvi_file;
 };
 
-#endif // DVISVGM_PROCESS_H
+#endif // LIBS_MVA_SVG_INCLUDE_DVISVGM_PROCESS_H_

@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SVG_CONFIG_H
-#define SVG_CONFIG_H
+#ifndef LIBS_MVA_SVG_INCLUDE_SVG_CONFIG_H_
+#define LIBS_MVA_SVG_INCLUDE_SVG_CONFIG_H_
 
 #include <QCryptographicHash>
 #include <QDir>
@@ -55,4 +55,4 @@ class SVGConfig {
     QDir m_svg_dir = QDir(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
 };
 
-#endif // SVG_CONFIG_H
+#endif // LIBS_MVA_SVG_INCLUDE_SVG_CONFIG_H_

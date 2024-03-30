@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SVG_TEST_HELPER_FUNCTIONS_H
-#define SVG_TEST_HELPER_FUNCTIONS_H
+#ifndef LIBS_MVA_SVG_TESTS_SVG_TEST_HELPER_FUNCTIONS_H_
+#define LIBS_MVA_SVG_TESTS_SVG_TEST_HELPER_FUNCTIONS_H_
 
 #include <QFile>
 #include <QFileInfo>
@@ -57,4 +57,4 @@ QString readData(QString file_path)
 
 }
 
-#endif // SVG_TEST_HELPER_FUNCTIONS_H
+#endif // LIBS_MVA_SVG_TESTS_SVG_TEST_HELPER_FUNCTIONS_H_

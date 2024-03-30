@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SVG_CREATOR_H
-#define SVG_CREATOR_H
+#ifndef LIBS_MVA_SVG_INCLUDE_SVG_CREATOR_H_
+#define LIBS_MVA_SVG_INCLUDE_SVG_CREATOR_H_
 
 #include <QDir>
 #include <QFileInfo>
@@ -48,4 +48,4 @@ class SVGCreator : public QObject {
     QMap<QString, QSharedPointer<DvisvgmProcess>> m_dvisvgm_process_map;
 };
 
-#endif // SVG_CREATOR_H
+#endif // LIBS_MVA_SVG_INCLUDE_SVG_CREATOR_H_
