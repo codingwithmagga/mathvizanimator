@@ -92,7 +92,9 @@ void TestRenderer::initTestCase()
     parent_item_2->setAbstractItem(rect);
 
     auto tex = new TextItem;
+    QSignalSpy latexSpy(tex, &TextItem::svgFileChanged);
     tex->setLatexSource("Hello $\\delta=\\epsilon$");
+    QVERIFY(latexSpy.wait());
     tex->setScaleText(3);
     tex->setOpacity(0.43);
     tex->setRotation(-23);
