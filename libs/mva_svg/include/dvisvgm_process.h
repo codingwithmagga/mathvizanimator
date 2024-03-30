@@ -26,7 +26,7 @@ class DvisvgmProcess : public QProcess {
     Q_OBJECT
 
   public:
-    DvisvgmProcess(const QFileInfo& dvi_file, QObject* parent = nullptr);
+    explicit DvisvgmProcess(const QFileInfo& dvi_file, QObject* parent = nullptr);
 
     QFileInfo dviFile() const { return m_dvi_file; }
 

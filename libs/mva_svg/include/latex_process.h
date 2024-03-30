@@ -26,7 +26,7 @@ class LaTeXProcess : public QProcess {
     Q_OBJECT
 
   public:
-    LaTeXProcess(const QFileInfo& latex_file, QObject* parent = nullptr);
+    explicit LaTeXProcess(const QFileInfo& latex_file, QObject* parent = nullptr);
 
     void cleanup() const;
 
