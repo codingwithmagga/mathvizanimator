@@ -28,7 +28,7 @@ void SVGCreator::svgFromLaTeX(const QString& latex)
 
     connect(latex_process.data(), &LaTeXProcess::processFinished, this,
         [&](const QFileInfo& dvi_file) { latexProcessFinished(dvi_file); });
-    connect(latex_process.data(), &LaTeXProcess::errorOccurred, this, &SVGCreator::latexProcessFailed);
+    connect(latex_process.data(), &LaTeXProcess::processFailed, this, &SVGCreator::svgCreationFailed);
     latex_process->start();
 }
 
@@ -41,6 +41,7 @@ void SVGCreator::latexProcessFinished(const QFileInfo& dvi_file)
 
     connect(dvisvgm_process.data(), &DvisvgmProcess::processFinished, this,
         [&](const QFileInfo& dvi_file) { dvisvgmProcessFinished(dvi_file); });
+    connect(dvisvgm_process.data(), &DvisvgmProcess::processFailed, this, &SVGCreator::svgCreationFailed);
 
     dvisvgm_process->start();
 }
@@ -54,13 +55,6 @@ void SVGCreator::dvisvgmProcessFinished(const QFileInfo& svg_file)
     latex_process->cleanup();
 
     emit svgCreated(svg_file);
-}
-
-void SVGCreator::latexProcessFailed(QProcess::ProcessError error)
-{
-    qDebug() << "LaTeX process failed with error:" << error;
-    const auto latex_process = qobject_cast<LaTeXProcess*>(sender());
-    latex_process->cleanup();
 }
 
 QFileInfo SVGCreator::prepareLaTeXFile(const QString& latex)

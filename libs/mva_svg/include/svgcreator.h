@@ -18,12 +18,11 @@ class SVGCreator : public QObject {
 
   signals:
     void svgCreated(const QFileInfo& svg_file);
+    void svgCreationFailed();
 
   private slots:
     void latexProcessFinished(const QFileInfo& dvi_file);
     void dvisvgmProcessFinished(const QFileInfo& svg_file);
-
-    void latexProcessFailed(QProcess::ProcessError error);
 
   private:
     QFileInfo prepareLaTeXFile(const QString& latex);

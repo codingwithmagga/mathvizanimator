@@ -20,6 +20,7 @@
 #include <QTest>
 
 #include "svg_config.h"
+#include "svg_test_helper_functions.h"
 #include "svgcreator.h"
 
 class TestSVGCreator : public QObject {
@@ -29,16 +30,14 @@ class TestSVGCreator : public QObject {
     void initTestCase();
 
     void renderHelloWorld();
-
-  private:
-    QString readData(QString file_path);
+    void renderError();
 };
 
 void TestSVGCreator::initTestCase() { SVGConfig::getInstance().setSVGDir(QDir::current()); }
 
 void TestSVGCreator::renderHelloWorld()
 {
-    const QString latex_text = readData("://test_data/latex_hello_world.tex");
+    const QString latex_text = SVGTestHelperFunctions::readData("://test_data/latex_hello_world.tex");
     QCOMPARE_NE(latex_text, QString());
     SVGCreator svg_creator;
 
@@ -51,8 +50,8 @@ void TestSVGCreator::renderHelloWorld()
     connect(&svg_creator, &SVGCreator::svgCreated, this, [&](const QFileInfo& created_svg_file) {
         QVERIFY(svg_file.exists());
 
-        const QString validation_svg = readData("://validation_data/hello_world.svg");
-        QCOMPARE(readData(created_svg_file.absoluteFilePath()), validation_svg);
+        const QString validation_svg = SVGTestHelperFunctions::readData("://validation_data/hello_world.svg");
+        QCOMPARE(SVGTestHelperFunctions::readData(created_svg_file.absoluteFilePath()), validation_svg);
 
         QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".dvi").absoluteFilePath()));
         QVERIFY(!QFile::exists(QFileInfo(created_svg_file.baseName() + ".log").absoluteFilePath()));
@@ -63,18 +62,16 @@ void TestSVGCreator::renderHelloWorld()
     QVERIFY(spy.wait(10000));
 }
 
-QString TestSVGCreator::readData(QString file_path)
+void TestSVGCreator::renderError()
 {
-    QFile file(file_path);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCritical() << "Cannot open: " << file.fileName();
-        return QString();
-    }
+    const QString latex_text = SVGTestHelperFunctions::readData("://test_data/latex_error.tex");
+    QCOMPARE_NE(latex_text, QString());
+    SVGCreator svg_creator;
 
-    QString data = file.readAll();
-    file.close();
+    QSignalSpy spy(&svg_creator, &SVGCreator::svgCreationFailed);
+    svg_creator.svgFromLaTeX(latex_text);
 
-    return data;
+    QVERIFY(spy.wait(10000));
 }
 
 QTEST_MAIN(TestSVGCreator)
