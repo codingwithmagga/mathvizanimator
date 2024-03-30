@@ -17,7 +17,6 @@ Dialog {
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     onAccepted: {
-        textItem.latexSource = latexTextArea.text
         root.userChangedProperty(textItem.name, "latexSource",
                                  latexTextArea.text)
         createText.close()

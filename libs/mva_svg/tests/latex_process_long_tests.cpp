@@ -59,12 +59,16 @@ void TestLaTeXProcess::renderHelloWorld()
 
 void TestLaTeXProcess::renderError()
 {
-    LaTeXProcess latex_process(createLocalFile("://test_data/latex_error.tex"));
+    const auto latex_file = createLocalFile("://test_data/latex_error.tex");
+    LaTeXProcess latex_process(latex_file);
 
     QSignalSpy spyFinished(&latex_process, &LaTeXProcess::processFinished);
     QSignalSpy spyError(&latex_process, &LaTeXProcess::processFailed);
 
-    connect(&latex_process, &LaTeXProcess::processFailed, this, [&]() { latex_process.cleanup(); });
+    connect(&latex_process, &LaTeXProcess::processFailed, this, [&](const QFileInfo& failed_latex_file) {
+        latex_process.cleanup();
+        QCOMPARE(latex_file.absoluteFilePath(), failed_latex_file.absoluteFilePath());
+    });
 
     latex_process.start();
     QVERIFY(spyError.wait(10000));

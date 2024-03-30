@@ -41,6 +41,9 @@ class SVGCreator : public QObject {
     void latexProcessFinished(const QFileInfo& dvi_file);
     void dvisvgmProcessFinished(const QFileInfo& svg_file);
 
+    void latexProcessFailed(const QFileInfo& latex_file);
+    void dvisvgmProcessFailed(const QFileInfo& dvi_file);
+
   private:
     QFileInfo prepareLaTeXFile(const QString& latex);
 

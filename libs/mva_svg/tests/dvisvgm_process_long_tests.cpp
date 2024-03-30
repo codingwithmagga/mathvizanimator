@@ -56,10 +56,14 @@ void TestDvisvgmProcess::renderHelloWorld()
 
 void TestDvisvgmProcess::renderError()
 {
-    DvisvgmProcess dvi_process(QFileInfo("://test_data/latex_hello_world.dvi"));
+    const auto dvi_file = QFileInfo("://test_data/latex_hello_world.dvi");
+    DvisvgmProcess dvi_process(dvi_file);
 
     QSignalSpy spyFinished(&dvi_process, &DvisvgmProcess::processFinished);
     QSignalSpy spyError(&dvi_process, &DvisvgmProcess::processFailed);
+    connect(&dvi_process, &DvisvgmProcess::processFailed, this, [&](const QFileInfo& failed_dvi_file) {
+        QCOMPARE(dvi_file.absoluteFilePath(), failed_dvi_file.absoluteFilePath());
+    });
 
     dvi_process.start();
     QVERIFY(spyError.wait(10000));

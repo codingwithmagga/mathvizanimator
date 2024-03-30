@@ -40,12 +40,12 @@ void SVGCreator::svgFromLaTeX(const QString& latex)
         return;
     }
 
-    const auto latex_process = QSharedPointer<LaTeXProcess>(new LaTeXProcess(prepareLaTeXFile(latex)));
+    const auto latex_process = QSharedPointer<LaTeXProcess>(new LaTeXProcess(prepareLaTeXFile(latex), this));
     m_latex_process_map.insert(hash, latex_process);
 
     connect(latex_process.data(), &LaTeXProcess::processFinished, this,
         [&](const QFileInfo& dvi_file) { latexProcessFinished(dvi_file); });
-    connect(latex_process.data(), &LaTeXProcess::processFailed, this, &SVGCreator::svgCreationFailed);
+    connect(latex_process.data(), &LaTeXProcess::processFailed, this, &SVGCreator::latexProcessFailed);
     latex_process->start();
 }
 
@@ -53,12 +53,12 @@ void SVGCreator::latexProcessFinished(const QFileInfo& dvi_file)
 {
     const auto hash = dvi_file.baseName();
 
-    const auto dvisvgm_process = QSharedPointer<DvisvgmProcess>(new DvisvgmProcess(dvi_file));
+    const auto dvisvgm_process = QSharedPointer<DvisvgmProcess>(new DvisvgmProcess(dvi_file, this));
     m_dvisvgm_process_map.insert(hash, dvisvgm_process);
 
     connect(dvisvgm_process.data(), &DvisvgmProcess::processFinished, this,
         [&](const QFileInfo& dvi_file) { dvisvgmProcessFinished(dvi_file); });
-    connect(dvisvgm_process.data(), &DvisvgmProcess::processFailed, this, &SVGCreator::svgCreationFailed);
+    connect(dvisvgm_process.data(), &DvisvgmProcess::processFailed, this, &SVGCreator::dvisvgmProcessFailed);
 
     dvisvgm_process->start();
 }
@@ -67,11 +67,30 @@ void SVGCreator::dvisvgmProcessFinished(const QFileInfo& svg_file)
 {
     const auto hash = svg_file.baseName();
 
-    m_dvisvgm_process_map.take(hash);
+    m_dvisvgm_process_map.remove(hash);
     const auto latex_process = m_latex_process_map.take(hash);
     latex_process->cleanup();
 
     emit svgCreated(svg_file);
+}
+
+void SVGCreator::latexProcessFailed(const QFileInfo& latex_file)
+{
+    const auto hash = latex_file.baseName();
+    const auto latex_process = m_latex_process_map.take(hash);
+    latex_process->cleanup();
+
+    emit svgCreationFailed();
+}
+
+void SVGCreator::dvisvgmProcessFailed(const QFileInfo& dvi_file)
+{
+    const auto hash = dvi_file.baseName();
+    m_dvisvgm_process_map.take(hash);
+    const auto latex_process = m_latex_process_map.take(hash);
+    latex_process->cleanup();
+
+    emit svgCreationFailed();
 }
 
 QFileInfo SVGCreator::prepareLaTeXFile(const QString& latex)

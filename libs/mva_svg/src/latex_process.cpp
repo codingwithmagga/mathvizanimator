@@ -46,7 +46,7 @@ void LaTeXProcess::cleanup() const
 void LaTeXProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (exitCode != 0 || exitStatus != QProcess::ExitStatus::NormalExit) {
-        emit processFailed();
+        emit processFailed(m_latex_file);
         return;
     }
     emit processFinished(

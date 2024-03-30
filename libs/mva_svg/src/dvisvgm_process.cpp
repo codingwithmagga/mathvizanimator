@@ -36,7 +36,7 @@ DvisvgmProcess::DvisvgmProcess(const QFileInfo& dvi_file, QObject* parent)
 void DvisvgmProcess::onFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
     if (exitCode != 0 || exitStatus != QProcess::ExitStatus::NormalExit) {
-        emit processFailed();
+        emit processFailed(m_dvi_file);
         return;
     }
     emit processFinished(QFileInfo(SVGConfig::getInstance().svgDir().absoluteFilePath(m_dvi_file.baseName() + ".svg")));

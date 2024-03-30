@@ -33,7 +33,7 @@ class LaTeXProcess : public QProcess {
     QFileInfo latexFile() const { return m_latex_file; }
 
   signals:
-    void processFailed();
+    void processFailed(const QFileInfo& latex_file);
     void processFinished(const QFileInfo& dvi_file);
 
   private:

@@ -31,7 +31,7 @@ class DvisvgmProcess : public QProcess {
     QFileInfo dviFile() const { return m_dvi_file; }
 
   signals:
-    void processFailed();
+    void processFailed(const QFileInfo& dvi_file);
     void processFinished(const QFileInfo& svg_file);
 
   private:

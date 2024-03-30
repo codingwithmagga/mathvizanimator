@@ -24,6 +24,7 @@
 #include <QStandardPaths>
 
 #include "abstractitem.h"
+#include "svg_creator.h"
 
 class TextItem : public AbstractItem {
     Q_OBJECT
@@ -60,8 +61,13 @@ class TextItem : public AbstractItem {
     void svgFileChanged(const QFileInfo& new_svg_file);
     void scaleTextChanged(const qreal new_scale_text);
 
+  private slots:
+    void svgCreationFinished(const QFileInfo& svg_file);
+
   private:
     void removeUnusedLatexFiles(const QString& hash);
+
+    SVGCreator m_svg_creator;
 
     QFileInfo m_svg_file = QFileInfo("://templates/placeholder.svg");
     QString m_latex_source;
