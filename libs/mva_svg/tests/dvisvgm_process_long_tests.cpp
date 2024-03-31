@@ -37,7 +37,7 @@ void TestDvisvgmProcess::initTestCase() { SVGConfig::getInstance().setSVGDir(QDi
 
 void TestDvisvgmProcess::renderHelloWorld()
 {
-    const auto local_dvi_file = SVGTestHelperFunctions::createLocalFile("://test_data/latex_hello_world.dvi");
+    const auto local_dvi_file = SVGTestHelperFunctions::createLocalFile("://test_data/hello_world.dvi");
     DvisvgmProcess dvi_process(local_dvi_file);
 
     QSignalSpy spyFinished(&dvi_process, &DvisvgmProcess::processFinished);
@@ -46,13 +46,13 @@ void TestDvisvgmProcess::renderHelloWorld()
         [&](const QFileInfo& svg_file) { QVERIFY(QFile::exists(svg_file.absoluteFilePath())); });
 
     dvi_process.start();
-    QVERIFY(spyFinished.wait(10000));
+    QVERIFY(spyFinished.wait(2000));
     QCOMPARE(spyError.count(), 0);
 }
 
 void TestDvisvgmProcess::renderError()
 {
-    const auto dvi_file = QFileInfo("://test_data/latex_hello_world.dvi");
+    const auto dvi_file = QFileInfo("://test_data/hello_world.dvi");
     DvisvgmProcess dvi_process(dvi_file);
 
     QSignalSpy spyFinished(&dvi_process, &DvisvgmProcess::processFinished);

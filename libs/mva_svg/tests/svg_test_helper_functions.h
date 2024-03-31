@@ -26,17 +26,38 @@
 
 namespace SVGTestHelperFunctions {
 
+inline void removeFile(const QString file_name)
+{
+    QFile file(file_name);
+    file.setPermissions(file.permissions() |
+        QFileDevice::WriteOwner |
+        QFileDevice::WriteUser |
+        QFileDevice::WriteGroup |
+        QFileDevice::WriteOther);
+    if(!file.remove()) {
+        qWarning() << "Remove of test file failed." << file.fileName() << file.errorString();
+    }
+}
+
 QFileInfo createLocalFile(const QString& resource_file_path)
 {
     QFile resource_file(resource_file_path);
+    QFileInfo resource_file_info(resource_file_path);
+    if (!resource_file.exists()) {
+        qCritical() << "Test file does not exists.";
+    }
+
     const QString copy_file_name
         = SVGConfig::getInstance().svgDir().absoluteFilePath(QFileInfo(resource_file.fileName()).baseName())
-        + "_copy.tex";
+        + "_copy." + resource_file_info.completeSuffix();
 
     if (QFile::exists(copy_file_name)) {
-        QFile::remove(copy_file_name);
+        removeFile(copy_file_name);
     }
-    resource_file.copy(copy_file_name);
+
+    if(!resource_file.copy(copy_file_name)) {
+        qWarning() << "Local file copy for test failed." << resource_file.fileName() << resource_file.errorString();
+    }
 
     return QFileInfo(copy_file_name);
 }

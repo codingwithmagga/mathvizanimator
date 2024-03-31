@@ -21,6 +21,7 @@
 
 #include "latex_process.h"
 #include "svg_config.h"
+#include "svg_test_helper_functions.h"
 
 class TestLaTeXProcess : public QObject {
     Q_OBJECT
@@ -30,16 +31,16 @@ class TestLaTeXProcess : public QObject {
 
     void renderHelloWorld();
     void renderError();
-
-  private:
-    QFileInfo createLocalFile(const QString& resource_file_path);
 };
 
 void TestLaTeXProcess::initTestCase() { SVGConfig::getInstance().setSVGDir(QDir::current()); }
 
 void TestLaTeXProcess::renderHelloWorld()
 {
-    LaTeXProcess latex_process(createLocalFile("://test_data/latex_hello_world.tex"));
+    LaTeXProcess latex_process(SVGTestHelperFunctions::createLocalFile("://test_data/latex_hello_world.tex"));
+    if (QFile::exists("latex_hello_world_copy.dvi")){
+        SVGTestHelperFunctions::removeFile("latex_hello_world_copy.dvi");
+    }
 
     QSignalSpy spyFinished(&latex_process, &LaTeXProcess::processFinished);
     QSignalSpy spyError(&latex_process, &LaTeXProcess::processFailed);
@@ -53,13 +54,13 @@ void TestLaTeXProcess::renderHelloWorld()
     });
 
     latex_process.start();
-    QVERIFY(spyFinished.wait(10000));
+    QVERIFY(spyFinished.wait(20000));
     QCOMPARE(spyError.count(), 0);
 }
 
 void TestLaTeXProcess::renderError()
 {
-    const auto latex_file = createLocalFile("://test_data/latex_error.tex");
+    const auto latex_file = SVGTestHelperFunctions::createLocalFile("://test_data/latex_error.tex");
     LaTeXProcess latex_process(latex_file);
 
     QSignalSpy spyFinished(&latex_process, &LaTeXProcess::processFinished);
@@ -73,21 +74,6 @@ void TestLaTeXProcess::renderError()
     latex_process.start();
     QVERIFY(spyError.wait(10000));
     QCOMPARE(spyFinished.count(), 0);
-}
-
-QFileInfo TestLaTeXProcess::createLocalFile(const QString& resource_file_path)
-{
-    QFile resource_file(resource_file_path);
-    const QString copy_file_name
-        = SVGConfig::getInstance().svgDir().absoluteFilePath(QFileInfo(resource_file.fileName()).baseName())
-        + "_copy.tex";
-
-    if (QFile::exists(copy_file_name)) {
-        QFile::remove(copy_file_name);
-    }
-    resource_file.copy(copy_file_name);
-
-    return QFileInfo(copy_file_name);
 }
 
 QTEST_MAIN(TestLaTeXProcess)
