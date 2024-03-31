@@ -38,7 +38,7 @@ void TestLaTeXProcess::initTestCase() { SVGConfig::getInstance().setSVGDir(QDir:
 void TestLaTeXProcess::renderHelloWorld()
 {
     LaTeXProcess latex_process(SVGTestHelperFunctions::createLocalFile("://test_data/latex_hello_world.tex"));
-    if (QFile::exists("latex_hello_world_copy.dvi")){
+    if (QFile::exists("latex_hello_world_copy.dvi")) {
         SVGTestHelperFunctions::removeFile("latex_hello_world_copy.dvi");
     }
 

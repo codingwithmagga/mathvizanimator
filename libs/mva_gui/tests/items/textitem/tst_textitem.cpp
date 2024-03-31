@@ -86,7 +86,7 @@ void TestTextItem::latexRenderTest()
     QSignalSpy spySvgFinished(&m_text_item, &TextItem::svgFileChanged);
     m_text_item.setLatexSource(test_latex);
 
-    QVERIFY(spySvgFinished.wait(10000));
+    QVERIFY(QTest::qWaitFor([&]() { return spySvgFinished.count() == 1; }));
     QVERIFY(svg_file.exists());
     QCOMPARE(m_text_item.latexSource(), test_latex);
     QCOMPARE(m_text_item.svgFile(), appPath.absoluteFilePath(svg_file.fileName()));

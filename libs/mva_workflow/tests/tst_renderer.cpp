@@ -94,7 +94,7 @@ void TestRenderer::initTestCase()
     auto tex = new TextItem;
     QSignalSpy latexSpy(tex, &TextItem::svgFileChanged);
     tex->setLatexSource("Hello $\\delta=\\epsilon$");
-    QVERIFY(latexSpy.wait());
+    QVERIFY(QTest::qWaitFor([&]() { return latexSpy.count() == 1; }));
     tex->setScaleText(3);
     tex->setOpacity(0.43);
     tex->setRotation(-23);
@@ -195,9 +195,8 @@ void TestRenderer::render()
                 "extracted_frame_" + QString::number(width) + "x" + QString::number(height) + ".png");
             QProcess ffmpeg_extract_frame;
             ffmpeg_extract_frame.start("ffmpeg",
-                QStringList {} << "-y"
-                               << "-i" << file.absoluteFilePath() << "-frames:v"
-                               << "1" << extracted_frame_file.fileName());
+                QStringList {} << "-y" << "-i" << file.absoluteFilePath() << "-frames:v" << "1"
+                               << extracted_frame_file.fileName());
 
             QVERIFY(ffmpeg_extract_frame.waitForFinished());
             QCOMPARE(QImage(extracted_frame_file.fileName()), test_frame_image);
@@ -249,9 +248,8 @@ void TestRenderer::multipleRendering()
         QFile extracted_frame_file("extracted_frame_multi.png");
         QProcess ffmpeg_extract_frame;
         ffmpeg_extract_frame.start("ffmpeg",
-            QStringList {} << "-y"
-                           << "-i" << file.absoluteFilePath() << "-frames:v"
-                           << "1" << extracted_frame_file.fileName());
+            QStringList {} << "-y" << "-i" << file.absoluteFilePath() << "-frames:v" << "1"
+                           << extracted_frame_file.fileName());
 
         QImage test_frame_image_multi("://test_images/test_frame_multi.png");
 
@@ -299,11 +297,8 @@ void TestRenderer::renderWithAnimation()
         QFile extracted_frame_file_05s("extracted_test_frame_animation_05s.png");
         QProcess ffmpeg_extract_frame_05s;
         ffmpeg_extract_frame_05s.start("ffmpeg",
-            QStringList {} << "-y"
-                           << "-i" << file.absoluteFilePath() << "-frames:v"
-                           << "1"
-                           << "-ss"
-                           << "0.5" << extracted_frame_file_05s.fileName());
+            QStringList {} << "-y" << "-i" << file.absoluteFilePath() << "-frames:v" << "1" << "-ss" << "0.5"
+                           << extracted_frame_file_05s.fileName());
 
         QImage test_frame_image_animation("://test_images/test_frame_half_animation.png");
 
@@ -313,11 +308,8 @@ void TestRenderer::renderWithAnimation()
         QFile extracted_frame_file_1s("extracted_test_frame_animation_1s.png");
         QProcess ffmpeg_extract_frame_1s;
         ffmpeg_extract_frame_1s.start("ffmpeg",
-            QStringList {} << "-y"
-                           << "-i" << file.absoluteFilePath() << "-frames:v"
-                           << "1"
-                           << "-ss"
-                           << "1.0" << extracted_frame_file_1s.fileName());
+            QStringList {} << "-y" << "-i" << file.absoluteFilePath() << "-frames:v" << "1" << "-ss" << "1.0"
+                           << extracted_frame_file_1s.fileName());
 
         QImage test_frame_image_animation_finished("://test_images/test_frame_full_animation.png");
 
@@ -327,11 +319,8 @@ void TestRenderer::renderWithAnimation()
         QFile extracted_frame_file_45s("extracted_test_frame_animation_45s.png");
         QProcess ffmpeg_extract_frame_45s;
         ffmpeg_extract_frame_45s.start("ffmpeg",
-            QStringList {} << "-y"
-                           << "-i" << file.absoluteFilePath() << "-frames:v"
-                           << "1"
-                           << "-ss"
-                           << "4.5" << extracted_frame_file_45s.fileName());
+            QStringList {} << "-y" << "-i" << file.absoluteFilePath() << "-frames:v" << "1" << "-ss" << "4.5"
+                           << extracted_frame_file_45s.fileName());
 
         QImage test_frame_image_fadeout_animation_finished("://test_images/test_frame_fadeout_animation.png");
 
