@@ -217,7 +217,9 @@ QImage TestHelperFunctions::extractImage(const QString& video_file) const
     QFile extracted_frame_file("extracted_frame.png");
     QProcess ffmpeg_extract_frame;
     ffmpeg_extract_frame.start("ffmpeg",
-        QStringList {} << "-y" << "-i" << video_file << "-frames:v" << "1" << extracted_frame_file.fileName());
+        QStringList {} << "-y"
+                       << "-i" << video_file << "-frames:v"
+                       << "1" << extracted_frame_file.fileName());
 
     if (!ffmpeg_extract_frame.waitForFinished()) {
         qCritical() << "Couldn't extract frame with ffmpeg";
