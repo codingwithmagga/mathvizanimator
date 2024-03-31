@@ -149,6 +149,8 @@ jobs:
           files: build/mva_test_coverage.xml
           flags: unittests
           name: codecov-mva
+          fail_ci_if_error: true
+          verbose: true
       
       #- name: (x) Setup tmate session
       #  if: ${{ failure() }}
