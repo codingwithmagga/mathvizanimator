@@ -29,10 +29,12 @@ foreach(INCLUDE_DIR ${MVA_APP_PUBLIC_HEADER_DIRS})
 endforeach()
 
 set(DOXYGEN_INPUT_DIR ${CMAKE_SOURCE_DIR})
-set(DOXYGEN_OUTPUT_DIR ${CMAKE_SOURCE_DIR}/docs/mathvizanimator)
+set(DOXYGEN_OUTPUT_SUBDIR mathvizanimator)
+set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/mathvizanimator)
 set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
 set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
 set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+set(DOXYGEN_GENERATE_TAGFILE ${DOXYGEN_OUTPUT_SUBDIR}/html/tagfile.xml)
 
 #Replace variables inside @@ with the current values
 configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
