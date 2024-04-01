@@ -30,11 +30,11 @@ endforeach()
 
 set(DOXYGEN_INPUT_DIR ${CMAKE_SOURCE_DIR})
 set(DOXYGEN_OUTPUT_SUBDIR mathvizanimator)
-set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/mathvizanimator)
+set(DOXYGEN_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${DOXYGEN_OUTPUT_SUBDIR})
 set(DOXYGEN_INDEX_FILE ${DOXYGEN_OUTPUT_DIR}/html/index.html)
 set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
 set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-set(DOXYGEN_GENERATE_TAGFILE ${DOXYGEN_OUTPUT_SUBDIR}/html/tagfile.xml)
+set(DOXYGEN_GENERATE_TAGFILE "${DOXYGEN_OUTPUT_SUBDIR}/html/tagfile.xml")
 
 #Replace variables inside @@ with the current values
 configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
@@ -44,9 +44,11 @@ add_custom_command(OUTPUT ${DOXYGEN_INDEX_FILE}
                    DEPENDS ${MVA_PUBLIC_HEADERS}
                    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
                    MAIN_DEPENDENCY ${DOXYFILE_OUT} ${DOXYFILE_IN}
-                   COMMENT "Generating docs")
+                   COMMENT "Generating docs"
+                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
-add_custom_target(doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE})
+add_custom_target(doxygen ALL DEPENDS ${DOXYGEN_INDEX_FILE} WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SPHINX_SOURCE ${CMAKE_CURRENT_SOURCE_DIR})
 set(SPHINX_BUILD ${CMAKE_CURRENT_BINARY_DIR}/sphinx)
@@ -62,5 +64,5 @@ add_custom_target(Sphinx ALL
                   ${SPHINX_EXECUTABLE} -b html
                   -Dbreathe_projects.MathVizAnimator=${DOXYGEN_OUTPUT_DIR}/xml # cspell:disable-line
                   ${SPHINX_SOURCE} ${SPHINX_BUILD}
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                   COMMENT "Generating documentation with Sphinx")
