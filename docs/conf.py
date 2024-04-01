@@ -34,11 +34,11 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
 if read_the_docs_build:
-    input_dir = '../libs'
-    output_dir = '../docs/mathvizanimator'
-    configureDoxyfile(input_dir, output_dir)
-    subprocess.call('doxygen', shell=True)
     read_the_docs_build_folder = os.environ.get('READTHEDOCS_OUTPUT', None)
+    input_dir = '../libs'
+    output_dir = read_the_docs_build_folder + '../docs/mathvizanimator'
+    configureDoxyfile(input_dir, output_dir)
+    subprocess.call('doxygen', shell=False)
     print(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir + '/html'])
     subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir + '/html'], shell=False)
     breathe_projects['MathVizAnimator'] = output_dir + '/xml'
