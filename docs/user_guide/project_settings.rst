@@ -1,7 +1,7 @@
 Project Settings
 ================
 
-In :ref:`Change project settings` there was already explained how to open the project settings (**Project->Project Settings**) and how to change the length of the video. Here we take a closer look on all the options we have.
+In :ref:`first_steps/index:Change project settings` there was already explained how to open the project settings (**Project->Project Settings**) and how to change the length of the video. Here we take a closer look on all the options we have.
 
 .. image:: images/project_settings_popup.png
   :width: 600

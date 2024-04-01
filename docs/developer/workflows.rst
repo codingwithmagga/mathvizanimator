@@ -10,14 +10,14 @@ On this page you will find some general notes how specific workflows are handled
 Pointer handling
 ++++++++++++++++
 
-Since the Qt library is used in this project, the usage of pointers cannot be prevented. For example when adding an item to the scene, see also :ref:`Adding an item`, the generated item object is a **BasicItem** Pointer containing an **AbstractItem** raw pointer as child. The **BasicItem** object itself is a child of the qml drop area. The `parent-child relationship in Qt <https://doc.qt.io/qt-6.5/objecttrees.html>`_ is also responsible for the memory management, so it is also not a good idea, to convert this raw pointers into smart pointers.
+Since the Qt library is used in this project, the usage of pointers cannot be prevented. For example when adding an item to the scene, see also :ref:`developer/workflows:Adding an item`, the generated item object is a **BasicItem** Pointer containing an **AbstractItem** raw pointer as child. The **BasicItem** object itself is a child of the qml drop area. The `parent-child relationship in Qt <https://doc.qt.io/qt-6.5/objecttrees.html>`_ is also responsible for the memory management, so it is also not a good idea, to convert this raw pointers into smart pointers.
 
 Besides the special cases explained above, smart pointers should be used when pointer usage is necessary. 
 
 Adding an item
 ++++++++++++++
 
-An item can be added by the user by drag and drop from the left list of available items. When the dragging process started, a small *shadow* item is created which follows the mouse cursor. The implementation of this process can be seen in **MVAItemDelegate.qml** file in the :ref:`MVA GUI library`. This *shadow* item will be destroyed when the item is dropped. Only the project area in the middle of the application accepts the drop and creates the item based on the items qml file, which is stored in the ListElement in **MVAItemModel.qml** file. The itemAdded signal is emitted, which is connected to **ItemHandler** object in the **MainLogic** class. Here the pointer to the item will be stored and added to the item model.
+An item can be added by the user by drag and drop from the left list of available items. When the dragging process started, a small *shadow* item is created which follows the mouse cursor. The implementation of this process can be seen in **MVAItemDelegate.qml** file in the :ref:`developer/mva_gui:MVA GUI library`. This *shadow* item will be destroyed when the item is dropped. Only the project area in the middle of the application accepts the drop and creates the item based on the items qml file, which is stored in the ListElement in **MVAItemModel.qml** file. The itemAdded signal is emitted, which is connected to **ItemHandler** object in the **MainLogic** class. Here the pointer to the item will be stored and added to the item model.
 
 Deleting an item 
 ++++++++++++++++
@@ -37,4 +37,4 @@ An animation can be deleted by the user by right clicking the animation in the a
 Render and Snapshot process
 +++++++++++++++++++++++++++
 
-Have a look at :ref:`Interface to FFmpeg`. 
+Have a look at :ref:`developer/mva_workflow:Interface to FFmpeg`. 
