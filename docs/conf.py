@@ -39,7 +39,7 @@ if read_the_docs_build:
     subprocess.call('doxygen', shell=True)
     read_the_docs_build_folder = os.environ.get('READTHEDOCS_OUTPUT', None)
     print(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir])
-    subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir], shell=True)
+    subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir], shell=False)
     breathe_projects['MathVizAnimator'] = output_dir + '/xml'
 
 
