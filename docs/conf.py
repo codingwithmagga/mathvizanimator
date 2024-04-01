@@ -69,7 +69,7 @@ autosectionlabel_prefix_document = True
 if read_the_docs_build:
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
     main_folder = read_the_docs_build_folder.parent.absolute()
-    output_dir = main_folder / 'docs' / 'mathvizanimator'
+    output_dir = main_folder / 'docs'
     doxygen_root = output_dir.absolute().as_posix()
     doxylink = {
         "mva": ( 
