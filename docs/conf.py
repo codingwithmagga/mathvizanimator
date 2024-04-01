@@ -34,9 +34,8 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
 if read_the_docs_build:
-    read_the_docs_build_folder = os.environ.get('READTHEDOCS_OUTPUT', None)
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
-    main_folder = read_the_docs_build_folder.parent()
+    main_folder = read_the_docs_build_folder.parent.absolute()
     input_dir = '../libs'
     output_dir = main_folder + '/docs/mathvizanimator'
     configureDoxyfile(input_dir, output_dir)
