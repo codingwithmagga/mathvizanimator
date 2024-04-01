@@ -37,10 +37,9 @@ if read_the_docs_build:
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
     main_folder = read_the_docs_build_folder.parent.absolute()
     input_dir = '../libs'
-    output_dir = main_folder / 'docs' / 'mathvizanimator'
+    output_dir = main_folder / 'docs'
     configureDoxyfile(input_dir, output_dir.absolute().as_posix())
     subprocess.call('doxygen', shell=False)
-    print(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'])
     subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'], shell=False)
     breathe_projects['MathVizAnimator'] = output_dir / 'xml'
 
