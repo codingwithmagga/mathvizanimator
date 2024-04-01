@@ -42,3 +42,6 @@
 
 # megalinter
 megalinter-reports/
+
+# For doxysphinx the doxygen ouput dir needs to be located in the doc dir, so we have to ignore that dir here
+docs/mathvizanimator/*
