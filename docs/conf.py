@@ -35,8 +35,10 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 breathe_projects = {}
 if read_the_docs_build:
     read_the_docs_build_folder = os.environ.get('READTHEDOCS_OUTPUT', None)
+    read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
+    main_folder = read_the_docs_build_folder.parent()
     input_dir = '../libs'
-    output_dir = read_the_docs_build_folder + '../docs/mathvizanimator'
+    output_dir = main_folder + '/docs/mathvizanimator'
     configureDoxyfile(input_dir, output_dir)
     subprocess.call('doxygen', shell=False)
     print(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir + '/html'])
