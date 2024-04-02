@@ -17,6 +17,14 @@
 import subprocess, os
 from pathlib import Path, PurePosixPath
 
+def get_output_dir():
+	read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
+	main_folder = read_the_docs_build_folder.parent.absolute()
+	output_dir = main_folder / 'mathvizanimator'
+ 
+	return output_dir.absolute().as_posix()
+
+
 def configureDoxyfile(input_dir, output_dir):
 
 	with open('Doxyfile.in', 'r') as file :
@@ -37,8 +45,8 @@ if read_the_docs_build:
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
     main_folder = read_the_docs_build_folder.parent.absolute()
     input_dir = '../libs'
-    output_dir = main_folder / 'docs' / 'mathvizanimator'
-    configureDoxyfile(input_dir, output_dir.absolute().as_posix())
+    output_dir = main_folder /'mathvizanimator'
+    configureDoxyfile(input_dir, get_output_dir())
     subprocess.call('doxygen', shell=False)
     subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'], shell=False)
     breathe_projects['MathVizAnimator'] = output_dir / 'xml'
@@ -67,11 +75,7 @@ extensions = ["breathe",
 autosectionlabel_prefix_document = True
 
 if read_the_docs_build:
-    read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
-    main_folder = read_the_docs_build_folder.parent.absolute()
-    output_dir = main_folder / 'docs' / 'mathvizanimator'
-    # doxygen_root = PurePosixPath(output_dir.as_posix()).relative_to(read_the_docs_build_folder, walk_up=True).as_posix()
-    doxygen_root = os.path.relpath(output_dir, start=read_the_docs_build_folder)
+    doxygen_root = os.path.relpath(get_output_dir(), start=read_the_docs_build_folder)
     doxylink = {
         "mva": ( 
             f"{doxygen_root}/html/tagfile.xml", 
@@ -110,10 +114,7 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 if read_the_docs_build:
-	read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
-	main_folder = read_the_docs_build_folder.parent.absolute()
-	output_dir = main_folder / 'docs' / 'mathvizanimator'
-	html_static_path = [output_dir.absolute().as_posix()]
+	html_static_path = [get_output_dir()]
 
 # Breathe Configuration
 breathe_default_project = "MathVizAnimator"
