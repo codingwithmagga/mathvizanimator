@@ -113,7 +113,7 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 if read_the_docs_build:
-	html_static_path = [get_output_dir().absolute().as_posix()]
+	html_extra_path = [get_output_dir().absolute().as_posix()]
 
 # Breathe Configuration
 breathe_default_project = "MathVizAnimator"
