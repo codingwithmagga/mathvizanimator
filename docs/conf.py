@@ -20,9 +20,9 @@ from pathlib import Path, PurePosixPath
 def get_output_dir():
 	read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
 	main_folder = read_the_docs_build_folder.parent.absolute()
-	output_dir = main_folder / 'mathvizanimator'
+	output_dir = main_folder / 'docs' / 'mathvizanimator'
  
-	return output_dir.absolute().as_posix()
+	return output_dir
 
 
 def configureDoxyfile(input_dir, output_dir):
@@ -42,11 +42,9 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 breathe_projects = {}
 if read_the_docs_build:
-    read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
-    main_folder = read_the_docs_build_folder.parent.absolute()
     input_dir = '../libs'
-    output_dir = main_folder /'mathvizanimator'
-    configureDoxyfile(input_dir, get_output_dir())
+    output_dir = get_output_dir()
+    configureDoxyfile(input_dir, output_dir.absolute().as_posix())
     subprocess.call('doxygen', shell=False)
     subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'], shell=False)
     breathe_projects['MathVizAnimator'] = output_dir / 'xml'
@@ -75,7 +73,7 @@ extensions = ["breathe",
 autosectionlabel_prefix_document = True
 
 if read_the_docs_build:
-    doxygen_root = os.path.relpath(get_output_dir(), start=read_the_docs_build_folder)
+    doxygen_root = os.path.relpath(get_output_dir().absolute().as_posix(), start=read_the_docs_build_folder)
     doxylink = {
         "mva": ( 
             f"{doxygen_root}/html/tagfile.xml", 
@@ -114,7 +112,7 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 if read_the_docs_build:
-	html_static_path = [get_output_dir()]
+	html_static_path = [get_output_dir().absolute().as_posix()]
 
 # Breathe Configuration
 breathe_default_project = "MathVizAnimator"
