@@ -10,5 +10,6 @@ The user guide shows how to use the features of the MathVizAnimator application.
     project_settings
     latex_items
     bugs_features
+    /docs/doxygen/demo/html
 
 :mva:`AbstractItem`
