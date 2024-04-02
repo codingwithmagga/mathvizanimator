@@ -16,3 +16,4 @@ The development is currently at an early stage, but there are already some inter
     first_steps/index
     user_guide/index
     developer/index
+    mathvizanimator/html/classAbstractAnimation
