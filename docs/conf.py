@@ -15,7 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import subprocess, os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 def configureDoxyfile(input_dir, output_dir):
 
@@ -67,7 +67,7 @@ extensions = ["breathe",
 autosectionlabel_prefix_document = True
 
 if read_the_docs_build:
-    read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
+    read_the_docs_build_folder = PurePosixPath(os.environ.get('READTHEDOCS_OUTPUT', None))
     main_folder = read_the_docs_build_folder.parent.absolute()
     output_dir = main_folder / 'docs' / 'mathvizanimator'
     doxygen_root = output_dir.relative_to(read_the_docs_build_folder, walk_up=True).as_posix()
