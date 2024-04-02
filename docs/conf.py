@@ -15,7 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import subprocess, os
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 
 def get_output_dir():
 	read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
@@ -45,6 +45,7 @@ if read_the_docs_build:
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
     input_dir = '../libs'
     output_dir = get_output_dir()
+    output_dir.mkdir(parents=True, exist_ok=True)
     configureDoxyfile(input_dir, output_dir.absolute().as_posix())
     subprocess.call('doxygen', shell=False)
     subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'], shell=False)
