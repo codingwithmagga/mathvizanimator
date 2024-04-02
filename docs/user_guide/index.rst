@@ -10,8 +10,3 @@ The user guide shows how to use the features of the MathVizAnimator application.
     project_settings
     latex_items
     bugs_features
-    ../mathvizanimator/html/classAbstractItem
-    
-:mva:`AbstractItem`
-
-:doc:`../mathvizanimator/html/classAbstractItem`
