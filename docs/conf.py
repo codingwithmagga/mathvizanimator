@@ -20,7 +20,7 @@ from pathlib import Path, PurePosixPath
 def get_output_dir():
 	read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
 	main_folder = read_the_docs_build_folder.parent.absolute()
-	output_dir = main_folder / 'docs' / 'mathvizanimator'
+	output_dir = main_folder / 'docs' / 'mathvizanimator' / 'mathvizanimator'
  
 	return output_dir
 
@@ -113,7 +113,7 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 if read_the_docs_build:
-	html_extra_path = [get_output_dir().absolute().as_posix()]
+	html_static_path = [get_output_dir().parent.absolute().as_posix()]
 
 # Breathe Configuration
 breathe_default_project = "MathVizAnimator"
