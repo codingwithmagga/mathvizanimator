@@ -100,7 +100,11 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**/*.html']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 
+                    get_output_dir().parent.absolute().as_posix() + '/**/*.html',
+                    get_output_dir().parent.absolute().as_posix() + '/**/*.rst',
+                    get_output_dir().parent.absolute().as_posix() + '/**/*.js',
+                    get_output_dir().parent.absolute().as_posix() + '/**/*.css']
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -110,8 +114,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '**/*.html']
 #
 html_theme = "sphinx_rtd_theme"
 
-#if read_the_docs_build:
-#	html_extra_path = [get_output_dir().parent.absolute().as_posix()]
+if read_the_docs_build:
+	html_extra_path = [get_output_dir().parent.absolute().as_posix()]
 
 # Breathe Configuration
 breathe_default_project = "MathVizAnimator"
