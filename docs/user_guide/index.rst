@@ -13,4 +13,5 @@ The user guide shows how to use the features of the MathVizAnimator application.
     ../mathvizanimator/html/classAbstractItem
     
 :mva:`AbstractItem`
+
 :doc:`../mathvizanimator/html/classAbstractItem`
