@@ -103,10 +103,11 @@ templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 
                     get_output_dir().parent.absolute().as_posix() + '/**/*.html',
                     get_output_dir().parent.absolute().as_posix() + '/**/*.rst',
-                    get_output_dir().parent.absolute().as_posix() + '/**/*.js',
-                    get_output_dir().parent.absolute().as_posix() + '/**/*.md5',
-                    get_output_dir().parent.absolute().as_posix() + '/**/*.map',
-                    get_output_dir().parent.absolute().as_posix() + '/**/*.css']
+                 #   get_output_dir().parent.absolute().as_posix() + '/**/*.js',
+                 #   get_output_dir().parent.absolute().as_posix() + '/**/*.md5',
+                  #  get_output_dir().parent.absolute().as_posix() + '/**/*.map',
+                   # get_output_dir().parent.absolute().as_posix() + '/**/*.css'
+                   ]
 
 
 # -- Options for HTML output -------------------------------------------------
