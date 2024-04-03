@@ -40,7 +40,6 @@ def configureDoxyfile(input_dir, output_dir):
 # Check if we're running on Read the Docs' servers
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
-breathe_projects = {}
 if read_the_docs_build:
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
     input_dir = '../libs'
@@ -49,7 +48,6 @@ if read_the_docs_build:
     configureDoxyfile(input_dir, output_dir.absolute().as_posix())
     subprocess.call('doxygen', shell=False)
     subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'], shell=False)
-    breathe_projects['MathVizAnimator'] = output_dir / 'xml'
 
 
 # -- Project information -----------------------------------------------------
@@ -66,8 +64,7 @@ author = 'CodingWithMagga'
 # ones.
 #...
 
-extensions = ["breathe", 
-              "sphinx.ext.graphviz", 
+extensions = ["sphinx.ext.graphviz", 
               "sphinx.ext.autosectionlabel",
               "sphinxcontrib.doxylink"]
 
@@ -118,9 +115,6 @@ html_static_path = ['_static']
 html_css_files = [
     'custom.css',
 ]
-
-# Breathe Configuration
-breathe_default_project = "MathVizAnimator"
 
 # For code highlighting
 pygments_style = 'sphinx'

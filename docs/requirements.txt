@@ -1,4 +1,3 @@
-breathe
 sphinx-rtd-theme
 doxysphinx
 sphinxcontrib-doxylink
