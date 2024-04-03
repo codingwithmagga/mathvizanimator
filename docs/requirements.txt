@@ -1,3 +1,2 @@
 sphinx-rtd-theme
-doxysphinx
-sphinxcontrib-doxylink
+doxysphinxS

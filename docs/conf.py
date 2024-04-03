@@ -71,26 +71,6 @@ extensions = ["sphinx.ext.graphviz",
 # Configure extension
 autosectionlabel_prefix_document = True
 
-if read_the_docs_build:
-    doxygen_root = os.path.relpath(get_output_dir().absolute().as_posix(), start=read_the_docs_build_folder)
-    doxylink = {
-        "mva": ( 
-            f"{doxygen_root}/html/tagfile.xml", 
-            f"{doxygen_root}/html"
-		)
-	}
-else:
-    doxygen_root = "mathvizanimator" # this is just a convenience variable
-    doxylink = {
-		"mva": ( 
-			f"{doxygen_root}/html/tagfile.xml", # the first parameter of this tuple is the tagfile
-			f"{doxygen_root}/html", # the second parameter of this tuple is a relative path pointing from
-										# sphinx output directory to the doxygen output folder inside the output
-										# directory tree.
-										# Doxylink will use the tagfile to get the html file name of the symbol you want
-										# to link and then prefix it with this path to generate html links (<a>-tags).
-		),
-	}
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -98,7 +78,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
 
 # -- Options for HTML output -------------------------------------------------
 
