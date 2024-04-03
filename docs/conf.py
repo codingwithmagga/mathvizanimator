@@ -65,8 +65,7 @@ author = 'CodingWithMagga'
 #...
 
 extensions = ["sphinx.ext.graphviz", 
-              "sphinx.ext.autosectionlabel",
-              "sphinxcontrib.doxylink"]
+              "sphinx.ext.autosectionlabel"]
 
 # Configure extension
 autosectionlabel_prefix_document = True
