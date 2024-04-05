@@ -11,7 +11,7 @@ build:
       - mkdir -p $READTHEDOCS_OUTPUT/html/mathvizanimator/html/
       - ls docs/mathvizanimator/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
-      - cp --recursive -v docs/mathvizanimator/html/ $READTHEDOCS_OUTPUT/html/mathvizanimator/
+      - rsync --recursive -av docs/mathvizanimator/html $READTHEDOCS_OUTPUT/html/mathvizanimator/html --exclude='*.html'
       - ls $READTHEDOCS_OUTPUT
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
