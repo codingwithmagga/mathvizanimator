@@ -9,8 +9,8 @@ build:
   jobs:
     post_build:
       - mkdir -p ${READTHEDOCS_OUTPUT}/html/mathvizanimator/
-      - yes | cp --recursive docs/mathvizanimator/ ${READTHEDOCS_OUTPUT}/html/mathvizanimator/
-
+      - cp --recursive docs/mathvizanimator/ ${READTHEDOCS_OUTPUT}/mathvizanimator
+      
 python:
   install:
     - requirements: docs/requirements.txt
