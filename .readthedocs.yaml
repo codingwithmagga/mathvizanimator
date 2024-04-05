@@ -18,7 +18,7 @@ build:
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
-      - zip -r $READTHEDOCS_OUTPUT/htmlzip/mva_doc.zip $READTHEDOCS_OUTPUT/html
+      - zip -r ${READTHEDOCS_OUTPUT}htmlzip/mva_doc.zip ${READTHEDOCS_OUTPUT}html
 
 python:
   install:
