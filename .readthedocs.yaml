@@ -18,7 +18,7 @@ build:
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
-      - zip -r $READTHEDOCS_OUTPUT/html/mva_doc.zip $READTHEDOCS_OUTPUT/htmlzip/
+      - zip -r $READTHEDOCS_OUTPUT/html/mva_doc.zip $READTHEDOCS_OUTPUT/htmlzip
 
 python:
   install:
@@ -27,4 +27,3 @@ python:
 sphinx:
   configuration: docs/conf.py
   fail_on_warning: true
-  
