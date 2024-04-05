@@ -8,6 +8,7 @@ build:
     - graphviz
   jobs:
     post_build:
+      - mkdir -p $READTHEDOCS_OUTPUT/html/mathvizanimator
       - cp --recursive docs/mathvizanimator/ ${READTHEDOCS_OUTPUT}/html/mathvizanimator
 
 python:
