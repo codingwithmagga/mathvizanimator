@@ -13,6 +13,7 @@ build:
       - ls $READTHEDOCS_OUTPUT
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
+      - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
 
 python:
   install:
