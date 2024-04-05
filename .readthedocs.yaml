@@ -6,6 +6,9 @@ build:
     python: "3.11"
   apt_packages:
     - graphviz
+  jobs:
+    post_build:
+      - cp --recursive docs/mathvizanimator/ ${READTHEDOCS_OUTPUT}/mathvizanimator
 
 python:
   install:

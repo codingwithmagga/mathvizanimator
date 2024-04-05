@@ -85,14 +85,13 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = "sphinx_rtd_theme"
 
-if read_the_docs_build:
-	html_extra_path = [get_output_dir().parent.absolute().as_posix()]
+# if read_the_docs_build:
+# 	html_extra_path = [get_output_dir().parent.absolute().as_posix()]
  
 html_static_path = ['_static'] 
 
 html_css_files = [
-    'custom.css',
-    'doxygen-awesome.css'
+    'custom.css'
 ]
 
 # For code highlighting
