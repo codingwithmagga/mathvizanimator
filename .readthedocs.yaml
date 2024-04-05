@@ -9,7 +9,7 @@ build:
   jobs:
     post_build:
       - mkdir -p $READTHEDOCS_OUTPUT/html/mathvizanimator/
-      - ls $ocs/mathvizanimator/html
+      - ls docs/mathvizanimator/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
       - yes | cp --recursive docs/mathvizanimator/ $READTHEDOCS_OUTPUT/html/mathvizanimator/
       - ls $READTHEDOCS_OUTPUT
