@@ -46,8 +46,8 @@ if read_the_docs_build:
     output_dir = get_output_dir()
     output_dir.mkdir(parents=True, exist_ok=True)
     configureDoxyfile(input_dir, output_dir.absolute().as_posix())
-    subprocess.call('doxygen', shell=False)
-    subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, output_dir / 'html'], shell=False)
+    subprocess.call(['doxygen', 'Doxyfile'], shell=False)
+    subprocess.call(['doxysphinx', 'build', '.', read_the_docs_build_folder, 'Doxyfile'], shell=False)
 
 
 # -- Project information -----------------------------------------------------
