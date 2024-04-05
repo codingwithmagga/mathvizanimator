@@ -7,12 +7,13 @@ build:
   apt_packages:
     - graphviz
     - rsync
+    - zip
   jobs:
     post_build:
       - mkdir -p $READTHEDOCS_OUTPUT/html/mathvizanimator/html/
       - ls docs/mathvizanimator/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
-      - rsync --recursive -av docs/mathvizanimator/html/ $READTHEDOCS_OUTPUT/html/mathvizanimator/html --exclude='*.html'
+      - rsync --recursive -av docs/mathvizanimator/html/ $READTHEDOCS_OUTPUT/html/mathvizanimator/html --exclude='*.html' 
       - ls $READTHEDOCS_OUTPUT
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
@@ -25,3 +26,6 @@ python:
 sphinx:
   configuration: docs/conf.py
   fail_on_warning: true
+
+formats:
+  - htmlzip
