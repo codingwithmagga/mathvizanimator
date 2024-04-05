@@ -8,7 +8,7 @@ build:
     - graphviz
   jobs:
     post_build:
-      - cp --recursive docs/mathvizanimator/ ${READTHEDOCS_OUTPUT}/mathvizanimator
+      - cp --recursive docs/mathvizanimator/ ${READTHEDOCS_OUTPUT}/html/mathvizanimator
 
 python:
   install:
