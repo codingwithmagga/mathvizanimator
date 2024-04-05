@@ -42,7 +42,7 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 if read_the_docs_build:
     read_the_docs_build_folder = Path(os.environ.get('READTHEDOCS_OUTPUT', None))
-    input_dir = '../libs'
+    input_dir = '..'
     output_dir = get_output_dir()
     output_dir.mkdir(parents=True, exist_ok=True)
     configureDoxyfile(input_dir, output_dir.absolute().as_posix())

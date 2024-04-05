@@ -57,6 +57,7 @@ add_custom_target(DoxySphinx ALL
     COMMAND
         doxysphinx build ${SPHINX_SOURCE} ${SPHINX_BUILD} ${DOXYFILE_OUT}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS doxygen
 )
 
 add_custom_target(Sphinx ALL
@@ -64,4 +65,5 @@ add_custom_target(Sphinx ALL
                   ${SPHINX_EXECUTABLE} -b html
                   ${SPHINX_SOURCE} ${SPHINX_BUILD}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                  DEPENDS DoxySphinx
                   COMMENT "Generating documentation with Sphinx")
