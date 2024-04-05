@@ -1,5 +1,8 @@
 version: 2
 
+formats:
+  - htmlzip
+
 build:
   os: "ubuntu-22.04"
   tools:
@@ -7,7 +10,6 @@ build:
   apt_packages:
     - graphviz
     - rsync
-    - zip
   jobs:
     post_build:
       - mkdir -p $READTHEDOCS_OUTPUT/html/mathvizanimator/html/
@@ -18,7 +20,6 @@ build:
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
-      - zip -r ${READTHEDOCS_OUTPUT}htmlzip/mva_doc.zip ${READTHEDOCS_OUTPUT}html
 
 python:
   install:
