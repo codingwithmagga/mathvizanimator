@@ -28,3 +28,8 @@ python:
 sphinx:
   configuration: docs/conf.py
   fail_on_warning: true
+
+submodules:
+  include:
+    - docs/doxygen-awesome-css
+  recursive: true
