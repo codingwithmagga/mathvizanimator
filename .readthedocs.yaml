@@ -12,4 +12,5 @@ build:
   commands:
     - pip install -r docs/requirements.txt
     - mkdir -p $READTHEDOCS_OUTPUT/html
-    - unzip docs/mva_docs.zip -d $READTHEDOCS_OUTPUT/html
+    # - unzip docs/mva_docs.zip -d $READTHEDOCS_OUTPUT/html
+    - python -m sphinx -T -W --keep-going -b html -d _build/doctrees -D language=en -c docs . $READTHEDOCS_OUTPUT/html 
