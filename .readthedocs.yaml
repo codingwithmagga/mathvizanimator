@@ -13,4 +13,5 @@ build:
     - pip install -r docs/requirements.txt
     - mkdir -p $READTHEDOCS_OUTPUT/html
     # - unzip docs/mva_docs.zip -d $READTHEDOCS_OUTPUT/html
+    - python -m pip install --upgrade --no-cache-dir sphinx readthedocs-sphinx-ext 
     - python -m sphinx -T -W --keep-going -b html -d _build/doctrees -D language=en -c docs . $READTHEDOCS_OUTPUT/html 
