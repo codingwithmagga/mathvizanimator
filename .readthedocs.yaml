@@ -16,7 +16,7 @@ build:
       - ls docs/mathvizanimator/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator/html
      # - rsync --recursive -av docs/mathvizanimator/html/ $READTHEDOCS_OUTPUT/html/mathvizanimator/html --exclude='*.html' --exclude='*.css' --exclude='*.js' --exclude='*.rst' 
-      - find a \( -name "*.png" -or -name "*.svg" \) -exec cp {} b \;
+      - find docs/mathvizanimator/html/ \( -name "*.png" -or -name "*.svg" \) -exec cp {} $READTHEDOCS_OUTPUT/html/mathvizanimator/html  \;
       - ls $READTHEDOCS_OUTPUT
       - ls $READTHEDOCS_OUTPUT/html
       - ls $READTHEDOCS_OUTPUT/html/mathvizanimator
