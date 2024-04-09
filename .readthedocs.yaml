@@ -10,5 +10,5 @@ build:
     - unzip
 
   commands:
-    - pip install docs/requirements.txt
+    - pip install -r docs/requirements.txt
     - unzip mva_docs.zip -d $READTHEDOCS_OUTPUT/html
