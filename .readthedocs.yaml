@@ -18,5 +18,5 @@ build:
 
 submodules:
   include:
-    - doc/doxygen-awesome-css
+    - doxygen-awesome-css
   recursive: true
