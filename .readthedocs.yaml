@@ -15,3 +15,8 @@ build:
     # - unzip docs/mva_docs.zip -d $READTHEDOCS_OUTPUT/html
     - python -m pip install --upgrade --no-cache-dir sphinx readthedocs-sphinx-ext 
     - python -m sphinx -T -b html -d _build/doctrees -D language=en docs/ $READTHEDOCS_OUTPUT/html 
+
+submodules:
+  include:
+    - doc/doxygen-awesome-css
+  recursive: true
