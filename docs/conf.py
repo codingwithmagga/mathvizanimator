@@ -32,7 +32,7 @@ def configureDoxyfile(input_dir, output_dir):
 
 	filedata = filedata.replace('@DOXYGEN_INPUT_DIR@', input_dir)
 	filedata = filedata.replace('@DOXYGEN_OUTPUT_DIR@', output_dir)
-	filedata = filedata.replace('@DOXYGEN_GENERATE_TAGFILE@', output_dir + '/html/tagfile.xml')
+	filedata = filedata.replace('@DOXYGEN_GENERATE_TAGFILE@', 'mathvizanimator/html/tagfile.xml')
 
 	with open('Doxyfile', 'w') as file:
 		file.write(filedata)
@@ -85,9 +85,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # a list of builtin themes.
 #
 html_theme = "sphinx_rtd_theme"
-
-# if read_the_docs_build:
-# 	html_extra_path = [get_output_dir().parent.absolute().as_posix()]
  
 html_static_path = ['_static'] 
 
