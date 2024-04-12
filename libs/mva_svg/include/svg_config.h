@@ -22,14 +22,31 @@
 #include <QDir>
 #include <QStandardPaths>
 
+/**
+ * @brief The SVGConfig class manages the configuration related to SVG files.
+ *
+ * This class provides functionalities to set and retrieve the directory where SVG files are stored,
+ * as well as a method to generate a hash value for a given text. It is created as a Singleton class so that
+ * the directory for the SVG files, as well as the used hash algorithm are the same through the whole
+ * library/application. You cannot create an Object of this class, but you can get an Instance of it through the
+ * function SVGConfig::getInstance().
+ */
 class SVGConfig {
   public:
+    /**
+     * @brief Returns the singleton instance of SVGConfig.
+     * @return Reference to the singleton instance of SVGConfig.
+     */
     static SVGConfig& getInstance()
     {
         static SVGConfig instance;
         return instance;
     }
 
+    /**
+     * @brief Sets the directory for SVG files.
+     * @param svg_dir The directory where SVG files will be stored.
+     */
     void setSVGDir(const QDir& svg_dir)
     {
         m_svg_dir = svg_dir;
@@ -39,8 +56,17 @@ class SVGConfig {
         }
     }
 
+    /**
+     * @brief Returns the directory where SVG files are stored.
+     * @return The directory where SVG files are stored.
+     */
     QDir svgDir() { return m_svg_dir; }
 
+    /**
+     * @brief Generates a hash value for the given text using MD5 algorithm.
+     * @param text The text for which the hash value will be generated.
+     * @return The hash value generated for the text.
+     */
     static QString hash(const QString& text)
     {
         return QString(QCryptographicHash::hash(text.toUtf8(), QCryptographicHash::Md5).toHex());

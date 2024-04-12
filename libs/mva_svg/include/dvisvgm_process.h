@@ -21,20 +21,52 @@
 #include <QFileInfo>
 #include <QProcess>
 
+/**
+ * @brief The DvisvgmProcess class handles the conversion of DVI files to SVG format using the dvisvgm utility.
+ *
+ * This class inherits from QProcess and emits signals upon successful completion or failure of the conversion process.
+ * The class should be used as follows. First specifiy the necessary DVI file in the constructor of the class. When the
+ * conversion should be started call the QProcess::start() method. To get informed about the result of the conversion
+ * process, connect to the processFailed() and processFinished() signal of this class. The SVG File will be created in
+ * the same folder as the given DVI file having the same base name. After the conversion process the object can be
+ * destroyed.
+ */
 class DvisvgmProcess : public QProcess {
-
     Q_OBJECT
 
   public:
+    /**
+     * @brief Constructs a DvisvgmProcess object.
+     * @param dvi_file The QFileInfo object representing the DVI file to be converted.
+     * @param parent Optional pointer to the parent QObject.
+     */
     explicit DvisvgmProcess(const QFileInfo& dvi_file, QObject* parent = nullptr);
 
+    /**
+     * @brief Returns the QFileInfo object representing the DVI file.
+     * @return QFileInfo object representing the DVI file.
+     */
     QFileInfo dviFile() const { return m_dvi_file; }
 
   signals:
+    /**
+     * @brief Signal emitted when the conversion process fails.
+     * @param dvi_file The QFileInfo object representing the DVI file that failed to convert.
+     */
     void processFailed(const QFileInfo& dvi_file);
+
+    /**
+     * @brief Signal emitted when the conversion process successfully finishes.
+     * @param svg_file The QFileInfo object representing the generated SVG file.
+     */
     void processFinished(const QFileInfo& svg_file);
 
   private:
+    /**
+     * @brief Slot invoked when the conversion process finishes.
+     * @param exitCode The exit code of the process.
+     * @param exitStatus The exit status of the process.
+     */
     void onFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
     QFileInfo m_dvi_file;

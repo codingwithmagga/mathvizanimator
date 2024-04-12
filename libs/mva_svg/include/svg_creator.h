@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef LIBS_MVA_SVG_INCLUDE_SVG_CREATOR_H_
 #define LIBS_MVA_SVG_INCLUDE_SVG_CREATOR_H_
 
@@ -26,25 +25,69 @@
 #include "dvisvgm_process.h"
 #include "latex_process.h"
 
+/**
+ * @brief The SVGCreator class handles the creation of SVG files from LaTeX input.
+ *
+ * This class manages the conversion process from LaTeX to DVI and then from DVI to SVG using separate processes.
+ */
 class SVGCreator : public QObject {
     Q_OBJECT
   public:
+    /**
+     * @brief Constructs an SVGCreator object.
+     * @param parent Optional pointer to the parent QObject.
+     */
     explicit SVGCreator(QObject* parent = nullptr);
 
+    /**
+     * @brief Initiates the creation of SVG file from LaTeX input.
+     * @param latex The LaTeX input to be converted to SVG.
+     */
     void svgFromLaTeX(const QString& latex);
 
   signals:
+    /**
+     * @brief Signal emitted when the SVG file is successfully created.
+     * @param svg_file The QFileInfo object representing the created SVG file.
+     */
     void svgCreated(const QFileInfo& svg_file);
+
+    /**
+     * @brief Signal emitted when the SVG creation process fails.
+     */
     void svgCreationFailed();
 
   private slots:
+    /**
+     * @brief Slot invoked when the LaTeX compilation process finishes.
+     * @param dvi_file The QFileInfo object representing the generated DVI file.
+     */
     void latexProcessFinished(const QFileInfo& dvi_file);
+
+    /**
+     * @brief Slot invoked when the Dvisvgm conversion process finishes.
+     * @param svg_file The QFileInfo object representing the generated SVG file.
+     */
     void dvisvgmProcessFinished(const QFileInfo& svg_file);
 
+    /**
+     * @brief Slot invoked when the LaTeX compilation process fails.
+     * @param latex_file The QFileInfo object representing the LaTeX file that failed to compile.
+     */
     void latexProcessFailed(const QFileInfo& latex_file);
+
+    /**
+     * @brief Slot invoked when the Dvisvgm conversion process fails.
+     * @param dvi_file The QFileInfo object representing the DVI file that failed to convert.
+     */
     void dvisvgmProcessFailed(const QFileInfo& dvi_file);
 
   private:
+    /**
+     * @brief Prepares the LaTeX file for compilation.
+     * @param latex The LaTeX input to be prepared.
+     * @return The QFileInfo object representing the prepared LaTeX file.
+     */
     QFileInfo prepareLaTeXFile(const QString& latex);
 
     QMap<QString, QSharedPointer<LaTeXProcess>> m_latex_process_map;
