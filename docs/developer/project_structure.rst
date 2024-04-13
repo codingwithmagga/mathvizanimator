@@ -7,6 +7,12 @@ The project is structured in multiple libraries and an application executable us
 
     digraph G {
         compound = true
+        subgraph "cluster_mva_svg" {
+            label = "MVA SVG";
+            LaTeXProcess -> SVGCreator
+            DvisvgmProcess -> SVGCreator    
+            SVGConfig 
+        }
         subgraph "cluster_mva_gui" {
             "MainWindow.qml" -> MainWindowHandler;
             "QML files" -> "MainWindow.qml"
@@ -37,10 +43,13 @@ The project is structured in multiple libraries and an application executable us
         AbstractItem -> "MainWindow.qml" [ltail=cluster_mva_gui_items];
         AbstractItem -> ItemObserver [ltail=cluster_mva_gui_items,style=dotted];
         AbstractAnimation -> ItemObserver [ltail=cluster_mva_gui_animations,style=dotted];
+        SVGCreator -> AbstractItem [ltail=cluster_mva_gui_items,style=dotted];
     }
 
-There are two libraries "MVA GUI" and "MVA Workflow" located in the *lib* folder of the project. The "MVA GUI" library contains classes for the different :ref:`developer/mva_gui:Items`, like a rectangle or a circle, and :ref:`developer/mva_gui:animations`, like FadeIn and FadeOut, which the user can add to the project. Besides that other, small **qml files** are located here for the user interface. In the **MainWindow.qml** file the main application window is located. Here the whole user interface is defined. The **MainWindowHandler** class serves as wrapper between the **MainWindow.qml** and the **MainLogic** class. Data from and to the qml based main window file is processed (and maybe converted) here. 
+There are three libraries ``MVA SVG``, ``MVA GUI`` and ``MVA Workflow`` located in the *lib* folder of the project. The ``MVA SVG`` is responsible for the SVG creation process from LaTeX files and later should also be used for analyzing and manipulating SVG files. Have a look at :ref:`developer/mva_svg:MVA SVG library` for more information.
 
-The "MVA Workflow" library contains the logic of the application and no direct GUI elements. The **ItemObserver** class stores pointers to the created items and animations from "MVA GUI" library and is responsible for the current state of the items. The **ItemHandler** class manages the **ItemObserver** objects and contains the models used in the list and tables in the GUI. The **Renderer** class is a small wrapper class for the **FFmpeg** library and provides an interface to create videos and snapshots. The **SaveFileHandler** is a small class to handle the save files of the application which are stored in the JSON-format.
+The ``MVA GUI`` library contains classes for the different :ref:`developer/mva_gui:Items`, like a rectangle or a circle, and :ref:`developer/mva_gui:animations`, like FadeIn and FadeOut, which the user can add to the project. Besides that other, small **qml files** are located here for the user interface. In the **MainWindow.qml** file the main application window is located. Here the whole user interface is defined. The **MainWindowHandler** class serves as wrapper between the **MainWindow.qml** and the **MainLogic** class. Data from and to the qml based main window file is processed (and maybe converted) here. 
+
+The ``MVA Workflow`` library contains the logic of the application and no direct GUI elements. The **ItemObserver** class stores pointers to the created items and animations from ``MVA GUI`` library and is responsible for the current state of the items. The **ItemHandler** class manages the **ItemObserver** objects and contains the models used in the list and tables in the GUI. The **Renderer** class is a small wrapper class for the **FFmpeg** library and provides an interface to create videos and snapshots. The **SaveFileHandler** is a small class to handle the save files of the application which are stored in the JSON-format.
 
 The **MainLogic** connects the GUI part (**MainWindowHandler**) with the workflow classes (**ItemHandler**, **Renderer**, **SaveFileHandler**). It ensures the connection and data transfer between these two parts and is responsible that the necessary Information are up-to-date in every class. The **main.cpp** file just creates the application and starts it. As usual in Qt based Applications it doesn't do that much more.
