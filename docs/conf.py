@@ -76,7 +76,7 @@ if read_the_docs_build:
     doxygen_root = os.path.relpath(get_output_dir().absolute().as_posix(), start=read_the_docs_build_folder)
     doxylink = {
         "mva": ( 
-            f"{doxygen_root}/html/tagfile.xml", 
+            "mathvizanimator/html/tagfile.xml", 
             "mathvizanimator/html"
 		)
 	}
