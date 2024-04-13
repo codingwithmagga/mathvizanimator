@@ -26,7 +26,7 @@
  *
  * This class inherits from QProcess and provides functionalities to compile LaTeX files
  * into DVI format and clean up auxiliary files generated during the compilation process.
- * The class should be used as follows. First specifiy the necessary LaTeX file in the constructor of the class. When
+ * The class should be used as follows. First specify the necessary LaTeX file in the constructor of the class. When
  * the conversion should be started call the QProcess::start() method. To get informed about the result of the
  * conversion process, connect to the processFailed() and processFinished() signal of this class. The DVI File will be
  * created in the same folder as the given LaTeX file having the same base name. After the conversion process the object

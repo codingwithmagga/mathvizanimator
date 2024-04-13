@@ -19,7 +19,7 @@ Then the ``latex`` process was successful ``dvisvgm`` is used to create a svg fi
 ``dvisvgm path/to/latex.dvi -n -o path/to/latex.svg``
 
 * ``path/to/latex.dvi`` Absolute file path to dvi file ``latex.dvi`` (or a different file name) on the file system.
-* ``-n``  Glyphs are drawed by using path elements, adjacent text elements are not merged and no CSS styles are used to reference fonts
+* ``-n``  Glyphs are drawn by using path elements, adjacent text elements are not merged and no CSS styles are used to reference fonts
 * ``-o path/to/latex.svg`` Specifies the output file ``latex.svg``
 
 Then the ``dvisvgm`` process was successful the ``SVGCreator::svgCreated(const QFileInfo& svg_file)`` signal is emitted there ``svg_file`` contains the information about the created SVG file.

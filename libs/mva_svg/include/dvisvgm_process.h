@@ -25,7 +25,7 @@
  * @brief The DvisvgmProcess class handles the conversion of DVI files to SVG format using the dvisvgm utility.
  *
  * This class inherits from QProcess and emits signals upon successful completion or failure of the conversion process.
- * The class should be used as follows. First specifiy the necessary DVI file in the constructor of the class. When the
+ * The class should be used as follows. First specify the necessary DVI file in the constructor of the class. When the
  * conversion should be started call the QProcess::start() method. To get informed about the result of the conversion
  * process, connect to the processFailed() and processFinished() signal of this class. The SVG File will be created in
  * the same folder as the given DVI file having the same base name. After the conversion process the object can be
