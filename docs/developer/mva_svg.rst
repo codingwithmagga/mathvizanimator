@@ -6,7 +6,7 @@ The SVG library streamlines the creation of SVG files from LaTeX input. This lib
 LaTeX to SVG process
 ++++++++++++++++++++
 
-Using ``SVGCreator::svgFromLaTeX(const QString& latex)`` starts the process to create a SVG image from a LaTeX file. First a ``latex`` process is started using the following command line arguments:
+Using :mva:`SVGCreator::svgFromLaTeX(const QString& latex)` starts the process to create a SVG image from a LaTeX file. First a ``latex`` process is started using the following command line arguments:
 
 ``latex -output-format=dvi -interaction=batchmode path/to/latex.tex``
 
@@ -22,5 +22,5 @@ Then the ``latex`` process was successful ``dvisvgm`` is used to create a svg fi
 * ``-n``  Glyphs are drawn by using path elements, adjacent text elements are not merged and no CSS styles are used to reference fonts
 * ``-o path/to/latex.svg`` Specifies the output file ``latex.svg``
 
-Then the ``dvisvgm`` process was successful the ``SVGCreator::svgCreated(const QFileInfo& svg_file)`` signal is emitted there ``svg_file`` contains the information about the created SVG file.
+Then the ``dvisvgm`` process was successful the :mva:`SVGCreator::svgCreated(const QFileInfo& svg_file)` signal is emitted where ``svg_file`` contains the information about the created SVG file.
 

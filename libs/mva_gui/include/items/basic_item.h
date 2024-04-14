@@ -49,6 +49,12 @@ class BasicItem : public QQuickItem {
 
   signals:
     void clicked(const QString& name);
+
+    /**
+     * @brief Short explanation
+     *
+     * TODO
+     */
     void animationAdded(const QString& name, const QString& type, const qreal start_time, const qreal duration);
 
     void isInitializedChanged();
