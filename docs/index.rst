@@ -17,5 +17,3 @@ The development is currently at an early stage, but there are already some inter
     user_guide/index
     developer/index
     Reference Guide (doxygen) <mathvizanimator/html/index>
-
-:mva:`AbstractItem`

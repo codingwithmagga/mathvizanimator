@@ -64,6 +64,11 @@ class AbstractItem : public QQuickPaintedItem {
     QList<QPair<QString, QVariant>> getItemProperties() const;
     QList<QPair<QString, QVariant>> getParentItemProperties() const;
 
+    /**
+     * @brief Short explanation
+     *
+     * TODO
+     */
     void paintItem(QPainter* painter);
 
   signals:

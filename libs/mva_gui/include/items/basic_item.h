@@ -31,6 +31,12 @@ class BasicItem : public QQuickItem {
     QML_ELEMENT
 
     Q_PROPERTY(bool is_initialized MEMBER m_is_initialized NOTIFY isInitializedChanged)
+
+    /**
+     * @brief Short explanation
+     *
+     * TODO
+     */
     Q_PROPERTY(AbstractItem* abstract_item READ abstractItem WRITE setAbstractItem NOTIFY abstractItemChanged REQUIRED)
 
   public:
