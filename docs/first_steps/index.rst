@@ -78,7 +78,7 @@ You may notice, that there are different opacity values: **filledOpacity**, **bo
 
 In this example the **filledOpacity** property is set to 0.4 and the **filledColor** property to *blue*. Note that the default color values are shown as hexadecimal number (#00000000 is transparent), but you can also use color names like *red* or *green*. Also the rectangle is rotated by 55 degrees by changing the rotation property to 55. The size of the rectangle can be changed using the **width** and **height** property. In this example we set it to *width=250* and *height=350*. While you can hold the left mouse button and move the rectangle wherever you want, the position of the object can also be changed by modifying the **x** and **y** property of the object. The origin of the coordinate system is located at the top left corner and the y-axis goes down. In this example *x=400* and *y=200* is used.
 
-.. note:: The values for the **x** and **y** property are in pixels. So you can work pixel perfect if you want to. How to change the resolution of the project will be shown in section :ref:`Change project settings`.
+.. note:: The values for the **x** and **y** property are in pixels. So you can work pixel perfect if you want to. How to change the resolution of the project will be shown in section :ref:`first_steps/index:Change project settings`.
 
 The width of the border can be changed using the property **borderWidth**. Here it is set to 10, so that we have a big visible border of the rectangle. The color of the border can be changed by changing the property **borderColor**, but let's keep it in *red* in this example. The only property left is now the **name** property of the object, which is also shown in the top right object list. It has no direct effect on the appearance of the object, but keep the warning below in mind.
 
@@ -90,7 +90,7 @@ After changing all this properties lets have a look at our rectangle:
   :width: 600
   :alt: Changed rectangle
 
-There is one thing left to do. Changing the **opacity** to 0.0. Since we use the fade in animation (see section :ref:`Adding animations`) the rectangle would be visible at the beginning and just disappear at one second if we don't change this property. After doing so you will see that the rectangle disappears on the screen. This is because the current project time is set to 0.0. How to change that is described in the next section.
+There is one thing left to do. Changing the **opacity** to 0.0. Since we use the fade in animation (see section :ref:`first_steps/index:Adding animations`) the rectangle would be visible at the beginning and just disappear at one second if we don't change this property. After doing so you will see that the rectangle disappears on the screen. This is because the current project time is set to 0.0. How to change that is described in the next section.
 
 Change current project time
 +++++++++++++++++++++++++++

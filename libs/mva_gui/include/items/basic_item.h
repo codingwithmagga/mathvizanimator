@@ -31,6 +31,12 @@ class BasicItem : public QQuickItem {
     QML_ELEMENT
 
     Q_PROPERTY(bool is_initialized MEMBER m_is_initialized NOTIFY isInitializedChanged)
+
+    /**
+     * @brief Short explanation
+     *
+     * TODO
+     */
     Q_PROPERTY(AbstractItem* abstract_item READ abstractItem WRITE setAbstractItem NOTIFY abstractItemChanged REQUIRED)
 
   public:
@@ -43,6 +49,12 @@ class BasicItem : public QQuickItem {
 
   signals:
     void clicked(const QString& name);
+
+    /**
+     * @brief Short explanation
+     *
+     * TODO
+     */
     void animationAdded(const QString& name, const QString& type, const qreal start_time, const qreal duration);
 
     void isInitializedChanged();

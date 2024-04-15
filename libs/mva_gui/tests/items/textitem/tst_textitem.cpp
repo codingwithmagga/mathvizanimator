@@ -16,6 +16,7 @@
  */
 
 #include <QPainter>
+#include <QSignalSpy>
 #include <QTest>
 
 #include "textitem.h"
@@ -82,8 +83,10 @@ void TestTextItem::latexRenderTest()
     }
 
     const QString test_latex = R"($\theta_1 = \delta + \epsilon$)";
+    QSignalSpy spySvgFinished(&m_text_item, &TextItem::svgFileChanged);
     m_text_item.setLatexSource(test_latex);
 
+    QVERIFY(QTest::qWaitFor([&]() { return spySvgFinished.count() == 1; }));
     QVERIFY(svg_file.exists());
     QCOMPARE(m_text_item.latexSource(), test_latex);
     QCOMPARE(m_text_item.svgFile(), appPath.absoluteFilePath(svg_file.fileName()));

@@ -23,6 +23,6 @@ if(CMAKE_COMPILER_IS_GNUCC AND RUN_CODE_COVERAGE)
         NAME mva_test_coverage
         EXECUTABLE ctest --schedule-random -j 4 --output-on-failure
         DEPENDENCIES ${TEST_TARGETS}
-        EXCLUDE libs/mva_gui/tests/* libs/mva_workflow/tests/* app/tests/*
+        EXCLUDE libs/mva_gui/tests/* libs/mva_svg/tests/* libs/mva_workflow/tests/* app/tests/*
     )
 endif()

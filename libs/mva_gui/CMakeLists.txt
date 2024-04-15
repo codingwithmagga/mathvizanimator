@@ -63,6 +63,7 @@ target_link_libraries(cwa.mva.gui
         Qt6::Core
         Qt6::Quick
         Qt6::Svg
+        mva::svg
 )
 
 target_include_directories(cwa.mva.gui

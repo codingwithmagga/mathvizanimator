@@ -207,7 +207,7 @@ bool TestHelperFunctions::renderVideo(const QString& render_file) const
     }
 
     render_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(render_file)));
-    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted", Qt::DirectConnection);
+    QMetaObject::invokeMethod(render_file_dialog, "simulateAccepted", Qt::QueuedConnection);
 
     return finishedVideoRenderingSpy.wait(60000);
 }
@@ -278,7 +278,12 @@ bool TestHelperFunctions::saveFileAs(const QString& full_file_path) const
     QMetaObject::invokeMethod(save_as_action_item, "trigger");
 
     if (QFile::exists(full_file_path)) {
-        QFile::remove(full_file_path);
+        QFile save_file(full_file_path);
+        save_file.setPermissions(save_file.permissions() | QFileDevice::WriteOwner | QFileDevice::WriteUser
+            | QFileDevice::WriteGroup | QFileDevice::WriteOther);
+        if (!save_file.remove()) {
+            qWarning() << "Remove of save file failed." << save_file.fileName() << save_file.errorString();
+        }
     }
 
     auto save_file_dialog = getChild<QObject*>("MVASaveFileDialog");
@@ -287,16 +292,18 @@ bool TestHelperFunctions::saveFileAs(const QString& full_file_path) const
     }
 
     save_file_dialog->setProperty("selectedFile", QVariant(QUrl::fromLocalFile(full_file_path)));
-    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted", Qt::DirectConnection);
+    QMetaObject::invokeMethod(save_file_dialog, "simulateAccepted", Qt::QueuedConnection);
 
-    return true;
+    return QTest::qWaitFor([&]() { return !save_file_dialog->property("visible").toBool(); });
 }
 
 QString TestHelperFunctions::absoluteFilePath(const QString file_name)
 {
     const QString save_dir = "test_files";
     QDir current_dir = QDir::current();
-    current_dir.mkdir(save_dir);
+    if (!current_dir.mkpath(save_dir)) {
+        qCritical() << "Couldn't create path: " << current_dir.filePath(save_dir);
+    }
     current_dir.cd(save_dir);
 
     return current_dir.absoluteFilePath(file_name);
