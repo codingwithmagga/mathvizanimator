@@ -459,6 +459,14 @@ void ItemModelItem::setItemObserver(const QSharedPointer<ItemObserver>& new_item
     m_item_observer = new_item_observer;
 }
 
+void PropertyModel::appendProperty(const ItemProperty& property)
+{
+    auto item_name(new QStandardItem(property.name));
+    auto item_value(new QStandardItem(property.value.toString()));
+
+    appendRow(QList<QStandardItem*> { item_name, item_value });
+}
+
 Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
 {
     auto flags = QAbstractItemModel::flags(index);

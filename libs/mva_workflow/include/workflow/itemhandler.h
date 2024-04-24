@@ -28,8 +28,23 @@
 
 class ItemModelItem;
 
+struct ItemProperty {
+    QString name;
+    QVariant value;
+};
+
 class PropertyModel : public QStandardItemModel {
   public:
+    /**
+     * @brief Appends a property to the model
+     *
+     * The given parameter is of type ItemProperty, where the value is given as QVariant. Internally the value will be
+     * converted to a QString using QVariant::toString(). If value is of a type which can't be converted to a QString,
+     * an empty QString will be added to the model.
+     *
+     * @param property The item property object containing name and value.
+     */
+    void appendProperty(const ItemProperty& property);
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 
