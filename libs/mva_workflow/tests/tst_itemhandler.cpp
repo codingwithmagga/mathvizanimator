@@ -61,6 +61,7 @@ class TestItemHandler : public QObject {
 
     void removeAnimation();
 
+    void propertyModelAppendProperty();
     void propertyModelFlags();
 
     void clearHandler();
@@ -528,6 +529,19 @@ void TestItemHandler::removeAnimation()
         num_animations--;
         QCOMPARE(item_observer->animations().size(), num_animations);
     }
+}
+
+void TestItemHandler::propertyModelAppendProperty()
+{
+    PropertyModel prop_model;
+    ItemProperty item_property { "property", "value" };
+
+    prop_model.appendProperty(item_property);
+    const auto model_item_name = prop_model.item(0, 0);
+    const auto model_item_value = prop_model.item(0, 1);
+
+    QCOMPARE(model_item_name->text(), item_property.name);
+    QCOMPARE(model_item_value->text(), item_property.value);
 }
 
 void TestItemHandler::propertyModelFlags()
