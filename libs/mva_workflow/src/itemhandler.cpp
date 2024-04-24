@@ -274,15 +274,15 @@ void ItemHandler::removeAnimation(const qint32 animation_number)
 // TODO(codingwithmagga): Refactor this function, give useful var names
 void ItemHandler::appendProperties(const auto obj, auto meta_object, const QStringList& allowedProperties)
 {
-    QList<std::pair<QString, QVariant>> propList;
+    QList<std::pair<QString, QVariant>> property_list;
 
     for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
         if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
-            propList.emplace_back(meta_object->property(i).name(), meta_object->property(i).read(obj));
+            property_list.emplace_back(meta_object->property(i).name(), meta_object->property(i).read(obj));
         }
     }
 
-    for (auto& property : propList) {
+    for (auto& property : property_list) {
         auto stdItemName(new QStandardItem(property.first));
         auto stdItemValue(new QStandardItem(property.second.toString()));
 
