@@ -82,8 +82,8 @@ class AbstractItem : public QQuickPaintedItem {
     // TODO(codingwithmagga): QVariantMap as return type seems to be a better
     // choice
     //
-    QList<QPair<QString, QVariant>> getItemProperties() const;
-    QList<QPair<QString, QVariant>> getParentItemProperties() const;
+    PropertyMap getItemProperties() const;
+    PropertyMap getParentItemProperties() const;
 
     /**
      * @brief Short explanation
@@ -96,8 +96,8 @@ class AbstractItem : public QQuickPaintedItem {
     void nameChanged(const QString& new_name);
 
   private:
-    QList<QPair<QString, QVariant>> appendProperties(
-        const auto obj, auto meta_object, const QStringList& allowedProperties) const;
+    PropertyMap addItemProperties(const QMetaObject* const meta_object) const;
+    PropertyMap addParentItemProperties(const QMetaObject* const meta_object) const;
 
     QString m_name;
 

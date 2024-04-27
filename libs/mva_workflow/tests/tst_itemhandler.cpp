@@ -270,7 +270,7 @@ void TestItemHandler::checkItemProperties()
     itemhandler.setCurrentItem(circle_item->name());
 
     auto item_properties = circle_item->getItemProperties();
-    item_properties.append(circle_item->getParentItemProperties());
+    item_properties.insert(circle_item->getParentItemProperties());
     const auto propModel = itemhandler.propertyModel();
 
     QCOMPARE(propModel->rowCount(), item_properties.size());
