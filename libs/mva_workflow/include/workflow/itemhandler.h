@@ -45,6 +45,18 @@ class PropertyModel : public QStandardItemModel {
      * @param property The item property object containing name and value.
      */
     void appendProperty(const ItemProperty& property);
+
+    /**
+     * @brief Appends all properties from the given property map to the model
+     *
+     * The given property map stores the values of the properties as QVariant. Internally the value will be
+     * converted to a QString using QVariant::toString(). If value is of a type which can't be converted to a QString,
+     * an empty QString will be added to the model.
+     *
+     * @param properties Map with property-value pairs which will be added to the model
+     */
+    void appendProperties(const PropertyMap& properties);
+
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 

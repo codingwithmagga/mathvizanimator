@@ -465,6 +465,13 @@ void PropertyModel::appendProperty(const ItemProperty& property)
     appendRow(QList<QStandardItem*> { item_name, item_value });
 }
 
+void PropertyModel::appendProperties(const PropertyMap& properties)
+{
+    for (auto [property, value] : properties.asKeyValueRange()) {
+        appendProperty({ property, value });
+    }
+}
+
 Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const
 {
     auto flags = QAbstractItemModel::flags(index);
