@@ -97,6 +97,8 @@ class AbstractItem : public QQuickPaintedItem {
      */
     virtual inline QStringList editablePropertiesParent() const { return { "width", "height", "x", "y" }; }
 
+    PropertyMap allItemProperties() const;
+
     PropertyMap itemProperties() const;
     PropertyMap parentItemProperties() const;
 

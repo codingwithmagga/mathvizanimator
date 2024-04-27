@@ -58,6 +58,14 @@ QJsonObject AbstractItem::toJson() const
     return json;
 }
 
+PropertyMap AbstractItem::allItemProperties() const
+{
+    auto propertyMap = itemProperties();
+    propertyMap.insert(parentItemProperties());
+
+    return propertyMap;
+}
+
 PropertyMap AbstractItem::itemProperties() const
 {
     PropertyMap properties;
