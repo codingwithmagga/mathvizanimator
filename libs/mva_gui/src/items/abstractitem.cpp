@@ -106,7 +106,7 @@ PropertyMap AbstractItem::addItemProperties(const QMetaObject* const meta_object
     PropertyMap properties;
 
     for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
-        if (editableProperties().abstract_item_properties.contains(QString(meta_object->property(i).name()))) {
+        if (editableProperties().contains(QString(meta_object->property(i).name()))) {
             properties.insert(meta_object->property(i).name(), meta_object->property(i).read(this));
         }
     }
@@ -119,20 +119,10 @@ PropertyMap AbstractItem::addParentItemProperties(const QMetaObject* const meta_
     PropertyMap properties;
 
     for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
-        if (editableProperties().basic_item_properties.contains(QString(meta_object->property(i).name()))) {
+        if (editablePropertiesParent().contains(QString(meta_object->property(i).name()))) {
             properties.insert(meta_object->property(i).name(), meta_object->property(i).read(parentItem()));
         }
     }
 
     return properties;
-}
-
-AbstractItem::EditableProperties AbstractItem::editableProperties() const
-{
-    EditableProperties editable_properties;
-
-    editable_properties.abstract_item_properties = QStringList { "name", "opacity", "rotation" };
-    editable_properties.basic_item_properties = QStringList { "width", "height", "x", "y" };
-
-    return editable_properties;
 }

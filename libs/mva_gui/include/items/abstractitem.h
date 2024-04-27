@@ -51,7 +51,7 @@ class PropertyMap : public QVariantMap {
  * @brief An abstract class representing a visible item like a circle or a
  * rectangle.
  *
- * Longer description...
+ * Add editable properties to the list
  */
 class AbstractItem : public QQuickPaintedItem {
     Q_OBJECT
@@ -60,11 +60,6 @@ class AbstractItem : public QQuickPaintedItem {
     Q_PROPERTY(QString file MEMBER m_qml_file CONSTANT)
 
   public:
-    struct EditableProperties {
-        QStringList abstract_item_properties;
-        QStringList basic_item_properties;
-    };
-
     /**
      * @brief Constructor for MyClass. TODO
      *
@@ -77,7 +72,30 @@ class AbstractItem : public QQuickPaintedItem {
 
     virtual QJsonObject toJson() const;
 
-    virtual EditableProperties editableProperties() const;
+    /**
+     * @brief Returns the properties which can be edited by the user in a QStringList
+     *
+     * When you derive an item from AbstractItem (directly or via multiple inheritance) and your item has a property
+     * which should be editable by the user, you have to override this function and return your own properties. Don't
+     * forget to add the properties of your base class. Take a look at the GeometryItem::editableProperties() source
+     * code for an example.
+     *
+     * @return Returns the editable properties as QStrings
+     */
+    virtual inline QStringList editableProperties() const { return { "name", "opacity", "rotation" }; }
+
+    /**
+     * @brief Returns the parents properties which can be edited by the user in a QStringList
+     *
+     * The position (x,y) and the width and height of an AbstractItem are determined by the parent which is an object of
+     * type BasicItem.The position (x,y) of the AbstractItem is relative to the parent, the BasicItem. So changing these
+     * values by the user is not intended. Since the AbstractItem should always fill the whole parent (search for
+     * "anchors.fill: parent" in the item qml files, for example CircleItem.qml) it is also reasonable to change width
+     * and height of the BasicItem by the user and not the widht and height of the AbstractItem.
+     *
+     * @return Returns the editable properties as QStrings
+     */
+    virtual inline QStringList editablePropertiesParent() const { return { "width", "height", "x", "y" }; }
 
     PropertyMap getItemProperties() const;
     PropertyMap getParentItemProperties() const;

@@ -127,15 +127,24 @@ void TextItem::setScaleText(qreal newScaleText)
     emit scaleTextChanged(m_scale_text);
 }
 
-AbstractItem::EditableProperties TextItem::editableProperties() const
+QStringList TextItem::editableProperties() const
 {
-    auto abstractList = AbstractItem::editableProperties();
-    abstractList.basic_item_properties.removeOne("width");
-    abstractList.basic_item_properties.removeOne("height");
+    auto editableProperties = AbstractItem::editableProperties();
 
-    abstractList.abstract_item_properties.append("latexSource");
-    abstractList.abstract_item_properties.append("scaleText");
-    return abstractList;
+    editableProperties.append("latexSource");
+    editableProperties.append("scaleText");
+
+    return editableProperties;
+}
+
+QStringList TextItem::editablePropertiesParent() const
+{
+    auto editableProperties = AbstractItem::editablePropertiesParent();
+
+    editableProperties.removeOne("width");
+    editableProperties.removeOne("height");
+
+    return editableProperties;
 }
 
 void TextItem::svgCreationFinished(const QFileInfo& svg_file) { setSvgFile(svg_file); }

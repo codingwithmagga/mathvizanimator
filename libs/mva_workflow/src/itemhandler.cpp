@@ -301,15 +301,16 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex)
     auto mo_abstract = abstract_item->metaObject();
     auto mo = basic_item->metaObject();
 
-    const auto allowedProperties = abstract_item->editableProperties();
+    const auto editableProperties = abstract_item->editableProperties();
+    const auto editablePropertiesParent = abstract_item->editablePropertiesParent();
 
     do {
-        appendProperties(abstract_item, mo_abstract, allowedProperties.abstract_item_properties);
+        appendProperties(abstract_item, mo_abstract, editableProperties);
     } while ((mo_abstract = mo_abstract->superClass()));
 
     do {
-        appendProperties(basic_item, mo, allowedProperties.basic_item_properties);
-    } while ((mo = mo->superClass())); // TODO(codingwithmagga): sort elements?
+        appendProperties(basic_item, mo, editablePropertiesParent);
+    } while ((mo = mo->superClass()));
 }
 
 void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item)

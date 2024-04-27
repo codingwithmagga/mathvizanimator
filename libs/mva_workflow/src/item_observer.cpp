@@ -83,7 +83,7 @@ void ItemObserver::removeAnimation(const qint32 animation_number) { m_animations
 
 void ItemObserver::updateItemProperty(const QString& property, const QVariant& value)
 {
-    if (abstractitem()->editableProperties().abstract_item_properties.contains(property)) {
+    if (abstractitem()->editableProperties().contains(property)) {
         abstractitem()->setProperty(property.toUtf8(), value);
         m_item_start_property_values.insert(property.toUtf8(), value);
 

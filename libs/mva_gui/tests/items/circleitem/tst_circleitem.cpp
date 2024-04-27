@@ -108,16 +108,15 @@ void TestCircleItem::paintTest()
 
 void TestCircleItem::editablePropertiesTest()
 {
-    const auto editable_properties = m_circle_item.editableProperties();
-    const auto item_properties = editable_properties.abstract_item_properties;
-    const auto quick_item_properties = editable_properties.basic_item_properties;
+    const auto item_properties = m_circle_item.editableProperties();
+    const auto basic_item_properties = m_circle_item.editablePropertiesParent();
 
     QStringList expected_item_properties { "name", "opacity", "rotation", "filledColor", "filledOpacity", "borderColor",
         "borderOpacity", "borderWidth" };
     QStringList expected_quick_item_properties { "width", "height", "x", "y" };
 
     QCOMPARE(item_properties, expected_item_properties);
-    QCOMPARE(quick_item_properties, expected_quick_item_properties);
+    QCOMPARE(basic_item_properties, expected_quick_item_properties);
 }
 
 QTEST_MAIN(TestCircleItem)

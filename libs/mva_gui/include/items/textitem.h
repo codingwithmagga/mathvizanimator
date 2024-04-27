@@ -47,14 +47,13 @@ class TextItem : public AbstractItem {
     void paint(QPainter* painter) override;
 
     QString latexSource() const;
-    // TODO(codingwithmagga): Relocate to a SvgHandler class or LatexHandler or
-    // similar
     void setLatexSource(const QString& newLatexSource);
 
     qreal scaleText() const;
     void setScaleText(qreal newScaleText);
 
-    EditableProperties editableProperties() const override;
+    QStringList editableProperties() const override;
+    QStringList editablePropertiesParent() const override;
 
   signals:
     void latexSourceChanged(const QString& new_latex_source);
