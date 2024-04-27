@@ -22,10 +22,30 @@
 #include <QFile>
 #include <QJsonObject>
 #include <QPair>
+#include <QVariantMap>
 #include <QVector>
 #include <QtQuick/QQuickPaintedItem>
 
 class BasicItem;
+
+/**
+ * @brief Map which stores key (QString) value (QVariant) pairs.
+ *
+ * Derived from QVariantMap which is typedef for QMap<QString, QVariant>. Stores the properties of an item with its
+ * values. The function stringValue converts the QVariant value of the given property to a QString.
+ */
+class PropertyMap : public QVariantMap {
+  public:
+    /**
+     * @brief Returns the value to the given property as QString.
+     *
+     * An empty QString will be returned when the value can't be converted or the given property does not exist in the
+     * Map.
+     *
+     * @param property The property which value should be returned.
+     */
+    inline QString stringValue(const QString& property) const { return value(property).toString(); }
+};
 
 /**
  * @brief An abstract class representing a visible item like a circle or a
@@ -61,6 +81,7 @@ class AbstractItem : public QQuickPaintedItem {
 
     // TODO(codingwithmagga): QVariantMap as return type seems to be a better
     // choice
+    //
     QList<QPair<QString, QVariant>> getItemProperties() const;
     QList<QPair<QString, QVariant>> getParentItemProperties() const;
 
