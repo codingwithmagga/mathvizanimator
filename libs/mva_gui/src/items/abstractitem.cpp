@@ -42,8 +42,8 @@ void AbstractItem::setName(const QString& name)
 QJsonObject AbstractItem::toJson() const
 {
     QJsonObject json;
-    auto properties = getItemProperties();
-    auto parent_properties = getParentItemProperties();
+    auto properties = itemProperties();
+    auto parent_properties = parentItemProperties();
 
     properties.insert("file", m_qml_file);
 
@@ -58,7 +58,7 @@ QJsonObject AbstractItem::toJson() const
     return json;
 }
 
-PropertyMap AbstractItem::getItemProperties() const
+PropertyMap AbstractItem::itemProperties() const
 {
     PropertyMap properties;
     auto meta_object = metaObject();
@@ -70,7 +70,7 @@ PropertyMap AbstractItem::getItemProperties() const
     return properties;
 }
 
-PropertyMap AbstractItem::getParentItemProperties() const
+PropertyMap AbstractItem::parentItemProperties() const
 {
     PropertyMap properties;
     auto parent_meta_object = parentItem()->metaObject();

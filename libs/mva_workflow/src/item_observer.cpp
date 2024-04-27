@@ -21,8 +21,8 @@ ItemObserver::ItemObserver(BasicItem* const item, QObject* parent)
     : QObject(parent)
     , m_item(item)
 {
-    m_item_start_property_values = abstractitem()->getItemProperties();
-    m_basic_item_start_property_values = abstractitem()->getParentItemProperties();
+    m_item_start_property_values = abstractitem()->itemProperties();
+    m_basic_item_start_property_values = abstractitem()->parentItemProperties();
 }
 
 void ItemObserver::setTimeProgressive(const qreal time)
