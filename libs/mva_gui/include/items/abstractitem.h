@@ -79,9 +79,6 @@ class AbstractItem : public QQuickPaintedItem {
 
     virtual EditableProperties editableProperties() const;
 
-    // TODO(codingwithmagga): QVariantMap as return type seems to be a better
-    // choice
-    //
     PropertyMap getItemProperties() const;
     PropertyMap getParentItemProperties() const;
 
