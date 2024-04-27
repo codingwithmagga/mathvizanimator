@@ -111,8 +111,8 @@ class AbstractItem : public QQuickPaintedItem {
     void nameChanged(const QString& new_name);
 
   private:
-    PropertyMap addItemProperties(const QMetaObject* const meta_object) const;
-    PropertyMap addParentItemProperties(const QMetaObject* const meta_object) const;
+    PropertyMap fillPropertyMap(const QMetaObject* const meta_object) const;
+    PropertyMap fillPropertyMapParent(const QMetaObject* const meta_object) const;
 
     QString m_name;
 

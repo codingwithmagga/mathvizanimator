@@ -64,7 +64,7 @@ PropertyMap AbstractItem::itemProperties() const
     auto meta_object = metaObject();
 
     do {
-        properties.insert(addItemProperties(meta_object));
+        properties.insert(fillPropertyMap(meta_object));
     } while ((meta_object = meta_object->superClass()));
 
     return properties;
@@ -76,7 +76,7 @@ PropertyMap AbstractItem::parentItemProperties() const
     auto parent_meta_object = parentItem()->metaObject();
 
     do {
-        properties.insert(addParentItemProperties(parent_meta_object));
+        properties.insert(fillPropertyMapParent(parent_meta_object));
     } while ((parent_meta_object = parent_meta_object->superClass()));
 
     return properties;
@@ -101,7 +101,7 @@ void AbstractItem::paintItem(QPainter* painter)
     painter->restore();
 }
 
-PropertyMap AbstractItem::addItemProperties(const QMetaObject* const meta_object) const
+PropertyMap AbstractItem::fillPropertyMap(const QMetaObject* const meta_object) const
 {
     PropertyMap properties;
 
@@ -114,7 +114,7 @@ PropertyMap AbstractItem::addItemProperties(const QMetaObject* const meta_object
     return properties;
 }
 
-PropertyMap AbstractItem::addParentItemProperties(const QMetaObject* const meta_object) const
+PropertyMap AbstractItem::fillPropertyMapParent(const QMetaObject* const meta_object) const
 {
     PropertyMap properties;
 
