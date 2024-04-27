@@ -271,25 +271,6 @@ void ItemHandler::removeAnimation(const qint32 animation_number)
                         << currentItem->itemObserver()->abstractitem()->name();
 }
 
-// TODO(codingwithmagga): Refactor this function, give useful var names
-void ItemHandler::appendProperties(const auto obj, auto meta_object, const QStringList& allowedProperties)
-{
-    QList<ItemProperty> property_list;
-
-    for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
-        if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
-            property_list.emplace_back(meta_object->property(i).name(), meta_object->property(i).read(obj));
-        }
-    }
-
-    for (auto& property : property_list) {
-        m_property_model.appendProperty(property);
-    }
-}
-
-// TODO(codingwithmagga): Refactor this function, give useful var names and use
-// AbstractItem::getItemProperties()
-// Also change param to ItemModelItem*
 void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex)
 {
     m_property_model.removeRows(0, m_property_model.rowCount());
@@ -298,19 +279,9 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex)
     const auto basic_item = model_item->itemObserver()->item();
     const auto abstract_item = basic_item->abstractItem();
 
-    auto mo_abstract = abstract_item->metaObject();
-    auto mo = basic_item->metaObject();
+    auto properties = abstract_item->allItemProperties();
 
-    const auto editableProperties = abstract_item->editableProperties();
-    const auto editablePropertiesParent = abstract_item->editablePropertiesParent();
-
-    do {
-        appendProperties(abstract_item, mo_abstract, editableProperties);
-    } while ((mo_abstract = mo_abstract->superClass()));
-
-    do {
-        appendProperties(basic_item, mo, editablePropertiesParent);
-    } while ((mo = mo->superClass()));
+    m_property_model.appendProperties(properties);
 }
 
 void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item)

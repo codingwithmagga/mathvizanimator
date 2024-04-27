@@ -110,8 +110,6 @@ class ItemHandler : public QObject {
 
     QString prepareNewItemName(const QString& old_item_name);
 
-    void appendProperties(const auto obj, auto meta_object, const QStringList& allowedProperties);
-
     void repopulatePropertyModel(const QModelIndex& currentIndex);
     void repopulateAnimationModel(const ItemModelItem* const item);
 
