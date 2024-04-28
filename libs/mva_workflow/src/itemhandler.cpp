@@ -31,23 +31,8 @@ Q_LOGGING_CATEGORY(itemhandler, "cwa.mva.workflow.itemhandler")
 ItemHandler::ItemHandler(QObject* parent)
     : QObject { parent }
 {
-    QStandardItem* headerItemLeft = new QStandardItem(tr("Name"));
-    QStandardItem* headerItemRight = new QStandardItem(tr("Type"));
 
-    m_item_model.setHorizontalHeaderItem(0, headerItemLeft);
-    m_item_model.setHorizontalHeaderItem(1, headerItemRight);
-
-    QStandardItem* propertyHeaderItemLeft = new QStandardItem(tr("Name"));
-    QStandardItem* propertyHeaderItemRight = new QStandardItem(tr("Value"));
-
-    m_property_model.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
-    m_property_model.setHorizontalHeaderItem(1, propertyHeaderItemRight);
-
-    QStandardItem* animationHeaderItemLeft = new QStandardItem(tr("Animation"));
-    QStandardItem* animationHeaderItemRight = new QStandardItem(tr("time span"));
-
-    m_animation_model.setHorizontalHeaderItem(0, animationHeaderItemLeft);
-    m_animation_model.setHorizontalHeaderItem(1, animationHeaderItemRight);
+    prepareModelHeader();
 
     connect(&m_property_model, &QStandardItemModel::dataChanged, this, &ItemHandler::propertyDataChanged);
     connect(&m_item_selection_model, &QItemSelectionModel::currentRowChanged, this, &ItemHandler::currentItemChanged);
@@ -137,6 +122,14 @@ QSharedPointer<ItemObserver> ItemHandler::getItemObserverByName(const QString& i
     }
 
     return model_item->itemObserver();
+}
+
+void ItemHandler::prepareModelHeader()
+{
+
+    m_item_model.setHorizontalHeaderLabels({ tr("Name"), tr("Type") });
+    m_property_model.setHorizontalHeaderLabels({ tr("Name"), tr("Value") });
+    m_animation_model.setHorizontalHeaderLabels({ tr("Animation"), tr("Timespan") });
 }
 
 void ItemHandler::clear()
