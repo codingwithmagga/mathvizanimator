@@ -91,7 +91,7 @@ class AbstractItem : public QQuickPaintedItem {
      * type BasicItem.The position (x,y) of the AbstractItem is relative to the parent, the BasicItem. So changing these
      * values by the user is not intended. Since the AbstractItem should always fill the whole parent (search for
      * "anchors.fill: parent" in the item qml files, for example CircleItem.qml) it is also reasonable to change width
-     * and height of the BasicItem by the user and not the widht and height of the AbstractItem.
+     * and height of the BasicItem by the user and not the width and height of the AbstractItem.
      *
      * @return Returns the editable properties as QStrings
      */
