@@ -318,7 +318,6 @@ void ItemHandler::updateItemModelName(const QVariant& name)
     m_item_model.setItemData(m_item_model.index(current_row, 0), changedValue);
 }
 
-// TODO(codingwithmagga): Refactor this
 // TODO(codingwithmagga): Create custom ItemModels and items which contain
 // pointers to the data, s.t. this will be done automatically
 void ItemHandler::propertyDataChanged(
