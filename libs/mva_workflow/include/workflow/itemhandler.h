@@ -119,6 +119,7 @@ class ItemHandler : public QObject {
     QSharedPointer<ItemObserver> getItemObserverByName(const QString& item_name);
 
     void prepareModelHeader();
+    void updateItemModelName(const QVariant& name);
 
     QStandardItemModel m_item_model;
     QStandardItemModel m_animation_model;

@@ -310,6 +310,14 @@ void ItemHandler::changeProperty(const QString& item_name, const QByteArray& pro
     item_observer->updateItemProperty(property, value);
 }
 
+void ItemHandler::updateItemModelName(const QVariant& name)
+{
+    QMap<qint32, QVariant> changedValue;
+    changedValue.insert(Qt::DisplayRole, name);
+    const int current_row = m_item_selection_model.currentIndex().row();
+    m_item_model.setItemData(m_item_model.index(current_row, 0), changedValue);
+}
+
 // TODO(codingwithmagga): Refactor this
 // TODO(codingwithmagga): Create custom ItemModels and items which contain
 // pointers to the data, s.t. this will be done automatically
@@ -322,21 +330,13 @@ void ItemHandler::propertyDataChanged(
         return;
     }
 
-    // Give a critical warning when this happens. Should normally be avoided by using PropertyModel class.
-    if (topLeft.column() != 1) {
-        qCCritical(itemhandler) << "Dont change values in column " << topLeft.column() << "in property editor.";
-        return;
-    }
-
     if (!roles.contains(Qt::DisplayRole)) {
         return;
     }
 
     // Set new name in item model
     if (m_property_model.data(m_property_model.index(topLeft.row(), 0)).toString() == "name") {
-        QMap<qint32, QVariant> changedValue;
-        changedValue.insert(roles[0], m_property_model.data(topLeft));
-        m_item_model.setItemData(m_item_selection_model.currentIndex(), changedValue);
+        updateItemModelName(m_property_model.data(topLeft));
     }
 
     // Update item
