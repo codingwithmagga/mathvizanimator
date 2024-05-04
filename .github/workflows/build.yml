@@ -70,7 +70,7 @@ jobs:
           target: desktop
           arch: ${{ matrix.qt-arch }}
           dir: "${{ env.SOURCE_DIR }}"
-          setup-python: false
+          setup-python: true
           aqtversion: ==3.1.*
           modules: 'qtmultimedia'  
       
