@@ -51,7 +51,7 @@ class GeometryItem : public AbstractItem {
     qreal borderWidth() const;
     void setBorderWidth(const qreal& new_border_width);
 
-    EditableProperties editableProperties() const override;
+    QStringList editableProperties() const override;
 
   signals:
     void filledColorChanged();

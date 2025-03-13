@@ -81,18 +81,18 @@ void GeometryItem::setBorderWidth(const qreal& new_border_width)
     emit borderWidthChanged();
 }
 
-AbstractItem::EditableProperties GeometryItem::editableProperties() const
+QStringList GeometryItem::editableProperties() const
 {
-    auto abstractList = AbstractItem::editableProperties();
+    auto editableProperties = AbstractItem::editableProperties();
 
-    abstractList.abstract_item_properties.append("filledColor");
-    abstractList.abstract_item_properties.append("filledOpacity");
+    editableProperties.append("filledColor");
+    editableProperties.append("filledOpacity");
 
-    abstractList.abstract_item_properties.append("borderColor");
-    abstractList.abstract_item_properties.append("borderOpacity");
-    abstractList.abstract_item_properties.append("borderWidth");
+    editableProperties.append("borderColor");
+    editableProperties.append("borderOpacity");
+    editableProperties.append("borderWidth");
 
-    return abstractList;
+    return editableProperties;
 }
 
 void GeometryItem::preparePainterForBorder(QPainter* painter)

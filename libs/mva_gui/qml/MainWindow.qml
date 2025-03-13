@@ -670,6 +670,7 @@ ApplicationWindow {
 
                         model: item_model
                         selectionModel: item_selection_model
+                        selectionBehavior: TableView.SelectRows
 
                         delegate: Label {
                             required property bool current

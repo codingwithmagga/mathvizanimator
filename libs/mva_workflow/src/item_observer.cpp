@@ -21,16 +21,8 @@ ItemObserver::ItemObserver(BasicItem* const item, QObject* parent)
     : QObject(parent)
     , m_item(item)
 {
-    const auto item_properties = abstractitem()->getItemProperties();
-    const auto quick_item_properties = abstractitem()->getParentItemProperties();
-
-    for (const auto& property : item_properties) {
-        m_item_start_property_values.insert(property.first, property.second);
-    }
-
-    for (const auto& property : quick_item_properties) {
-        m_basic_item_start_property_values.insert(property.first, property.second);
-    }
+    m_item_start_property_values = abstractitem()->itemProperties();
+    m_basic_item_start_property_values = abstractitem()->parentItemProperties();
 }
 
 void ItemObserver::setTimeProgressive(const qreal time)
@@ -91,7 +83,7 @@ void ItemObserver::removeAnimation(const qint32 animation_number) { m_animations
 
 void ItemObserver::updateItemProperty(const QString& property, const QVariant& value)
 {
-    if (abstractitem()->editableProperties().abstract_item_properties.contains(property)) {
+    if (abstractitem()->editableProperties().contains(property)) {
         abstractitem()->setProperty(property.toUtf8(), value);
         m_item_start_property_values.insert(property.toUtf8(), value);
 

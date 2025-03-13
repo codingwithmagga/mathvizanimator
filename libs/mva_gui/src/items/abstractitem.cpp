@@ -42,48 +42,52 @@ void AbstractItem::setName(const QString& name)
 QJsonObject AbstractItem::toJson() const
 {
     QJsonObject json;
-    auto properties = getItemProperties();
-    auto parent_properties = getParentItemProperties();
+    auto properties = itemProperties();
+    auto parent_properties = parentItemProperties();
 
-    properties.append(QPair<QString, QVariant> { "file", m_qml_file });
+    properties.insert("file", m_qml_file);
 
-    for (auto& property : properties) {
-        json["abstract_item." + property.first] = property.second.toString();
+    for (auto [property, value] : properties.asKeyValueRange()) {
+        json["abstract_item." + property] = value.toString();
     }
 
-    for (auto& property : parent_properties) {
-        json[property.first] = property.second.toString();
+    for (auto [property, value] : parent_properties.asKeyValueRange()) {
+        json[property] = value.toString();
     }
 
     return json;
 }
 
-QList<QPair<QString, QVariant>> AbstractItem::getItemProperties() const
+PropertyMap AbstractItem::allItemProperties() const
 {
-    auto meta_object = metaObject();
-    const auto properties = editableProperties();
+    auto propertyMap = itemProperties();
+    propertyMap.insert(parentItemProperties());
 
-    QList<QPair<QString, QVariant>> prop_list;
-
-    do {
-        prop_list.append(appendProperties(this, meta_object, properties.abstract_item_properties));
-    } while ((meta_object = meta_object->superClass()));
-
-    return prop_list;
+    return propertyMap;
 }
 
-QList<QPair<QString, QVariant>> AbstractItem::getParentItemProperties() const
+PropertyMap AbstractItem::itemProperties() const
 {
-    auto parent_meta_object = parentItem()->metaObject();
-    const auto properties = editableProperties();
-
-    QList<QPair<QString, QVariant>> prop_list;
+    PropertyMap properties;
+    auto meta_object = metaObject();
 
     do {
-        prop_list.append(appendProperties(parentItem(), parent_meta_object, properties.basic_item_properties));
+        properties.insert(fillPropertyMap(meta_object));
+    } while ((meta_object = meta_object->superClass()));
+
+    return properties;
+}
+
+PropertyMap AbstractItem::parentItemProperties() const
+{
+    PropertyMap properties;
+    auto parent_meta_object = parentItem()->metaObject();
+
+    do {
+        properties.insert(fillPropertyMapParent(parent_meta_object));
     } while ((parent_meta_object = parent_meta_object->superClass()));
 
-    return prop_list;
+    return properties;
 }
 
 void AbstractItem::paintItem(QPainter* painter)
@@ -105,26 +109,28 @@ void AbstractItem::paintItem(QPainter* painter)
     painter->restore();
 }
 
-QList<QPair<QString, QVariant>> AbstractItem::appendProperties(
-    const auto obj, auto meta_object, const QStringList& allowedProperties) const
+PropertyMap AbstractItem::fillPropertyMap(const QMetaObject* const meta_object) const
 {
-    QList<QPair<QString, QVariant>> prop_list;
+    PropertyMap properties;
 
     for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
-        if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
-            prop_list.emplace_back(meta_object->property(i).name(), meta_object->property(i).read(obj));
+        if (editableProperties().contains(QString(meta_object->property(i).name()))) {
+            properties.insert(meta_object->property(i).name(), meta_object->property(i).read(this));
         }
     }
 
-    return prop_list;
+    return properties;
 }
 
-AbstractItem::EditableProperties AbstractItem::editableProperties() const
+PropertyMap AbstractItem::fillPropertyMapParent(const QMetaObject* const meta_object) const
 {
-    EditableProperties editable_properties;
+    PropertyMap properties;
 
-    editable_properties.abstract_item_properties = QStringList { "name", "opacity", "rotation" };
-    editable_properties.basic_item_properties = QStringList { "width", "height", "x", "y" };
+    for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
+        if (editablePropertiesParent().contains(QString(meta_object->property(i).name()))) {
+            properties.insert(meta_object->property(i).name(), meta_object->property(i).read(parentItem()));
+        }
+    }
 
-    return editable_properties;
+    return properties;
 }

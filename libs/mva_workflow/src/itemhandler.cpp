@@ -31,23 +31,8 @@ Q_LOGGING_CATEGORY(itemhandler, "cwa.mva.workflow.itemhandler")
 ItemHandler::ItemHandler(QObject* parent)
     : QObject { parent }
 {
-    QStandardItem* headerItemLeft = new QStandardItem(tr("Name"));
-    QStandardItem* headerItemRight = new QStandardItem(tr("Type"));
 
-    m_item_model.setHorizontalHeaderItem(0, headerItemLeft);
-    m_item_model.setHorizontalHeaderItem(1, headerItemRight);
-
-    QStandardItem* propertyHeaderItemLeft = new QStandardItem(tr("Name"));
-    QStandardItem* propertyHeaderItemRight = new QStandardItem(tr("Value"));
-
-    m_property_model.setHorizontalHeaderItem(0, propertyHeaderItemLeft);
-    m_property_model.setHorizontalHeaderItem(1, propertyHeaderItemRight);
-
-    QStandardItem* animationHeaderItemLeft = new QStandardItem(tr("Animation"));
-    QStandardItem* animationHeaderItemRight = new QStandardItem(tr("time span"));
-
-    m_animation_model.setHorizontalHeaderItem(0, animationHeaderItemLeft);
-    m_animation_model.setHorizontalHeaderItem(1, animationHeaderItemRight);
+    prepareModelHeader();
 
     connect(&m_property_model, &QStandardItemModel::dataChanged, this, &ItemHandler::propertyDataChanged);
     connect(&m_item_selection_model, &QItemSelectionModel::currentRowChanged, this, &ItemHandler::currentItemChanged);
@@ -137,6 +122,14 @@ QSharedPointer<ItemObserver> ItemHandler::getItemObserverByName(const QString& i
     }
 
     return model_item->itemObserver();
+}
+
+void ItemHandler::prepareModelHeader()
+{
+
+    m_item_model.setHorizontalHeaderLabels({ tr("Name"), tr("Type") });
+    m_property_model.setHorizontalHeaderLabels({ tr("Name"), tr("Value") });
+    m_animation_model.setHorizontalHeaderLabels({ tr("Animation"), tr("Timespan") });
 }
 
 void ItemHandler::clear()
@@ -271,28 +264,6 @@ void ItemHandler::removeAnimation(const qint32 animation_number)
                         << currentItem->itemObserver()->abstractitem()->name();
 }
 
-// TODO(codingwithmagga): Refactor this function, give useful var names
-void ItemHandler::appendProperties(const auto obj, auto meta_object, const QStringList& allowedProperties)
-{
-    QList<std::pair<QString, QVariant>> propList;
-
-    for (auto i = meta_object->propertyOffset(); i < meta_object->propertyCount(); ++i) {
-        if (allowedProperties.contains(QString(meta_object->property(i).name()))) {
-            propList.emplace_back(meta_object->property(i).name(), meta_object->property(i).read(obj));
-        }
-    }
-
-    for (auto& property : propList) {
-        auto stdItemName(new QStandardItem(property.first));
-        auto stdItemValue(new QStandardItem(property.second.toString()));
-
-        m_property_model.appendRow(QList<QStandardItem*> { stdItemName, stdItemValue });
-    }
-}
-
-// TODO(codingwithmagga): Refactor this function, give useful var names and use
-// AbstractItem::getItemProperties()
-// Also change param to ItemModelItem*
 void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex)
 {
     m_property_model.removeRows(0, m_property_model.rowCount());
@@ -301,18 +272,9 @@ void ItemHandler::repopulatePropertyModel(const QModelIndex& currentIndex)
     const auto basic_item = model_item->itemObserver()->item();
     const auto abstract_item = basic_item->abstractItem();
 
-    auto mo_abstract = abstract_item->metaObject();
-    auto mo = basic_item->metaObject();
+    auto properties = abstract_item->allItemProperties();
 
-    const auto allowedProperties = abstract_item->editableProperties();
-
-    do {
-        appendProperties(abstract_item, mo_abstract, allowedProperties.abstract_item_properties);
-    } while ((mo_abstract = mo_abstract->superClass()));
-
-    do {
-        appendProperties(basic_item, mo, allowedProperties.basic_item_properties);
-    } while ((mo = mo->superClass())); // TODO(codingwithmagga): sort elements?
+    m_property_model.appendProperties(properties);
 }
 
 void ItemHandler::repopulateAnimationModel(const ItemModelItem* const item)
@@ -348,7 +310,14 @@ void ItemHandler::changeProperty(const QString& item_name, const QByteArray& pro
     item_observer->updateItemProperty(property, value);
 }
 
-// TODO(codingwithmagga): Refactor this
+void ItemHandler::updateItemModelName(const QVariant& name)
+{
+    QMap<qint32, QVariant> changedValue;
+    changedValue.insert(Qt::DisplayRole, name);
+    const int current_row = m_item_selection_model.currentIndex().row();
+    m_item_model.setItemData(m_item_model.index(current_row, 0), changedValue);
+}
+
 // TODO(codingwithmagga): Create custom ItemModels and items which contain
 // pointers to the data, s.t. this will be done automatically
 void ItemHandler::propertyDataChanged(
@@ -360,21 +329,13 @@ void ItemHandler::propertyDataChanged(
         return;
     }
 
-    // Give a critical warning when this happens. Should normally be avoided by using PropertyModel class.
-    if (topLeft.column() != 1) {
-        qCCritical(itemhandler) << "Dont change values in column " << topLeft.column() << "in property editor.";
-        return;
-    }
-
     if (!roles.contains(Qt::DisplayRole)) {
         return;
     }
 
     // Set new name in item model
     if (m_property_model.data(m_property_model.index(topLeft.row(), 0)).toString() == "name") {
-        QMap<qint32, QVariant> changedValue;
-        changedValue.insert(roles[0], m_property_model.data(topLeft));
-        m_item_model.setItemData(m_item_selection_model.currentIndex(), changedValue);
+        updateItemModelName(m_property_model.data(topLeft));
     }
 
     // Update item
@@ -457,6 +418,21 @@ QSharedPointer<ItemObserver> ItemModelItem::itemObserver() const { return m_item
 void ItemModelItem::setItemObserver(const QSharedPointer<ItemObserver>& new_item_observer)
 {
     m_item_observer = new_item_observer;
+}
+
+void PropertyModel::appendProperty(const ItemProperty& property)
+{
+    auto item_name(new QStandardItem(property.name));
+    auto item_value(new QStandardItem(property.value.toString()));
+
+    appendRow(QList<QStandardItem*> { item_name, item_value });
+}
+
+void PropertyModel::appendProperties(const PropertyMap& properties)
+{
+    for (auto [property, value] : properties.asKeyValueRange()) {
+        appendProperty({ property, value });
+    }
 }
 
 Qt::ItemFlags PropertyModel::flags(const QModelIndex& index) const

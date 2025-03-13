@@ -61,6 +61,8 @@ class TestItemHandler : public QObject {
 
     void removeAnimation();
 
+    void propertyModelAppendProperty();
+    void propertyModelAppendProperties();
     void propertyModelFlags();
 
     void clearHandler();
@@ -268,8 +270,8 @@ void TestItemHandler::checkItemProperties()
     itemhandler.addItem(rect);
     itemhandler.setCurrentItem(circle_item->name());
 
-    auto item_properties = circle_item->getItemProperties();
-    item_properties.append(circle_item->getParentItemProperties());
+    auto item_properties = circle_item->itemProperties();
+    item_properties.insert(circle_item->parentItemProperties());
     const auto propModel = itemhandler.propertyModel();
 
     QCOMPARE(propModel->rowCount(), item_properties.size());
@@ -527,6 +529,40 @@ void TestItemHandler::removeAnimation()
         itemhandler.removeAnimation(0);
         num_animations--;
         QCOMPARE(item_observer->animations().size(), num_animations);
+    }
+}
+
+void TestItemHandler::propertyModelAppendProperty()
+{
+    PropertyModel prop_model;
+    ItemProperty item_property { "property", "value" };
+
+    prop_model.appendProperty(item_property);
+    const auto model_item_name = prop_model.item(0, 0);
+    const auto model_item_value = prop_model.item(0, 1);
+
+    QCOMPARE(model_item_name->text(), item_property.name);
+    QCOMPARE(model_item_value->text(), item_property.value);
+}
+
+void TestItemHandler::propertyModelAppendProperties()
+{
+    PropertyModel prop_model;
+    PropertyMap item_properties;
+    item_properties.insert("property1", "value1");
+    item_properties.insert("property2", "value2");
+
+    prop_model.appendProperties(item_properties);
+
+    int property_number = 0;
+    for (auto [property, value] : item_properties.asKeyValueRange()) {
+        const auto model_item_name = prop_model.item(property_number, 0);
+        const auto model_item_value = prop_model.item(property_number, 1);
+
+        QCOMPARE(model_item_name->text(), property);
+        QCOMPARE(model_item_value->text(), value);
+
+        ++property_number;
     }
 }
 

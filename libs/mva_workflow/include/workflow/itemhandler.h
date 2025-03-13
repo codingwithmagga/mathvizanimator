@@ -28,8 +28,35 @@
 
 class ItemModelItem;
 
+struct ItemProperty {
+    QString name;
+    QVariant value;
+};
+
 class PropertyModel : public QStandardItemModel {
   public:
+    /**
+     * @brief Appends a property to the model
+     *
+     * The given parameter is of type ItemProperty, where the value is given as QVariant. Internally the value will be
+     * converted to a QString using QVariant::toString(). If value is of a type which can't be converted to a QString,
+     * an empty QString will be added to the model.
+     *
+     * @param property The item property object containing name and value.
+     */
+    void appendProperty(const ItemProperty& property);
+
+    /**
+     * @brief Appends all properties from the given property map to the model
+     *
+     * The given property map stores the values of the properties as QVariant. Internally the value will be
+     * converted to a QString using QVariant::toString(). If value is of a type which can't be converted to a QString,
+     * an empty QString will be added to the model.
+     *
+     * @param properties Map with property-value pairs which will be added to the model
+     */
+    void appendProperties(const PropertyMap& properties);
+
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 };
 
@@ -83,8 +110,6 @@ class ItemHandler : public QObject {
 
     QString prepareNewItemName(const QString& old_item_name);
 
-    void appendProperties(const auto obj, auto meta_object, const QStringList& allowedProperties);
-
     void repopulatePropertyModel(const QModelIndex& currentIndex);
     void repopulateAnimationModel(const ItemModelItem* const item);
 
@@ -92,6 +117,9 @@ class ItemHandler : public QObject {
 
     ItemModelItem* getItemModelItemByName(const QString& item_name);
     QSharedPointer<ItemObserver> getItemObserverByName(const QString& item_name);
+
+    void prepareModelHeader();
+    void updateItemModelName(const QVariant& name);
 
     QStandardItemModel m_item_model;
     QStandardItemModel m_animation_model;

@@ -29,7 +29,7 @@ jobs:
            - os: windows-latest
              qt-os: windows
              qt-arch: 'win64_msvc2019_64'
-           - os: macos-latest
+           - os: macos-13
              qt-os: mac
              qt-arch: 'clang_64'
 
@@ -70,7 +70,7 @@ jobs:
           target: desktop
           arch: ${{ matrix.qt-arch }}
           dir: "${{ env.SOURCE_DIR }}"
-          setup-python: false
+          setup-python: true
           aqtversion: ==3.1.*
           modules: 'qtmultimedia'  
       

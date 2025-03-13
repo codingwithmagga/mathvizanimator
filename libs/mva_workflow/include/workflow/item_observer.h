@@ -52,8 +52,8 @@ class ItemObserver : public QObject {
     BasicItem* m_item;
     QList<QSharedPointer<AbstractAnimation>> m_animations;
 
-    QVariantMap m_item_start_property_values;
-    QVariantMap m_basic_item_start_property_values;
+    PropertyMap m_item_start_property_values;
+    PropertyMap m_basic_item_start_property_values;
 };
 
 inline BasicItem* ItemObserver::item() const { return m_item; }
